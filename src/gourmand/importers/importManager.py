@@ -63,73 +63,27 @@ class ImportManager (plugin_loader.Pluggable):
         normal plugins for acting on files, or by special web-aware
         plugins.
         """
-        sublabel = _('Enter the URL of a recipe archive or recipe website.')
-        url = de.getEntry(label=_('Enter website address'),
-                          sublabel=sublabel,
-                          entryLabel=_('Enter URL:'),
-                          entryTip=_('Enter the address of a website or recipe archive.'),
-                          default_character_width=60,
-                          )
         if url:
             return self.import_url(url)
 
-    def import_url(self, url):
-        parsed_url = urlparse(url)
-        if parsed_url.scheme:
-            # there is an `http[s]` prefix
-            url = "{}://{}{}".format(parsed_url.scheme, parsed_url.netloc, parsed_url.path)
-        else:
-            # no `https` prefix, we add one
-            url = 'https://' + parsed_url.path
-        reader = URLReader(url)
-        reader.connect('completed',
-                       self.finish_web_import)
-        self.setup_thread(reader,'Downloading %s'%url, connect_follow_up=False)
-
-    def finish_web_import (self, reader):
-        # Filter by mimetype...
-        if reader.content_type:
-            base_content_type=reader.content_type.split(';')[0]
-            possible_plugins = [p for p in self.importer_plugins if base_content_type in p.mimetypes]
-        else:
-            possible_plugins = self.importer_plugins
-        fallback = None; plugin = None
-        for p in possible_plugins:
-            result = p.test_url(reader.url,reader.data,reader.content_type)
-            if result == -1:
-                fallback = p
-            elif result:
-                plugin = p
-                break
-        if not plugin:
-            plugin = fallback
-        if not plugin:
-            de.show_message(
-                title=_('Unable to import URL'),
-                label=_('Gourmet does not have a plugin capable of importing URL'),
-                sublabel=_('Unable to import URL %(url)s of mimetype %(type)s. File saved to temporary location %(fn)s')%{
-                'url':reader.url,
-                'type':reader.content_type or 'Unknown',
-                'fn':self.get_tempfilename(reader.url,reader.data,reader.content_type)
-                },
-                )
-        else:
-            print('Doing import of',reader.url,plugin)
-            self.do_import(plugin, 'get_web_importer', reader.url,
-                           reader.data.decode(), reader.content_type)
 
     def offer_import(self, parent: Optional[Gtk.Window] = None):
-        """Offer to import a file or group of files.
+        """Offer to import url or files."""
 
-        Begin the import if we can in a separate dialog.
-        """
-        filenames = de.select_file(_('Open recipe...'),
-                                   filters=self.get_filters(),
-                                   parent=parent,
-                                   select_multiple=True)
-        if filenames is None:
-            return
-        self.import_filenames(filenames)
+        # Get the list of supported websites to offer validation
+        # Get the list of filters
+        from recipe_scrapers import SCRAPERS
+        uri = de.get_uri(label=_('Open recipe...'),
+                         sublabel=_('Enter a recipe file path or website address.'),
+                         entryLabel=_('Path:'),
+                         entryTip=_('Enter the address of a website or recipe archive.'),
+                         default_character_width=60,
+                         filters=self.get_filters(),
+                         supported_urls=list(SCRAPERS.keys()),
+                         select_multiple=True
+                        )
+        if uri:
+            self.import_filenames(uri)
 
     def import_filenames(self, filenames: List[str]) -> List[Any]:
         """Import list of filenames, filenames, based on our currently

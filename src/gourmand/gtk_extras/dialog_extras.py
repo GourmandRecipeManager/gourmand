@@ -5,6 +5,7 @@ import xml.sax.saxutils
 from pathlib import Path
 from pkgutil import get_data
 from typing import List, Optional, Tuple, Union
+from urllib.parse import urlparse
 
 from gi.repository import GObject, Gtk, Pango
 from gi.repository.GLib import UserDirectory, get_user_special_dir
@@ -14,6 +15,7 @@ from gourmand.i18n import _
 from gourmand.image_utils import image_to_pixbuf, make_thumbnail
 
 from . import optionTable
+from .validation import ValidatingEntry
 
 H_PADDING = 12
 Y_PADDING = 12
@@ -95,9 +97,7 @@ class ModalDialog (Gtk.Dialog):
         self.connect('response', self.response_cb)
 
     def response_cb(self, dialog, response, *params):
-        # print 'response CB ',dialog,response,params
         if response in self.responses:
-            # print 'we have a response!'
             self.responses[response]()
         else:
             print('WARNING, no response for ', response)
@@ -1152,18 +1152,99 @@ class ImageSelectorDialog (FileSelectorDialog):
             self.preview.hide()
 
 
+class URIDialog(EntryDialog):
+    """An Entry dialog that can call a FileSelectorDialog."""
+    def __init__(self,
+                 filters: List[str],
+                 supported_urls: List[str],
+                 select_multiple: bool,
+                 **kwargs):
+        super().__init__(**kwargs)
+
+        # Override the base class Gtk.Entry
+        self.hbox.remove(self.entry)
+
+        def _show_warning():
+            pass
+
+        self.entry = ValidatingEntry()
+        self.entry._show_warning = _show_warning
+        self.entry.warning_box.hide()
+        self.entry.entry.set_width_chars(60)
+        self.entry.set_can_default(True)
+        self.entry.grab_default()
+        self.entry.connect('changed', self.update_value)
+        self.hbox.add(self.entry)
+
+        # Add a button to call the FileSelectorDialog
+        button = Gtk.Button(label='Browse File(s)...')
+        button.connect('clicked', self.select_file)
+        button.show()
+        self.hbox.pack_end(button, True, True, 5)
+
+        self.filters = filters
+        self.select_multiple = select_multiple
+
+        # Retrieve the dialog's ok button.
+        box = self.vbox.get_children()[-1]
+        button_box = box.get_children()[-1]
+        _, self.ok_button = button_box.get_children()
+        self.ok_button.set_sensitive(False)
+
+        def validate(uri: str) -> Optional[str]:
+            uri_ = urlparse(uri).netloc.strip('www.')
+            supported = False
+
+            if not uri:  # Do nothing, but disable ok button
+                self.ok_button.set_sensitive(False)
+                return 
+
+            if ';' in uri:  # Match files from FileSelectorDialog
+                supported = True
+            elif Path(uri).is_file():
+                supported = True
+            elif uri_ in supported_urls:
+                supported = True
+
+            if supported:
+                self.ok_button.set_sensitive(True)
+            else:
+                self.ok_button.set_sensitive(False)
+                return 'File not found or not supported'
+
+        self.entry.find_errors_in_progress = validate
+        self.entry.find_completed_errors = validate
+
+
+    def select_file(self, button: Gtk.Button):
+        filenames = select_file(filters=self.filters,
+                                title=_('Select File(s)'),
+                                select_multiple=self.select_multiple)
+        self.entry.set_text(';'.join(f for f in filenames))
+        self.ret = filenames
+
+
 def getNumber(*args, **kwargs):
-    """Run NumberDialog, passing along all args, waiting on input and passing along
-    the results."""
+    """Run NumberDialog, passing along all args, waiting on input and passing
+    along the results."""
     d = NumberDialog(*args, **kwargs)
     return d.run()
 
 
 def getEntry(*args, **kwargs):
-    """Run EntryDialog, passing along all args, waiting on input and passing along
-    the results."""
+    """Run EntryDialog, passing along all args, waiting on input and passing
+    along the results."""
     d = EntryDialog(*args, **kwargs)
     return d.run()
+
+
+def get_uri(*args, **kwargs) -> Optional[List[str]]:
+    """Get a uri or let the user choose files."""
+    d = URIDialog(*args, **kwargs)
+    ret = d.run()
+    if isinstance(ret, str):
+        ret = [ret]
+    return ret
 
 
 def getBoolean(*args, **kwargs) -> bool:
