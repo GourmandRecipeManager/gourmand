@@ -4,9 +4,9 @@ import tempfile
 import time
 import unittest
 
-import gourmet.backends.db
-import gourmet.gglobals
-import gourmet.GourmetRecipeManager
+import gourmand.backends.db
+import gourmand.gglobals
+import gourmand.GourmetRecipeManager
 from gourmet.importers import importManager
 
 tmpdir = tempfile.mktemp()
