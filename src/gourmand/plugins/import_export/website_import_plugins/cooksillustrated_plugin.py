@@ -29,24 +29,17 @@ class LogInWebReader(gourmand.threadManager.SuspendableThread):
     def do_run (self):
         self.read()
 
-    def get_username_and_pw (self):
-        print('Let us get a password...')
+    def get_username_and_pw(self):
+        pw = ''
         username = self.prefs.get('cooksillustrated-username','')
-        print('Username=',username)
         if username:
             pw = keyring.get_password(
                 'http://www.cooksillustrated.com',
                 username
                 )
         else:
-            pw = ''
-        print('Initial password: ',pw)
-        print('Launch dialog...')
-        #
-        username, pw = de.getUsernameAndPassword(
-            username=username,
-            pw=pw
-            )
+            username, pw = de.getUsernameAndPassword(username=username,
+                                                     pw=pw)
         # broken :( - temporary workaround?
         #username,pw = 'USERNAME','PASSWORD'
         print('Done with dialog')
