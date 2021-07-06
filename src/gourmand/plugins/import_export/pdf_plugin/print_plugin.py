@@ -158,16 +158,18 @@ class PDFSimpleWriter (PDFPrinter):
         self.export_commands.append(('close',[],{}))
         self.setup_printer(self.parent)
 
-    def begin_print (self, operation, context):
-        fn = tempfile.mktemp()
+    def begin_print(self,
+                    operation: Gtk.PrintOperation,
+                    context: Gtk.PrintContext):
+        filename = tempfile.mkstemp()
         writer = pdf_exporter.PdfWriter()
-        writer.setup_document(fn,**self.args)
+        writer.setup_document(filename, **self.args)
         # Playback all the commands we recorded
-        for commandname,args,kwargs in self.export_commands:
-            func = getattr(writer,commandname)
-            func(*args,**kwargs)
+        for commandname, args, kwargs in self.export_commands:
+            func = getattr(writer, commandname)
+            func(*args, **kwargs)
         # And now we trust the documents been written...
-        self.set_document(fn,operation,context)
+        self.set_document(filename, operation, context)
 
 
 class PDFRecipePrinter (PDFPrinter):
@@ -186,7 +188,7 @@ class PDFRecipePrinter (PDFPrinter):
     def begin_print(self,
                     operation: Gtk.PrintOperation,
                     context: Gtk.PrintContext):
-        fn = tempfile.mktemp()
+        fn = tempfile.mkstemp()
         pe = pdf_exporter.PdfExporterMultiDoc(self.rd, self.recs, fn,
                                               change_units=self.change_units,
                                               mult=self.mult)
