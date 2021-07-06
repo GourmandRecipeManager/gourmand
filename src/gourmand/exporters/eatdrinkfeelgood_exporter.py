@@ -21,14 +21,11 @@
 # USA.
 
 import base64
-import sys
-import unittest
 import xml.dom
 import xml.sax.saxutils
 
 import gourmand.convert as convert
 from gourmand.exporters import exporter
-from gourmand.gdebug import debug
 from gourmand.gglobals import NAME_TO_ATTR
 
 
@@ -307,75 +304,8 @@ class EdfgXmlM(exporter.ExporterMultirec, EdfgXmlBase):
                              }
             )
 
-    def write_footer (self):
-        self.xmlDoc.writexml(self.ofi, newl = '\n', addindent = "\t",
-                encoding = "UTF-8")
-
-class ExportTestCase (unittest.TestCase):
-
-    TEST_RECS = [
-        [{'title':'Foo',
-          'source':'Bar',
-          'season':'Winter'},
-         ['1 tsp. sugar',
-          '2 c. wine',
-          '3 cloves garlic',
-          '4 1/2 apples'
-          'salt',
-          'pepper'],
-         ['Eat','Cook','Try\nSome\nNew\nLines']
-         ],
-        [{'title':'Screwy',
-          'season':'123',
-          'servings':'34'},
-         ['1- baseballs',
-          '2-3 cups',
-          '3-4 wild and crazy recipes.'],
-         []],
-        ]
-
-    out_file = 'eatdrinkfeelgood_test.xml'
-
-    def setUp (self):
-        import tempfile
-
-        import fake_db
-        from cozy_interactive_importer import CozyInteractiveImporter
-
-        from gourmand.importers.interactive_importer import ConvenientImporter
-        self.rd = fake_db.RecData(tempfile.mktemp('.db'))
-        import gourmand.convert
-        import gourmand.nutrition.nutrition as nutrition
-        c = gourmand.convert.Converter()
-        self.rd.nd = nutrition.NutritionData(self.rd,c)
-
-        class DumbImporter (CozyInteractiveImporter):
-            added_to = False
-            def __init__ (self, rd):
-                ConvenientImporter.__init__(self,rd,threaded=True)
-            def set_added_to (self,bool):
-                self.added_to = bool
-
-        imp = DumbImporter(self.rd)
-        for attrs,ings,steps in self.TEST_RECS:
-            imp.start_rec()
-            for a,v in list(attrs.items()): imp.add_attribute(a,v)
-            for i in ings:
-                imp.add_ing_from_text(i)
-            for s in steps:
-                imp.add_text('step',s)
-            imp.commit_rec()
-
-
-    def testExport (self):
-        from gourmand.exporters import exporter
-        e=EdfgXmlM(
-            self.rd,
-            [self.rd.recipe_table[k] for k in self.rd.recipe_table],
-            self.out_file,
-            #threaded = False
-            )
-        e.run()
-
-if __name__ == '__main__':
-    unittest.main()
+    def write_footer(self):
+        self.xmlDoc.writexml(self.ofi,
+                             newl='\n',
+                             addindent="\t",
+                             encoding="UTF-8")
