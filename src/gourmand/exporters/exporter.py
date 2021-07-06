@@ -9,7 +9,7 @@ from gi.repository import GLib, Pango
 from gourmand import convert
 from gourmand.gdebug import TimeAction, debug, print_timer_info
 from gourmand.gglobals import (DEFAULT_ATTR_ORDER, DEFAULT_TEXT_ATTR_ORDER,
-                              REC_ATTR_DIC, TEXT_ATTR_DIC, use_threads)
+                               REC_ATTR_DIC, TEXT_ATTR_DIC, use_threads)
 from gourmand.i18n import _
 from gourmand.plugin import BaseExporterMultiRecPlugin, BaseExporterPlugin
 from gourmand.plugin_loader import Pluggable, pluggable_method

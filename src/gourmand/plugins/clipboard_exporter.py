@@ -1,6 +1,7 @@
 """Basic example of a Gourmet export plugin."""
 from pathlib import Path
 from typing import List, Tuple
+
 from gi.repository import Gdk, Gtk
 
 

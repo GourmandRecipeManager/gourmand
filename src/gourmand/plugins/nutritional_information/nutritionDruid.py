@@ -1109,8 +1109,9 @@ class PageableNutritionStore (PageableViewStore):
 
 
 if __name__ == '__main__':
+    from gourmand.recipeManager import RecipeManager, dbargs
+
     from . import nutrition
-    from gourmand.recipeManager import RecipeManager,dbargs
     dbargs['file']='/tmp/boofoo.db'
     rd=RecipeManager(**dbargs)
     rd.add_ing(dict(ingkey='1% milk',

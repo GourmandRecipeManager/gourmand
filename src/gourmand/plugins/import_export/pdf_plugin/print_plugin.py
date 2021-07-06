@@ -5,9 +5,9 @@ import tempfile
 import reportlab.lib.pagesizes as pagesizes
 from gi.repository import Gtk
 
+from gourmand.gdebug import debug
 from gourmand.i18n import _
 from gourmand.plugin import PrinterPlugin
-from gourmand.gdebug import debug
 
 from . import pdf_exporter
 
@@ -48,8 +48,8 @@ class WindowsPDFPrinter:
 
     def set_document (self, filename, operation,context):
         try:
-            from subprocess import Popen
             import winreg
+            from subprocess import Popen
             regPathKey = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
                                          "Software\Microsoft\Windows\CurrentVersion\App Paths\AcroRd32.exe")
             regPathValue, regPathType = winreg.QueryValueEx(regPathKey, "")

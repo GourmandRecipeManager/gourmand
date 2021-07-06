@@ -175,7 +175,7 @@ def encode_text (txt):
             return txt.encode('cp1252','replace')
 
 if __name__ == '__main__':
-    from .__init__ import Tester,RTF
+    from .__init__ import RTF, Tester
     t = Tester()
     print('Exporting test to /tmp/test_recs.rtf')
     import sys

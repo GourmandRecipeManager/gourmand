@@ -262,8 +262,10 @@ def test_parser ():
 def test_webpage ():
     with open('/tmp/test_recipe.htm', 'r') as ifi:
         test = ifi.read()
-    from gourmand.plugins.import_export.website_import_plugins.about_dot_com_plugin import AboutDotComPlugin
     import sys
+
+    from gourmand.plugins.import_export.website_import_plugins.about_dot_com_plugin import \
+        AboutDotComPlugin
     aboutdotcom_plugin = AboutDotComPlugin()
     parser_type = aboutdotcom_plugin.get_importer(sys.modules[__name__])
     parser =  parser_type('http://www.foo.bar',test,None)

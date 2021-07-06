@@ -560,8 +560,12 @@ def find_columns (strings, char=" "):
 
 
 if __name__ == '__main__':
+    import os.path
+    import profile
+    import sys
+    import tempfile
+
     import gourmand.recipeManager as recipeManager
-    import tempfile, sys, profile, os.path
     print('Testing MealMaster import')
     tmpfile = tempfile.mktemp()
     import backends.db

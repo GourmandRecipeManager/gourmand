@@ -6,9 +6,9 @@ from typing import Set
 
 from gi.repository import Gdk, GLib, GObject, Gtk
 
-from gourmand import (batchEditor, convert, plugin, plugin_gui, plugin_loader,
-                      prefs, prefsGui, reccard, recipeManager, shopgui)
-from gourmand import __version__
+from gourmand import (__version__, batchEditor, convert, plugin, plugin_gui,
+                      plugin_loader, prefs, prefsGui, reccard, recipeManager,
+                      shopgui)
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.defaults.defaults import lang as defaults
 from gourmand.exporters.exportManager import ExportManager

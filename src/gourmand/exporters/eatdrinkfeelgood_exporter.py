@@ -337,7 +337,9 @@ class ExportTestCase (unittest.TestCase):
     out_file = 'eatdrinkfeelgood_test.xml'
 
     def setUp (self):
-        import fake_db, tempfile
+        import tempfile
+
+        import fake_db
         from cozy_interactive_importer import CozyInteractiveImporter
 
         from gourmand.importers.interactive_importer import ConvenientImporter

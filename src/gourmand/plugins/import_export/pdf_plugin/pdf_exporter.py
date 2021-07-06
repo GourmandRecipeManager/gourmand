@@ -1046,8 +1046,9 @@ if __name__ == '__main__':
     Gtk.main()
     raise Exception("Hell")
 
-    from tempfile import tempdir
     import os.path
+    from tempfile import tempdir
+
     #opts = get_pdf_prefs(); print opts
     test_3_x_5()
 

@@ -6,7 +6,7 @@ import gourmand.convert as convert
 import gourmand.main
 from gourmand.gdebug import debug
 from gourmand.gtk_extras.cb_extras import (cb_get_active_text,
-                                          cb_set_active_text, setup_typeahead)
+                                           cb_set_active_text, setup_typeahead)
 from gourmand.i18n import _
 
 try:

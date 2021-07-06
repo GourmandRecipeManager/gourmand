@@ -4,7 +4,7 @@ from gi.repository import GObject, Gtk, Pango
 
 from gourmand.i18n import _
 from gourmand.plugin import (IngredientControllerPlugin, RecEditorModule,
-                            RecEditorPlugin)
+                             RecEditorPlugin)
 from gourmand.plugin_loader import POST, PRE
 from gourmand.reccard import IngredientEditorModule, RecRef
 

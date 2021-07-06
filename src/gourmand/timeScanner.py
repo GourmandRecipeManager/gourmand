@@ -7,7 +7,8 @@ from gi.repository import GObject, Gtk
 
 from gourmand import timer
 from gourmand.convert import NUMBER_FINDER_REGEXP, RANGE_REGEXP, Converter
-from gourmand.gtk_extras.LinkedTextView import LinkedPangoBuffer, LinkedTextView
+from gourmand.gtk_extras.LinkedTextView import (LinkedPangoBuffer,
+                                                LinkedTextView)
 
 all_units = set()
 for base, units in Converter.time_units:

@@ -15,21 +15,21 @@ from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
 from gourmand.gglobals import (FLOAT_REC_ATTRS, INT_REC_ATTRS, REC_ATTR_DIC,
-                              REC_ATTRS)
+                               REC_ATTRS)
 from gourmand.gtk_extras import WidgetSaver  # noqa: imports needed for glade
 from gourmand.gtk_extras import validation  # noqa: imports needed for glade
 from gourmand.gtk_extras import cb_extras as cb
 from gourmand.gtk_extras import dialog_extras as de
 from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,
-                                ratingWidget)
+                                 ratingWidget)
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.gtk_extras.dialog_extras import (UserCancelledError,
-                                              show_amount_error)
+                                               show_amount_error)
 from gourmand.gtk_extras.pango_buffer import PangoBuffer
 from gourmand.i18n import _
 from gourmand.importers.importer import parse_range
 from gourmand.plugin import (IngredientControllerPlugin, RecDisplayPlugin,
-                            RecEditorModule, RecEditorPlugin, ToolPlugin)
+                             RecEditorModule, RecEditorPlugin, ToolPlugin)
 from gourmand.plugins.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 

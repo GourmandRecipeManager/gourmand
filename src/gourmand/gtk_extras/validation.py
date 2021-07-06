@@ -6,8 +6,8 @@ from gi.repository import Gdk, GObject, Gtk
 
 import gourmand.convert
 from gourmand.convert import (FRACTIONS_ASCII, NUMBER_MATCHER, RANGE_MATCHER,
-                             Converter, float_to_frac, frac_to_float,
-                             seconds_to_timestring)
+                              Converter, float_to_frac, frac_to_float,
+                              seconds_to_timestring)
 from gourmand.i18n import _
 
 TIME_TO_READ = 1000

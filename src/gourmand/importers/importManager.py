@@ -10,7 +10,7 @@ import gourmand.plugin_loader as plugin_loader
 from gourmand.i18n import _
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
 from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
-                                   get_thread_manager_gui)
+                                    get_thread_manager_gui)
 
 from .webextras import URLReader
 

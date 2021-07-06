@@ -12,9 +12,9 @@ from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer,
                         LargeBinary, Numeric, String, Table, Text, event, func)
 from sqlalchemy.sql import and_, case, or_
 
+import gourmand.__version__
 import gourmand.gglobals as gglobals
 import gourmand.recipeIdentifier as recipeIdentifier
-import gourmand.__version__
 from gourmand import Undo, convert, image_utils
 from gourmand.defaults import lang as defaults
 from gourmand.gdebug import TimeAction, debug
@@ -503,6 +503,7 @@ class RecData (Pluggable):
                 print('Database older than 0.16.0 -- updating', sv_text)
                 self.backup_db()
                 from sqlalchemy.sql.expression import func
+
                 # We need to unpickle Booleans that have erroneously remained
                 # pickled during previous Metakit -> SQLite -> SQLAlchemy
                 # database migrations.
