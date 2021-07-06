@@ -3,7 +3,7 @@ from pathlib import Path
 from gi.repository.GdkPixbuf import Pixbuf
 from PIL import Image, ImageChops
 
-from gourmet.image_utils import (ThumbnailSize, bytes_to_image,
+from gourmand.image_utils import (ThumbnailSize, bytes_to_image,
                                  bytes_to_pixbuf, image_to_bytes,
                                  image_to_pixbuf, make_thumbnail,
                                  pixbuf_to_image)
@@ -14,7 +14,7 @@ IMAGE = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\x
 def test_make_thumbnail():
     # TODO: Switch to using resources instead of hard-coded paths
     path = Path(__file__)
-    logo = path.parent.parent / 'src' / 'gourmet'/ 'data' / 'images' / 'splash.png'
+    logo = path.parent.parent / 'src' / 'gourmand'/ 'data' / 'images' / 'splash.png'  # noqa
 
     thumbnail = make_thumbnail(str(logo))
     x, y = thumbnail.size

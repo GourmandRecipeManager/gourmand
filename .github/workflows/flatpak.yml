@@ -24,14 +24,14 @@ jobs:
 
     - name: Build Flatpak
       run: |
-        flatpak-builder --repo=repo --force-clean build-dir .flatpak/io.github.thinkle.Gourmet.yml
+        flatpak-builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
-        flatpak build-bundle repo gourmet-${GITHUB_SHA::8}.flatpak io.github.thinkle.Gourmet
+        flatpak build-bundle repo gourmand-${GITHUB_SHA::8}.flatpak io.github.GourmandRecipeManager.Gourmand
 
     - name: Upload Flatpak
       uses: actions/upload-artifact@v2
       with:
-        name: gourmet.flatpak
-        path: ./gourmet-*.flatpak
+        name: gourmand.flatpak
+        path: ./gourmand-*.flatpak

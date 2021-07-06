@@ -11,7 +11,7 @@ from setuptools.command.sdist import sdist
 from wheel.bdist_wheel import bdist_wheel
 
 
-PACKAGE = 'gourmet'
+PACKAGE = 'gourmand'
 PACKAGEDIR = Path('src') / PACKAGE
 DATADIR = Path('data')
 PODIR = Path('po')
@@ -20,7 +20,7 @@ LOCALEDIR = PACKAGEDIR / 'data' / 'locale'
 
 
 def get_info(prop: str) -> str:
-    with open(PACKAGEDIR / 'version.py') as versfile:
+    with open(PACKAGEDIR / '__version__.py') as versfile:
         content = versfile.read()
     match = re.search(r'^{} = "(.+)"'.format(prop), content, re.M)
     if match is not None:
@@ -174,7 +174,6 @@ setup(
     version=get_info('version'),
     description=get_info('description'),
     author=get_info('author'),
-    author_email=get_info('author_email'),
     maintainer=get_info('maintainer'),
     maintainer_email=get_info('maintainer_email'),
     url=get_info('url'),
@@ -209,6 +208,6 @@ setup(
     },
     entry_points={
         "gui_scripts": [
-            "gourmet = gourmet.GourmetRecipeManager:launch_app",
+            "gourmand = gourmand.main:launch_app",
         ]}
 )

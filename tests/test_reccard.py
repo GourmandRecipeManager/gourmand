@@ -1,13 +1,14 @@
 from tempfile import TemporaryDirectory
+from pathlib import Path
 
 import gi
 from gi.repository import Gtk  # noqa: import not a top of file
 
-from gourmet import convert, gglobals  # noqa: import not at top
-from gourmet.backends.db import RecData  # noqa: import not at top
-from gourmet.GourmetRecipeManager import get_application  # noqa
-from gourmet.reccard import (RecCard, RecCardDisplay, RecEditor,  # noqa
-                             add_with_undo)
+from gourmand import convert, gglobals  # noqa: import not at top
+from gourmand.backends.db import RecData  # noqa: import not at top
+from gourmand.main import get_application  # noqa
+from gourmand.reccard import (RecCard, RecCardDisplay, RecEditor,  # noqa
+                              add_with_undo)
 
 gi.require_version("Gtk", "3.0")
 
@@ -297,8 +298,8 @@ def do_undo_save_sensitivity(rc):
 
 
 def test_reccard():
-    with TemporaryDirectory(prefix='gourmet_', suffix='_test_reccard') as tmpdir:
-        gglobals.gourmetdir = tmpdir
+    with TemporaryDirectory(prefix='gourmand_', suffix='_test_reccard') as tmpdir:
+        gglobals.gourmanddir = Path(tmpdir)
         rec_gui = get_application()
         rec_card = RecCard(rec_gui)
 

@@ -1,6 +1,6 @@
 import unittest
 
-from gourmet.importers import interactive_importer
+from gourmand.importers import interactive_importer
 
 
 class TestConvenientImporter (unittest.TestCase):

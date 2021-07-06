@@ -1,6 +1,6 @@
 import unittest
 
-from gourmet import convert
+from gourmand import convert
 
 
 class ConvertTest (unittest.TestCase):

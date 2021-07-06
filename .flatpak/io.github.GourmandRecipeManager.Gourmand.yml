@@ -1,0 +1,50 @@
+app-id: io.github.GourmandRecipeManager.Gourmand
+runtime: org.gnome.Platform
+runtime-version: '40'
+sdk: org.gnome.Sdk
+command: gourmand
+
+finish-args:
+  - --filesystem=host
+  - --socket=fallback-x11
+  - --socket=pulseaudio
+  - --share=network
+modules:
+  - name: poppler
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DENABLE_UTILS=OFF
+      - -DENABLE_CPP=OFF
+      - -DENABLE_QT5=OFF
+    sources:
+      - url: https://poppler.freedesktop.org/poppler-20.10.0.tar.xz
+        sha256: 434ecbbb539c1a75955030a1c9b24c7b58200b7f68d2e4269e29acf2f8f13336
+        type: archive
+
+  - name: cpython
+    sources:
+      - type: archive
+        url: https://www.python.org/ftp/python/3.8.4/Python-3.8.4.tar.xz
+        sha256: 5f41968a95afe9bc12192d7e6861aab31e80a46c46fa59d3d837def6a4cd4d37
+
+  - name: intltool
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+        sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
+
+  - name: gourmand
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - python3 -m pip install --upgrade pip setuptools wheel
+      - pip3 install pyenchant pygobject Sphinx
+      - pip3 install --prefix=/app .[epub-export,mycookbook,pdf-export,spellcheck,web-import]
+      - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
+      - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
+    sources:
+      - type: git
+        url: https://github.com/GourmandRecipeManager/gourmand

@@ -2,15 +2,16 @@ import os
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 
-import gourmet.backends.db
-import gourmet.gglobals
-import gourmet.GourmetRecipeManager
-from gourmet.exporters.exportManager import EXTRA_PREFS_DEFAULT, ExportManager
+import gourmand.backends.db
+import gourmand.gglobals
+import gourmand.main
+from gourmand.exporters.exportManager import EXTRA_PREFS_DEFAULT, ExportManager
 
 tmpdir = tempfile.mktemp()
 os.makedirs(tmpdir)
-gourmet.gglobals.gourmetdir = tmpdir
+gourmand.gglobals.gourmanddir = Path(tmpdir)
 
 
 class SampleRecipeSetterUpper:
@@ -75,7 +76,7 @@ class SampleRecipeSetterUpper:
     }
 
     def __init__(self):
-        self.db = gourmet.backends.db.get_database()
+        self.db = gourmand.backends.db.get_database()
         for rec in self.recipes:
             self.add_rec(self.recipes[rec])
 
@@ -117,7 +118,7 @@ class TestExports (unittest.TestCase):
         print("in setUp 1", file=sys.stderr)
         self.em = ExportManager.instance()
         print("in setUp 2", file=sys.stderr)
-        self.db = gourmet.backends.db.get_database()
+        self.db = gourmand.backends.db.get_database()
         print("finish setUp", file=sys.stderr)
 
     def testMultipleExporters(self):

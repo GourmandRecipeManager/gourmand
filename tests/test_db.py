@@ -1,8 +1,8 @@
 import tempfile
 import unittest
 
-from gourmet.backends import db
-from gourmet.plugin_loader import MasterLoader
+from gourmand.backends import db
+from gourmand.plugin_loader import MasterLoader
 
 
 class DBTest (unittest.TestCase):

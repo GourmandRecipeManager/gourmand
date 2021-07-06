@@ -30,7 +30,7 @@
 
 ### Environment
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-<!--- If Gourmet was downloaded from Github, you should have some funny alphanumeric characters
+<!--- If Gourmand was downloaded from Github, you should have some funny alphanumeric characters
       in the filename, such as the 5ad618be in gourmet-5ad618be-py3-none-any.whl -->
 * Operating System:
 * Version or commit id:

@@ -5,9 +5,9 @@ name: Tests
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         run: |
           sudo pip3 install --upgrade pip setuptools wheel
 
-      - name: Install Gourmet
+      - name: Install Gourmand
         run: sudo pip3 install -r development.in
 
       - name: Test with pytest

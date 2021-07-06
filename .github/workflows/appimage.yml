@@ -23,20 +23,20 @@ jobs:
         wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
         chmod +x appimagetool-*.AppImage
 
-    - name: Install Gourmet in AppImage
+    - name: Install Gourmand in AppImage
       run: |
           ./squashfs-root/AppRun -m pip install --upgrade pip
           ./squashfs-root/AppRun -m pip install decorator six BeautifulSoup4 html5lib lxml pyenchant pygobject Sphinx
 
           ./squashfs-root/AppRun setup.py bdist_wheel
           ./squashfs-root/AppRun -m pip install .[epub-export,mycookbook,pdf-export,spellcheck,web-import]
-          ./squashfs-root/AppRun -m pip install dist/gourmet*.whl
-          sed -i -e 's|/opt/python3.8/bin/python3.8|/usr/bin/gourmet|g' ./squashfs-root/AppRun
+          ./squashfs-root/AppRun -m pip install dist/gourmand*.whl
+          sed -i -e 's|/opt/python3.8/bin/python3.8|/usr/bin/gourmand|g' ./squashfs-root/AppRun
           rm squashfs-root/*.desktop
-          cp .flatpak/io.github.thinkle.Gourmet.desktop squashfs-root/usr/share/applications/io.github.thinkle.Gourmet.desktop
-          cp .flatpak/io.github.thinkle.Gourmet.desktop squashfs-root/
-          convert .flatpak/io.github.thinkle.Gourmet.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.thinkle.Gourmet.png
-          convert .flatpak/io.github.thinkle.Gourmet.svg squashfs-root/io.github.thinkle.Gourmet.png
+          cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/usr/share/applications/io.github.GourmandRecipeManager.Gourmand.desktop
+          cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/
+          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
+          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
 
     - name: Pack AppImage
       run: |
@@ -45,5 +45,5 @@ jobs:
     - name: Upload AppImage
       uses: actions/upload-artifact@v2
       with:
-        name: gourmet.AppImage
-        path: ./Gourmet-*.AppImage
+        name: gourmand.AppImage
+        path: ./Gourmand-*.AppImage

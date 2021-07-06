@@ -5,9 +5,9 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -27,11 +27,11 @@ jobs:
     - name: Create wheel and source distributions
       run: |
           python3 setup.py sdist bdist_wheel
-          mv dist/gourmet-*.tar.gz dist/gourmet-${GITHUB_SHA::8}.tar.gz
-          mv dist/gourmet-*-py3-none-any.whl dist/gourmet-${GITHUB_SHA::8}-py3-none-any.whl
+          mv dist/gourmand-*.tar.gz dist/gourmand-${GITHUB_SHA::8}.tar.gz
+          mv dist/gourmand-*-py3-none-any.whl dist/gourmand-${GITHUB_SHA::8}-py3-none-any.whl
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
-          name: gourmet
-          path: ./dist/gourmet-*
+          name: gourmand
+          path: ./dist/gourmand-*
