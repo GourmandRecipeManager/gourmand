@@ -1,4 +1,4 @@
-from gourmet.gtk_extras.pango_html import PangoToHtml
+from gourmand.gtk_extras.pango_html import PangoToHtml
 
 
 def test_convert_colors_to_html():

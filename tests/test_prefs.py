@@ -1,6 +1,6 @@
 import pytest
 
-from gourmet.prefs import Prefs
+from gourmand.prefs import Prefs
 
 
 def test_singleton():

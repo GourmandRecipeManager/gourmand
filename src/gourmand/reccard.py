@@ -271,7 +271,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
 
     def setup_ui (self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/recCardDisplay.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/recCardDisplay.ui').decode())  # noqa
 
         self.ui.connect_signals({
             'shop_for_recipe':self.shop_for_recipe_cb,
@@ -1125,7 +1125,7 @@ class IngredientEditorModule (RecEditorModule):
 
     def setup_main_interface (self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/recCardIngredientsEditor.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/recCardIngredientsEditor.ui').decode())  # noqa
         self.main = self.ui.get_object('ingredientsNotebook')
         self.main.unparent()
         self.ingtree_ui = IngredientTreeUI(self, self.ui.get_object('ingTree'))
@@ -1357,7 +1357,7 @@ class DescriptionEditorModule (TextEditor, RecEditorModule):
 
     def setup_main_interface (self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/recCardDescriptionEditor.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/recCardDescriptionEditor.ui').decode())  # noqa
         self.imageBox = ImageBox(self)
         self.init_recipe_widgets()
         self.ui.connect_signals({
@@ -2986,7 +2986,7 @@ class RecSelector (RecIndex):
     def __init__(self, recGui, ingEditor):
         self.prefs = prefs.Prefs.instance()
         self.ui=Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/recipe_index.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/recipe_index.ui').decode())  # noqa
         self.rg=recGui
         self.ingEditor = ingEditor
         self.re = self.ingEditor.re

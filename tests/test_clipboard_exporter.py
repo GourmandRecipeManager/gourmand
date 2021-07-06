@@ -4,7 +4,7 @@ import pytest
 gi.require_version("Gtk", "3.0")
 from collections import namedtuple  # noqa: import not at top of file
 from gi.repository import Gtk, Gdk  # noqa: import not at top of file
-from gourmet.plugins.clipboard_exporter import ClipboardExporter  # noqa
+from gourmand.plugins.clipboard_exporter import ClipboardExporter  # noqa
 
 Recipe = namedtuple('Recipe', ['title', 'source', 'yields', 'yield_unit',
                                'description', 'instructions'])

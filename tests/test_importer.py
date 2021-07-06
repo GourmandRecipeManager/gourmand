@@ -1,6 +1,6 @@
 import unittest
 
-from gourmet.importers import importer
+from gourmand.importers import importer
 
 
 class TestImporter (unittest.TestCase):

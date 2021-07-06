@@ -1,9 +1,9 @@
 import re
 from pathlib import Path
 
-from gourmet.importers.importManager import ImportFileList, ImportManager
-from gourmet.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester  # noqa
-from gourmet.recipeManager import RecipeManager
+from gourmand.importers.importManager import ImportFileList, ImportManager
+from gourmand.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester  # noqa
+from gourmand.recipeManager import RecipeManager
 
 TEST_FILE_DIRECTORY = Path(__file__).parent / 'recipe_files'
 

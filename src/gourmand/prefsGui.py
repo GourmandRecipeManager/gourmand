@@ -56,7 +56,7 @@ class PreferencesGui (plugin_loader.Pluggable):
 
         self.prefs = prefs
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/preferenceDialog.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/preferenceDialog.ui').decode())  # noqa
         self.notebook = self.ui.get_object('notebook')
         # pref name: {'buttonName':VALUE,...}
         self.radio_options = radio_options

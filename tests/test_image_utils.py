@@ -3,7 +3,7 @@ from pathlib import Path
 from gi.repository.GdkPixbuf import Pixbuf
 from PIL import Image, ImageChops
 
-from gourmet.image_utils import (ThumbnailSize, bytes_to_image,
+from gourmand.image_utils import (ThumbnailSize, bytes_to_image,
                                  bytes_to_pixbuf, image_to_bytes,
                                  image_to_pixbuf, make_thumbnail,
                                  pixbuf_to_image)

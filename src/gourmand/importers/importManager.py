@@ -52,7 +52,7 @@ class ImportManager (plugin_loader.Pluggable):
         self.get_app_and_prefs()
 
     def get_app_and_prefs (self):
-        from gourmand.GourmetRecipeManager import get_application
+        from gourmand.main import get_application
         self.app = get_application()
         self.prefs = self.app.prefs
 

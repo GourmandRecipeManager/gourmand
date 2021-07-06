@@ -90,7 +90,7 @@ def image_to_bytes(image: Image.Image) -> bytes:
 
 
 def load_pixbuf_from_resource(resource_name: str) -> Pixbuf:
-    data = get_data('gourmet', f'data/images/{resource_name}')
+    data = get_data('gourmand', f'data/images/{resource_name}')
     assert data
     return bytes_to_pixbuf(data)
 
