@@ -1,13 +1,10 @@
 import array
-import os.path
 import re
-import string
 
 from gourmand import check_encodings, convert
 from gourmand.gdebug import TimeAction, debug
 from gourmand.importers import importer, plaintext_importer
 
-#from gourmand.gglobals import gt
 
 class mmf_constants:
     def __init__ (self):
@@ -556,25 +553,3 @@ def find_columns (strings, char=" "):
     columns.sort()
     testtimer.end()
     return columns
-
-
-
-if __name__ == '__main__':
-    import os.path
-    import profile
-    import sys
-    import tempfile
-
-    import gourmand.recipeManager as recipeManager
-    print('Testing MealMaster import')
-    tmpfile = tempfile.mktemp()
-    import backends.db
-    rd = backends.db.RecipeManager(tmpfile)
-    if not args: args = ['/home/tom/Projects/recipe/Data/200_Recipes.mmf']
-    for a in args:
-        profi = os.path.join(tempfile.tempdir,'MMI_PROFILE')
-        profile.run("mmf_importer(rd,a,prog=lambda *args: sys.stdout.write('|'),threaded=False)",
-                    profi)
-        import pstats
-        p = pstats.Stats(profi)
-        p.strip_dirs().sort_stats('cumulative').print_stats()

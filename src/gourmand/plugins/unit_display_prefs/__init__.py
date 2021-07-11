@@ -42,7 +42,7 @@ class UnitDisplayDatabasePlugin (DatabasePlugin):
         db.add_hook(PRE,'get_amount_and_unit',self.get_amount_and_unit_hook)
 
     def get_amount_and_unit_hook (self, db, *args, **kwargs):
-        kwargs['preferred_unit_groups'] = Prefs.instance()().get('preferred_unit_groups',[])
+        kwargs['preferred_unit_groups'] = Prefs.instance().get('preferred_unit_groups',[])
         return args,kwargs
 
 

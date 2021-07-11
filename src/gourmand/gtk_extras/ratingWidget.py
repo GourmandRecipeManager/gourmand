@@ -93,7 +93,7 @@ class StarGenerator:
             os.path.exists(self.image_files[(n,max,ext)])
             ):
             return self.image_files[(n,max,ext)]
-        fi = tempfile.mktemp("%s_of_%s.%s"%(n,max,ext))
+        fi = tempfile.mkstemp("%s_of_%s.%s"%(n,max,ext))
         i = self.get_image(n,max)
         i = i.convert('RGB')
         i.save(fi)

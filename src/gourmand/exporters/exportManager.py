@@ -127,8 +127,6 @@ class ExportManager (plugin_loader.Pluggable):
             extra_prefs = myexp.run_extra_prefs_dialog() or {}
         elif extra_prefs == EXTRA_PREFS_DEFAULT:
             extra_prefs = myexp.get_default_prefs()
-        else:
-            extra_prefs = extra_prefs
         return extra_prefs
 
     def get_multiple_exporter (self, recs, fn, exp_type=None,

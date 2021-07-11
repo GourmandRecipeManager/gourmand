@@ -451,8 +451,8 @@ class WebPageImporter (importer.Importer):
         self.url = url
         self.prog = prog
         self.interactive = interactive
-        importer.Importer.__init__(self,rd,threaded=threaded,total=total,prog=prog,do_markup=True,
-                                   conv=conv)
+        importer.Importer.__init__(self, rd, total=total, prog=prog,
+                                   do_markup=True, conv=conv)
 
     def run (self):
         """Import our recipe to our database.
