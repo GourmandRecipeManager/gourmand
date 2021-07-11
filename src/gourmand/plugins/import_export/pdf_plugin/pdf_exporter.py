@@ -1,28 +1,15 @@
 import math
-import os.path
-import re
-import tempfile
-import types
-import webbrowser
 import xml.sax.saxutils
 from gettext import ngettext
 from io import BytesIO
 
-import reportlab
-import reportlab.lib.colors as colors
-import reportlab.lib.fonts as fonts
-import reportlab.lib.pagesizes as pagesizes
-import reportlab.lib.styles as styles
-import reportlab.lib.units as units
+from reportlab.lib import colors, pagesizes, styles
 import reportlab.platypus as platypus
 from gi.repository import Gtk
 from reportlab.lib.units import inch, mm
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfgen import canvas
-from reportlab.platypus.flowables import ParagraphAndImage
 
 import gourmand.exporters.exporter as exporter
-from gourmand import convert, gglobals, image_utils
+from gourmand import convert, gglobals
 from gourmand.gtk_extras import cb_extras
 from gourmand.gtk_extras import dialog_extras as de
 from gourmand.gtk_extras import optionTable
@@ -31,14 +18,26 @@ from gourmand.prefs import Prefs
 
 from .page_drawer import PageDrawer
 
-DEFAULT_PDF_ARGS = {'bottom_margin': 72, 'pagesize': 'letter', 'right_margin': 72, 'top_margin': 72, 'left_margin': 72, 'pagemode': 'portrait', 'base_font_size': 10, 'mode': ('column', 1)}
+DEFAULT_PDF_ARGS = {
+    'bottom_margin': 72,
+    'pagesize': 'letter',
+    'right_margin': 72,
+    'top_margin': 72,
+    'left_margin': 72,
+    'pagemode': 'portrait',
+    'base_font_size': 10,
+    'mode': ('column', 1),
+}
 
-# Code for MCLine from:
-# http://two.pairlist.net/pipermail/reportlab-users/2005-February/003695.html
+
 class MCLine(platypus.Flowable):
-    """Line flowable --- draws a line in a flowable"""
+    """Line flowable.
 
-    def __init__(self,width):
+    Draw a line in a flowable. Code for MCLine from:
+    http://two.pairlist.net/pipermail/reportlab-users/2005-February/003695.html
+    """
+
+    def __init__(self, width):
         platypus.Flowable.__init__(self)
         self.width = width
 
@@ -46,12 +45,12 @@ class MCLine(platypus.Flowable):
         return "Line(w=%s)" % self.width
 
     def draw(self):
-        self.canv.line(0,0,self.width,0)
+        self.canv.line(0, 0, self.width, 0)
+
 
 class Star (platypus.Flowable):
     '''A hand flowable.'''
     def __init__(self, size=None, fillcolor=colors.tan, strokecolor=colors.green):
-        from reportlab.lib.units import inch
         if size is None: size=12 # 12 point
         self.fillcolor, self.strokecolor = fillcolor, strokecolor
         self.size = size

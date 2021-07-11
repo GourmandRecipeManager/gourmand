@@ -1,13 +1,10 @@
 import array
-import os.path
 import re
-import string
 
 from gourmand import check_encodings, convert
 from gourmand.gdebug import TimeAction, debug
 from gourmand.importers import importer, plaintext_importer
 
-#from gourmand.gglobals import gt
 
 class mmf_constants:
     def __init__ (self):
