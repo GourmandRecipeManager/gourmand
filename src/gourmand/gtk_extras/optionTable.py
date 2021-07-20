@@ -91,7 +91,9 @@ class OptionTable (Gtk.Table):
                 if self.changedcb:
                     w.connect('changed',self.changedcb)
             elif isinstance(v, (int, float)):
-                adj = Gtk.Adjustment(value=0, lower=0, upper=100*(v or 1), step_incr=(v or 1)*0.1, page_incr=(v or 1)*0.5)
+                adj = Gtk.Adjustment(value=0, lower=0, upper=100*(v or 1),
+                        step_increment=(v or 1)*0.1,
+                        page_increment=(v or 1)*0.5)
                 if isinstance(v, int):
                     # if an integer...
                     w = Gtk.SpinButton()
