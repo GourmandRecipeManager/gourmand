@@ -787,10 +787,13 @@ class Language(AbstractLanguage):
             rets.append(s[0:-1])
         return rets
 
-    def guess_plurals (s):
-        if not s: return []
+    @staticmethod
+    def guess_plurals(s):
+        if not s:
+            return []
         ret = [s+'s',s+'es']
-        if s[-1]=='f': ret.append(s[0:-1]+'ves')
+        if s[-1]=='f':
+            ret.append(s[0:-1]+'ves')
         return ret
 
     IGNORE = ["and","with","of","for","cold","warm","finely","thinly","roughly","coarsely"]
