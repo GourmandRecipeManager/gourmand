@@ -519,7 +519,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self.yields_orig=self.current_rec.yields
         try:
             self.yields_orig = float(self.yields_orig)
-        except:
+        except ValueError:
             self.yields_orig = None
         if self.yields_orig:
             # in this case, display yields spinbutton and update multiplier label as necessary
@@ -846,12 +846,13 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         #self.setEdited(False)
         # parameters for tracking what has changed
         self.widgets_changed_since_save = {}
+
         self.new = True
         if recipe and not new:
-            #self.updateRecipe(recipe,show=False)
             self.new = False
         elif not recipe:
-            recipe=self.rg.rd.new_rec()
+            self.rg.rd.new_rec()
+
         self.set_edited(False)
         plugin_loader.Pluggable.__init__(self,[ToolPlugin,RecEditorPlugin])
         self.mm = mnemonic_manager.MnemonicManager()
@@ -1421,7 +1422,7 @@ class DescriptionEditorModule (TextEditor, RecEditorModule):
             if isinstance(self.rw[e],Gtk.SpinButton):
                 try:
                     self.rw[e].set_value(float(getattr(self.current_rec,e)))
-                except:
+                except ValueError:
                     debug('%s Value %s is not floatable!'%(e,getattr(self.current_rec,e)))
                     self.rw[e].set_text("")
                 Undo.UndoableGenericWidget(self.rw[e],self.history, signal='value-changed')
@@ -1476,26 +1477,9 @@ class ImageBox:
         if rec is None:
             rec = self.rc.current_rec
         if rec.image:
-            try:
-                self.set_from_bytes(rec.image)
-            except:
-                print('Problem with image from recipe.')
-                print('Moving ahead anyway.')
-                print('Here is the traceback')
-                import traceback; traceback.print_exc()
-                print("And for your debugging convenience, I'm dumping")
-                print("a copy of the faulty image in /tmp/bad_image.jpg")
-                import tempfile
-                try:
-                    dumpto = os.path.join(tempfile.tempdir,'bad_image.jpg')
-                    with open(dumpto, 'wb') as ofi:
-                        ofi.write(rec.image)
-                except:
-                    print('Nevermind -- I had a problem dumping the file.')
-                    traceback.print_exc()
-                    print('(Ignoring this traceback...)')
+            self.set_from_bytes(rec.image)
         else:
-            self.image=None
+            self.image = None
             self.hide()
 
     def hide (self):
@@ -2320,10 +2304,6 @@ class IngredientTreeUI:
                                 label=_("The recipe %s (ID %s) is not in our database.")%(i.item,
                                                                                           i.refid)
                                 )
-        else:
-            d = self.ingController.get_rowdict(itr)
-            #self.re.ie.show(i,d)
-            #self.re.ie.ieExpander.set_expanded(True)
 
     def ingtree_keypress_cb (self, widget, event):
         keyname = Gdk.keyval_name(event.keyval)
@@ -2353,15 +2333,15 @@ class IngredientTreeUI:
 
     def ingtree_toggled_cb (self, cellrenderer, path, colnum, head):
         debug("ingtree_toggled_cb (self, cellrenderer, path, colnum, head):",5)
-        store=self.ingTree.get_model()
-        iter=store.get_iter(path)
-        val = store.get_value(iter,colnum)
-        obj = store.get_value(iter,0)
+        store = self.ingTree.get_model()
+        iterator = store.get_iter(path)
+        val = store.get_value(iterator, colnum)
+        obj = store.get_value(iterator, 0)
         if isinstance(obj, str) and obj.find('GROUP')==0:
             print('Sorry, whole groups cannot be toggled to "optional"')
             return
         newval = not val
-        ref = self.ingController.get_persistent_ref_from_iter(iter)
+        ref = self.ingController.get_persistent_ref_from_iter(iterator)
         u = Undo.UndoableObject(
             lambda *args: store.set_value(self.ingController.get_iter_from_persistent_ref(ref),
                                           colnum,newval),
@@ -3039,7 +3019,7 @@ class RecSelector (RecIndex):
                                     )
                     continue
                 if rec.yields:
-                    amount = getYieldSelection(rec,self.re.window)
+                    amount = YieldSelector(rec, self.re.window).run()
                 else:
                     amount = 1
                 ingdic={'amount':amount,
@@ -3048,12 +3028,10 @@ class RecSelector (RecIndex):
                         'refid':rec.id,
                         }
                 debug('adding ing: %s'%ingdic,5)
-                iter=self.ingEditor.ingtree_ui.ingController.add_ingredient_from_kwargs(
+                self.ingEditor.ingtree_ui.ingController.add_ingredient_from_kwargs(
                     group_iter=pre_iter,
                     **ingdic
                     )
-                #path=self.reccard.imodel.get_path(iter)
-                #self.reccard.ss.add_selection(iter)
             self.quit()
         except:
             de.show_message(label=_("You haven't selected any recipes!"))
@@ -3119,16 +3097,3 @@ class YieldSelector (de.ModalDialog):
             self.yieldsAdj.set_value(self.rec.yields * factor)
         self.ret = factor
         self.__in_update_from_rec = False
-
-def getYieldSelection (rec, parent=None):
-    '''Given a recipe, return how much of that recipe we want.
-
-    We offer the user the choice to multiply the recipe or change the
-    yield amount. We return the factor to multiply the recipe by.
-
-    '''
-    yd = YieldSelector(rec,parent)
-    try:
-        return yd.run()
-    except:
-        return 1
