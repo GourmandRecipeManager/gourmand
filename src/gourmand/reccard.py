@@ -1422,7 +1422,7 @@ class DescriptionEditorModule (TextEditor, RecEditorModule):
             if isinstance(self.rw[e],Gtk.SpinButton):
                 try:
                     self.rw[e].set_value(float(getattr(self.current_rec,e)))
-                except ValueError:
+                except (TypeError, ValueError):
                     debug('%s Value %s is not floatable!'%(e,getattr(self.current_rec,e)))
                     self.rw[e].set_text("")
                 Undo.UndoableGenericWidget(self.rw[e],self.history, signal='value-changed')
