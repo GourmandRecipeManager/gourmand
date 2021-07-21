@@ -772,8 +772,9 @@ class Language(AbstractLanguage):
     v_plural_matcher = re.compile('ves')
 
     @staticmethod
-    def guess_singulars (s):
-        if len(s)<3: return []
+    def guess_singulars(s):
+        if len(s)<3:
+            return []
         rets = []
         if s in Language.irregular_plurals:
             rets.append(Language.irregular_plurals[s])
