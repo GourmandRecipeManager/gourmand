@@ -1,7 +1,7 @@
 import time
 import traceback
 
-from .optionparser import args
+from gourmand.optionparser import args
 
 debug_level=args.debug or 0
 debug_file=args.debug_file

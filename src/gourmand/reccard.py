@@ -697,48 +697,44 @@ class IngredientDisplay:
             )
         self.display_ingredients()
 
-    def display_ingredients (self):
+    def display_ingredients(self):
         group_strings = []
         group_index = 0
-        nut_highlighted = False
-        for g,ings in self.ing_alist:
+        for group, ings in self.ing_alist:
             labels = []
-            if g: labels.append("<u>%s</u>"%xml.sax.saxutils.escape(g))
+            if group:
+                labels.append(f'<u>{xml.sax.saxutils.escape(group)}</u>')
             ing_index = 0
             for i in ings:
                 ing_strs = []
-                amt,unit = self.rg.rd.get_amount_and_unit(i,
-                                                          mult=self.recipe_display.mult,
-                                                          conv=(self.prefs.get('readableUnits',True) and self.rg.conv or None)
-                                                          )
-                #if self.nutritional_highlighting and self.yields_orig:
-                #    amt,unit = self.rg.rd.get_amount_and_unit(i,
-                #                                              mult = 1.0/self.yields_orig,
-                #                                              conv=(self.prefs.get('readableUnits',True) and self.rg.conv or None)
-                #                                              )
-                if amt: ing_strs.append(amt)
-                if unit: ing_strs.append(unit)
-                if i.item: ing_strs.append(i.item)
+                amt, unit = self.rg.rd.get_amount_and_unit(
+                        i,
+                        mult=self.recipe_display.mult,
+                        conv=(self.prefs.get('readableUnits', True) and self.rg.conv or None)
+                )
+                if amt:
+                    ing_strs.append(amt)
+                if unit:
+                    ing_strs.append(unit)
+                if i.item:
+                    ing_strs.append(i.item)
                 if i.optional:
                     ing_strs.append(_('(Optional)'))
                 istr = xml.sax.saxutils.escape(' '.join(ing_strs))
                 if i.refid:
-                    istr = ('<a href="%s:%s">'%(i.refid,
-                                                xml.sax.saxutils.escape(i.item))
-                             + istr
-                            + '</a>')
-                istr = self.run_markup_ingredient_hooks(istr,i,
+                    istr = (f'<a href="{i.refid}:{xml.sax.saxutils.escape(i.item)}">'
+                            f'{istr}</a>')
+                istr = self.run_markup_ingredient_hooks(istr, i,
                                                         ing_index,
                                                         group_index)
-                labels.append(
-                    istr
-                    )
+                labels.append(istr)
                 ing_index += 1
+
             group_strings.append('\n'.join(labels))
             group_index += 1
+
         label = '\n\n'.join(group_strings)
-        if nut_highlighted:
-            label = '<i>Highlighting amount of %s in each ingredient.</i>\n'%self.nutritionLabel.active_label+label
+
         if label:
             self.ingredientsDisplay.set_text(label)
             self.ingredientsDisplay.set_editable(False)
