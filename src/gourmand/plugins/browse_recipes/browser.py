@@ -173,7 +173,7 @@ class RecipeBrowserView(Gtk.IconView):
         def just_recs_filter (item):
             try:
                 int(item)
-            except:
+            except ValueError:
                 return False
             else:
                 return True
