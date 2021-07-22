@@ -1,5 +1,4 @@
 import gc
-import os.path
 import webbrowser
 import xml.sax.saxutils
 from pkgutil import get_data
