@@ -37,10 +37,10 @@ class Language(AbstractLanguage):
     # Feel free to change the number or content of categories to be consistent
     # with what users in your locale are likely to be familiar with.
 
-    fields={'cuisine': ['Américaine','Italienne','Mexicaine'
+    fields={'cuisine': ['Américaine','Italienne','Mexicaine',
                         'Américaine/sud-ouest','Asiatique/thaïlandaise','Asiatique/vietnamienne',
-                        'Asiatique/chinoise','Asiatique/japonaise','Asiatique/indienne','Canadienne'
-                'Canadienne/québécoise','Grecque','Française'],
+                        'Asiatique/chinoise','Asiatique/japonaise','Asiatique/indienne','Canadienne',
+                        'Canadienne/québécoise','Grecque','Française'],
             'rating' : ['5 - Excellent','4 - Très bon','3 - Bon','2 - Moyen','1 - Mauvais','(non-testé)'],
             'source' : [],
             'category' : ['Dessert','Entrée','Salade','Soupe',
@@ -878,35 +878,6 @@ class Language(AbstractLanguage):
         "sucre glace": 0.6              # sugar, confectioners
                 }
 
-    ### ORIGINAL TABLES FROM ENGLISH
-
-    # THESE ARE STANDARD UNIT CONVERSIONS. You can simply translate unit names where
-    # you know them. Eliminate entries that are untranslatable or don't exist in your
-    # locale. And please add any additional units that you know of.
-    # Each unit is of the following format:
-    # ("unit1","unit2"):conversion_factor, where unit1 contains conversion_factor X unit2
-    # For example: 1 cup has 16 tablespoons.
-    CONVERTER_TABLE = {
-        ("c.", "tbs."):16,
-        ("lb.", "oz."):16,
-        ("tbs.", "tsp."):3,
-        ("pt.", "c."):2,
-        ("qt.", "c."):4,
-        ("gallon", "qt."):4,
-        ("l", "qt."):1.057,
-        ("l", "ml"):1000,
-        ("l", "cl"):100,
-        ("l", "dl"):10,
-        ("oz.", "g"):28.35,
-        ("kg", "g"):1000,
-        ("g", "mg"):1000,
-        ("tsp.", "drop"):76,
-        ("oz.", "dram"):16,
-        ("dram", "grains"):27.34375,
-        ("peck", "gallon"):2,
-        ("bucket", "peck"):2,
-        ("bushel", "bucket"):2,
-        ("lb.", "grains"):7000}
 
     # Standard unit names and alternate unit names that might appear.  For
     # example: "c." is our standard abbreviation for cup.  "cup","c." or
@@ -1133,7 +1104,8 @@ class Language(AbstractLanguage):
         return ret
 
     @staticmethod
-    def guess_plurals (s): return [s+'s',s+'es']
+    def guess_plurals(s):
+        return [s+'s',s+'es']
 
 
     IGNORE=["et","avec","de","des","d'","pour","froid","froide","froids","froides",

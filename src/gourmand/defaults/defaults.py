@@ -10,12 +10,8 @@ deflang = 'en'
 lang: AbstractLanguage
 
 if os.name == 'posix':
-    try:
-        locale.setlocale(locale.LC_ALL,'')
-    except:
-        loc,enc = locale.getdefaultlocale()
-    else:
-        loc, enc = locale.getlocale()
+    locale.setlocale(locale.LC_ALL,'')
+    loc, enc = locale.getlocale()
 
 # Windows locales are named differently, e.g. German_Austria instead of de_AT
 # Fortunately, we can find the POSIX-like type using a different method.
@@ -43,7 +39,7 @@ else:
 # The next item is used to allow us to know some things about handling the language
 try:
     langProperties=lang.LANG_PROPERTIES
-except:
+except AttributeError:
     lang.LANG_PROPERTIES=langProperties={'hasAccents':False, 'capitalisedNouns':False, 'useFractions':True}
     # 'hasAccents' includes accents, umlauts etc, that might not be correctly handled
     # by eg lower()

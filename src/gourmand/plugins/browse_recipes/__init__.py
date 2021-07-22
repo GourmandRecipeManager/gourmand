@@ -42,10 +42,10 @@ class BrowserPlugin (MainPlugin):
     def recipe_activated_cb (self, browser, rid):
         self.main.open_rec_card(self.main.rd.get_rec(rid))
 
-    def reset_view (self, *args):
+    def reset_view(self, *args):
         self.browser.view.reset_model()
 
-    def update_recipe (recipe):
+    def update_recipe(self, recipe):
         self.reset_view()
 
     def get_selected_post_hook (self, recs_from_recindex, pluggable):
