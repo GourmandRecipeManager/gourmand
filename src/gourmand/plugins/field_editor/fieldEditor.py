@@ -205,16 +205,11 @@ class FieldEditor:
         else:
             return {}
 
-    def get_selected_values (self, ts=None):
+    def get_selected_values(self, ts=None):
         if not ts:
             ts = self.treeview.get_selection()
         mod,paths = ts.get_selected_rows()
-        values = []
-        for p in paths:
-            values.append(
-                mod.get_value(mod.get_iter(p),0)
-                )
-        return values
+        return [mod.get_value(mod.get_iter(p),0) for p in paths]
 
     def get_criteria_and_table (self):
         values = self.get_selected_values()
@@ -228,7 +223,7 @@ class FieldEditor:
             table = self.rd.recipe_table
         return criteria,table
 
-    def apply_changes (self, criteria, table):
+    def apply_changes(self, criteria, table):
         changes = self.get_changes()
         other_changes = self.get_other_changes()
         if self.field != 'category' and self.other_field != 'category':
@@ -242,20 +237,13 @@ class FieldEditor:
                     if not self.rd.fetch_one(self.rd.categories_table,{'id':r.id}):
                         self.rd.do_add_cat({'id':r.id,'category':other_changes['category']})
             else:
-                if self.field=='category':
-                    IDs = [r.id for r in self.rd.fetch_all(self.rd.categories_table,**criteria)]
-                    new_criteria = {'id':('==',('or',IDs))}
-                    self.rd.update_by_criteria(
-                        self.rd.recipe_table,
-                        new_criteria,
-                        other_changes
-                        )
-                else:
-                    self.rd.update_by_criteria(
-                        self.rd.recipe_table,
-                        criteria,
-                        other_changes
-                        )
+                IDs = [r.id for r in self.rd.fetch_all(self.rd.categories_table,**criteria)]
+                new_criteria = {'id':('==',('or',IDs))}
+                self.rd.update_by_criteria(
+                    self.rd.recipe_table,
+                    new_criteria,
+                    other_changes
+                    )
         if self.field=='category' and not changes['category']:
             self.rd.delete_by_criteria(table,criteria)
         else:

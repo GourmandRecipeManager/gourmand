@@ -41,7 +41,7 @@ class ShoppingNutritionalInfoPlugin (ShoppingListPlugin):
             ])
         self.action_groups.append(self.nutritionShoppingActionGroup)
 
-    def show_nutinfo (self, *args):
+    def show_nutinfo(self, *args):
         sg = self.pluggable
         rr = sg.recs
         rd = gourmand.recipeManager.get_recipe_manager()
@@ -54,17 +54,11 @@ class ShoppingNutritionalInfoPlugin (ShoppingListPlugin):
             ings = rd.get_ings(rec)
             ni = rd.nd.get_nutinfo_for_inglist(rd.get_ings(rec),
                                                rd)
-            if nutinfo:
-                nutinfo = nutinfo + ni
-            else:
-                nutinfo = ni
+            nutinfo = nutinfo + ni if nutinfo else ni
         # Add extras...
         for amt,unit,item in sg.extras:
             ni = rd.nd.get_nutinfo_for_item(item,amt,unit)
-            if nutinfo:
-                nutinfo = nutinfo + ni
-            else:
-                nutinfo = ni
+            nutinfo = nutinfo + ni if nutinfo else ni
         self.nl.set_nutinfo(nutinfo)
         self.nutrition_window.present()
 

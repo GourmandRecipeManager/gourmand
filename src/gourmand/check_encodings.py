@@ -179,7 +179,7 @@ class EncodingDialog(de.OptionDialog):
             )
         self.tv.scroll_to_mark(mark,0)
 
-    def set_buffer_text (self, buffer, text):
+    def set_buffer_text(self, buffer, text):
         """Set buffer text to show encoding differences."""
         lines = text.splitlines()
         totl = len(lines)
@@ -187,7 +187,7 @@ class EncodingDialog(de.OptionDialog):
         for line,diffs in list(self.diff_lines.items()):
             if line in shown: continue
             start_at = line - self.context_lines
-            if start_at < 0: start_at = 0
+            start_at = max(start_at, 0)
             end_at = line + self.context_lines
             if end_at >= totl: end_at = totl-1
             if start_at != 0:
@@ -230,12 +230,14 @@ class EncodingDialog(de.OptionDialog):
 
             # If not all lines are the same, create a diff marking where they
             # differ.
-            if not all(line == ol for ol in other_lines):
+            if any(line != ol for ol in other_lines):
                 ranges = []
                 for chnum, ch in enumerate(line):
                     # Check that the lines are the same. If not, mark where
-                    if not all([len(line) > chnum and ch == line[chnum]
-                                for line in other_lines]):
+                    if not all(
+                        len(line) > chnum and ch == line[chnum]
+                        for line in other_lines
+                    ):
                         if ranges and ranges[-1][1] == chnum:
                             ranges[-1][1] = chnum+1
                         else:

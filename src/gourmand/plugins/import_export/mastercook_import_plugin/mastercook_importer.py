@@ -21,41 +21,40 @@ class Mx2Cleaner:
         self.attr_regexp = re.compile(self.attr_regexp)
         self.encodings = ['cp1252','iso8859','ascii','latin_1','cp850','utf-8']
 
-    def cleanup (self, infile, outfile):
+    def cleanup(self, infile, outfile):
         infile = open(infile, 'rb')
-        outfile = open(outfile,'w', encoding='utf-8')
-        for l in infile.readlines():
-            l = self.decode(l)
-            l = self.toss_regs(l)
-            l = self.fix_attrs(l)
-            outfile.write(l)
-        infile.close()
-        outfile.close()
+        with open(outfile,'w', encoding='utf-8') as outfile:
+            for l in infile.readlines():
+                l = self.decode(l)
+                l = self.toss_regs(l)
+                l = self.fix_attrs(l)
+                outfile.write(l)
+            infile.close()
 
-    def toss_regs (self, instr):
+    def toss_regs(self, instr):
         m = self.toss_regexp.search(instr)
-        if m:
-            outstr = instr[0:m.start()] + instr[m.end():]
-            debug('Converted "%s" to "%s"'%(instr,outstr),1)
-            return outstr
-        else:
+        if not m:
             return instr
 
-    def fix_attrs (self, instr):
+        outstr = instr[0:m.start()] + instr[m.end():]
+        debug('Converted "%s" to "%s"'%(instr,outstr),1)
+        return outstr
+
+    def fix_attrs(self, instr):
         match = self.attr_regexp.search(instr)
         outstr = ""
         while match:
-            outstr = outstr + instr[0:match.start()]
+            outstr += instr[0:match.start()]
             pre,badattr = match.groups()
-            outstr = outstr + pre
-            outstr = outstr + xml.sax.saxutils.quoteattr(badattr)
+            outstr += pre
+            outstr += xml.sax.saxutils.quoteattr(badattr)
             debug('Fixed broken attribute: %s -> %s'%(instr,outstr),0)
             instr = instr[match.end():]
             match = self.attr_regexp.search(instr)
-        outstr = outstr + instr
+        outstr += instr
         return outstr
 
-    def decode (self, l: bytes) -> str:
+    def decode(self, l: bytes) -> str:
         """Try several encodings, return the line once it's succesfully decoded
         """
         for e in self.encodings:
@@ -63,7 +62,6 @@ class Mx2Cleaner:
                 return l.decode(e)
             except UnicodeDecodeError:
                 debug('Could not decode as %s'%e,2)
-                pass
 
 class MastercookXMLHandler (xml_importer.RecHandler):
     """We handle MasterCook XML Files"""
@@ -108,13 +106,12 @@ class MastercookXMLHandler (xml_importer.RecHandler):
             handler = self._get_handler(name)
             handler(start=True,attrs=attrs)
 
-    def endElement (self, name):
+    def endElement(self, name):
         if name not in self.elements:
             return
-        else:
-            self.current_elements.remove(name)
-            handler = self._get_handler(name)
-            handler(end=True)
+        self.current_elements.remove(name)
+        handler = self._get_handler(name)
+        handler(end=True)
 
 
     def endDocument (self):
@@ -123,9 +120,8 @@ class MastercookXMLHandler (xml_importer.RecHandler):
     def _get_handler (self, name):
         return getattr(self,'%s_handler'%name)
 
-    def mx2_handler (self, start=False, end=False, attrs=None):
-        if start:
-            pass
+    def mx2_handler(self, start=False, end=False, attrs=None):
+        pass
 
     def characters (self, ch):
         if self.bufs:

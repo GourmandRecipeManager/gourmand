@@ -29,11 +29,10 @@ class IcaSePlugin (PluginPlugin):
 
                 howto = self.soup.find("howto-steps")
                 modifications = howto.find("h2")
-                if modifications:
-                    if modifications.text == "Tips":
-                        text = modifications.next_sibling
-                        if text:
-                            self.preparsed_elements.append((text.strip(), "modifications"))
+                if modifications and modifications.text == "Tips":
+                    text = modifications.next_sibling
+                    if text:
+                        self.preparsed_elements.append((text.strip(), "modifications"))
 
                 if not self.recipe:
                     return

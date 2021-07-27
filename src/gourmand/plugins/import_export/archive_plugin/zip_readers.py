@@ -33,7 +33,7 @@ def archive_to_filelist (fi, progress=None, name='zipfile'):
         except IOError:
             return zipfile_to_filelist(fi,progress,name)
 
-def zipfile_to_filelist (fi, progress=None, name="zipfile"):
+def zipfile_to_filelist(fi, progress=None, name="zipfile"):
     """Take our zipfile and return a list of files.
 
     We're quite liberal in what we allow fi to be.  If fi is a string,
@@ -65,9 +65,8 @@ def zipfile_to_filelist (fi, progress=None, name="zipfile"):
         debug('Unzipping item %s'%i,1)
         if progress: progress(float(i)/totlen,_("Unzipping zip archive"))
         fn = os.path.join(fbase,n)
-        ifi=open(fn,'wb')
-        ifi.write(zf.read(n))
-        ifi.close()
+        with open(fn,'wb') as ifi:
+            ifi.write(zf.read(n))
         flist.append(fn)
     zf.close()
     debug('zipfile returning filelist %s'%flist,1)

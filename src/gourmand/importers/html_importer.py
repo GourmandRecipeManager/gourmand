@@ -136,7 +136,7 @@ class BeautifulSoupScraper:
         tag = self.get_tag_according_to_path(tagpath)
         self.store_tag(store_as,tag,retmethod,post_processing)
 
-    def post_process (self, post_processing, value, tag):
+    def post_process(self, post_processing, value, tag):
         """Post process value according to post_processing
 
         post_processing is either callable (and will return a modified
@@ -154,9 +154,8 @@ class BeautifulSoupScraper:
             regexp=re.compile(post_processing[0],re.UNICODE)
             m=regexp.search(value)
             if m: return m.groups()[0]
-            else:
-                if post_processing[1]: return ""
-                else: return value
+            if post_processing[1]: return ""
+            else: return value
         elif callable(post_processing):
             return post_processing(value,tag)
         else:
@@ -175,7 +174,7 @@ class BeautifulSoupScraper:
                 break
         return base
 
-    def follow_path (self, base, step):
+    def follow_path(self, base, step):
         """Follow step from base of base.
 
         Base is a tag. Step is a set of instructions as a dictionary.
@@ -225,30 +224,25 @@ class BeautifulSoupScraper:
                         break
             if isinstance(ind, (list, tuple)):
                 return ret[ind[0]:ind[1]]
-            else: #ind is an integer
-                if ind < len(ret):
-                    return ret[ind]
-                else:
-                    print('Problem following path.')
-                    print('I am supposed to get item: ',ind)
-                    print('from: ',ret)
-                    print('instructions were : ', end=' ')
-                    try: print('base: ',base)
-                    except UnicodeDecodeError: print('(ugly unicodeness)')
-                    try: print('step: ',step)
-                    except UnicodeDecodeError: print('(ugly unicodeness)')
+            if ind < len(ret):
+                return ret[ind]
+            print('Problem following path.')
+            print('I am supposed to get item: ',ind)
+            print('from: ',ret)
+            print('instructions were : ', end=' ')
+            try: print('base: ',base)
+            except UnicodeDecodeError: print('(ugly unicodeness)')
+            try: print('step: ',step)
+            except UnicodeDecodeError: print('(ugly unicodeness)')
 
-    def store_tag (self, name, tag, method, post_processing=None):
+    def store_tag(self, name, tag, method, post_processing=None):
         """Store our tag in our dictionary according to our method."""
         if isinstance(tag, list):
             for t in tag: self.store_tag(name,t,method,post_processing)
             return
-        if method==self.TEXT:
-            if tag: val = get_text(tag)
-            else: val = ""
-        elif method==self.MARKUP:
-            if tag: val = tag.prettify()
-            else: val = ""
+        if method == self.TEXT and tag: val = get_text(tag)
+        elif method == self.TEXT or method == self.MARKUP and not tag: val = ""
+        elif method == self.MARKUP: val = tag.prettify()
         else: #otherwise, we assume our method is an attribute name
             val = ""
             if tag:
@@ -331,7 +325,7 @@ class FancyTextGetter:
     def add_tag (self, t):
         for item in t.contents: self.get_text_fancy(item)
 
-    def get_text_fancy (self, item):
+    def get_text_fancy(self, item):
         #print 'get_text_fancy looking at:',item
         if self.text and hasattr(item,'name'):
             if item.name in self.IGNORE: return
@@ -355,7 +349,7 @@ class FancyTextGetter:
                 if hasattr(item,'name'):
                     print(item.name)
                 if hasattr(item,'fetchParents'):
-                    print('CHILD OF: ','<'.join([p.name for p in item.fetchParents()]))
+                    print('CHILD OF: ', '<'.join(p.name for p in item.fetchParents()))
 
 get_text = FancyTextGetter()
 
@@ -393,7 +387,7 @@ def add_to_fn (fn):
     except:
         return f + "%s1"%os.path.extsep + e
 
-def import_url (url, rd, progress=None, add_webpage_source=True, threaded=False,
+def import_url(url, rd, progress=None, add_webpage_source=True, threaded=False,
                 interactive=True):
     """Import information from URL.
     We handle HTML with scrape_url.
@@ -422,9 +416,8 @@ def import_url (url, rd, progress=None, add_webpage_source=True, threaded=False,
         fn = os.path.join(tempfile.tempdir,url.split('/')[-1])
         while os.path.exists(fn):
             fn=add_to_fn(fn)
-        ofi = open(fn,'w')
-        ofi.write(get_url(sock,progress))
-        ofi.close()
+        with open(fn,'w') as ofi:
+            ofi.write(get_url(sock,progress))
         return [fn]
 
 class WebPageImporter (importer.Importer):
@@ -512,7 +505,7 @@ class WebPageImporter (importer.Importer):
             if self.prog: self.prog(1,_('Import complete.'))
             return
 
-    def get_url_based_on_template (self):
+    def get_url_based_on_template(self):
         """Get URL based on template stored in d
         """
         self.start_rec()
@@ -556,11 +549,8 @@ class WebPageImporter (importer.Importer):
                     self.commit_ing()
                 continue
 
-            # Listy stuff...
             elif isinstance(v, list):
-                if k in self.JOIN_AS_PARAGRAPHS: v = "\n".join(v)
-                else: v = " ".join(v)
-
+                v = "\n".join(v) if k in self.JOIN_AS_PARAGRAPHS else " ".join(v)
             # Ingredients in blocks
             if k == 'ingredient_block':
                 for l in v.split('\n'):

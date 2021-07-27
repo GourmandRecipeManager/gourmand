@@ -69,7 +69,7 @@ class ShopEditor:
     def dont_ask_cb (self, widget, *args):
         self.dont_ask=widget.get_active()
 
-    def sort_model_fun (model, iter1, iter2, data):
+    def sort_model_fun(model, iter1, iter2, data):
         c1 = model.get_value(iter1, self.CAT_COL)
         if c1 in self.rg.sl.sh.catorder_dic:
             c1_order = self.rg.sl.sh.catorder_dic[c1]
@@ -93,12 +93,9 @@ class ShopEditor:
                 compare = 0
         # iter1 and iter2 are equal
         if compare==0: return 0
-        # iter1 precedes iter2
         if compare: return 1
-        # iter2 precedes iter1
-        else: return 1
 
-    def filter_visibility_fun (self, mod, iter):
+    def filter_visibility_fun(self, mod, iter):
         if not self.search_string:
             return True
         str = mod.get_value(iter,self.search_by)
@@ -108,14 +105,18 @@ class ShopEditor:
             cat = mod.get_value(iter,self.CAT_COL)
             if cat in self.cat_to_key:
                 for itm in self.cat_to_key[cat]:
-                    if self.use_regexp:
-                        if re.search(self.search_string, itm): return True
-                    elif itm.find(self.search_string) >= 0: return True
-        if self.use_regexp:
-            if re.search(self.search_string, str): return True
-        else:
-            if str.find(self.search_string) >= 0:
-                return True
+                    if (
+                        self.use_regexp
+                        and re.search(self.search_string, itm)
+                        or not self.use_regexp
+                        and itm.find(self.search_string) >= 0
+                    ): return True
+        if (
+            self.use_regexp
+            and re.search(self.search_string, str)
+            or not self.use_regexp
+            and str.find(self.search_string) >= 0
+        ): return True
 
     def setupTreeView (self):
         self.CAT_COL = 1
@@ -131,7 +132,7 @@ class ShopEditor:
             self.treeview.append_column(col)
             self.treeview.connect('row-expanded',self.populateChild)
 
-    def tree_edited (self, renderer, path_string, text, n, head):
+    def tree_edited(self, renderer, path_string, text, n, head):
         indices = path_string.split(':')
         path = tuple( map(int, indices))
         iter = self.filteredModel.convert_iter_to_child_iter(self.filteredModel.get_iter(path))
@@ -145,10 +146,7 @@ class ShopEditor:
             msg = "Are you sure you want to change the "
             if n==self.KEY_COL: msg += 'key'
             if n==self.ITEM_COL: msg += 'item'
-            if item:
-                msg += "for \"%s from \"%s\""%(item,key)
-            else:
-                msg += " from \"%s\" "%key
+            msg += "for \"%s from \"%s\""%(item,key) if item else " from \"%s\" "%key
             msg += " to \"%s\""%text
             if not de.getBoolean(label=msg,
                                  dont_ask_cb=self.dont_ask_cb,
@@ -156,11 +154,10 @@ class ShopEditor:
                 return
         if children and n==self.KEY_COL:
             self.change_children(key, text, iter)
-        else:
-            if n==self.KEY_COL:
-                self.changeItem(key, item, new_key=text)
-            elif n==self.ITEM_COL:
-                self.changeItem(key, item, new_item=text)
+        elif n==self.KEY_COL:
+            self.changeItem(key, item, new_key=text)
+        elif n==self.ITEM_COL:
+            self.changeItem(key, item, new_item=text)
         self.treeModel.set_value(iter, n, text)
 
     def change_children (self, key, new_key, iter):
@@ -216,16 +213,12 @@ class ShopEditor:
             n += 1
             child = self.treeModel.iter_nth_child(iter,n)
 
-    def doSearch (self):
+    def doSearch(self):
         """Do the actual searching."""
         self.search_string = self.searchEntry.get_text()
         search_by_str = cb.cb_get_active_text(self.searchByBox)
         self.use_regexp = self.regexpTog.get_active()
-        if search_by_str == 'Key':
-            self.search_by = self.KEY_COL
-        else:
-            #print self.treeModel[-1][self.ITEM_COL]
-            self.search_by = self.CAT_COL
+        self.search_by = self.KEY_COL if search_by_str == 'Key' else self.CAT_COL
         self.filteredModel.refilter()
 
     def isearchCB (self, *args):

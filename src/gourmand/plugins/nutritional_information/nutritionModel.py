@@ -21,8 +21,7 @@ class NutritionModel (Gtk.TreeStore):
         self.ings = ings
         list(map(self.add_ingredient,self.ings))
 
-    def add_ingredient (self, ing):
+    def add_ingredient(self, ing):
         r=self.nd.get_key(ing.ingkey)
-        if r: desc=r.desc
-        else: desc = self.UNKNOWN
+        desc = r.desc if r else self.UNKNOWN
         self.append(None,[ing,str(ing.amount),ing.unit,str(ing.item),desc])

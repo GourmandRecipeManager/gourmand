@@ -168,17 +168,11 @@ class ExportManager (plugin_loader.Pluggable):
     def get_exporter (self, name):
         return self.plugins_by_name[name]
 
-    def get_single_filters (self):
-        filters = []
-        for plugin in self.plugins:
-            filters.append(plugin.saveas_single_filters)
-        return filters
+    def get_single_filters(self):
+        return [plugin.saveas_single_filters for plugin in self.plugins]
 
-    def get_multiple_filters (self):
-        filters = []
-        for plugin in self.plugins:
-            filters.append(plugin.saveas_filters)
-        return filters
+    def get_multiple_filters(self):
+        return [plugin.saveas_filters for plugin in self.plugins]
 
     def register_plugin (self, plugin):
         name = plugin.saveas_filters[0]

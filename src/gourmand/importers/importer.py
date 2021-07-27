@@ -41,7 +41,7 @@ class Importer (SuspendableThread):
     self.rec and then commits that dictionary with commit_rec(). Similarly, ingredients are built
     as self.ing and then committed with commit_ing()."""
 
-    def __init__ (self,
+    def __init__(self,
                   rd = None, # OBSOLETE
                   total=0,
                   prog=None, # OBSOLETE
@@ -61,11 +61,12 @@ class Importer (SuspendableThread):
         self.id_converter = {} # a dictionary for tracking named IDs
         self.total = total
         if prog or rd:
-            import traceback; traceback.print_stack()
-            if prog:
-                print('WARNING: ',self,'handed obsolete parameter prog=',prog)
-            if rd:
-                print('WARNING: ',self,'handed obsolete parameter rd=',rd)
+            import traceback
+            traceback.print_stack()
+        if prog:
+            print('WARNING: ',self,'handed obsolete parameter prog=',prog)
+        if rd:
+            print('WARNING: ',self,'handed obsolete parameter rd=',rd)
         self.do_markup=do_markup
         self.count = 0
         self.rd = get_recipe_manager()
@@ -110,11 +111,9 @@ class Importer (SuspendableThread):
         #self.rd.add_hooks = self.rd_orig_hooks
         #print_timer_info()
 
-    def _run_cleanup_ (self):
-        if self.do_conversion:
-            # if we have something to convert
-            if self.rating_converter.to_convert:
-                self.rating_converter.do_conversions(self.rd)
+    def _run_cleanup_(self):
+        if self.do_conversion and self.rating_converter.to_convert:
+            self.rating_converter.do_conversions(self.rd)
 
     def check_for_sleep (self):
         timeaction = TimeAction('importer.check_for_sleep',10)
@@ -129,7 +128,7 @@ class Importer (SuspendableThread):
                 time.sleep(1)
         timeaction.end()
 
-    def start_rec (self, dict=None):
+    def start_rec(self, dict=None):
         self.rec_timer = TimeAction('importer RECIPE IMPORT',10)
         timeaction = TimeAction('importer.start_rec',10)
         self.check_for_sleep()
@@ -138,10 +137,7 @@ class Importer (SuspendableThread):
             print('Unadded ingredients: ',self.added_ings)
         self.added_ings=[]
         self.group = None
-        if dict:
-            self.rec=dict
-        else:
-            self.rec = {}
+        self.rec = dict or {}
         #if not self.rec.has_key('id'):
         #else:
         #    self.rec['id']=self.rd.new_id()
@@ -165,7 +161,7 @@ class Importer (SuspendableThread):
             recdic['instructions']=recdic['instructions']+'\n'+text_to_add
         del recdic[attr]
 
-    def commit_rec (self):
+    def commit_rec(self):
         timeaction = TimeAction('importer.commit_rec',10)
         for key in ['cuisine','category','title']:
             if key in self.rec:
@@ -235,10 +231,7 @@ class Importer (SuspendableThread):
                     del self.rec['image']
                     del self.rec['thumb']
         ## if we have an ID, we need to remember it for the converter
-        if 'id' in self.rec:
-            id_to_convert = self.rec['id']
-        else:
-            id_to_convert = None
+        id_to_convert = self.rec['id'] if 'id' in self.rec else None
         if id_to_convert:
             if self.rec['id'] in self.id_converter:
                 self.rec['id']=self.id_converter[self.rec['id']]
@@ -273,24 +266,24 @@ class Importer (SuspendableThread):
                 _("Imported %s of %s recipes.")%(self.count,self.total)
                 )
 
-    def parse_yields (self, str):
+    def parse_yields(self, str):
         '''Parse number and field.'''
         m = re.match(r"(?P<prefix>\w+\s+)?(?P<num>[0-9/. ]+)(?P<unit>\s*\w+)?",str)
-        if m:
-            num = m.group('num')
-            num = convert.frac_to_float(num)
-            unit = (m.group('unit') or '').strip()
-            prefix = (m.group('prefix') or '').strip()
-            if not unit:
-                if prefix in ['Serves','Feeds']:
-                    unit = 'servings'
-            elif prefix:
-                if prefix not in ['Makes','Yields']:
-                    print('Warning: parse_yields ignoring prefix, "%(prefix)s" in "%(str)s"'%locals())
-            if not unit: unit='servings' # default/fallback
-            return num,unit
-        else:
+        if not m:
             return None,None
+
+        num = m.group('num')
+        num = convert.frac_to_float(num)
+        unit = (m.group('unit') or '').strip()
+        prefix = (m.group('prefix') or '').strip()
+        if not unit:
+            if prefix in ['Serves','Feeds']:
+                unit = 'servings'
+        elif prefix:
+            if prefix not in ['Makes','Yields']:
+                print('Warning: parse_yields ignoring prefix, "%(prefix)s" in "%(str)s"'%locals())
+        if not unit: unit='servings' # default/fallback
+        return num,unit
 
     def convert_str_to_num (self, str):
         """Return a numerical servings value"""
@@ -323,7 +316,7 @@ class Importer (SuspendableThread):
         #debug('ing ID %s, recipe ID %s'%(self.ing['recipe_id'],self.rec['id']),0)
         timeaction.end()
 
-    def finish_ing (self):
+    def finish_ing(self):
         timeaction = TimeAction('importer.finish_ing 1',10)
         # Strip whitespace...
         for key in ['item','ingkey','unit']:
@@ -344,10 +337,13 @@ class Importer (SuspendableThread):
         timeaction.end()
         # if we have an amount (and it's not None), let's convert it
         # to a number
-        if 'amount' in self.ing and self.ing['amount']\
-               and 'rangeamount' not in self.ing:
-            if convert.RANGE_MATCHER.search(str(self.ing['amount'])):
-                self.ing['amount'],self.ing['rangeamount']=parse_range(self.ing['amount'])
+        if (
+            'amount' in self.ing
+            and self.ing['amount']
+            and 'rangeamount' not in self.ing
+            and convert.RANGE_MATCHER.search(str(self.ing['amount']))
+        ):
+            self.ing['amount'],self.ing['rangeamount']=parse_range(self.ing['amount'])
         if 'amount' in self.ing:
             self.ing['amount']=convert.frac_to_float(
                 self.ing['amount']
@@ -366,7 +362,8 @@ class Importer (SuspendableThread):
             self.ing['inggroup']=self.group
         timeaction.end()
         timeaction = TimeAction('importer.commit_ing 4',10)
-        self.added_ings.append(self.ing); self.ing = {}
+        self.added_ings.append(self.ing)
+        self.ing = {}
         timeaction.end()
 
     commit_ing = finish_ing

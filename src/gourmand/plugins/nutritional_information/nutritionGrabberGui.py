@@ -14,11 +14,8 @@ class DatabaseGrabberGui (databaseGrabber.DatabaseGrabber):
         self.paused=False
         self.terminated=False
 
-    def pausecb (self,button,*args):
-        if button.get_active():
-            self.paused=True
-        else:
-            self.paused=False
+    def pausecb(self,button,*args):
+        self.paused = bool(button.get_active())
 
     def stopcb (self,*args):
         self.terminated=True

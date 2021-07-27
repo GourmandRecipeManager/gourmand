@@ -100,39 +100,38 @@ DETAIL_NUT_LAYOUT = [
 NUT_LAYOUT = MAIN_NUT_LAYOUT + DETAIL_NUT_LAYOUT
 
 RECOMMENDED_INTAKE = {
-        'fat':0.30 / 9, # 30% of calories * 9 cal / g.
-        'fasat':0.10 / 9, #10% of calories * 9 cal /g.
-        'carb':0.6 / 4, #60% of calories * 4 cal / g.
-        'protein':0.10 / 4, #10% of calories * 4 cal/g.
-        'fiber':11.5/1000, #11.5 grams / 1000calories
-        'sodium':2400.0/2000, # 2400 mg per typical 2000 c diet
-        'potassium':3500.0/2000,
-        'iron':18.0/2000,
-        'calcium':1000.0/2000,
-        'cholestrl':300.0/2000,
-        'vitarae':900.0/2000,
-        'magnesium':420.0/2000,
-        'vitaminc':60.0/2000,
-        'vitaiu':5000.0/2000,
-        'vite':30.0/2000,
-        'vitk':80.0/2000,
-        'thiamin':1.5/2000,
-        'riboflavin':1.7/2000,
-        'niacin':20.0/2000,
-        'vitaminb6':2.0/2000,
-        'folatetotal':400.0/2000,
-        'vitb12':6.0/2000,
-        'pantoacid':10.0/2000,
-        'phosphorus':1000.0/2000,
-        'magnesium':400.0/2000,
-        'zinc':15.0/2000,
-        'selenium':70.0/2000,
-        'copper':2.0/2000,
-        'manganese':2.0/2000,
-        'chromium':120.0/2000,
-        'molybdenum':75.0/2000,
-        'chloride':3400.0/2000,
-        }
+    'fat': 0.30 / 9,
+    'fasat': 0.10 / 9,
+    'carb': 0.6 / 4,
+    'protein': 0.10 / 4,
+    'fiber': 11.5 / 1000,
+    'sodium': 2400.0 / 2000,
+    'potassium': 3500.0 / 2000,
+    'iron': 18.0 / 2000,
+    'calcium': 1000.0 / 2000,
+    'cholestrl': 300.0 / 2000,
+    'vitarae': 900.0 / 2000,
+    'vitaminc': 60.0 / 2000,
+    'vitaiu': 5000.0 / 2000,
+    'vite': 30.0 / 2000,
+    'vitk': 80.0 / 2000,
+    'thiamin': 1.5 / 2000,
+    'riboflavin': 1.7 / 2000,
+    'niacin': 20.0 / 2000,
+    'vitaminb6': 2.0 / 2000,
+    'folatetotal': 400.0 / 2000,
+    'vitb12': 6.0 / 2000,
+    'pantoacid': 10.0 / 2000,
+    'phosphorus': 1000.0 / 2000,
+    'magnesium': 400.0 / 2000,
+    'zinc': 15.0 / 2000,
+    'selenium': 70.0 / 2000,
+    'copper': 2.0 / 2000,
+    'manganese': 2.0 / 2000,
+    'chromium': 120.0 / 2000,
+    'molybdenum': 75.0 / 2000,
+    'chloride': 3400.0 / 2000,
+}
 
 
 class NutritionLabel (Gtk.VBox):
@@ -308,7 +307,7 @@ class NutritionLabel (Gtk.VBox):
         self.edit_missing_button = b
         return hb
 
-    def set_missing_label_text (self,missing,total):
+    def set_missing_label_text(self,missing,total):
         self.missingLabelLabel.set_markup(
             '<span color="red" style="italic">' +\
             _('''Missing nutritional information\nfor %(missing)s of %(total)s ingredients.''')%locals()+\
@@ -317,8 +316,7 @@ class NutritionLabel (Gtk.VBox):
             self.missingLabelLabel.hide()
         else:
             self.missingLabelLabel.show()
-        if missing==total: method = 'hide'
-        else: method = 'show'
+        method = 'hide' if missing==total else 'show'
         getattr(self.main_table,method)()
         getattr(self.nutexpander,method)()
         getattr(self.yieldLabel,method)()
@@ -426,7 +424,7 @@ class NutritionLabel (Gtk.VBox):
                 self.cal_per_day_box.show()
                 self.missingLabel.hide()
 
-    def update_display (self):
+    def update_display(self):
         """Update the display of labels based on values in nutinfo,
         adjusted by yields and calories_per_day.
         """
@@ -436,12 +434,10 @@ class NutritionLabel (Gtk.VBox):
                 rawval = getattr(self.nutinfo,props) or 0
             else:
                 # sum a list of properties
-                rawval = sum([getattr(self.nutinfo,p) or 0 for p in props])
+                rawval = sum(getattr(self.nutinfo,p) or 0 for p in props)
             if self.yields:
                 rawval = float(rawval) / self.yields
             if itm['type'] != MAJOR:
-                # If the item is not "MAJOR", then we hide it if the
-                # rawval is 0
                 if rawval == 0:
                     itm['box'].hide()
                     if itm['percent_label']: itm['percent_label'].hide()
@@ -516,20 +512,20 @@ if __name__ == '__main__':
 
         def __len__ (self): return 7
 
-        def __getattr__ (self,n):
+        def __getattr__(self,n):
             if n=='has_vapor':
                 return self.has_vapor
             if n=='_get_vapor':
                 return self._get_vapor_
             if n in self.__attdict__:
-                return self.__attdict__[n]
+                pass
             elif n=='kcal':
                 self.__attdict__[n]=self.carb*4+self.sugar*4+self.protein*4+self.famono*9+self.fasat*9
-                return self.__attdict__[n]
             else:
                 #n = random.randint(0,100)
                 self.__attdict__[n]=random.randint(0,100)
-                return self.__attdict__[n]
+
+            return self.__attdict__[n]
 
         def has_vapor (self): True
 

@@ -86,7 +86,7 @@ class RecipeBrowserView(Gtk.IconView):
                 self.category_images.append(result.title)
         elif attr == 'rating':
             return star_generator.get_pixbuf(val)
-        elif attr in ['preptime', 'cooktime']:
+        elif attr in {'preptime', 'cooktime'}:
             return get_time_slice(val)
         else:
             tbl = self.rd.recipe_table
@@ -108,13 +108,12 @@ class RecipeBrowserView(Gtk.IconView):
         elif attr == 'rating':
             if not val:
                 return _('Unrated')
-            else:
-                val = int(val)
-                txt = str(val // 2)
-                if val % 2:
-                    txt += ' 1/2'
-                txt += ' ' + _('Stars')
-                return txt
+            val = int(val)
+            txt = str(val // 2)
+            if val % 2:
+                txt += ' 1/2'
+            txt += ' ' + _('Stars')
+            return txt
         else:
             return str(val)
 

@@ -191,12 +191,9 @@ class BaseExporterPlugin (Plugin):
         values will not print.
         '''
         if type==self.TEXT:
-            def do_write (*args):
+            def do_write(*args):
                 #print 'do_write received arguments',args
-                if position==plugin_loader.POST:
-                    klass = args[1]
-                else:
-                    klass = args[0]
+                klass = args[1] if position==plugin_loader.POST else args[0]
                 val = field_fetcher(klass.r)
                 if klass.do_markup:
                     val = klass.handle_markup(val)
@@ -205,12 +202,9 @@ class BaseExporterPlugin (Plugin):
                     klass.write_text(field_name,val)
             self.hooks_to_add.append((position,'_write_text_',do_write))
         else:
-            def do_write (*args):
+            def do_write(*args):
                 #print 'do_write received arguments',args
-                if position==plugin_loader.POST:
-                    klass = args[1]
-                else:
-                    klass = args[0]
+                klass = args[1] if position==plugin_loader.POST else args[0]
                 val = field_fetcher(klass.r)
                 if klass.do_markup:
                     val = klass.handle_markup(val)
@@ -485,7 +479,7 @@ class RecEditorModule (UIModule, GObject.GObject, object):
         self.emit('saved')
         return recdict
 
-    def undo_action_callback (self, undo_history, action, typ):
+    def undo_action_callback(self, undo_history, action, typ):
         # For all actions that go into the undo system, not just UNDO
         widget = action.widget
         #prop = self.get_prop_for_widget(widget)
@@ -518,35 +512,25 @@ class RecEditorModule (UIModule, GObject.GObject, object):
                     del self.re.widgets_changed_since_save[prop]
             else:
                 self.re.widgets_changed_since_save[prop]=val
-        else:
-            # If we can't compare with original values, we keep a
-            # dictionary of all changes made on a per-widget basis.
-            if not widget:
-                self.re.widgets_changed_since_save['UntrackableChange']=True
+        elif not widget:
+            self.re.widgets_changed_since_save['UntrackableChange']=True
+        elif widget in self.re.widgets_changed_since_save:
+            old_change = self.re.widgets_changed_since_save[widget][-1]
+            if (old_change.is_undo != action.is_undo
+                and
+                old_change not in undo_history):
+                # If we are the inverse of the old action and
+                # the old action is no longer in history, then
+                # we can assume (safely?) that we have undone
+                # the old action
+                del self.re.widgets_changed_since_save[widget][-1]
+                if not self.re.widgets_changed_since_save[widget]:
+                    del self.re.widgets_changed_since_save[widget]
             else:
-                # We store each change in our dictionary... if the
-                # change has disappeared from the history list, then
-                # we can surmise it has been "undone"
-                if widget in self.re.widgets_changed_since_save:
-                    old_change = self.re.widgets_changed_since_save[widget][-1]
-                    if (old_change.is_undo != action.is_undo
-                        and
-                        old_change not in undo_history):
-                        # If we are the inverse of the old action and
-                        # the old action is no longer in history, then
-                        # we can assume (safely?) that we have undone
-                        # the old action
-                        del self.re.widgets_changed_since_save[widget][-1]
-                        if not self.re.widgets_changed_since_save[widget]:
-                            del self.re.widgets_changed_since_save[widget]
-                    else:
-                        self.re.widgets_changed_since_save[widget].append(action)
-                else:
-                    self.re.widgets_changed_since_save[widget]=[action]
-        if self.re.widgets_changed_since_save:
-            self.edited = True
+                self.re.widgets_changed_since_save[widget].append(action)
         else:
-            self.edited = False
+            self.re.widgets_changed_since_save[widget]=[action]
+        self.edited = bool(self.re.widgets_changed_since_save)
 
     def grab_focus (self):
         """Put focus on appropriate widget for editing."""

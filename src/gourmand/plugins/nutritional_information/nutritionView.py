@@ -69,11 +69,11 @@ class NutritionTable:
             self.table.attach(entr,1,2,n,n+1)
             self.table.attach(lab2,2,3,n,n+1)
 
-    def create_mnemonic (self, txt):
+    def create_mnemonic(self, txt):
         """Create a mnemonic for txt, trying not to use the same
         mnemonic twice."""
         for n,char in enumerate(txt):
-            if char.strip() and not char in self.mnemonics:
+            if char.strip() and char not in self.mnemonics:
                 self.mnemonics.append(char)
                 return txt[0:n]+"_"+txt[n:]
         else:
@@ -297,12 +297,12 @@ class NutritionCardView:
         for i in self.ings: self.nmodel.add_ingredient(i)
         NutritionCardViewOld(recCard) # initialize our old interface as well...
 
-    def get_nd (self):
-        if hasattr(self.rc.rg,'nutritionData'): return self.rc.rg.nutritionData
-        else:
+    def get_nd(self):
+        if not hasattr(self.rc.rg, 'nutritionData'):
             from . import nutrition
             self.rc.rg.nutritionData = nutrition.NutritionData(self.rc.rg.rd,self.rc.rg.conv)
-            return self.rc.rg.nutritionData
+
+        if hasattr(self.rc.rg,'nutritionData'): return self.rc.rg.nutritionData
 
 class NutritionCardViewOld:
 
@@ -388,12 +388,12 @@ class NutritionCardViewOld:
             col.set_resizable(True)
             self.treeview.append_column(col)
 
-    def get_nd (self):
-        if hasattr(self.rc.rg,'nutritionData'): return self.rc.rg.nutritionData
-        else:
+    def get_nd(self):
+        if not hasattr(self.rc.rg, 'nutritionData'):
             from . import nutrition
             self.rc.rg.nutritionData = nutrition.NutritionData(self.rc.rg.rd,self.rc.rg.conv)
-            return self.rc.rg.nutritionData
+
+        if hasattr(self.rc.rg,'nutritionData'): return self.rc.rg.nutritionData
 
     def selectionChangedCB (self, *args):
         mod,itr = self.treeviewsel.get_selected()
@@ -497,14 +497,13 @@ class NutritionTreeModel (Gtk.TreeStore):
         self.build_store()
         self.nutrition_fields = nutrition_fields
 
-    def build_store (self):
+    def build_store(self):
         n = self.ING_OBJECT_COLUMN
         self.ts_col_dic = {}
         self.coltypes = [GObject.TYPE_PYOBJECT] # for our ingobject
         for c in self.columns:
             n += 1
             if c in self.numerics: self.coltypes += [str] # everything's a string
-            else: self.coltypes += [str]
             self.ts_col_dic[c]=n
         self.ts = GObject.GObject.__init__(self,*self.coltypes)
 
@@ -536,9 +535,9 @@ class NutritionTreeModel (Gtk.TreeStore):
         itr=self.append(None,[ing]+base_list)
         self.append(itr)
 
-    def populateChild (self, tv, iter, path):
+    def populateChild(self, tv, iter, path):
         child = self.iter_children(iter)
-        if self.get_value(child, 0)==None:
+        if self.get_value(child, 0) is None:
             self.remove(child) # remove the blank...
             self.append_nutritional_info(iter)
 

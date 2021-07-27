@@ -11,14 +11,13 @@ def print_tree (mod):
         for child in row.iterchildren():
             print('-> ',[col for col in child])
 
-def path_next (path, inc=1):
+def path_next(path, inc=1):
     """Return the path NEXT rows after PATH. Next can be negative, in
     which case we get previous paths."""
     next=list(path[0:-1])
     last=path[-1]
     last += inc
-    if last < 0:
-        last=0
+    last = max(last, 0)
     next.append(last)
     next=tuple(next)
     return next
@@ -71,13 +70,11 @@ def move_iter(mod: Gtk.TreeStore,
         dpath = ()
     rowdata = get_row(mod, iter)
     children=harvest_children(mod, iter)
-    def insert_new (parent):
+    def insert_new(parent):
         """A little subroutine to insert our row. We'll call this at the appropriate
         time depending on the order of source and destination iters"""
         if not parent:
-            parent=None
-            if len(dpath) > 1:
-                parent=mod.get_iter(dpath[0:-1])
+            parent = mod.get_iter(dpath[0:-1]) if len(dpath) > 1 else None
         if parent==sibling or not sibling:
             """If our parent is our destination iter or if we have
             only a parent specified, we're moving inside, not before"""
@@ -126,7 +123,7 @@ def harvest_children (mod, iter):
         child = mod.iter_nth_child(iter, n)
     return ret
 
-def path_compare (p1, p2):
+def path_compare(p1, p2):
     """Return 1 if p1 > p2, 0 if p1 = p2 and -1 if p1 < p2
     Greater than means comes after."""
     flag = True
@@ -147,12 +144,8 @@ def path_compare (p1, p2):
             flag=False
         else:
             ## otherwise one of these is greater (the longer path comes after/is greater than the shorter)
-            if len(p1) > len(p2):
-                retval=1
-                flag=False
-            else:
-                retval=-1
-                flag=False
+            retval = 1 if len(p1) > len(p2) else -1
+            flag=False
         n += 1
     return retval
 
@@ -212,18 +205,15 @@ class selectionSaver:
         except ValueError:
             pass
 
-    def restore_selections (self, tv=None):
+    def restore_selections(self, tv=None):
         """Restore selections. We can optionally do the unlikely task of
         restoring selections to a new treeView. This might come in handy
         w/ dragndrop within an application between treeViews. Otherwise,
         we remember and use the treeView we were initially handed."""
         if tv:
             self.tv=tv
-            self.model=self.tv.get_model()
-            self.selection=self.tv.get_selection()
-        else:
-            self.model = self.tv.get_model()
-            self.selection = self.tv.get_selection()
+        self.model=self.tv.get_model()
+        self.selection=self.tv.get_selection()
         self.selection.unselect_all()
         itr = self.model.get_iter_first()
         new_paths=[]
@@ -243,10 +233,7 @@ class selectionSaver:
                     itr = next
                 else:
                     parent = self.model.iter_parent(itr)
-                    if parent:
-                        itr = self.model.iter_next(parent)
-                    else:
-                        itr = None
+                    itr = self.model.iter_next(parent) if parent else None
 
 class TreeViewConf:
     """Handed a treeView and two configuration items, this class allows
@@ -287,13 +274,11 @@ class TreeViewConf:
             else:
                 debug("There is no column in position %s"%n,4)
 
-    def save_column_change_cb (self,tv):
+    def save_column_change_cb(self,tv):
         self.order = {}
-        n=0
-        for c in tv.get_columns():
+        for n, c in enumerate(tv.get_columns()):
             titl=c.get_title()
             self.order[titl]=n
-            n += 1
 
 class QuickTree (Gtk.ScrolledWindow):
     def __init__ (self, rows, titles=None):

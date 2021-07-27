@@ -42,11 +42,11 @@ class PlainTextImporterPlugin (ImporterPlugin):
 
     antipatterns = ['*.html','*.htm','*.xml','*.doc','*.rtf']
 
-    def test_file (self, filename):
+    def test_file(self, filename):
         '''Given a filename, test whether the file is of this type.'''
         if filename.endswith('.txt'):
             return 1
-        elif not True in [fnmatch.fnmatch(filename,p) for p in self.antipatterns]:
+        elif True not in [fnmatch.fnmatch(filename, p) for p in self.antipatterns]:
             return -1 # we are a fallback option
 
     def get_importer (self, filename):

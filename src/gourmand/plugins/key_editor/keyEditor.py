@@ -338,7 +338,7 @@ class KeyEditor:
             print('WTF! WE SHOULD NEVER LAND HERE!',field,value)
             raise Exception("WTF ERROR")
 
-    def applyEntriesCB (self, *args):
+    def applyEntriesCB(self, *args):
         newdic = {}
         for k, e in list(self.entries.items()):
             txt = e.get_text()
@@ -373,7 +373,8 @@ class KeyEditor:
             # in which case the changes would already be inherited by
             # the current row (i.e. if the tree has been expanded and
             # all rows have been selected).
-            parent = mod.iter_parent(itr); already_updated = False
+            parent = mod.iter_parent(itr)
+            already_updated = False
             while parent:
                 if parent in updated_iters:
                     already_updated = True
@@ -383,20 +384,19 @@ class KeyEditor:
             # Now that we're sure we really need to update...
             curdic,field = self.get_dic_describing_iter(itr)
             curkey = self.treeModel.get_value(itr,self.VALUE_COL)
-            if not already_updated:
-                self.rd.update_by_criteria(
-                    self.rd.ingredients_table,
-                    curdic,
-                    newdic,
+            self.rd.update_by_criteria(
+                self.rd.ingredients_table,
+                curdic,
+                newdic,
+                )
+            if 'ingkey' in curdic and 'ingkey' in newdic:
+                self.rd.delete_by_criteria(
+                    self.rd.keylookup_table,
+                    {'ingkey':curdic['ingkey']}
                     )
-                if 'ingkey' in curdic and 'ingkey' in newdic:
-                    self.rd.delete_by_criteria(
-                        self.rd.keylookup_table,
-                        {'ingkey':curdic['ingkey']}
-                        )
         self.resetTree()
 
-    def editNutritionalInfoCB (self, *args):
+    def editNutritionalInfoCB(self, *args):
         nid = nutritionDruid.NutritionInfoDruid(self.rg.nd, self.rg.prefs)
         mod,rows = self.treeview.get_selection().get_selected_rows()
         keys_to_update = {}
@@ -409,30 +409,26 @@ class KeyEditor:
                 itr = parent
                 parent = mod.iter_parent(itr)
             curkey = mod.get_value(itr,self.VALUE_COL)
-            #if mod.get_value(itr,self.NUT_COL):
-            #    print "We can't yet edit nutritional information..."
-            #else:
-            if True:
-                keys_to_update[curkey]=[]
-                child = mod.iter_children(itr)
-                while child:
-                    grandchild = mod.iter_children(child)
-                    while grandchild:
-                        # Grand children are units...
-                        unit = mod.get_value(grandchild,self.VALUE_COL)
-                        greatgrandchild = mod.iter_children(grandchild)
-                        while greatgrandchild:
-                            amount = mod.get_value(
-                                greatgrandchild,
-                                self.VALUE_COL
-                                )
-                            keys_to_update[curkey].append((frac_to_float(amount), unit))
-                            greatgrandchild = mod.iter_next(greatgrandchild)
-                        grandchild = mod.iter_next(grandchild)
-                    child = mod.iter_next(child)
-                nid.add_ingredients(list(keys_to_update.items()))
-                nid.connect('finish',self.update_nutinfo)
-                nid.show()
+            keys_to_update[curkey]=[]
+            child = mod.iter_children(itr)
+            while child:
+                grandchild = mod.iter_children(child)
+                while grandchild:
+                    # Grand children are units...
+                    unit = mod.get_value(grandchild,self.VALUE_COL)
+                    greatgrandchild = mod.iter_children(grandchild)
+                    while greatgrandchild:
+                        amount = mod.get_value(
+                            greatgrandchild,
+                            self.VALUE_COL
+                            )
+                        keys_to_update[curkey].append((frac_to_float(amount), unit))
+                        greatgrandchild = mod.iter_next(greatgrandchild)
+                    grandchild = mod.iter_next(grandchild)
+                child = mod.iter_next(child)
+            nid.add_ingredients(list(keys_to_update.items()))
+            nid.connect('finish',self.update_nutinfo)
+            nid.show()
 
     def update_nutinfo (self, *args):
         self.treeModel.reset_views()
@@ -526,17 +522,14 @@ class KeyStore (pageable_store.PageableTreeStore,pageable_store.PageableViewStor
                                                    ],
                                                   per_page=per_page)
 
-    def reset_views (self):
+    def reset_views(self):
         if self.__last_limit_text:
             txt = self.__last_limit_text
             if hasattr(self,'use_regexp') and self.use_regexp:
                 s = {'search':txt,'operator':'REGEXP'}
             else:
                 s = {'search':'%'+txt.replace('%','%%')+'%','operator':'LIKE'}
-            if self.search_by == _('item'):
-                s['column']='item'
-            else:
-                s['column']='ingkey'
+            s['column'] = 'item' if self.search_by == _('item') else 'ingkey'
             self.view = self.rd.get_ingkeys_with_count(s)
         else:
             self.view = self.rd.get_ingkeys_with_count()

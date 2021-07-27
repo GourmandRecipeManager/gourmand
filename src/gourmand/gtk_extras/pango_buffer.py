@@ -53,12 +53,11 @@ class PangoBuffer(Gtk.TextBuffer):
         if end is None:
             end = self.get_end_iter()
 
-        if include_hidden_chars is False:
+        if not include_hidden_chars:
             return super().get_text(start, end, include_hidden_chars=False)
-        else:
-            format_ = self.register_serialize_tagset()
-            content = self.serialize(self, format_, start, end)
-            return PangoToHtml().feed(content)
+        format_ = self.register_serialize_tagset()
+        content = self.serialize(self, format_, start, end)
+        return PangoToHtml().feed(content)
 
     def get_selection_bounds(self):
         """A get_selection_bounds that returns either the selection, or

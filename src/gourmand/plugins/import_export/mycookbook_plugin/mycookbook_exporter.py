@@ -52,14 +52,14 @@ class rec_to_mcb (XmlExporter):
 
         self.rec_el.appendChild(self.create_text_element(attr.replace(' ',''),text))
 
-    def write_text (self, attr, text):
+    def write_text(self, attr, text):
         #attr mapping with li
         if (attr == 'instructions'):
             attr = 'recipetext'
         if (attr == 'modifications'):
             attr = 'comments'
 
-        if (attr == 'recipetext' or attr == 'comments'):
+        if attr in ['recipetext', 'comments']:
             linelist = text.split('\n')
             self.attrlist_el = self.xmlDoc.createElement(attr.replace(' ',''))
             self.rec_el.appendChild(self.attrlist_el)
@@ -96,11 +96,11 @@ class rec_to_mcb (XmlExporter):
     def write_ingref (self, amount=1, unit=None, item=None, refid=None, optional=False):
         pass
 
-    def write_ing (self, amount=1, unit=None, item=None, key=None, optional=False):
+    def write_ing(self, amount=1, unit=None, item=None, key=None, optional=False):
         ing_txt=''
         if isinstance(amount, (float, int)):
             amount = convert.float_to_frac(amount)
-        ing_txt = ing_txt + amount
+        ing_txt += amount
         if unit:
             ing_txt = ing_txt + ' ' + unit
         if item:

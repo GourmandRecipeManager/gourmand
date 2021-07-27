@@ -44,16 +44,13 @@ class KeyEditorPlugin (PluginPlugin):
         self.tvcs[renderer] = tvc
         return tvc
 
-    def cell_data_func (self, col, renderer, model, itr, key_col):
+    def cell_data_func(self, col, renderer, model, itr, key_col):
         if model[itr][key_col] in self.ingkeys_to_change:
             cat = self.ingkeys_to_change[model[itr][key_col]]
         else:
             shopcat_row = self.rd.fetch_one(self.rd.shopcats_table,
                                             ingkey=model[itr][key_col])
-            if shopcat_row:
-                cat = shopcat_row.shopcategory
-            else:
-                cat = ''
+            cat = shopcat_row.shopcategory if shopcat_row else ''
         renderer.set_property('text',cat)
 
     def start_edit_cb (self, renderer, cbe, path_string):

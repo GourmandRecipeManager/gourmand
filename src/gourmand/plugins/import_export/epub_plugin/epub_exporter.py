@@ -244,7 +244,11 @@ class epub_exporter (exporter_mult):
         self.preparedDocument.append('<li class="ing" itemprop="ingredients">')
 
         # Escape all incoming things first.
-        (amount, unit, item) = tuple([xml.sax.saxutils.escape("%s"%o) if o else "" for o in [amount, unit, item]])
+        (amount, unit, item) = tuple(
+            xml.sax.saxutils.escape("%s" % o) if o else ""
+            for o in [amount, unit, item]
+        )
+
 
         self.preparedDocument.append('<div class="ingamount">%s</div>' % (amount if len(amount) != 0 else "&nbsp;"))
         self.preparedDocument.append('<div class="ingunit">%s</div>' % (unit if len(unit) != 0 else "&nbsp;"))

@@ -156,16 +156,15 @@ class MastercookPlaintextImporter(plaintext_importer.TextImporter):
             attr = attr.strip()
             self.last_attr = self.ATTR_DICT[attr]
             self.rec[self.ATTR_DICT[attr]] = val
+        elif self.last_attr:
+            # attribute values can run over one line...
+            self.rec[self.last_attr] = ', '.join([self.rec[self.last_attr],
+                                                  self.join_multiple_attvals(
+                line.strip())
+            ])
         else:
-            if self.last_attr:
-                # attribute values can run over one line...
-                self.rec[self.last_attr] = ', '.join([self.rec[self.last_attr],
-                                                      self.join_multiple_attvals(
-                    line.strip())
-                ])
-            else:
-                # otherwise, we add this to instructions, like we do with all junk
-                self.instr += line
+            # otherwise, we add this to instructions, like we do with all junk
+            self.instr += line
 
     def join_multiple_attvals(self, txt):
         """We take replace more than one space with a comma."""

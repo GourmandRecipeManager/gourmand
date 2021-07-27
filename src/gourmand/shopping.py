@@ -146,7 +146,7 @@ class Shopper:
             for i,a in d:
                 write_item(a,i)
 
-    def organize (self, dic=None):
+    def organize(self, dic=None):
         """We organize our ingredients into lists in the form.
            [Category, [[ingredient, amt],
                        [ingredient, amt]...
@@ -155,8 +155,6 @@ class Shopper:
         ## first we build a dictionary, since it gives us an
         ## easy way to sort by category
         cats = {}
-        if not dic:
-            pass
         for i,a in list(dic.items()):
             if self.orgdic.has_key(i) and self.orgdic[i]:
                 c = self.orgdic[i]
@@ -169,9 +167,7 @@ class Shopper:
         ## next we turn our nested dictionaries into nested lists
         lst = []
         for c,d in list(cats.items()):
-            itms = []
-            for i,amts in list(d.items()):
-                itms.append([i,self.amt_to_string(amts)])
+            itms = [[i,self.amt_to_string(amts)] for i,amts in list(d.items())]
             lst.append([c,itms])
         ## now that we have lists, we can sort them
         from functools import cmp_to_key
@@ -199,28 +195,21 @@ class Shopper:
         if cata == catb: return 0
         else: return -1
 
-    def _ing_compare (self,inga,ingb):
+    def _ing_compare(self,inga,ingb):
         """Put two ingredients in order"""
         inga = inga[0]
         ingb = ingb[0]
-        if False and inga in self.ingorder_dic and ingb in self.ingorder_dic:
-            # if both ings have known positions, we use them to compare
-            inga = self.ingorder_dic[inga]
-            ingb = self.ingorder_dic[ingb]
-        else:
-            # otherwise, we just use > to sort alphabetically
-            inga = inga.lower()
-            ingb = ingb.lower()
+        # otherwise, we just use > to sort alphabetically
+        inga = inga.lower()
+        ingb = ingb.lower()
         if inga > ingb: return 1
         if inga == ingb: return 0
         else: return -1
 
 
-    def get_porg_categories (self):
+    def get_porg_categories(self):
         """Return a list of categories used for sorting."""
-        tmp = {}
-        for v in list(self.orgdic.values()):
-            tmp[v]=1
+        tmp = {v: 1 for v in list(self.orgdic.values())}
         return list(tmp.keys())
 
     def add_org_itm (self, itm, cat):
@@ -294,7 +283,7 @@ class ShoppingList:
         debug("returning: data=%s pantry=%s"%(data,pantry),5)
         return data,pantry
 
-    def grabIngFromRec (self, rec, mult=1):
+    def grabIngFromRec(self, rec, mult=1):
         """Get an ingredient from a recipe and return a list with our amt,unit,key"""
         """We will need [[amt,un,key],[amt,un,key]]"""
         debug("grabIngFromRec (self, rec=%s, mult=%s):"%(rec,mult),5)
@@ -303,23 +292,18 @@ class ShoppingList:
         lst = []
         include_dic = self.includes.get(rec.id) or {}
         for i in ings:
-            if hasattr(i,'refid'): refid=i.refid
-            else: refid=None
+            refid = i.refid if hasattr(i,'refid') else None
             debug("adding ing %s, %s"%(i.item,refid),4)
             if i.optional:
                 # handle boolean includes value which applies to ALL ingredients
                 if not include_dic:
                     continue
-                if isinstance(include_dic, dict):
-                    # Then we have to look at the dictionary itself...
-                    if ((i.ingkey not in include_dic)
-                        or
-                            not include_dic[i.ingkey]):
-                        # we ignore our ingredient (don't add it)
-                        continue
-            if self.rd.get_amount(i):
-                amount=self.rd.get_amount(i,mult=mult)
-            else: amount=None
+                if isinstance(include_dic, dict) and (
+                    ((i.ingkey not in include_dic) or not include_dic[i.ingkey])
+                ):
+                    # we ignore our ingredient (don't add it)
+                    continue
+            amount = self.rd.get_amount(i,mult=mult) if self.rd.get_amount(i) else None
             if refid:
                 ## a reference tells us to get another recipe
                 ## entirely.  it has two parts: i.item (regular name),

@@ -47,7 +47,7 @@ class MarkupString (str):
     def __getitem__ (self, n):
         return self.__getslice__(n,n+1)
 
-    def __getslice__ (self, s, e):
+    def __getslice__(self, s, e):
         # only include relevant elements
         if not e or e > len(self.raw): e = len(self.raw)
         elements = [tp for tp in self.handler.elements if (tp[0][1] >= s and # end after the start...
@@ -68,8 +68,8 @@ class MarkupString (str):
             etag = "</%s>"%name # simple end tag
             spos = pos[0]
             epos = pos[1]
-            if spos < s: spos=s
-            if epos > e: epos=e
+            spos = max(spos, s)
+            epos = min(epos, e)
             if epos != spos: # we don't care about tags that don't markup any text
                 if spos not in starts: starts[spos]=[]
                 starts[spos].append(stag)

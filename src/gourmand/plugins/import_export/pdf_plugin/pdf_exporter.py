@@ -65,10 +65,7 @@ class Star (platypus.Flowable):
 
     def wrap(self, availW, availH):
         if self.size > availW or self.size > availH:
-            if availW > availH:
-                self.size = availH
-            else:
-                self.size = availW
+            self.size = min(availW, availH)
         return (self.size,self.size)
 
     def draw (self):
@@ -87,7 +84,7 @@ class Star (platypus.Flowable):
         p.close()
         canvas.drawPath(p,fill=1)
 
-    def draw_half_star (self, inner_length=1*inch, outer_length=2*inch, points=5, origin=None):
+    def draw_half_star(self, inner_length=1*inch, outer_length=2*inch, points=5, origin=None):
         canvas = self.canv
         canvas.setLineWidth(0)
         if not origin: canvas.translate(self.size*0.5,self.size*0.5)
@@ -100,8 +97,7 @@ class Star (platypus.Flowable):
         #print 'Drawing star with radius',outer_length,'(moving origin ',origin,')'
         for theta in range(0, 360, 360 // (points * 2)):
             if 0 < theta < 180: continue
-            if inner: r = inner_length
-            else: r = outer_length
+            r = inner_length if inner else outer_length
             x = (math.sin(math.radians(theta)) * r)
             y = (math.cos(math.radians(theta)) * r)
             #print 'POINT:',x,y
@@ -114,7 +110,7 @@ class Star (platypus.Flowable):
         p.close()
         canvas.drawPath(p,fill=1)
 
-    def draw_star (self, inner_length=1*inch, outer_length=2*inch, points=5, origin=None):
+    def draw_star(self, inner_length=1*inch, outer_length=2*inch, points=5, origin=None):
         canvas = self.canv
         canvas.setLineWidth(0)
         if not origin: canvas.translate(self.size*0.5,self.size*0.5)
@@ -126,8 +122,7 @@ class Star (platypus.Flowable):
         is_origin = True
         #print 'Drawing star with radius',outer_length,'(moving origin ',origin,')'
         for theta in range(0, 360, 360 // (points * 2)):
-            if inner: r = inner_length
-            else: r = outer_length
+            r = inner_length if inner else outer_length
             x = (math.sin(math.radians(theta)) * r)
             y = (math.cos(math.radians(theta)) * r)
             #print 'POINT:',x,y
@@ -256,11 +251,7 @@ class PdfWriter:
         self.pagesize = getattr(pagesizes, pagemode)(pagesize)
         self.margins = (left_margin, right_margin, top_margin, bottom_margin)
 
-        if mode is not None:
-            mode, count = mode
-        else:
-            mode, count = 'column', 1
-
+        mode, count = mode if mode is not None else ('column', 1)
         if mode == 'column':
             frames = self.setup_column_frames(count)
         elif mode == 'index_cards':
@@ -408,7 +399,7 @@ class PdfWriter:
 
 class PdfExporter (exporter.exporter_mult, PdfWriter):
 
-    def __init__ (self, rd, r, out,
+    def __init__(self, rd, r, out,
                   doc=None,
                   styleSheet=None,
                   txt=None,
@@ -420,10 +411,7 @@ class PdfExporter (exporter.exporter_mult, PdfWriter):
         all_recipes = all_recipes if all_recipes is not None else []
         self.all_recipes = all_recipes
         PdfWriter.__init__(self)
-        if isinstance(out, str):
-            self.out = open(out, 'wb')
-        else:
-            self.out = out
+        self.out = open(out, 'wb') if isinstance(out, str) else out
         if not doc:
             self.setup_document(self.out,**pdf_args)
             self.multidoc = False
@@ -481,11 +469,9 @@ class PdfExporter (exporter.exporter_mult, PdfWriter):
         buf = BytesIO(data)
         i = platypus.Image(buf)
         self.scale_image(i)
-        factor = 1
         MAX_WIDTH = self.doc.frame_width * 0.35
         MAX_HEIGHT = self.doc.frame_height * 0.5
-        if i.drawWidth > MAX_WIDTH:
-            factor = MAX_WIDTH/i.drawWidth
+        factor = MAX_WIDTH/i.drawWidth if i.drawWidth > MAX_WIDTH else 1
         if i.drawHeight > MAX_HEIGHT:
             f = MAX_HEIGHT/i.drawHeight
             if f < factor: factor = f
@@ -652,23 +638,22 @@ class PdfExporter (exporter.exporter_mult, PdfWriter):
             attributes=' firstLineIndent="-%(hanging)s" leftIndent="%(hanging)s"'%locals()
             )
 
-    def write_ingref (self, amount, unit, item, refid, optional):
-        if refid in [r.id for r in self.all_recipes]:
-            txt = ""
-            for blob in [amount,unit,item,(optional and _('optional') or '')]:
-                if blob == item:
-                    blob = '<link href="r%s">'%refid + blob + '</link>'
-                elif not blob:
-                    continue
-                if txt: txt += " %s"%blob
-                else: txt = blob
-            hanging = inch*0.25
-            self.write_paragraph(
-                txt,
-                attributes=' firstLineIndent="-%(hanging)s" leftIndent="%(hanging)s"'%locals()
-                )
-        else:
+    def write_ingref(self, amount, unit, item, refid, optional):
+        if refid not in [r.id for r in self.all_recipes]:
             return self.write_ing(amount,unit,item,optional=optional)
+        txt = ""
+        for blob in [amount,unit,item,(optional and _('optional') or '')]:
+            if blob == item:
+                blob = '<link href="r%s">'%refid + blob + '</link>'
+            elif not blob:
+                continue
+            if txt: txt += " %s"%blob
+            else: txt = blob
+        hanging = inch*0.25
+        self.write_paragraph(
+            txt,
+            attributes=' firstLineIndent="-%(hanging)s" leftIndent="%(hanging)s"'%locals()
+            )
 
 class PdfExporterMultiDoc (exporter.ExporterMultirec, PdfWriter):
     def __init__ (self, rd, recipes, out, conv=None, pdf_args=DEFAULT_PDF_ARGS,

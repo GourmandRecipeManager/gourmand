@@ -15,9 +15,8 @@ if debug_level > 0: print('DEBUG_LEVEL=',debug_level)
 if debug_file: print('DEBUG_FILE=',debug_file)
 
 
-def debug (message, level=10):
-    if timestamp: ts= '%s:'%time.time()
-    else: ts = ''
+def debug(message, level=10):
+    ts = '%s:'%time.time() if timestamp else ''
     if level <= debug_level:
         stack = traceback.extract_stack()
         if len(stack) >= 2:
@@ -27,10 +26,11 @@ def debug (message, level=10):
         else:
             finame = " ".join(stack)
             line = ""
-        if args.debug_file:
-            if debug_file.search(finame):
-                print("DEBUG: ",ts,"%s: %s"%(finame,line),message)
-        else:
+        if (
+            args.debug_file
+            and debug_file.search(finame)
+            or not args.debug_file
+        ):
             print("DEBUG: ",ts,"%s: %s"%(finame,line),message)
 
 timers = {}
@@ -42,23 +42,24 @@ class TimeAction:
             self.name = name
             self.start = time.time()
 
-    def end (self):
-        if self.level <= debug_level:
-            end = time.time()
-            t=end-self.start
-            # grab our location
-            stack=traceback.extract_stack()
-            if len(stack)>2:
-                caller=stack[-2]
-                finame=caller[0]
-                line = caller[1]
-            else:
-                finame = " ".join(stack)
-                line = ""
-            if not args.debug_file or debug_file.search(finame):
-                print("DEBUG: %s TOOK %s SECONDS"%(self.name,t))
-                if self.name not in timers: timers[self.name]=[t]
-                else: timers[self.name].append(t)
+    def end(self):
+        if self.level > debug_level:
+            return
+        end = time.time()
+        t=end-self.start
+        # grab our location
+        stack=traceback.extract_stack()
+        if len(stack)>2:
+            caller=stack[-2]
+            finame=caller[0]
+            line = caller[1]
+        else:
+            finame = " ".join(stack)
+            line = ""
+        if not args.debug_file or debug_file.search(finame):
+            print("DEBUG: %s TOOK %s SECONDS"%(self.name,t))
+            if self.name not in timers: timers[self.name]=[t]
+            else: timers[self.name].append(t)
 
 
 def print_timer_info ():

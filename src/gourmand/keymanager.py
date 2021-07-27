@@ -40,7 +40,7 @@ class KeyManager:
             return s
         ret = s[:m.start()].strip()
 
-        return ret if ret else s
+        return ret or s
 
     def initialize_from_defaults(self):
         dics = []
@@ -94,9 +94,8 @@ class KeyManager:
                 added_gk = True
             if not nwlst.__contains__(key):
                 nwlst.append(key)
-        if not added_gk:
-            if not nwlst.__contains__(gk):
-                nwlst.append(gk)
+        if not added_gk and not nwlst.__contains__(gk):
+            nwlst.append(gk)
         return nwlst
 
     def get_key_fast(self, s) -> str:
@@ -104,9 +103,8 @@ class KeyManager:
                                  sort_by=[('count', 1)])
         if srch:
             return srch[-1].ingkey
-        else:
-            s = self._snip_notes(s)
-            return self.generate_key(s)
+        s = self._snip_notes(s)
+        return self.generate_key(s)
 
     def get_key(self, txt: str, certainty: Optional[float] = 0.61) -> str:
         """Grab a single key. This is simply a best guess at the
@@ -117,10 +115,9 @@ class KeyManager:
         txt = self._snip_notes(txt)
         result = self.look_for_key(txt)
         if result and result[0][0] and result[0][1] > certainty:
-            k = result[0][0]
+            return result[0][0]
         else:
-            k = self.generate_key(txt)
-        return k
+            return self.generate_key(txt)
 
     def look_for_key(self, txt: str) -> Optional[List[Tuple[str, float]]]:
         """Given a key, return a sorted list of potential matching known keys.
@@ -138,8 +135,7 @@ class KeyManager:
         retvals = defaultdict(float)
 
         # First look for matches for our full text (or full text +/- s)
-        main_txts = [txt]
-        main_txts.extend(defaults.guess_singulars(txt))
+        main_txts = [txt, *defaults.guess_singulars(txt)]
         if len(main_txts) == 1:
             main_txts.extend(defaults.guess_plurals(txt))
 
@@ -178,7 +174,7 @@ class KeyManager:
             if not word:
                 return
             srch = self.rm.fetch_all(self.rm.keylookup_table, word=word)
-            total_count = sum([m.count for m in srch])
+            total_count = sum(m.count for m in srch)
             for match in srch:
                 # We have a lovely ratio.
                 #
@@ -192,7 +188,7 @@ class KeyManager:
                 # of words we're dealing with.
                 ik = match.ingkey
                 words_in_key = len(ik.split())
-                wordcount = words_in_key if words_in_key > nwords else nwords
+                wordcount = max(words_in_key, nwords)
                 retvals[ik] += (match.count / total_count) * (1 / wordcount)
 
                 # Add some probability if our word shows up in the key
@@ -216,7 +212,6 @@ class KeyManager:
             # if there are no commas, we see if it makes sense
             # to turn, e.g. whole-wheat bread into bread, whole-wheat
             words = ingr.split()
-            if len(words) >= 2:
-                if self.cats.__contains__(words[-1]):
-                    ingr = f'{words[-1]}, {"".join(words[0:-1])}'
+            if len(words) >= 2 and self.cats.__contains__(words[-1]):
+                ingr = f'{words[-1]}, {"".join(words[0:-1])}'
         return ingr

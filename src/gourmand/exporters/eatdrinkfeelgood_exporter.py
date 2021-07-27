@@ -175,7 +175,7 @@ class EdfgXml(exporter.exporter_mult, EdfgXmlBase):
                       refid=None, optional=False):
         print('write_ingref not implemented yet')
 
-    def write_ing (self, amount=1, unit=None, item=None,
+    def write_ing(self, amount=1, unit=None, item=None,
                    key=None, optional=False):
         # item's are the same as keys in cozyland...
         if not key: key = item
@@ -199,12 +199,13 @@ class EdfgXml(exporter.exporter_mult, EdfgXmlBase):
         e_parent.appendChild(e)
         e_parent = e
         e_amount = self.xmlDoc.createElement('amount')
-        if gram_amount:
-            if not isinstance(gram_amount, (tuple, list)) or None not in gram_amount:
-                e_amount.appendChild(
-                    self.quantity_element(gram_amount,
-                                          'gram')
-                    )
+        if gram_amount and (
+            not isinstance(gram_amount, (tuple, list)) or None not in gram_amount
+        ):
+            e_amount.appendChild(
+                self.quantity_element(gram_amount,
+                                      'gram')
+                )
         e_parent.appendChild(e_amount)
         e_displayamount = self.xmlDoc.createElement('displayamount')
         e_displayamount.appendChild(
@@ -217,10 +218,10 @@ class EdfgXml(exporter.exporter_mult, EdfgXmlBase):
         e_item.appendChild(t)
         if ndbno:
             e_usda = self.xmlDoc.createElement('usdaid')
-            if ndbno:
-                t = self.xmlDoc.createTextNode("%05i"%ndbno)
-                e_usda.appendChild(t)
-                e_parent.appendChild(e_usda)
+        if ndbno:
+            t = self.xmlDoc.createTextNode("%05i"%ndbno)
+            e_usda.appendChild(t)
+            e_parent.appendChild(e_usda)
 
     def write_grouphead (self, name):
         print('write_grouphead not implemented yet')
@@ -228,7 +229,7 @@ class EdfgXml(exporter.exporter_mult, EdfgXmlBase):
     def write_groupfoot (self):
         print('write_groupfoot not implemented yet')
 
-    def quantity_element (self, amount, unit):
+    def quantity_element(self, amount, unit):
         """Make a quantity element based on our amount and unit.
         """
         customunit = unit not in self.units
@@ -243,19 +244,18 @@ class EdfgXml(exporter.exporter_mult, EdfgXmlBase):
                     e = self.xmlDoc.createElement(typ)
                     e_rng.appendChild(e)
                     e.appendChild(self.n_element(a))
+            elif isinstance(amount, (list, tuple)):
+                # If we have a list here, something's gone a bit screwy...
+                for possible_n in amount:
+                    try:
+                        e = self.n_element(amount)
+                    except TypeError:
+                        continue
+                    else:
+                        e_qty.appendChild(e)
+                        break
             else:
-                if isinstance(amount, (list, tuple)):
-                    # If we have a list here, something's gone a bit screwy...
-                    for possible_n in amount:
-                        try:
-                            e = self.n_element(amount)
-                        except TypeError:
-                            continue
-                        else:
-                            e_qty.appendChild(e)
-                            break
-                else:
-                    e_qty.appendChild(self.n_element(amount))
+                e_qty.appendChild(self.n_element(amount))
         # Now for the measure...
         if unit:
             e_msr = self.xmlDoc.createElement('measure')

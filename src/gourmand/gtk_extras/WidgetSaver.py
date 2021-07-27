@@ -89,10 +89,9 @@ class WidgetPrefs:
         self.hideable_widgets = hideable_widgets
         self.apply_widget_prefs()
 
-    def toggle_widget (self, w, val):
+    def toggle_widget(self, w, val):
         """Toggle the visibility of widget 'w'"""
-        if val: method = 'hide'
-        else: method = 'show'
+        method = 'hide' if val else 'show'
         if isinstance(w, str):
             w = [w]
         for wn in w:

@@ -20,7 +20,7 @@ class MCBPlugin (ImporterPlugin):
     def test_file (self, filename):
         return True
 
-    def get_importer (self, filename):
+    def get_importer(self, filename):
         xmlfilename=''
 
         #Unzip in a temporary directory
@@ -37,9 +37,8 @@ class MCBPlugin (ImporterPlugin):
             #Create the images dir if not exists yet
             if not os.path.exists(fulldirpath):
                 os.mkdir(fulldirpath, 0o775)
-            outfile = open(os.path.join(tempdir, name), 'wb')
-            outfile.write(zf.read(name))
-            outfile.close()
+            with open(os.path.join(tempdir, name), 'wb') as outfile:
+                outfile.write(zf.read(name))
             #Get the path to the xml file to import it
             if filename.endswith(".xml"):
                 xmlfilename = os.path.join(tempdir, filename)

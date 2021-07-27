@@ -35,11 +35,8 @@ STANDARD_UNITS = ['g.','ml.']
 
 # Hash stuff.
 
-def standardize_ingredient (ing_object, converter):
-    if ing_object.item:
-        ing = ing_object.item
-    else:
-        ing = ing_object.ingkey
+def standardize_ingredient(ing_object, converter):
+    ing = ing_object.item or ing_object.ingkey
     unit,amount = ing_object.unit,ing_object.amount
     gconv = converter.converter(unit,'g.')
     vconv = converter.converter(unit,'ml.')
@@ -52,10 +49,8 @@ def standardize_ingredient (ing_object, converter):
     elif vconv:
         unit = 'ml.'
         if amount: amount = amount*vconv
-    if unit in ['g.','ml.']:
-        # Round to the 10s place...
-        if amount:
-            amount = round(amount,-1)
+    if unit in ['g.', 'ml.'] and amount:
+        amount = round(amount,-1)
     istring = "%s %s %s"%(amount,unit,ing)
     return istring.lower()
 
@@ -67,10 +62,13 @@ def get_ingredient_hash (ings, conv):
     #print 'Hash',ings,m.hexdigest()
     return m.hexdigest()
 
-def get_recipe_hash (recipe_object):
-    recstrings = []
-    for field in REC_FIELDS:
-        if getattr(recipe_object,field): recstrings.append(getattr(recipe_object,field))
+def get_recipe_hash(recipe_object):
+    recstrings = [
+        getattr(recipe_object, field)
+        for field in REC_FIELDS
+        if getattr(recipe_object, field)
+    ]
+
     recstring = '\n'.join(recstrings)
     recstring = recstring.strip()
     recstring = recstring.lower()
@@ -110,13 +108,13 @@ def format_ings (rec, rd):
     alist = rd.order_ings(ings)
     return format_ing_text(alist,rd)
 
-def apply_line_markup (line, markup):
+def apply_line_markup(line, markup):
     out = ''
     current_tag = ''
     if len(markup) < len(line):
         markup += ' '*(len(line)-len(markup))
     for n in range(len(line)):
-        if markup[n]==' ' or markup[n]=='\n':
+        if markup[n] in [' ', '\n']:
             tag = None
         elif markup[n]=='+':
             tag = 'add'

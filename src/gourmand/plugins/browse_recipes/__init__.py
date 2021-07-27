@@ -48,11 +48,9 @@ class BrowserPlugin (MainPlugin):
     def update_recipe(self, recipe):
         self.reset_view()
 
-    def get_selected_post_hook (self, recs_from_recindex, pluggable):
+    def get_selected_post_hook(self, recs_from_recindex, pluggable):
         if self.main.main_notebook.get_current_page() in self.added_tabs:
-            # then get recipes from iconview...
-            retval = self.browser.view.get_selected_recipes()
-            return retval
+            return self.browser.view.get_selected_recipes()
         else:
             return recs_from_recindex
 

@@ -52,7 +52,7 @@ def generate(BaseParser):
                             self.preparsed_elements.append((entry, output_key))
                     elif isinstance(value, timedelta):
                         minutes = int(value.total_seconds() // 60)
-                        if not minutes % 60 == 0:
+                        if minutes % 60 != 0:
                             # Not full hours.
                             self.preparsed_elements.append(("{} min".format(minutes), output_key))
                         else:

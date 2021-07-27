@@ -68,13 +68,12 @@ class LinkedPangoBuffer(PangoBuffer):
         if end is None:
             end = self.get_end_iter()
 
-        if include_hidden_chars is False:
+        if not include_hidden_chars:
             return super().get_text(start, end, include_hidden_chars)
-        else:
-            format_ = self.register_serialize_tagset()
-            pango_markup = self.serialize(self, format_, start, end)
-            return PangoToHtml().feed(pango_markup, self.markup_dict,
-                                      ignore_links)
+        format_ = self.register_serialize_tagset()
+        pango_markup = self.serialize(self, format_, start, end)
+        return PangoToHtml().feed(pango_markup, self.markup_dict,
+                                  ignore_links)
 
 
 class LinkedTextView(Gtk.TextView):
@@ -122,8 +121,11 @@ class LinkedTextView(Gtk.TextView):
         # Check for selection
         buffer = text_view.get_buffer()
         selection = buffer.get_selection_bounds()
-        selecting = not (len(selection) != 0 and
-                     (selection[0].get_offset() != selection[1].get_offset()))
+        selecting = (
+            len(selection) == 0
+            or selection[0].get_offset() == selection[1].get_offset()
+        )
+
 
         # Check for a left mouse click (as set by the system, not hardware).
         if (event.type == Gdk.EventType.BUTTON_RELEASE
@@ -152,8 +154,6 @@ class LinkedTextView(Gtk.TextView):
         If leaving the area of a time link, set the cursor to an I-beam.
         """
         _, itr = text_view.get_iter_at_location(x, y)
-        hovering_over_link = False
-
         # Get the tags surrounding the text at the cursor.
         begin = itr.copy()
         begin.forward_to_tag_toggle()
@@ -163,9 +163,7 @@ class LinkedTextView(Gtk.TextView):
 
         # Check if the text is the content of a link.
         text = text_view.get_buffer().get_text(begin, end)
-        if text in text_view.get_buffer().markup_dict:
-            hovering_over_link = True
-
+        hovering_over_link = text in text_view.get_buffer().markup_dict
         cursor = self.hand_cursor if hovering_over_link else self.text_cursor
         text_view.get_window(Gtk.TextWindowType.TEXT).set_cursor(cursor)
 

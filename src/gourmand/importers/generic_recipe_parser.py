@@ -5,18 +5,17 @@ import gourmand.convert as convert
 from gourmand.i18n import _
 
 
-def parse_group (match, text, group_number, tag):
+def parse_group(match, text, group_number, tag):
     start,end = match.span(group_number)
     if start==-1:
         return None
-    else:
-        retv = []
-        if start > 0:
-            retv.append((text[0:start],None))
-        retv.append((text[start:end],tag))
-        if end < len(text):
-            retv.append((text[end:],None))
-        return retv
+    retv = []
+    if start > 0:
+        retv.append((text[0:start],None))
+    retv.append((text[start:end],tag))
+    if end < len(text):
+        retv.append((text[end:],None))
+    return retv
 
 class RecipeParser:
 
@@ -196,7 +195,7 @@ class RecipeParser:
         self.join_the_joinable()
         return self.parsed
 
-    def join_the_joinable (self):
+    def join_the_joinable(self):
         """Go through self.parsed and join joinable elements.
 
         This means: produce fewer elements to jump through for the
@@ -225,7 +224,7 @@ class RecipeParser:
                     if n > 1:
                         self.parsed = self.parsed[0:-(n-1)]
                     break
-                if oldtag == None:
+                if oldtag is None:
                     add_on += oldchunk
                 else:
                     break

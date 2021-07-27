@@ -72,7 +72,7 @@ class MasterLoader:
             os.path.join(current_path, 'plugins'),
             os.path.join(current_path, 'plugins', 'import_export'),
         ]
-        self.errors = dict()
+        self.errors = {}
         self.pluggables_by_class: Dict = dict()
         self.active_plugin_sets: List[str] = []
         self.available_plugin_sets: Dict[str, LegacyPlugin] = self.load_legacy_plugins(self.plugin_directories)  # noqa
@@ -89,7 +89,7 @@ class MasterLoader:
             for ppath in plugins:
                 debug('Found %s'%ppath,1)
                 plugin_set = LegacyPlugin(ppath)
-                if plugin_set.module in ret.keys():
+                if plugin_set.module in ret:
                     print('Ignoring duplicate plugin ',plugin_set.module,'found in ',ppath)
                 else:
                     ret[plugin_set.module] = plugin_set
@@ -141,11 +141,8 @@ class MasterLoader:
 
     def check_dependencies(self, plugin_set):
         if plugin_set.dependencies:
-            missing = []
             depends = plugin_set.dependencies or []
-            for dep in depends:
-                if not dep in self.active_plugin_sets:
-                    missing.append(dep)
+            missing = [dep for dep in depends if dep not in self.active_plugin_sets]
             if missing:
                 raise DependencyError(plugin_set,missing)
 
@@ -205,15 +202,14 @@ class MasterLoader:
                     self.instantiated_plugins[plugin].remove()
                 self.active_plugins.remove(plugin)
 
-    def get_instantiated_plugin (self, plugin):
-        if plugin in self.instantiated_plugins:
-            return self.instantiated_plugins[plugin]
-        else:
+    def get_instantiated_plugin(self, plugin):
+        if plugin not in self.instantiated_plugins:
             debug('Instantiate %s from %s'%(plugin,
                                             plugin.__module__),
                   1)
             self.instantiated_plugins[plugin] = plugin()
-            return self.instantiated_plugins[plugin]
+
+        return self.instantiated_plugins[plugin]
 
     def register_pluggable (self, pluggable, klass):
         if klass not in self.pluggables_by_class:
@@ -289,24 +285,23 @@ class LegacyPlugin:
     def get_module(self):
         if self._loaded is not None:
             return self._loaded
-        else:
-            if self.curdir not in sys.path:
-                sys.path.append(self.curdir)
-            if self.plugin_modules_dir not in sys.path:
-                sys.path.append(self.plugin_modules_dir)
-            if self.import_export_modules_dir not in sys.path:
-                sys.path.append(self.import_export_modules_dir)
+        if self.curdir not in sys.path:
+            sys.path.append(self.curdir)
+        if self.plugin_modules_dir not in sys.path:
+            sys.path.append(self.plugin_modules_dir)
+        if self.import_export_modules_dir not in sys.path:
+            sys.path.append(self.import_export_modules_dir)
 
-            try:
-                self._loaded = __import__(self.module)
-            except ImportError as ie:
-                print('WARNING: Plugin module import failed')
-                print('PATH:', sys.path)
-                traceback.print_exc()
-                self.error = ie
-                return None
-            else:
-                return self._loaded
+        try:
+            self._loaded = __import__(self.module)
+        except ImportError as ie:
+            print('WARNING: Plugin module import failed')
+            print('PATH:', sys.path)
+            traceback.print_exc()
+            self.error = ie
+            return None
+        else:
+            return self._loaded
 
     def __getattr__ (self, attr):
         if attr == 'plugins':
@@ -401,16 +396,14 @@ class Pluggable:
             retval = hook(retval,self,*args,**kwargs)
         return retval
 
-    def add_hook (self, type, name, hook):
-        if type==PRE: hookdic = self.pre_hooks
-        else: hookdic = self.post_hooks
+    def add_hook(self, type, name, hook):
+        hookdic = self.pre_hooks if type==PRE else self.post_hooks
         if name not in hookdic:
             hookdic[name] = []
         hookdic[name].append(hook)
 
-    def remove_hook (self, type, name, hook):
-        if type==PRE: hookdic = self.pre_hooks
-        else: hookdic = self.post_hooks
+    def remove_hook(self, type, name, hook):
+        hookdic = self.pre_hooks if type==PRE else self.post_hooks
         hookdic.pop(name, None)
 
     def get_plugin_by_module (self, module):

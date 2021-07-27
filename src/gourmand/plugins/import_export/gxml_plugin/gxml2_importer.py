@@ -34,9 +34,10 @@ class RecHandler (xml_importer.RecHandler):
 
         if name=='ingredient':
             self.start_ing(recipe_id=self.rec['id'])
-            if attrs.get('optional',False):
-                if attrs.get('optional',False) not in ['no','No','False','false','None']:
-                    self.ing['optional']=True
+            if attrs.get('optional', False) and attrs.get(
+                'optional', False
+            ) not in ['no', 'No', 'False', 'false', 'None']:
+                self.ing['optional']=True
         if name=='ingref':
             self.start_ing(id=self.rec['id'])
             self.add_ref(unquoteattr(attrs.get('refid')))

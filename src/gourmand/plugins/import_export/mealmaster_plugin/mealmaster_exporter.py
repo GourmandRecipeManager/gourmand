@@ -37,14 +37,21 @@ class mealmaster_exporter (exporter_mult):
                                mult=mult)
 
     @pluggable_method
-    def _write_attrs_ (self):
+    def _write_attrs_(self):
         self.write_attr_head()
         title = self._grab_attr_(self.r,'title')
         if not title:
             title = ''
 
-        categories = ', '.join([x for x in (self._grab_attr_(self.r,'cuisine'),
-                                          self._grab_attr_(self.r,'category')) if x])
+        categories = ', '.join(
+            x
+            for x in (
+                self._grab_attr_(self.r, 'cuisine'),
+                self._grab_attr_(self.r, 'category'),
+            )
+            if x
+        )
+
 
         yields = self._grab_attr_(self.r,'yields')
         if not yields: # MealMaster format mandates numeric yield information
@@ -103,7 +110,7 @@ class mealmaster_exporter (exporter_mult):
     def write_groupfoot (self):
         self.ings = self.master_ings # back to master level
 
-    def write_ing (self, amount="1", unit=None, item=None, key=None, optional=False):
+    def write_ing(self, amount="1", unit=None, item=None, key=None, optional=False):
         if isinstance(amount, (float, int)):
             amount = convert.float_to_frac(amount)
             if not amount: amount = ""
@@ -114,11 +121,10 @@ class mealmaster_exporter (exporter_mult):
             # Try to fix the unit
             if unit in self.conv.unit_dict:
                 new_u = self.conv.unit_dict[unit]
-                if len(new_u) <= 2 and not '.' in new_u:
+                if len(new_u) <= 2 and '.' not in new_u:
                     unit = new_u; unit_bad = False
-                else:
-                    if new_u in self.uc:
-                        unit = self.uc[new_u]; unit_bad = False
+                elif new_u in self.uc:
+                    unit = self.uc[new_u]; unit_bad = False
         if unit_bad: # If we couldn't fix the unit...  we add it to
             # the item
             if unit: item="%s %s"%(unit,item)

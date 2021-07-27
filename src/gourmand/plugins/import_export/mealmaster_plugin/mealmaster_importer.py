@@ -7,7 +7,7 @@ from gourmand.importers import importer, plaintext_importer
 
 
 class mmf_constants:
-    def __init__ (self):
+    def __init__(self):
         self.committed = False
         self.recattrs={'Title':'title',
                        'Name':'title',
@@ -21,25 +21,25 @@ class mmf_constants:
                        'Preparation Time':'preptime',
                        }
 
-        self.unit_conv = {'ts':'tsp',
-                          'tb':'Tbs',
-                          'sm':'small',
-                          'md':'medium',
-                          'ea':'',
-                          'lg':'large',
-                          'c':'c',
-                          'pn':'pinch',
-                          'ds':'dash',
-                          'T' : 'tbs',
-                          't' : 'tsp',
-                          'pk' : 'package',
-                          'x' : '',
-                          'ea' : '',
-                          't' : 'tsp',
-                          'pt' : 'pt',
-                          'qt' : 'qt',
-                          'oz' : 'oz'
-                          }
+        self.unit_conv = {
+            'ts': 'tsp',
+            'tb': 'Tbs',
+            'sm': 'small',
+            'md': 'medium',
+            'lg': 'large',
+            'c': 'c',
+            'pn': 'pinch',
+            'ds': 'dash',
+            'T': 'tbs',
+            'pk': 'package',
+            'x': '',
+            'ea': '',
+            't': 'tsp',
+            'pt': 'pt',
+            'qt': 'qt',
+            'oz': 'oz',
+        }
+
         self.unit_convr = {}
         for k,v in list(self.unit_conv.items()):
             self.unit_convr[v]=k
@@ -105,7 +105,7 @@ class mmf_importer (plaintext_importer.TextImporter):
         #threaded=threaded,conv=conv)
         testtimer.end()
 
-    def compile_regexps (self):
+    def compile_regexps(self):
         testtimer = TimeAction('mealmaster_importer.compile_regexps',10)
         debug("start compile_regexps",5)
         plaintext_importer.TextImporter.compile_regexps(self)
@@ -121,11 +121,16 @@ class mmf_importer (plaintext_importer.TextImporter):
         # followed by a two digit unit (or spaces)
         c = convert.get_converter()
         self.ing_num_matcher = re.compile(
-            r"^\s*%s+\s+([a-z ]{1,2}|%s)\s+.*\w+.*"%(
-                convert.NUMBER_REGEXP,
-                '('+'|'.join([x for x in list(c.unit_dict.keys()) if x])+')'
-                ),
-            re.IGNORECASE)
+            (
+                r"^\s*%s+\s+([a-z ]{1,2}|%s)\s+.*\w+.*"
+                % (
+                    convert.NUMBER_REGEXP,
+                    '(' + '|'.join(x for x in list(c.unit_dict.keys()) if x) + ')',
+                )
+            ),
+            re.IGNORECASE,
+        )
+
         self.amt_field_matcher = re.compile(r"^(\s*%s\s*)$"%convert.NUMBER_REGEXP)
         # we build a regexp to match anything that looks like
         # this: ^\s*ATTRIBUTE: Some entry of some kind...$
@@ -137,7 +142,7 @@ class mmf_importer (plaintext_importer.TextImporter):
         self.attr_matcher = re.compile(attrmatch)
         testtimer.end()
 
-    def handle_line (self,l):
+    def handle_line(self,l):
 
         """Handle an individual line of a mealmaster file.
 
@@ -206,8 +211,7 @@ class mmf_importer (plaintext_importer.TextImporter):
                 self.ingrs.append([l,self.group])
         else:
             ## otherwise, we assume a line of instructions
-            if self.last_line_was == 'blank': add_blank=True
-            else: add_blank = False
+            add_blank = self.last_line_was == 'blank'
             if self.in_variation:
                 debug('Adding to instructions: %s'%l,4)
                 self.last_line_was = 'mod'
@@ -300,7 +304,7 @@ class mmf_importer (plaintext_importer.TextImporter):
         # we were in instructions. If we see a group heading,
         # we know that's not the case!
 
-    def find_ing_fields (self):
+    def find_ing_fields(self):
         """Find fields in an ingredient line."""
         testtimer = TimeAction('mealmaster_importer.find_ing_fields',10)
         all_ings = [i[0] for i in self.ingrs]
@@ -315,10 +319,7 @@ class mmf_importer (plaintext_importer.TextImporter):
         if ufield:
             fields = fields[1:]
             fields_is_numfield = fields_is_numfield[1:]
-        if fields:
-            ifield = [fields[0][0],None]
-        else:
-            ifield = 0,None
+        ifield = [fields[0][0],None] if fields else (0, None)
         retval = [[afield,ufield,ifield]]
         sec_col_fields = [x for x in fields if x[0]>self.two_col_minimum]
         if sec_col_fields:
@@ -510,7 +511,7 @@ def field_width (tuple):
         return None
 
 
-def find_fields (strings, char=" "):
+def find_fields(strings, char=" "):
     testtimer = TimeAction('mealmaster_importer.find_fields',10)
     cols = find_columns(strings, char)
     if not cols: return []
@@ -521,11 +522,9 @@ def find_fields (strings, char=" "):
     end = lens[-1]
     last_col = end
     for col in cols:
-        if col == last_col - 1:
-            end = col
-        else:
+        if col != last_col - 1:
             fields.append([col+1,end])
-            end = col
+        end = col
         last_col = col
     if end != 0: fields.append([0,end])
     fields.reverse()

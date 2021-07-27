@@ -328,14 +328,13 @@ class RecIndex:
                 renderer=Gtk.CellRendererText()
                 renderer.set_property('editable',True)
                 renderer.connect('edited',self.rtree_time_edited_cb,n,c)
-                def get_colnum (tc):
+                def get_colnum(tc):
                     try:
                         t = tc.get_title()
                         if t:
                             return _title_to_num_[t.replace('_','')]
-                        else:
-                            print('wtf, no title for ',tc)
-                            return -1
+                        print('wtf, no title for ',tc)
+                        return -1
                     except:
                         print('problem with ',tc)
                         raise
@@ -514,11 +513,10 @@ class RecIndex:
         self.last_search={}  # reset search so we redo it
         self.search()
 
-    def get_rec_from_iter (self, iter):
+    def get_rec_from_iter(self, iter):
         debug("get_rec_from_iter (self, iter): %s"%iter,5)
         obj=self.rectree.get_model().get_value(iter,0)
-        retval=self.rd.get_rec(obj.id)
-        return retval
+        return self.rd.get_rec(obj.id)
 
     def rtree_time_edited_cb (self, renderer, path_string, text, colnum, attribute):
         if not text: secs = 0
@@ -570,24 +568,25 @@ class RecIndex:
         self.rmodel.update_iter(iter)
         self.rd.save()
 
-    def tree_keypress_cb (self, widget, event):
+    def tree_keypress_cb(self, widget, event):
         keyname = Gdk.keyval_name(event.keyval)
-        if keyname in ['Page_Up','Page_Down']:
+        if keyname in ['Page_Up', 'Page_Down']:
             sb = self.sw.get_vscrollbar()
             adj =  self.sw.get_vscrollbar().get_adjustment()
-            val = adj.get_value(); upper = adj.get_upper()
-            if keyname == 'Page_Up':
-                if val > 0:
-                    return None
-                self.rmodel.prev_page()
-                sb.set_value(upper)
-                return True
-            if keyname == 'Page_Down':
-                if val < (upper - adj.page_size):
-                    return None
-                self.rmodel.next_page()
-                sb.set_value(0)
-                return True
+            val = adj.get_value()
+            upper = adj.get_upper()
+        if keyname == 'Page_Up':
+            if val > 0:
+                return None
+            self.rmodel.prev_page()
+            sb.set_value(upper)
+            return True
+        if keyname == 'Page_Down':
+            if val < (upper - adj.page_size):
+                return None
+            self.rmodel.next_page()
+            sb.set_value(0)
+            return True
         if keyname == 'Home':
             self.rmodel.goto_first_page()
             self.sw.get_vscrollbar().set_value(0)
@@ -625,26 +624,23 @@ class RecIndex:
         else:
             return []
 
-    def selection_changedCB (self, *args):
+    def selection_changedCB(self, *args):
         """We pass along true or false to selection_changed
         to say whether there is a selection or not."""
         debug("selection_changed (self, *args):",5)
         v=self.rectree.get_selection().get_selected_rows()[1]
-        if v: selected=True
-        else: selected=False
+        selected = bool(v)
         self.selection_changed(v)
 
     def selection_changed (self, selected=False):
         """This is a way to act whenever the selection changes."""
         pass
 
-    def visibility_fun (self, model, iter):
+    def visibility_fun(self, model, iter):
         try:
-            if (model.get_value(iter,0) and
+            return bool((model.get_value(iter,0) and
                 not model.get_value(iter,0).deleted and
-                    model.get_value(iter, 0).id in self.visible):
-                return True
-            else: return False
+                    model.get_value(iter, 0).id in self.visible))
         except:
             debug('something bizaare just happened in visibility_fun',1)
             return False

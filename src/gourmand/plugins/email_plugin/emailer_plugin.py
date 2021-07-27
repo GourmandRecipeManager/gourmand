@@ -37,19 +37,18 @@ class EmailRecipePlugin (MainPlugin, UIPlugin):
             recs = self.rd.fetch_all(self.rd.recipe_table, deleted=False, sort_by=[('title',1)])
         return recs
 
-    def email_selected (self, *args):
+    def email_selected(self, *args):
         recs = self.get_selected_recs()
         l = len(recs)
-        if l > 20:
-            if not de.getBoolean(
-                title=_('Email recipes'),
-                # only called for l>20, so fancy gettext methods
-                # shouldn't be necessary if my knowledge of
-                # linguistics serves me
-                sublabel=_('Do you really want to email all %s selected recipes?')%l,
-                custom_yes=_('Yes, e_mail them'),
-                cancel=False,
-                ):
-                return
+        if l > 20 and not de.getBoolean(
+            title=_('Email recipes'),
+            # only called for l>20, so fancy gettext methods
+            # shouldn't be necessary if my knowledge of
+            # linguistics serves me
+            sublabel=_('Do you really want to email all %s selected recipes?') % l,
+            custom_yes=_('Yes, e_mail them'),
+            cancel=False,
+        ):
+            return
         re = RecipeEmailer(recs)
         re.send_email_with_attachments()

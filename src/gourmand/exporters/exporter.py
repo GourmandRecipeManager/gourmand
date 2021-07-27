@@ -75,12 +75,11 @@ class exporter (SuspendableThread, Pluggable):
         Pluggable.__init__(self,[BaseExporterPlugin])
         SuspendableThread.__init__(self,self.name)
 
-    def do_run (self):
+    def do_run(self):
         self.write_head()
         for task in self.order:
-            if task=='image':
-                if self._grab_attr_(self.r,'image'):
-                    self.write_image(self.r.image)
+            if task == 'image' and self._grab_attr_(self.r, 'image'):
+                self.write_image(self.r.image)
             if task=='attr':
                 self._write_attrs_()
 
@@ -93,22 +92,24 @@ class exporter (SuspendableThread, Pluggable):
     # Internal methods -- ideally, subclasses should have no reason to
     # override any of these methods.
     @pluggable_method
-    def _write_attrs_ (self):
+    def _write_attrs_(self):
         self.write_attr_head()
         for a in self.attr_order:
             txt=self._grab_attr_(self.r,a)
             debug('_write_attrs_ writing %s=%s'%(a,txt),1)
-            if txt and ((not isinstance(txt, str)) or txt.strip()):
-                if (a=='preptime' or a=='cooktime') and a.find("0 ")==0: pass
+            if (
+                txt
+                and ((not isinstance(txt, str)) or txt.strip())
+                and (a not in ['preptime', 'cooktime'] or a.find("0 ") != 0)
+            ):
+                if self.convert_attnames:
+                    self.write_attr(REC_ATTR_DIC.get(a,a),txt)
                 else:
-                    if self.convert_attnames:
-                        self.write_attr(REC_ATTR_DIC.get(a,a),txt)
-                    else:
-                        self.write_attr(a,txt)
+                    self.write_attr(a,txt)
         self.write_attr_foot()
 
     @pluggable_method
-    def _write_text_ (self):
+    def _write_text_(self):
         #print 'exporter._write_text_',self.text_attr_order,'!'
         for a in self.text_attr_order:
             # This code will never be called for Gourmet
@@ -131,10 +132,7 @@ class exporter (SuspendableThread, Pluggable):
                     if self.do_markup:
                         txt=self.handle_markup(s)
                     if not self.use_ml: txt = xml.sax.saxutils.unescape(s)
-                    if self.convert_attnames:
-                        out_a = TEXT_ATTR_DIC.get(a,a)
-                    else:
-                        out_a = a
+                    out_a = TEXT_ATTR_DIC.get(a,a) if self.convert_attnames else a
                     # Goodness this is an ugly way to pass the
                     # time as a parameter... we use try/except to
                     # allow all gourmet exporters to ignore this
@@ -424,38 +422,33 @@ class exporter_mult (exporter):
         #attr = NAME_TO_ATTR[label]
         self.out.write("%s: %s\n"%(label, text))
 
-    def _grab_attr_ (self, obj, attr):
+    def _grab_attr_(self, obj, attr):
         """Grab attribute attr of obj obj.
 
         Possibly manipulate the attribute we get to hand out export
         something readable.
         """
-        if attr=='servings' or attr=='yields' and self.mult:
-            ret = getattr(obj,attr)
-            if isinstance(ret, (int, float)):
-                fl_ret = float(ret)
-            else:
-                if ret is not None:
-                    print('WARNING: IGNORING serving value ',ret)
-                fl_ret = None
-            if fl_ret:
-                ret = convert.float_to_frac(fl_ret * self.mult,
-                                            fractions=self.fractions)
-                if attr=='yields' :
-                    yield_unit = self._grab_attr_(obj,'yield_unit')
-                    if yield_unit:
-                        ret = '%s %s'%(ret,yield_unit) # FIXME: i18n?
-                return ret
-        else:
+        if attr != 'servings' and (attr != 'yields' or not self.mult):
             return exporter._grab_attr_(self,obj,attr)
-
-    def _get_amount_and_unit_ (self, ing):
-        if self.mult != 1 and self.change_units:
-            return self.rd.get_amount_and_unit(ing,mult=self.mult,conv=self.conv,
-                                               fractions=self.fractions)
+        ret = getattr(obj,attr)
+        if isinstance(ret, (int, float)):
+            fl_ret = float(ret)
         else:
-            return self.rd.get_amount_and_unit(ing,mult=self.mult,conv=self.conv,
-                                               fractions=self.fractions)
+            if ret is not None:
+                print('WARNING: IGNORING serving value ',ret)
+            fl_ret = None
+        if fl_ret:
+            ret = convert.float_to_frac(fl_ret * self.mult,
+                                        fractions=self.fractions)
+            if attr=='yields' :
+                yield_unit = self._grab_attr_(obj,'yield_unit')
+                if yield_unit:
+                    ret = '%s %s'%(ret,yield_unit) # FIXME: i18n?
+            return ret
+
+    def _get_amount_and_unit_(self, ing):
+        return self.rd.get_amount_and_unit(ing,mult=self.mult,conv=self.conv,
+                                           fractions=self.fractions)
 
     @pluggable_method
     def write_ing (self, amount=1, unit=None, item=None, key=None, optional=False):
@@ -535,14 +528,14 @@ class ExporterMultirec (SuspendableThread, Pluggable):
 
             return ret
 
-    def append_referenced_recipes (self):
+    def append_referenced_recipes(self):
         for r in self.recipes[:]:
             reffed = self.rd.db.execute(
                 'select * from ingredients where recipe_id=%s and refid is not null' % r.id
                 )
             for ref in reffed:
                 rec = self.rd.get_rec(ref.refid)
-                if rec is not None and not rec in self.recipes:
+                if rec is not None and rec not in self.recipes:
                     self.recipes.append(rec)
 
     @pluggable_method
@@ -600,16 +593,13 @@ class ExporterMultirec (SuspendableThread, Pluggable):
     def write_footer (self):
         pass
 
-    def generate_filename (self, rec, ext, add_id=False):
+    def generate_filename(self, rec, ext, add_id=False):
         title=rec.title
         # get rid of potentially confusing characters in the filename
         # Windows doesn't like a number of special characters, so for
         # the time being, we'll just get rid of all non alpha-numeric
         # characters
-        ntitle = ""
-        for c in title:
-            if re.match("[A-Za-z0-9 ]",c):
-                ntitle += c
+        ntitle = "".join(c for c in title if re.match("[A-Za-z0-9 ]",c))
         title = ntitle
         # truncate long filenames
         max_filename_length = 252
@@ -633,17 +623,15 @@ class ExporterMultirec (SuspendableThread, Pluggable):
         an index (written to a file specified in write_header."""
         pass
 
-    def unique_name (self, filename):
-        if os.path.exists(filename):
-            n=1
-            fn,ext=os.path.splitext(filename)
-            if ext: dot=os.path.extsep
-            else: dot=""
-            while os.path.exists("%s%s%s%s"%(fn,n,dot,ext)):
-                n += 1
-            return "%s%s%s%s"%(fn,n,dot,ext)
-        else:
+    def unique_name(self, filename):
+        if not os.path.exists(filename):
             return filename
+        n=1
+        fn,ext=os.path.splitext(filename)
+        dot = os.path.extsep if ext else ""
+        while os.path.exists("%s%s%s%s"%(fn,n,dot,ext)):
+            n += 1
+        return "%s%s%s%s"%(fn,n,dot,ext)
 
     def check_for_sleep (self):
         if self.terminated:

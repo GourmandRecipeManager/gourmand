@@ -143,17 +143,17 @@ class PageableListStore (Gtk.ListStore):
         self.set(itr,*args)
 
 
-    def update_tree (self):
+    def update_tree(self):
         """Update our tree based on current page, etc."""
         # clear the existing rows...
-        for n in range(len(self)):
+        for _ in range(len(self)):
             self.remove(self.get_iter(0,))
         # and add the new ones...
         length = self._get_length_()
         start_at = self.page * self.per_page
         end_at = (self.page+1) * self.per_page
         if start_at > length: return # we're empty then...
-        if end_at > length: end_at = length
+        end_at = min(end_at, length)
         for row in self._get_slice_(int(start_at),int(end_at)):
             try:
                 self.append(row)
@@ -243,17 +243,17 @@ class PageableTreeStore (Gtk.TreeStore, PageableListStore):
         self.update_tree()
         self.sort_dict = {}
 
-    def update_tree (self):
+    def update_tree(self):
         """Update our tree based on current page, etc."""
         # clear the existing rows...
-        for n in range(len(self)):
+        for _ in range(len(self)):
             self.remove(self.get_iter(0,))
         # and add the new ones...
         length = self._get_length_()
         start_at = self.page * self.per_page
         end_at = (self.page+1) * self.per_page
         if start_at > length: return # we're empty then...
-        if end_at > length: end_at = length
+        end_at = min(end_at, length)
         for row in self._get_slice_(int(start_at),int(end_at)):
             itr=self.append(None,row)
             self.append_descendants(itr)
@@ -288,9 +288,9 @@ class ColumnSortSetterUpper:
         #tree_column.set_sort_column_id(model_column)
         tree_column.connect('clicked',self.sort_by_column_callback,model_column)
 
-    def sort_by_column_callback (self,tree_column,model_column):
+    def sort_by_column_callback(self,tree_column,model_column):
         toggle_to = self.mod.toggle_sort(model_column)
-        if toggle_to==None:
+        if toggle_to is None:
             tree_column.set_sort_indicator(False)
         else:
             tree_column.set_sort_indicator(True)

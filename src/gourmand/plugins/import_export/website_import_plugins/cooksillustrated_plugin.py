@@ -129,7 +129,7 @@ class CooksIllustratedPlugin (PluginPlugin):
                             self.maybe_add(el.findAll('h4',{'class':'section-slug'}),'ignore')
 
 
-            def preparse (self):
+            def preparse(self):
                 self.preparsed_elements = []
                 self.maybe_add(self.soup.find('section',{'class':'why'}),'modifications')
                 self.maybe_add(self.soup.find('h2',{'class':'document-header__title'}),'title')
@@ -164,10 +164,7 @@ class CooksIllustratedPlugin (PluginPlugin):
                 self.maybe_add(self.soup.find('span',{'class':'recipe__yield'}),'yields')
 
                 # Do we use automatic settings or not...
-                if self.preparsed_elements:
-                    self.ignore_unparsed = True
-                else:
-                    self.ignore_unparsed = False
+                self.ignore_unparsed = bool(self.preparsed_elements)
 
         return CooksIllustratedParser
 

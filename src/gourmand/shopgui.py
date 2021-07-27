@@ -256,7 +256,7 @@ class IngredientAndPantryList:
         # reset the first time
         self.slTree_sel_changed_cb(self.slTree.get_selection())
 
-    def create_ingTree (self, widget, model):
+    def create_ingTree(self, widget, model):
         debug("create_ingTree (self, widget, model):",5)
         # self.slTree = Gtk.TreeView(self.slMod)
         tree=widget
@@ -271,9 +271,12 @@ class IngredientAndPantryList:
                    ('STRING',0,4),
                    ('COMPOUND_TEXT',0,5),
                    ('text/unicode',0,6),]
-        tree.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
-                             list(Gtk.TargetEntry.new(*t) for t in targets),
-                             Gdk.DragAction.COPY | Gdk.DragAction.MOVE)
+        tree.drag_source_set(
+            Gdk.ModifierType.BUTTON1_MASK,
+            [Gtk.TargetEntry.new(*t) for t in targets],
+            Gdk.DragAction.COPY | Gdk.DragAction.MOVE,
+        )
+
         tree.enable_model_drag_dest(targets,
                                     Gdk.DragAction.COPY | Gdk.DragAction.MOVE)
         tree.connect('drag_begin', self.on_drag_begin)
@@ -366,7 +369,10 @@ class IngredientAndPantryList:
                         debug("Saving new category orders",0)
                         self.commit_category_orders(tv)
                         # and now we need to move our new category into place...
-                        if drop_where==Gtk.TreeViewDropPosition.AFTER or drop_where==Gtk.TreeViewDropPosition.INTO_OR_AFTER:
+                        if drop_where in [
+                            Gtk.TreeViewDropPosition.AFTER,
+                            Gtk.TreeViewDropPosition.INTO_OR_AFTER,
+                        ]:
                             new_pos=self.sh.catorder_dic[cat]+0.5
                         else:
                             new_pos=self.sh.catorder_dic[cat]-0.5
@@ -378,7 +384,6 @@ class IngredientAndPantryList:
                 self.resetSL()
                 self.ssave.restore_selections(tv=self.slTree)
                 self.pssave.restore_selections(tv=self.pTree)
-            # except TypeError:
             else:
                 debug("Out of range!",0)
         elif str(selection.target) == 'GOURMET_SHOPPER':
@@ -626,11 +631,11 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         self.add_entry.connect('activate',self.item_added)
         self.add_button.connect('clicked',self.item_added)
 
-    def get_catmodel (self):
-        if hasattr(self,'catmodel'): return self.catmodel
-        else:
+    def get_catmodel(self):
+        if not hasattr(self, 'catmodel'):
             self.catmodel = Gtk.ListStore(str)
-            return self.catmodel
+
+        if hasattr(self,'catmodel'): return self.catmodel
 
     def setup_cat_box (self):
         # Setup change-category widget
@@ -711,7 +716,7 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         self.ui_manager.insert_action_group(self.recipeListActions,0)
         IngredientAndPantryList.setup_actions(self)
 
-    def getOptionalIngDic (self, ivw, mult, prefs):
+    def getOptionalIngDic(self, ivw, mult, prefs):
         """Return a dictionary of optional ingredients with a TRUE|FALSE value
 
         Alternatively, we return a boolean value, in which case that is
@@ -726,19 +731,13 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         # optional_mode: 0==ask, 1==add, -1==dont add
         optional_mode=prefs.get('shop_handle_optional',0)
         if optional_mode:
-            if optional_mode==1:
-                return True
-            elif optional_mode==-1:
+            if optional_mode == -1:
                 return False
+            elif optional_mode == 1:
+                return True
         elif len(vw) > 0:
-            if not None in [i.shopoptional for i in vw]:
-                # in this case, we have a simple job -- load our saved
-                # defaults
-                dic = {}
-                for i in vw:
-                    if i.shopoptional==2: dic[i.ingkey]=True
-                    else: dic[i.ingkey]=False
-                return dic
+            if None not in [i.shopoptional for i in vw]:
+                return {i.ingkey: i.shopoptional==2 for i in vw}
             # otherwise, we ask our user
             oid=OptionalIngDialog(vw, prefs, mult)
             retval = oid.run()
@@ -804,7 +803,7 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         debug("%s selected recs: %s"%(len(recs),recs),3)
         return recs
 
-    def commit_category_orders (self, tv, space_before=None, space_after=None):
+    def commit_category_orders(self, tv, space_before=None, space_after=None):
         """Commit the order of categories to memory.
         We allow for making room before or after a given
         iter, in which case"""
@@ -813,10 +812,7 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         last_val = -100
         while iter:
             cat = mod.get_value(iter,0)
-            if cat in self.sh.catorder_dic:
-                val = self.sh.catorder_dic[cat]
-            else:
-                val = 0
+            val = self.sh.catorder_dic[cat] if cat in self.sh.catorder_dic else 0
             if val <= last_val:
                 val = last_val + 10
                 self.sh.catorder_dic[cat] = val

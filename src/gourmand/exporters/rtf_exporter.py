@@ -53,11 +53,9 @@ class rtf_exporter (exporter.exporter_mult):
                                         )
 
 
-    def setup_document (self, doc=None, ss=None):
-        if doc: self.doc=doc
-        else: self.doc = PyRTF.Document()
-        if ss: self.ss=ss
-        else: self.ss = self.doc.StyleSheet
+    def setup_document(self, doc=None, ss=None):
+        self.doc = doc or PyRTF.Document()
+        self.ss = ss or self.doc.StyleSheet
         self.ss.ParagraphStyles.Normal.TextStyle.TextPropertySet.Font = self.ss.Fonts.TimesNewRoman
         self.ss.ParagraphStyles.Heading1.TextStyle.TextPropertySet.Bold = True
         if not hasattr(self.ss.ParagraphStyles, 'Heading3'):

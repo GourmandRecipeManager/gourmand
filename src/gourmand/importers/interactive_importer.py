@@ -93,22 +93,22 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
 
     NEW_REC_TEXT = _('New Recipe')
 
-    def __init__ (self,
+    def __init__(self,
                   custom_parser = None,
                   tags=DEFAULT_TAGS,
                   tag_labels=DEFAULT_TAG_LABELS,
                   modal=True,
                   title=_('Import recipe')):
         self.title = title
-        if custom_parser: self.parser = custom_parser
-        else: self.parser = RecipeParser()
+        self.parser = custom_parser or RecipeParser()
         self.labels_by_tag = tag_labels
         self.tags_by_label = {self.NEW_REC_TEXT:'newrec'}
         for k,v in list(self.labels_by_tag.items()): self.tags_by_label[v]=k
         self.tags = tags
         self.setup_window()
         self.setup_action_area()
-        self.markup_marks = {}; self.markup_partners = {}
+        self.markup_marks = {}
+        self.markup_partners = {}
         self.anchors = []
         self.midno = 0 # an ID counter for markup marks we insert
         self.labelled = []
@@ -375,15 +375,12 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
                      self.tb.get_iter_at_mark(emark))
         self.tb.delete(sitr,eitr)
 
-    def clear_tags (self, *args):
+    def clear_tags(self, *args):
         """Clear all markup in current selection, or whole buffer if
         there is no selection
         """
         cursel = self.tb.get_selection_bounds()
-        if cursel:
-            st,end = cursel
-        else:
-            st,end = self.tb.get_bounds()
+        st,end = cursel or self.tb.get_bounds()
         st_offset = st.get_offset()
         e_offset = end.get_offset()
         for idno,iters in list(self.markup_marks.items()):
@@ -479,11 +476,11 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
         txt = self.parser.parse(txt) # Parse
         self.set_parsed(txt)
 
-    def set_parsed (self, parsed):
+    def set_parsed(self, parsed):
         #dbg_file = open('/tmp/out','w')
         for chunk,tag in parsed:
             #dbg_file.write(chunk)
-            if tag==None:
+            if tag is None:
                 self.tb.insert(self.tb.get_end_iter(),
                                chunk)
             else:
@@ -508,10 +505,9 @@ if __name__ == '__main__':
     ii = InteractiveImporter()
     ii.w.connect('delete-event',Gtk.main_quit)
     ii.w.show_all()
-    if True:
-        ii.images = ['http://thinkle.github.io/gourmet/images/screenshots/CardView.png']
-        ii.set_text(
-        """
+    ii.images = ['http://thinkle.github.io/gourmet/images/screenshots/CardView.png']
+    ii.set_text(
+    """
 Quick Pesto Dinner
 
 Category: Quick, Easy, Summer

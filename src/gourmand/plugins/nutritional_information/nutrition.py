@@ -81,7 +81,7 @@ class NutritionData:
         sorting algorithm succeeded in picking out the good matches!).
         """
         words=re.split(r"\W",key)
-        words = [w for w in words if w and not w in ['in','or','and','with']]
+        words = [w for w in words if w and w not in ['in','or','and','with']]
         #words += ['raw']
         result =  self.db.search_nutrition(words)
         while not result and len(words)>1:
@@ -92,11 +92,10 @@ class NutritionData:
         else:
             return []
 
-    def _get_key (self, key):
+    def _get_key(self, key):
         """Handed an ingredient key, get our nutritional Database equivalent
         if one exists."""
-        row=self.db.fetch_one(self.db.nutritionaliases_table,**{'ingkey':str(key)})
-        return row
+        return self.db.fetch_one(self.db.nutritionaliases_table,**{'ingkey':str(key)})
 
     def get_nutinfo_for_ing (self, ing, rd, multiplier=None):
         """A convenience function that grabs the requisite items from
@@ -140,16 +139,15 @@ class NutritionData:
                               unit=unit,
                               ingObject=ingObject)
 
-    def get_nutinfo_from_desc (self, desc):
+    def get_nutinfo_from_desc(self, desc):
         nvrow = self.db.fetch_one(self.db.nutrition_table,**{'desc':desc})
         if nvrow:
             return NutritionInfo(nvrow)
-        else:
-            matches = self.get_matches(desc)
-            if len(matches) == 1:
-                ndbno = matches[0][1]
-                nvrow = self.db.fetch_one(self.db.nutrition_table,ndbno=ndbno)
-                return NutritionInfo(nvrow)
+        matches = self.get_matches(desc)
+        if len(matches) == 1:
+            ndbno = matches[0][1]
+            nvrow = self.db.fetch_one(self.db.nutrition_table,ndbno=ndbno)
+            return NutritionInfo(nvrow)
         return None
 
     def get_nutinfo (self, key):
@@ -245,7 +243,7 @@ class NutritionData:
         if cnv:
             return (0.01*amt)/cnv
 
-    def get_conversions (self, key=None, row=None):
+    def get_conversions(self, key=None, row=None):
         """Handed an ingredient key or a row of the nutrition database,
         we return two dictionaries, one with Unit Conversions and the other
         with densities. Our return dictionaries look like this:
@@ -270,31 +268,28 @@ class NutritionData:
                     continue
             # if we can't get a density from this amount, we're going to treat it as a unit!
             if e: u = u + ", " + e
-            if a: gw = float(gw)/a
-            else:
-                gw = float(gw)
+            gw = float(gw)/a if a else float(gw)
             if u: units[u]=gw
         return densities,units
 
-    def get_densities (self,key=None,row=None):
+    def get_densities(self,key=None,row=None):
         """Handed key or nutrow, return dictionary with densities."""
         if not row: row = self._get_key(key)
         if not row: return {}
         if key in self.conv.density_table:
             return {'':self.conv.density_table[key]}
-        else:
-            densities = {}
-            for gd,gw in list(self.get_gramweights(row).items()):
-                a,u,e = gd
-                if not a:
-                    continue
-                convfactor=self.conv.converter(u,'ml')
-                if convfactor: # if we are a volume
-                    # divide mass by volume converted to milileters
-                    # (gramwts are in grams)
-                    density = float(gw) / (a * convfactor)
-                    densities[e]=density
-            return densities
+        densities = {}
+        for gd,gw in list(self.get_gramweights(row).items()):
+            a,u,e = gd
+            if not a:
+                continue
+            convfactor=self.conv.converter(u,'ml')
+            if convfactor: # if we are a volume
+                # divide mass by volume converted to milileters
+                # (gramwts are in grams)
+                density = float(gw) / (a * convfactor)
+                densities[e]=density
+        return densities
 
     def get_gramweights (self,row):
         """Return a dictionary with gram weights.
@@ -384,20 +379,20 @@ class NutritionInfo:
         self.__fudged__ = fudged
         self.__ingobject__ = ingObject
 
-    def __getattr__ (self, attr):
-        if attr[0]!='_':
-            ret = getattr(self.__rowref__, attr)
-            try:
-                if attr in SUMMABLE_FIELDS:
-                    return (ret or 0) * self.__mult__
-                else:
-                    return ret
-            except:
-                raise
-        else:
+    def __getattr__(self, attr):
+        if attr[0] == '_':
             # somehow this magically gets us standard
             # attribute handling...
             raise AttributeError(attr)
+
+        ret = getattr(self.__rowref__, attr)
+        try:
+            if attr in SUMMABLE_FIELDS:
+                return (ret or 0) * self.__mult__
+            else:
+                return ret
+        except:
+            raise
 
     def __add__ (self, obj):
         if isinstance(obj,NutritionInfo):
@@ -437,22 +432,21 @@ class NutritionVapor (NutritionInfo):
         self.__unit__ = unit
         self.__ingobject__ = ingObject
 
-    def _reset (self):
+    def _reset(self):
         """Try to create matter from vapor and return it.
 
         If we fail we return more vapor."""
-        if not self.__rowref__:
-            if self.__mult__:
-                ni = self.__nd__.get_nutinfo(self.__key__)
-                if not isinstance(ni,NutritionVapor): return ni * self.__mult__
-                else: return self
-            else:
-                return self.__nd__.get_nutinfo_for_item(self.__key__,
-                                                        self.__amt__,
-                                                        self.__unit__,
-                                                        ingObject=self.__ingobject__
-                                                        )
-        elif self.__amt__:
+        if not self.__rowref__ and self.__mult__:
+            ni = self.__nd__.get_nutinfo(self.__key__)
+            if not isinstance(ni,NutritionVapor): return ni * self.__mult__
+            else: return self
+        elif not self.__rowref__ or not self.__amt__:
+            return self.__nd__.get_nutinfo_for_item(self.__key__,
+                                                    self.__amt__,
+                                                    self.__unit__,
+                                                    ingObject=self.__ingobject__
+                                                    )
+        else:
             c=self.__nd__.get_conversion_for_amt(self.__amt__,self.__unit__,self.__key__,fudge=False)
             if c:
                 self.__mult__ = c
@@ -468,7 +462,6 @@ class NutritionVapor (NutritionInfo):
                                          )
                 else:
                     return self
-        else: return self.__nd__.get_nutinfo_for_item(self.__key__,self.__amt__,self.__unit__,ingObject=self.__ingobject__)
 
     def __getattr__ (self,attr):
         """Return 0 for any requests for a non _ prefixed attribute."""
@@ -502,18 +495,17 @@ class NutritionInfoList (list, NutritionInfo):
         self.__mult__ = 1
         self.__ingobject__ = ingObject
 
-    def __getattr__ (self, attr):
-        if attr[0]!='_':
-            alist = [getattr(ni,attr) for ni in self.__nutinfos__]
-            if attr in SUMMABLE_FIELDS:
-                if self.__mult__: alist = [n * self.__mult__ for n in alist]
-                return sum(alist)
-            else:
-                return ", ".join(map(str,alist))
-        else:
+    def __getattr__(self, attr):
+        if attr[0] == '_':
             # somehow this magically gets us standard
             # attribute handling...
             raise AttributeError(attr)
+
+        alist = [getattr(ni,attr) for ni in self.__nutinfos__]
+        if attr not in SUMMABLE_FIELDS:
+            return ", ".join(map(str,alist))
+        if self.__mult__: alist = [n * self.__mult__ for n in alist]
+        return sum(alist)
 
     def _reset (self):
         """See if we can turn any of our vapor into matter."""
@@ -535,14 +527,14 @@ class NutritionInfoList (list, NutritionInfo):
                 ret.extend(i._get_vapor())
         return ret
 
-    def _get_fudge (self):
+    def _get_fudge(self):
         """Return a list of fudged items
         """
-        ret = []
-        for i in self.__nutinfos__:
-            if hasattr(i,'__fudged__') and i.__fudged__:
-                ret.append(i)
-        return ret
+        return [
+            i
+            for i in self.__nutinfos__
+            if hasattr(i, '__fudged__') and i.__fudged__
+        ]
 
     def __add__ (self, obj):
         if isinstance(obj,NutritionInfo):
@@ -564,19 +556,16 @@ class NutritionInfoList (list, NutritionInfo):
     def __repr__ (self):
         return '<NutritionInfoList>'
 
-    def __iter__ (self):
-        for i in self.__nutinfos__: yield i
+    def __iter__(self):
+        yield from self.__nutinfos__
 
-    def recursive_length (self):
+    def recursive_length(self):
         """Return number of contained nutrition info objects, recursing any embedded lists.
         """
         n = 0
         for x in range(len(self)):
             obj = self[x]
-            if isinstance(obj,NutritionInfoList):
-                n += obj.recursive_length()
-            else:
-                n += 1
+            n += obj.recursive_length() if isinstance(obj,NutritionInfoList) else 1
         return n
 
 if __name__ == '__main__':
@@ -601,7 +590,7 @@ def foo ():
             self.nd = nd
             self.ings = []
 
-        def run (self):
+        def run(self):
             choices = list(self.ACTIONS.keys())
             for n,a in enumerate(choices):
                 print(n,a)
@@ -609,8 +598,7 @@ def foo ():
             while not choice:
                 choice = input('Enter number of choice: ')
                 choice = int(choice)
-                if choice < len(choices): choice = self.ACTIONS[choices[choice]]
-                else: choice = None
+                choice = self.ACTIONS[choices[choice]] if choice < len(choices) else None
             try:
                 choice()
             except:
@@ -628,7 +616,7 @@ def foo ():
             else:
                 self.ings = self.ings + self.nd.get_nutinfo_for_item(key,amt,unit)
 
-        def add_key (self):
+        def add_key(self):
             key=input('Enter key for which we add info: ')
             matches = self.nd.get_matches(key,10)
             for n,m in enumerate(matches):
@@ -637,8 +625,7 @@ def foo ():
             while not choice:
                 choice = input('Enter number of choice: ')
                 choice = int(choice)
-                if choice < len(matches): choice = matches[choice][1]
-                else: choice = None
+                choice = matches[choice][1] if choice < len(matches) else None
             self.nd.set_key_from_ndbno(key,choice)
             self.ings._reset()
 

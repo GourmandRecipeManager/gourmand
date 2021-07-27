@@ -12,12 +12,11 @@ PREP = 1
 COOK = 2
 
 
-def scale_pb (pb, do_grow=True):
+def scale_pb(pb, do_grow=True):
     w = pb.get_width()
     h = pb.get_height ()
     if not do_grow and (w < ICON_SIZE or h < ICON_SIZE):
-        if w < h: target = w
-        else: target = h
+        target = min(w, h)
     else:
         target = ICON_SIZE
     if w > h:
@@ -48,7 +47,7 @@ attr_to_icon = {
     'preptime':scale_pb(preptime_image),
     }
 
-def get_recipe_image (rec):
+def get_recipe_image(rec):
     if rec.image:
         pb = scale_pb(bytes_to_pixbuf(rec.image))
     else:
@@ -60,8 +59,8 @@ def get_recipe_image (rec):
         ratingPB = sg.get_pixbuf(rec.rating)
         h = pb.get_height() - ratingPB.get_height() - 5
         w = pb.get_width() - ratingPB.get_width() - 5
-        if h < 0: h = 0
-        if w < 0: w = 0
+        h = max(h, 0)
+        w = max(w, 0)
         if ratingPB.get_property('width') > pb.get_property('width'):
             SCALE = float(pb.get_property('width'))/ratingPB.get_property('width')
         else:

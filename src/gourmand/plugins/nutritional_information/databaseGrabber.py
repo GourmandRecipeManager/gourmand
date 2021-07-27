@@ -45,16 +45,15 @@ class DatabaseGrabber:
         self.show_progress=show_progress
         self.db = db
 
-    def get_zip_file (self):
-        if hasattr(self,'zipfile'):
-            return self.zipfile
-        else:
+    def get_zip_file(self):
+        if not hasattr(self, 'zipfile'):
             ofi = urllib.request.urlopen(self.USDA_ZIP_URL)
             tofi = tempfile.TemporaryFile()
             tofi.write(ofi.read())
             tofi.seek(0)
             self.zipfile = zipfile.ZipFile(tofi,'r')
-            return self.zipfile
+
+        return self.zipfile
 
     def get_file_from_url (self, filename):
         zf = self.get_zip_file()

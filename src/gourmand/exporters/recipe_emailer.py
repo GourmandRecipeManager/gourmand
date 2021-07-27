@@ -79,33 +79,31 @@ class RecipeEmailer (Emailer):
         self.body += s.getvalue()
         s.close_really()
 
-    def write_email_html (self):
+    def write_email_html(self):
         for r in self.recipes:
             fi = os.path.join(gglobals.tmpdir,"%s.htm"%r.title)
-            ofi = open(fi,'w')
-            e=html_exporter.html_exporter(self.rd,
-                                          r,
-                                          ofi,
-                                          conv=self.conv,
-                                          embed_css=True,
-                                          imagedir="")
-            ofi.close()
+            with open(fi,'w') as ofi:
+                e=html_exporter.html_exporter(self.rd,
+                                              r,
+                                              ofi,
+                                              conv=self.conv,
+                                              embed_css=True,
+                                              imagedir="")
             self.attachments.append(fi)
             for i in e.images:
                 self.attachments.append(i)
 
-    def write_email_pdf (self):
+    def write_email_pdf(self):
         prefs = pdf_exporter.get_pdf_prefs()
         for r in self.recipes:
             fi = os.path.join(gglobals.tmpdir,"%s.pdf"%r.title)
-            ofi = open(fi,'w')
-            e = pdf_exporter.PdfExporter(self.rd,
-                                         r,
-                                         ofi,
-                                         conv=self.conv,
-                                         change_units=self.change_units,
-                                         pdf_args=prefs)
-            ofi.close()
+            with open(fi,'w') as ofi:
+                e = pdf_exporter.PdfExporter(self.rd,
+                                             r,
+                                             ofi,
+                                             conv=self.conv,
+                                             change_units=self.change_units,
+                                             pdf_args=prefs)
             self.attachments.append(fi)
 
     def send_email_html (self, emailaddress=None, include_plain_text=True):
@@ -136,29 +134,27 @@ class EmailerDialog (RecipeEmailer):
             self.email_options[v[0]]=self.prefs.get(*v)
             self.option_list.append([k,self.email_options[v[0]]])
 
-    def dont_ask_cb (self, widget, *args):
-        if widget.get_active():
-            self.prefs['emailer_dont_ask']=True
-        else:
-            self.prefs['emailer_dont_ask']=False
+    def dont_ask_cb(self, widget, *args):
+        self.prefs['emailer_dont_ask'] = bool(widget.get_active())
 
-    def setup_dialog (self, force = False):
-        if force or not self.prefs.get('emailer_dont_ask',False):
-            d=de.PreferencesDialog(options=self.option_list,
-                                   option_label=_("Email Options"),
-                                   value_label="",
-                                   dont_ask_cb=self.dont_ask_cb,
-                                   dont_ask_custom_text=_("Don't ask before sending e-mail."))
-            retlist = d.run()
-            if retlist:
-                for o in retlist:
-                    k = o[0]
-                    v = o[1]
-                    pref = self.options[k][0]
-                    self.email_options[pref]=v
-                    self.prefs[pref]=v
+    def setup_dialog(self, force = False):
+        if not force and self.prefs.get('emailer_dont_ask', False):
+            return
+        d=de.PreferencesDialog(options=self.option_list,
+                               option_label=_("Email Options"),
+                               value_label="",
+                               dont_ask_cb=self.dont_ask_cb,
+                               dont_ask_custom_text=_("Don't ask before sending e-mail."))
+        retlist = d.run()
+        if retlist:
+            for o in retlist:
+                k = o[0]
+                v = o[1]
+                pref = self.options[k][0]
+                self.email_options[pref]=v
+                self.prefs[pref]=v
 
-    def email (self, address=None):
+    def email(self, address=None):
         if address: self.emailaddress=address
         if self.email_options['email_include_body']:
             self.write_email_text()
@@ -166,7 +162,7 @@ class EmailerDialog (RecipeEmailer):
             self.write_email_html()
         if self.email_options['email_include_pdf']:
             self.write_email_pdf()
-        if not self.email_options['email_include_body'] and not self.email_options['email_include_body']:
+        if not self.email_options['email_include_body']:
             de.show_message(_("E-mail not sent"),
                             sublabel=_("You have not chosen to include the recipe in the body of the message or as an attachment.")
                             )

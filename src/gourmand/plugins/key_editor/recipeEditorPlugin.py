@@ -214,13 +214,13 @@ class IngredientKeyEditor (RecEditorModule):
         if edited:
             # Update based on current ingredients...
             ITM = ie.ingtree_ui.ingController.ITEM_COL
-            def process_row (row):
+            def process_row(row):
                 obj = row[0]
                 item = row[ITM]
                 already_there = False
                 if isinstance(obj,RecRef):
                     return
-                if item == None: # if this is a group..
+                if item is None: # if this is a group..
                     for child in row.iterchildren():
                         process_row(child)
                     return

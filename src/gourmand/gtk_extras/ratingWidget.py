@@ -66,17 +66,16 @@ class StarGenerator:
         self.pixbufs = {}
         self.image_files = {}
 
-    def get_pixbuf (self,n,max=10):
+    def get_pixbuf(self,n,max=10):
 
         """Return a pixbuf with an image representing n/max stars"""
 
         if (n,max) in self.pixbufs:
             return self.pixbufs[(n,max)]
-        else:
-            img = self.build_image(n,max)
-            pb=self.get_pixbuf_from_image(img)
-            self.pixbufs[(n,max)]=pb
-            return pb
+        img = self.build_image(n,max)
+        pb=self.get_pixbuf_from_image(img)
+        self.pixbufs[(n,max)]=pb
+        return pb
 
     def get_full_width (self, max=10):
         return self.width*max//2
@@ -100,13 +99,13 @@ class StarGenerator:
         self.image_files[(n,max,ext)]=fi
         return fi
 
-    def build_image (self, n, max=10):
+    def build_image(self, n, max=10):
         """Build an image representing n/max stars."""
         img=Image.new('RGBA',
                       (self.get_full_width(max),
                        self.height),
                       self.background)
-        for i in range(0,(max//2)):
+        for i in range(max//2):
             if i*2+2 <= n:
                 to_paste = self.set_region
             elif (i*2)+1 <= n:
@@ -130,7 +129,7 @@ class StarGenerator:
         is_rgba = image.mode == 'RGBA'
         rowstride = 4 if is_rgba else 3
 
-        pb = GdkPixbuf.Pixbuf.new_from_data(
+        return GdkPixbuf.Pixbuf.new_from_data(
             image.tobytes(),
             GdkPixbuf.Colorspace.RGB,
             is_rgba,
@@ -138,7 +137,6 @@ class StarGenerator:
             image.size[0],
             image.size[1],
             rowstride * image.size[0])
-        return pb
 
 
 star_generator = StarGenerator()
@@ -167,12 +165,12 @@ class StarImage (Gtk.Image):
         self.upper = upper
         self.set_value(value)
 
-    def set_value (self, value):
+    def set_value(self, value):
 
         """Set value. Silently floor value at 0 and cap it at self.upper"""
 
-        if value > self.upper: value = self.upper
-        if value < 0: value = 0
+        value = min(value, self.upper)
+        value = max(value, 0)
         self.set_from_pixbuf(
             self.stars.get_pixbuf(value,self.upper)
             )

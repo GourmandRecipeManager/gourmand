@@ -21,13 +21,13 @@ if sys.platform not in ["win32",'darwin']:
 
 
 rl2gtk_papersizes = {
-    tuple([int(round(s)) for s in pagesizes.letter]) : Gtk.PAPER_NAME_LETTER,
-    tuple([int(round(s)) for s in pagesizes.legal]) : Gtk.PAPER_NAME_LEGAL,
-    tuple([int(round(s)) for s in pagesizes.B5]):Gtk.PAPER_NAME_B5,
-    tuple([int(round(s)) for s in pagesizes.A5]):Gtk.PAPER_NAME_A5,
-    tuple([int(round(s)) for s in pagesizes.A4]):Gtk.PAPER_NAME_A4,
-    tuple([int(round(s)) for s in pagesizes.A3]):Gtk.PAPER_NAME_A3,
-    }
+    tuple(int(round(s)) for s in pagesizes.letter): Gtk.PAPER_NAME_LETTER,
+    tuple(int(round(s)) for s in pagesizes.legal): Gtk.PAPER_NAME_LEGAL,
+    tuple(int(round(s)) for s in pagesizes.B5): Gtk.PAPER_NAME_B5,
+    tuple(int(round(s)) for s in pagesizes.A5): Gtk.PAPER_NAME_A5,
+    tuple(int(round(s)) for s in pagesizes.A4): Gtk.PAPER_NAME_A4,
+    tuple(int(round(s)) for s in pagesizes.A3): Gtk.PAPER_NAME_A3,
+}
 
 class OSXPDFPrinter:
     def setup_printer (self, parent=None):

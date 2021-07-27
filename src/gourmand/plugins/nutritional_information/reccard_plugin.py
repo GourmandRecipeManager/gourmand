@@ -69,14 +69,17 @@ class NutritionDisplayModule (RecDisplayModule):
         self.recipe_display.mult = self.mult_orig
         self.recipe_display.ingredientDisplay.display_ingredients()
 
-    def enter_page (self):
+    def enter_page(self):
         self.nutritional_highlighting = True
-        if not self.nutritionLabel.active_name:
-            if self.prefs.get('nutrition_to_highlight','kcal') in self.nutritionLabel.toggles:
-                self.nutritionLabel.toggles[
-                    self.prefs.get(
-                        'nutrition_to_highlight','kcal')
-                    ].activate()
+        if (
+            not self.nutritionLabel.active_name
+            and self.prefs.get('nutrition_to_highlight', 'kcal')
+            in self.nutritionLabel.toggles
+        ):
+            self.nutritionLabel.toggles[
+                self.prefs.get(
+                    'nutrition_to_highlight','kcal')
+                ].activate()
         # Save what servings were and set them to "1" so that the
         # ingredient amounts display how much goes into each servings
         # (assuming there is a yield value)
@@ -89,7 +92,7 @@ class NutritionDisplayModule (RecDisplayModule):
         self.ingredientDisplay = self.recipe_display.ingredientDisplay
         self.ingredientDisplay.markup_ingredient_hooks.append(self.nutritional_markup_hook)
 
-    def nutritional_markup_hook (self, istr, ing, ing_index, group_index):
+    def nutritional_markup_hook(self, istr, ing, ing_index, group_index):
         if self.nutritional_highlighting and self.nutritionLabel.active_name:
             props = self.nutritionLabel.active_properties
             nutinfo_for_ing = None
@@ -107,8 +110,8 @@ class NutritionDisplayModule (RecDisplayModule):
                 nut_amt = getattr(nutinfo_for_ing,props)
                 tot_amt = getattr(self.nutinfo,props)
             else:
-                nut_amt = sum([getattr(nutinfo_for_ing,p) or 0 for p in props])
-                tot_amt = sum([getattr(self.nutinfo,p) or 0 for p in props])
+                nut_amt = sum(getattr(nutinfo_for_ing,p) or 0 for p in props)
+                tot_amt = sum(getattr(self.nutinfo,p) or 0 for p in props)
             if nut_amt:
                 perc = float(nut_amt)/tot_amt
                 if self.recipe_display.yields_orig: nut_amt = nut_amt/self.recipe_display.yields_orig

@@ -57,7 +57,7 @@ class WebParser (InteractiveImporter):
             if tag==t:
                 return label
 
-    def get_images (self):
+    def get_images(self):
         self.images = []
         for i in self.soup('img'):
             try:
@@ -66,11 +66,7 @@ class WebParser (InteractiveImporter):
                 continue
             img_url = urllib.parse.urljoin(self.url, src)
             if self.imageexcluders:
-                exclude = False
-                for exc in  self.imageexcluders:
-                    if exc.search(img_url):
-                        exclude = True
-                        break
+                exclude = any(exc.search(img_url) for exc in self.imageexcluders)
                 if exclude: continue
             self.images.append(img_url)
 
@@ -84,14 +80,13 @@ class WebParser (InteractiveImporter):
             self.add_buffer_to_parsed()
         return self.parsed
 
-    def crawl (self, tag, parent_label=None):
+    def crawl(self, tag, parent_label=None):
         formatting = self.format_tag_whitespace(tag)
         if formatting == -1:
             return # special case allows formatting method to
                    # auto-skip scripts and what-not
-        else:
-            start_ws,end_ws = formatting
-            self.buffer += start_ws
+        start_ws,end_ws = formatting
+        self.buffer += start_ws
         label = self.identify_match(tag)
         if not label and parent_label:
             # inherit...
@@ -149,7 +144,7 @@ class WebParser (InteractiveImporter):
             self.parsed.append((pre_add,None))
         self.parsed.append((to_add,self.last_label))
 
-    def format_tag_whitespace (self, tag):
+    def format_tag_whitespace(self, tag):
         '''Return any whitespace required by tag, or -1 if tag should
         not be considered for text
         '''
@@ -163,9 +158,8 @@ class WebParser (InteractiveImporter):
         if tag.name in self.IS_BREAK:
             return '\n',''
         elif tag.name in self.NESTED:
-            parent_types = self.NESTED[tag.name]; parents = 0
-            for typ in parent_types:
-                parents += len(tag.fetchParents(typ))
+            parent_types = self.NESTED[tag.name]
+            parents = sum(len(tag.fetchParents(typ)) for typ in parent_types)
             return '\n'+self.TAB*parents,''
         elif tag.name in self.TAB_BEFORE:
             return self.TAB,''
@@ -174,13 +168,13 @@ class WebParser (InteractiveImporter):
         else:
             return '',''
 
-    def postparse (self, parsed):
+    def postparse(self, parsed):
         '''Do purely text-based parsing of content.
         '''
         new_parse = []
         for p,attr in parsed:
             p = re.sub(r'(\n\s*\n)+','\n\n',p) # Take out extra newlines
-            if attr == None or attr == 'recipe':
+            if attr is None or attr == 'recipe':
                 new_parse.extend(
                     self.text_parser.parse(p)
                     )

@@ -16,12 +16,12 @@ class FocusFixer:
     def focus_in_cb (self, widget, event):
         self.e.grab_focus()
 
-    def focus_out_cb (self, widget, event):
+    def focus_out_cb(self, widget, event):
         if not event.in_ and self.key in ['Tab']:
             parent = widget.get_parent()
             while parent and not isinstance(parent,Gtk.Window) :
                 parent = parent.get_parent()
-            for n in range(2):
+            for _ in range(2):
                 parent.emit('move-focus',Gtk.DirectionType.RIGHT)
             #parent.emit('move-focus',Gtk.DIRECTION_LEFT)
 
@@ -36,17 +36,15 @@ def cb_get_active_text (combobox):
         return None
     return model[active][0]
 
-def cb_set_active_text (combobox, text, col=0):
+def cb_set_active_text(combobox, text, col=0):
     """Set the active text of combobox to text. We fail
     if the text is not already in the model. Column is the column
     of the model from which text is drawn."""
     model = combobox.get_model()
-    n = 0
-    for rw in model:
+    for n, rw in enumerate(model):
         if rw[col]==text:
             combobox.set_active(n)
             return n
-        n += 1
     return None
 
 class setup_typeahead:
@@ -89,14 +87,12 @@ class setup_typeahead:
     def reset_str (self, *args):
         self.string = ""
 
-    def match_string_in_combo (self, str):
+    def match_string_in_combo(self, str):
         mod = self.cb.get_model()
-        n = 0
-        for r in mod:
+        for n, r in enumerate(mod):
             modstr = r[self.col]
             if modstr.lower().find(str.lower()) == 0:
                 return n
-            n += 1
 
 
 def setup_completion (cbe, col=0):

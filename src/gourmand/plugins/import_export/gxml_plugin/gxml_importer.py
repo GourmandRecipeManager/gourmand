@@ -21,7 +21,7 @@ class RecHandler (xml_importer.RecHandler):
 
     def startElement(self, name, attrs):
         self.elbuf = ""
-        if name=='category' or name=='cuisine' or name=='source':
+        if name in ['category', 'cuisine', 'source']:
             self.in_mixed=0
             self.metaid=unquoteattr(attrs.get('id',""))
         if name=='recipe':
@@ -46,9 +46,10 @@ class RecHandler (xml_importer.RecHandler):
         if name=='ingredient':
             self.in_mixed=0
             self.start_ing(id=self.rec['id'])
-            if attrs.get('optional',False):
-                if attrs.get('optional',False) not in ['no','false','False','No','None']: #support for obsolete values
-                    self.ing['optional']=True
+            if attrs.get('optional', False) and attrs.get(
+                'optional', False
+            ) not in ['no', 'false', 'False', 'No', 'None']: #support for obsolete values
+                self.ing['optional']=True
         if name=='ingref':
             self.in_mixed=0
             self.start_ing(id=self.rec['id'])
@@ -67,12 +68,12 @@ class RecHandler (xml_importer.RecHandler):
             for (n,v) in list(attrs.items()):
                 self.mixed += " %s='%s'" % (n,v)
             self.mixed += ">"
-        if name=='instructions' or name=='modifications':
+        if name in ['instructions', 'modifications']:
             self.in_mixed = 1
             self.mixed = ""
 
-    def endElement (self, name):
-        if name=='category' or name=='cuisine' or name=='source':
+    def endElement(self, name):
+        if name in ['category', 'cuisine', 'source']:
             self.meta[name][self.metaid]=xml.sax.saxutils.unescape(self.elbuf)
         if name=='title':
             self.rec['title']=xml.sax.saxutils.unescape(self.elbuf)
@@ -92,7 +93,7 @@ class RecHandler (xml_importer.RecHandler):
             self.add_item(xml.sax.saxutils.unescape(self.elbuf))
         if name=='amount':
             self.add_amt(self.elbuf)
-        if name=='instructions' or name=='modifications':
+        if name in ['instructions', 'modifications']:
             self.in_mixed = 0
             self.mixed += self.elbuf
             # special unescaping of our grand little tags

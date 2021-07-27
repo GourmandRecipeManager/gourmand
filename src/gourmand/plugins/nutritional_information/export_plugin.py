@@ -18,7 +18,7 @@ class NutritionBaseExporterPlugin (BaseExporterPlugin):
                            self.get_nutritional_info_as_text_blob,
                            self.TEXT)
 
-    def get_nutritional_info_as_text_blob (self, rec):
+    def get_nutritional_info_as_text_blob(self, rec):
         if not Prefs.instance().get('include_nutritional_info_in_export',True): return None
         txt = ''
         footnotes = ''
@@ -37,31 +37,31 @@ class NutritionBaseExporterPlugin (BaseExporterPlugin):
                                 _('Nutritional information reflects amounts for entire recipe'))
 
         if vapor:
-            txt = txt + '*'
-            footnotes = '\n*' + _('Nutritional information is missing for %s ingredients: %s')%(
-                len(vapor),
-                ', '.join([escape(nv.__ingobject__.item) for nv in vapor])
+            txt += '*'
+            footnotes = '\n*' + (
+                _('Nutritional information is missing for %s ingredients: %s')
+                % (
+                    len(vapor),
+                    ', '.join(escape(nv.__ingobject__.item) for nv in vapor),
                 )
+            )
+
         for itm in MAIN_NUT_LAYOUT:
             if itm == SEP:
                 # We don't have any nice way of outputting separator
                 # lines in our export
                 continue
+            label,typ,name,properties,show_percent,unit = itm
+            itm_text = '<b>'+label+'</b>' if typ==MAJOR else label
+            if unit:
+                itm_text += ' (%s)'%unit
+            if isinstance(properties, list):
+                amts = [getattr(nutinfo,att) for att in properties]
+                amt = sum(amts)
             else:
-                label,typ,name,properties,show_percent,unit = itm
-                if typ==MAJOR:
-                    itm_text = '<b>'+label+'</b>'
-                else:
-                    itm_text = label
-                if unit:
-                    itm_text += ' (%s)'%unit
-                if isinstance(properties, list):
-                    amts = [getattr(nutinfo,att) for att in properties]
-                    amt = sum(amts)
-                else:
-                    amt = getattr(nutinfo,properties)
-                if rec.yields:
-                    amt = amt/rec.yields
-                itm_text += ' %d'%round(amt)
+                amt = getattr(nutinfo,properties)
+            if rec.yields:
+                amt = amt/rec.yields
+            itm_text += ' %d'%round(amt)
             txt += '\n'+itm_text
         return '\n'.join([txt,footnotes])

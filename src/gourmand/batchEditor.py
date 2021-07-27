@@ -20,7 +20,7 @@ class BatchEditor:
         self.setup_boxes()
         self.dialog.connect('response',self.response_cb)
 
-    def setup_boxes (self):
+    def setup_boxes(self):
         self.attribute_widgets = {}
         self.get_data_methods = {}
         for a,l,w in gglobals.REC_ATTRS:
@@ -32,7 +32,7 @@ class BatchEditor:
                 setattr(self,'%sBox'%a,box)
                 checkbutton.connect('toggled',self.toggle_cb,a)
                 box.set_sensitive(False)
-                if w=='Combo':
+                if w == 'Combo':
                     # If this is a combo box, we'll get info via the child's get_text method...
                     self.get_data_methods[a] = (checkbutton,
                                                 getattr(self,'%sBox'%a).get_children()[0].get_text)
@@ -40,11 +40,8 @@ class BatchEditor:
                     box.set_model(self.rg.get_attribute_model(a))
                     box.set_text_column(0)
                     cb_extras.setup_completion(box)
-                elif w=='Entry':
-                    if hasattr(box,'get_value'):
-                        method = box.get_value
-                    else:
-                        method = box.get_text
+                elif w == 'Entry':
+                    method = box.get_value if hasattr(box,'get_value') else box.get_text
                     self.get_data_methods[a] = (checkbutton,
                                                 method)
 

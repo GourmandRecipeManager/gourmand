@@ -780,7 +780,7 @@ class Language(AbstractLanguage):
             rets.append(Language.irregular_plurals[s])
         if Language.two_digit_plural_matcher.search(s):
             wrd=s[0:-2]
-            if not wrd in rets: rets.append(wrd)
+            if wrd not in rets: rets.append(wrd)
         if Language.v_plural_matcher.search(s):
             rets.append(s[0:-3]+'f')
         if Language.one_digit_plural_matcher.search(s):

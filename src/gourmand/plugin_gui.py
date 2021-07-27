@@ -104,7 +104,7 @@ class PluginChooser:
         self.do_change_plugin(plugin_set, state, ls)
         ls[path][0] = state
 
-    def do_change_plugin (self, plugin_set, state, ls):
+    def do_change_plugin(self, plugin_set, state, ls):
         try:
             if state:
                 try:
@@ -121,20 +121,28 @@ class PluginChooser:
             else:
                 dependers = self.loader.check_if_depended_upon(plugin_set)
                 if dependers:
-                    if de.getBoolean(
-                        label=_("Plugin is needed for other plugins. Deactivate plugin anyway?"),
-                        sublabel=(_('The following plugins require %s:'%plugin_set.name) + '\n' +
-                                  '\n'.join(plugin_set.name for plugin_set in dependers)
-                                  ),
+                    if not de.getBoolean(
+                        label=_(
+                            "Plugin is needed for other plugins. Deactivate plugin anyway?"
+                        ),
+                        sublabel=(
+                            _(
+                                'The following plugins require %s:'
+                                % plugin_set.name
+                            )
+                            + '\n'
+                            + '\n'.join(
+                                plugin_set.name for plugin_set in dependers
+                            )
+                        ),
                         custom_yes=_('Deactivate anyway'),
-                        custom_no=_('Keep plugin active')
-                        ):
-                        self.loader.deactivate_plugin_set(plugin_set)
-                        for row in ls:
-                            if row[1] in dependers:
-                                row[0] = False
-                    else:
+                        custom_no=_('Keep plugin active'),
+                    ):
                         raise Exception("Cancelled")
+                    self.loader.deactivate_plugin_set(plugin_set)
+                    for row in ls:
+                        if row[1] in dependers:
+                            row[0] = False
                 else:
                     self.loader.deactivate_plugin_set(plugin_set)
         except:

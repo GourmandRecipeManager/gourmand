@@ -53,11 +53,8 @@ class RecipeMergerDialog:
     DUP_INDEX_PAGE = 0
     MERGE_PAGE = 1
 
-    def __init__ (self, rd=None, in_recipes=None, on_close_callback=None):
-        if rd:
-            self.rd = rd
-        else:
-            self.rd = recipeManager.get_recipe_manager()
+    def __init__(self, rd=None, in_recipes=None, on_close_callback=None):
+        self.rd = rd or recipeManager.get_recipe_manager()
         self.in_recipes = in_recipes
         self.on_close_callback = on_close_callback
         self.to_merge = [] # Queue of recipes to be merged...
@@ -287,14 +284,14 @@ class RecipeMergerDialog:
         if not self.to_merge:
             self.populate_tree()
 
-    def populate_tree_if_possible (self):
+    def populate_tree_if_possible(self):
         self.populate_tree()
         if not self.dups:
             self.searchTypeCombo.set_active(self.RECIPE_DUP_MODE)
             self.populate_tree()
-            if not self.dups:
-                self.searchTypeCombo.set_active(self.ING_DUP_MODE)
-                self.populate_tree()
+        if not self.dups:
+            self.searchTypeCombo.set_active(self.ING_DUP_MODE)
+            self.populate_tree()
 
     def show_if_there_are_dups (self, label=None):
         self.populate_tree_if_possible()
@@ -331,17 +328,16 @@ class RecipeMerger:
     def __init__ (self, rd):
         self.rd = rd
 
-    def autoMergeRecipes (self, recs):
+    def autoMergeRecipes(self, recs):
         to_fill,conflicts = recipeIdentifier.merge_recipes(self.rd, recs)
         if conflicts:
             raise ConflictError(conflicts)
-        else:
-            to_keep = recs[0]
-            # Update a single recipe with our information...
-            self.rd.modify_rec(to_keep,to_fill)
-            # Delete the other recipes...
-            for r in recs[1:]:
-                self.rd.delete_rec(r.id)
+        to_keep = recs[0]
+        # Update a single recipe with our information...
+        self.rd.modify_rec(to_keep,to_fill)
+        # Delete the other recipes...
+        for r in recs[1:]:
+            self.rd.delete_rec(r.id)
 
     def uiMergeRecipes (self, recs):
         diffs = recipeIdentifier.diff_recipes(self.rd, recs)
@@ -525,8 +521,8 @@ class DiffTable (Gtk.Table):
         """Return an ing-blurb for r1 and r2 suitable for display."""
         idiff = recipeIdentifier.diff_ings(self.rd, r1, r2)
         if idiff: self.idiffs.append(idiff)
-        def is_line (l):
-            return not (l == '<diff/>')
+        def is_line(l):
+            return l != '<diff/>'
         if idiff:
             ret = []
             for igroup in idiff:

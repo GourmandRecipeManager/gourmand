@@ -105,12 +105,12 @@ class GourmandApplication:
                         )
 
     # Convenience method for showing progress dialogs for import/export/deletion
-    def show_progress_dialog (self, thread, progress_dialog_kwargs=None,
+    def show_progress_dialog(self, thread, progress_dialog_kwargs=None,
                               message=_("Import paused"),
                               stop_message=_("Stop import")):
         """Show a progress dialog"""
         if progress_dialog_kwargs is None:
-            progress_dialog_kwargs = dict()
+            progress_dialog_kwargs = {}
         name = getattr(thread, 'name', '')
         for k,v in [('okay',True),
                     ('label',name),
@@ -274,21 +274,20 @@ class GourmandApplication:
         for n, item in enumerate(slist):
             if model[n][0] == item:
                 continue
-            else:
-                # See if we match something later in the model -- if
-                # we do, suck up the whole model
-                additional = 1
-                found_match = False
-                while len(model) > (n+additional):
-                    if model[n+additional][0] == item:
-                        while additional > 0:
-                            model.remove(model.get_iter(n))
-                            additional -= 1
-                            found_match = False
-                        break
-                    additional += 1
-                if not found_match:
-                    model.insert(n,[item])
+            # See if we match something later in the model -- if
+            # we do, suck up the whole model
+            additional = 1
+            found_match = False
+            while len(model) > (n+additional):
+                if model[n+additional][0] == item:
+                    while additional > 0:
+                        model.remove(model.get_iter(n))
+                        additional -= 1
+                        found_match = False
+                    break
+                additional += 1
+            if not found_match:
+                model.insert(n,[item])
         while len(model) > len(slist):
             last = model.get_iter(len(model) - 1)
             model.remove(last)
@@ -388,7 +387,7 @@ class GourmandApplication:
             self.message(_("Saved!"))
         self.loader.save_active_plugins() # relies on us being a pluggable...
 
-    def quit (self):
+    def quit(self):
         # TODO: check if this method is called.
         for c in self.conf:
             c.save_properties()
@@ -415,29 +414,28 @@ class GourmandApplication:
                                         custom_yes=Gtk.STOCK_QUIT,
                                         custom_no=_("Don't exit!"),
                                         cancel=False)
-            if quit_anyway:
-                for t in threads:
-                    if t.getName() !='MainThread':
-                        try:
-                            t.terminate()
-                        except:
-                            debug("Unable to terminate thread %s"%t,0)
-                            # try not to lose data if this is going to
-                            # end up in a force quit
-                            #self.save_default()
-                            return True
-                if not use_threads:
-                    for t in self._threads:
-                        try:
-                            t.terminate()
-                            self.threads = self.threads - 1
-                        except:
-                            # try not to lose data if this is going to
-                            # end up in a force quit
-                            #self.save_default()
-                            return True
-            else:
+            if not quit_anyway:
                 return True
+            for t in threads:
+                if t.getName() !='MainThread':
+                    try:
+                        t.terminate()
+                    except:
+                        debug("Unable to terminate thread %s"%t,0)
+                        # try not to lose data if this is going to
+                        # end up in a force quit
+                        #self.save_default()
+                        return True
+            if not use_threads:
+                for t in self._threads:
+                    try:
+                        t.terminate()
+                        self.threads = self.threads - 1
+                    except:
+                        # try not to lose data if this is going to
+                        # end up in a force quit
+                        #self.save_default()
+                        return True
         # Delete our deleted ingredient keys -- we don't need these
         # for posterity since there is no "trash" interface for
         # ingredients anyway.
@@ -564,16 +562,22 @@ class RecTrash (RecIndex):
         self.update_from_db()
 
 class UnitModel (Gtk.ListStore):
-    def __init__ (self, converter):
+    def __init__(self, converter):
         debug('UnitModel.__init__',5)
         self.conv = converter
         Gtk.ListStore.__init__(self, str, str)
         # the first item of each conv.units
         ## areckx: is there a reason why this is formatted this way?
-        lst = [(a[1][0],a[0]) for a in [x for x in self.conv.units if not (x[1][0] in converter.unit_to_seconds
-                                                                  or
-                                                                  x[0] in converter.unit_to_seconds
-                                                                  )]]
+        lst = [
+            (a[1][0], a[0])
+            for a in [
+                x
+                for x in self.conv.units
+                if x[1][0] not in converter.unit_to_seconds
+                and x[0] not in converter.unit_to_seconds
+            ]
+        ]
+
         ##
         lst.sort()
         for ulong,ushort in lst:
@@ -717,7 +721,7 @@ class StuffThatShouldBePlugins:
         ce = ClipboardExporter(list(zip(recipes, ingredients)))
         ce.export()
 
-    def batch_edit_recs (self, *args):
+    def batch_edit_recs(self, *args):
         recs = self.get_selected_recs_from_rec_tree()
         if not hasattr(self,'batchEditor'):
             self.batchEditor =  batchEditor.BatchEditor(self)
@@ -727,7 +731,7 @@ class StuffThatShouldBePlugins:
         if self.batchEditor.values:
             changes = self.batchEditor.values
             only_where_blank = self.batchEditor.setFieldWhereBlank
-            attributes = ', '.join([_(k) for k in list(changes.keys())])
+            attributes = ', '.join(_(k) for k in list(changes.keys()))
             msg = ngettext('Set %(attributes)s for %(num)s selected recipe?',
                                    'Set %(attributes)s for %(num)s selected recipes?',
                                    len(recs))%{'attributes':attributes,
@@ -899,10 +903,8 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
         # user settings
         toggleToolbar(None, self.prefs.get('showToolbar',True))
 
-    def configure_columns (self, retcolumns):
-        hidden=[]
-        for c,v in retcolumns:
-            if not v: hidden.append(c)
+    def configure_columns(self, retcolumns):
+        hidden = [c for c,v in retcolumns if not v]
         self.rectree_conf.hidden=self.prefs['rectree_hidden_columns']=hidden
         self.rectree_conf.apply_visibility()
 
@@ -1121,16 +1123,14 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
                 GObject.idle_add(show)
 
     # Deletion
-    def show_deleted_recs (self, *args):
+    def show_deleted_recs(self, *args):
         if not hasattr(self,'recTrash'):
             self.recTrash = RecTrash(self.rg)
-            self.recTrash.show()
-        else:
-            self.recTrash.show()
+        self.recTrash.show()
 
-    def rec_tree_keypress_cb (self, widget, event):
+    def rec_tree_keypress_cb(self, widget, event):
         keyname = Gdk.keyval_name(event.keyval)
-        if keyname == 'Delete' or keyname == 'BackSpace':
+        if keyname in ['Delete', 'BackSpace']:
             self.rec_tree_delete_rec_cb()
             return True
 
@@ -1161,11 +1161,8 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
             self.del_rc(rec.id)
 
     @plugin_loader.pluggable_method
-    def rec_tree_delete_recs (self, recs):
-        cancelled = []
-        for rec in recs:
-            if self.delete_open_card_carefully(rec): # returns True if user cancels
-                cancelled.append(rec)
+    def rec_tree_delete_recs(self, recs):
+        cancelled = [rec for rec in recs if self.delete_open_card_carefully(rec)]
         if cancelled:
             for c in cancelled: recs.remove(c)
         self.rd.undoable_delete_recs(

@@ -67,10 +67,7 @@ class UndoableObject:
         self.reundo_name = reundo_name
         self.is_undo = is_undo
         self.widget = widget
-        if self.get_reapply_action_args:
-            self.reapplyable = True
-        else:
-            self.reapplyable = False
+        self.reapplyable = bool(self.get_reapply_action_args)
         self.action_args = action_args
 
     def perform (self):
@@ -120,8 +117,8 @@ class UndoableTextChange (UndoableObject):
     def determine_mode(self,
                        current: Optional[str] = "",
                        initial: Optional[str] = "") -> UndoMode:
-        current = current if current else self.text
-        initial = initial if initial else self.initial_text
+        current = current or self.text
+        initial = initial or self.initial_text
 
         if len(current) > len(initial):
             return UndoMode.ADD
@@ -150,7 +147,7 @@ class UndoableTextChange (UndoableObject):
             else:
                 return [len(initial_text),len(text2)-len(initial_text)]
 
-    def add_text (self, new_text):
+    def add_text(self, new_text):
         mode=self.determine_mode(new_text,self.text)
         contmode = self.determine_mode(new_text,self.text)
         if (mode == contmode == self.mode):
@@ -159,10 +156,11 @@ class UndoableTextChange (UndoableObject):
                 # there are multiple places where "Too many changes"
                 # could crop up as an error.
                 cindex,clen = self.find_change(new_text)
-                if ((cindex==self.cindex) or
-                    (self.mode == UndoMode.ADD and cindex == self.cindex) or
-                    (self.mode == UndoMode.DELETE and cindex == self.cindex-clen)
-                    ):
+                if (
+                    cindex == self.cindex
+                    or self.mode == UndoMode.DELETE
+                    and cindex == self.cindex - clen
+                ):
                     if self.mode == UndoMode.ADD:
                         changed_text = new_text[cindex:cindex+(self.clen+clen)]
                     else: changed_text=''
@@ -339,7 +337,7 @@ class UndoableGenericWidget:
     def get (self):
         return getattr(self.w,self.get_method)()
 
-    def changecb (self,*args):
+    def changecb(self,*args):
         if self.im_doing_the_setting:
             # If we are doing the setting, presumably this is from one
             # of the Undo objects we created, in which case we don't
@@ -348,16 +346,15 @@ class UndoableGenericWidget:
         old_val = self.last_value
         new_val = self.get()
         if old_val==new_val: return # Ignore redundant changes...
-        if new_val != old_val:
-            # We don't perform because we're being called after the action has happened.
-            # We simply append ourselves to the history list.
-            u = UndoableObject(lambda *args: self.set(new_val),
-                               lambda *args: self.set(old_val),
-                               self.history,
-                               widget=self.w
-                               )
-            self.history.append(u)
-            self.last_value=new_val
+        # We don't perform because we're being called after the action has happened.
+        # We simply append ourselves to the history list.
+        u = UndoableObject(lambda *args: self.set(new_val),
+                           lambda *args: self.set(old_val),
+                           self.history,
+                           widget=self.w
+                           )
+        self.history.append(u)
+        self.last_value=new_val
 
 class UndoableTextView (UndoableTextContainer):
     def __init__ (self, textview, history):
@@ -423,12 +420,12 @@ class UndoHistoryList (list):
         action.inverse()
         for h in self.action_hooks: h(self,action,'undo')
 
-    def redo (self, *args):
+    def redo(self, *args):
         if len(self) == 0: return False
         index = -1
         try:
             while not self[index].is_undo:
-                index = index - 1
+                index -= 1
         except IndexError:
             debug('All %s available actions are is_undo=False'%len(self),0)
             print('There is nothing to redo!')
@@ -453,7 +450,7 @@ class UndoHistoryList (list):
             return
         w.set_sensitive(is_sensitive)
 
-    def gui_update (self):
+    def gui_update(self):
         debug('gui_update',0)
         if len(self) >= 1:
             undoables = [x.is_undo for x in self]
@@ -472,11 +469,13 @@ class UndoHistoryList (list):
             if self[-1].reapplyable:
                 debug('Sensitizing "reapply" widgets',0)
                 self.set_sensitive(self.reapply_widget,True)
-                if self[-1].reapply_name:
-                    if type(self.reapply_widget)==Gtk.MenuItem:
-                        alabel = self.reapply_widget.get_children()[0]
-                        alabel.set_text_with_mnemonic(self[-1].reapply_name)
-                        alabel.set_use_markup(True)
+                if (
+                    self[-1].reapply_name
+                    and type(self.reapply_widget) == Gtk.MenuItem
+                ):
+                    alabel = self.reapply_widget.get_children()[0]
+                    alabel.set_text_with_mnemonic(self[-1].reapply_name)
+                    alabel.set_use_markup(True)
         else:
             debug('Nothing to undo, desensitizing widgets',0)
             self.set_sensitive(self.redo_widget,False)
@@ -564,15 +563,14 @@ class MultipleUndoLists:
 
     def get_all_histories (self): return list(self.histories.values())
 
-    def get_history (self):
+    def get_history(self):
         hid=self.get_current_id()
-        if hid in self.histories:
-            #debug('Returning history %s for id %s'%([repr(i) for i in self.histories[hid]],hid),0)
-            return self.histories[hid]
-        else:
+        if hid not in self.histories:
             #debug('Creating new history for id %s'%hid,0)
             self.histories[hid]=self.make_history()
-            return self.histories[hid]
+
+        #debug('Returning history %s for id %s'%([repr(i) for i in self.histories[hid]],hid),0)
+        return self.histories[hid]
 
     def make_history (self):
         uhl = UndoHistoryList(self.undo_widget,self.redo_widget,None,None)

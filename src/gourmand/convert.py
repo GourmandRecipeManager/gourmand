@@ -47,11 +47,11 @@ class PossiblyCaseInsensitiveDictionary(collections.abc.MutableMapping):
 
     def __delitem__(self, key):
         norm = self.__normalization(key)
-        if norm in self.__mapping:
-            del self.__orig[norm]
-            del self.__mapping[norm]
-        else:
+        if norm not in self.__mapping:
             raise KeyError(key)
+
+        del self.__orig[norm]
+        del self.__mapping[norm]
 
     def __getitem__(self, key):
         norm = self.__normalization(key)
@@ -152,11 +152,11 @@ class Converter:
         for u,alts in self.time_units:
             lst = []
             for a in alts:
-                if not a in lst: lst.append(a)
-                if not a.title() in lst: lst.append(a.title())
-                if not a.capitalize() in lst: lst.append(a.capitalize())
-                if not a.upper() in lst: lst.append(a.upper())
-                if not a.lower() in lst: lst.append(a.lower())
+                if a not in lst: lst.append(a)
+                if a.title() not in lst: lst.append(a.title())
+                if a.capitalize() not in lst: lst.append(a.capitalize())
+                if a.upper() not in lst: lst.append(a.upper())
+                if a.lower() not in lst: lst.append(a.lower())
             self.units.append((u,lst))
         self.unit_dict=PossiblyCaseInsensitiveDictionary()
         for itm in self.units:
@@ -213,17 +213,16 @@ class Converter:
                                 to_expand.append(k)
                     expanded.append(itm)
 
-    def convert_simple (self, u1, u2, item=None):
+    def convert_simple(self, u1, u2, item=None):
         if u1 == u2:
             return 1.0
+        dict=self.conv_table
+        if (u1,u2) in dict:
+            return dict[(u1,u2)]
+        elif (u2,u1) in dict:
+            return float(1) / float(dict[(u2,u1)])
         else:
-            dict=self.conv_table
-            if (u1,u2) in dict:
-                return dict[(u1,u2)]
-            elif (u2,u1) in dict:
-                return float(1) / float(dict[(u2,u1)])
-            else:
-                return 0
+            return 0
 
     def convert_w_density (self, u1, u2, density=None, item=None):
         if u1 == u2:
@@ -242,17 +241,17 @@ class Converter:
         else:
             return None
 
-    def list_of_cu_tables (self, dictcu=None):
+    def list_of_cu_tables(self, dictcu=None):
         if (not dictcu):
             dictcu = self.cross_unit_table
         values = list(dictcu.values())
         ret = []
         for v in values:
-            if not v[0] in ret:
+            if v[0] not in ret:
                 ret.append(v[0])
         return ret
 
-    def conv_dict_for_item (self, item=None, dictcu=None, mult=None):
+    def conv_dict_for_item(self, item=None, dictcu=None, mult=None):
         """item overrides mult"""
         if (not dictcu):
             dictcu = self.cross_unit_table
@@ -260,26 +259,20 @@ class Converter:
 #        my_tbls = []
         ret = {}
         for itm in list(dictcu.items()):
-            k = itm[0]
             v = itm[1]
             dct = self.cross_unit_dicts[v[0]]
-            conv = v[1]
             if item and item in dct:
                 mult = dct[item]
             if mult:
+                k = itm[0]
+                conv = v[1]
                 ret[k] = conv * mult
         return ret
 
-    def converter (self, u1, u2, item=None, density=None):
+    def converter(self, u1, u2, item=None, density=None):
         ## Just a front end to convert_fancy that looks up units
-        if u1 in self.unit_dict:
-            unit1 = self.unit_dict[u1]
-        else:
-            unit1 = u1
-        if u2 in self.unit_dict:
-            unit2 = self.unit_dict[u2]
-        else:
-            unit2 = u2
+        unit1 = self.unit_dict[u1] if u1 in self.unit_dict else u1
+        unit2 = self.unit_dict[u2] if u2 in self.unit_dict else u2
         ## provide some kind of item lookup?
         return self.convert_fancy(unit1, unit2, item=item, density=density)
 
@@ -300,16 +293,16 @@ class Converter:
                 dct.update(self.conv_dict_for_item(mult=density))
         return self.possible_conversions(u, dct)
 
-    def get_all_conversions (self, u, item=None, density=None):
+    def get_all_conversions(self, u, item=None, density=None):
         dict = self.get_conversions(u, item, density)
         expanded = []
         conversions = list(dict.keys())
         lst = conversions[0:] # make another copy to chew up
         while len(lst) >= 1:
             itm = lst.pop()
-            if not itm in conversions:
+            if itm not in conversions:
                 conversions.append(itm)
-            if not itm in expanded:
+            if itm not in expanded:
                 d = self.get_conversions(u,itm,density)
                 lst.extend(list(d.keys()))
                 expanded.append(itm)
@@ -332,7 +325,7 @@ class Converter:
                 ret[i1] = float(item[1])
         return ret
 
-    def readability_score (self,amt,unit=None):
+    def readability_score(self,amt,unit=None):
         """We rate the readability of a number and unit
 
         This is rather advanced. We presume a few things -- such as that we
@@ -392,19 +385,15 @@ class Converter:
                     readability += -2
                     # now we get clever and add a penalty proportional to the oversizedness
                     if (amt-mx): readability += - ((amt - mx)/float(mx))*2
-        else:
-            # otherwise, we'll make some assumptions about numbers
-            # we don't like things over a thousand and we really don't
-            # or under a hundredth
-            if amt > 1000: readability += -2
-            elif amt < .1:
+        elif amt > 1000: readability += -2
+        elif amt < .1:
+            readability += -1
+            if amt < .01:
                 readability += -1
-                if amt < .01:
+                if amt < .001:
                     readability += -1
-                    if amt < .001:
+                    if amt < .0001:
                         readability += -1
-                        if amt < .0001:
-                            readability += -1
         ## And we like numbers between 1/8 and 4
         #if 0.25 <= amt <= 4:
         #    readability += 1
@@ -424,7 +413,7 @@ class Converter:
         #    readability += -20
         return readability
 
-    def adjust_unit (self, amt, unit, item=None, favor_current_unit=True, preferred_unit_groups=[]):
+    def adjust_unit(self, amt, unit, item=None, favor_current_unit=True, preferred_unit_groups=[]):
 
         """Return the most readable equivalent of amount and unit for item ITM
 
@@ -444,17 +433,16 @@ class Converter:
             return amt,unit
         else:
             units=defaults.UNIT_GROUPS[ugroup]
-            if preferred_unit_groups:
-                if ugroup not in preferred_unit_groups:
-                    for ug in preferred_unit_groups:
-                        conv = self.converter(u,defaults.UNIT_GROUPS[ug][0][0])
-                        if conv:
-                            units = defaults.UNIT_GROUPS[ug]
-                            amt = conv * amt
-                            u = unit = defaults.UNIT_GROUPS[ug][0][0]
-                            break
-                        else:
-                            continue
+            if preferred_unit_groups and ugroup not in preferred_unit_groups:
+                for ug in preferred_unit_groups:
+                    conv = self.converter(u,defaults.UNIT_GROUPS[ug][0][0])
+                    if conv:
+                        units = defaults.UNIT_GROUPS[ug]
+                        amt = conv * amt
+                        u = unit = defaults.UNIT_GROUPS[ug][0][0]
+                        break
+                    else:
+                        continue
             ret_readability = self.readability_score(amt,unit)
             if favor_current_unit: ret_readability += 1
             ret_amt = amt
@@ -637,7 +625,7 @@ def seconds_to_timestring(time: int,
                     # round because 1/2 = 1 as far as plural forms are concerned
                     time_formatters[unit](round(time_covered))
                     ]))
-                time = time - time_covered * divisor
+                time -= time_covered * divisor
                 if time==0: break
     if len(time_strings)>2:
         # Translators... this is a messay way of concatenating
@@ -686,8 +674,10 @@ all_number_words.sort(
     ))
 
 NUMBER_WORD_REGEXP = '|'.join(all_number_words).replace(' ',r'\s+')
-FRACTION_WORD_REGEXP = '|'.join([n for n in all_number_words if NUMBER_WORDS[n]<1.0]
-                                ).replace(' ',r'\s+')
+FRACTION_WORD_REGEXP = '|'.join(
+    n for n in all_number_words if NUMBER_WORDS[n] < 1.0
+).replace(' ', r'\s+')
+
 
 NORMAL_FRACTIONS = [(1,2),(1,4),(3,4)]
 
@@ -764,10 +754,10 @@ NUMBER_MID_REGEXP += "]"
 NUMBER_END_REGEXP = NUMBER_START_REGEXP
 NUMBER_REGEXP = "("+NUMBER_START_REGEXP+"*"+NUMBER_MID_REGEXP+"*"+NUMBER_END_REGEXP
 if NUMBER_WORD_REGEXP:
-     NUMBER_REGEXP = NUMBER_REGEXP + '|' + NUMBER_WORD_REGEXP + ')'
-     NUMBER_NO_RANGE_REGEXP = '(' + NUMBER_START_REGEXP + '+|' + NUMBER_WORD_REGEXP + ')'
+    NUMBER_REGEXP = NUMBER_REGEXP + '|' + NUMBER_WORD_REGEXP + ')'
+    NUMBER_NO_RANGE_REGEXP = '(' + NUMBER_START_REGEXP + '+|' + NUMBER_WORD_REGEXP + ')'
 else:
-    NUMBER_REGEXP = NUMBER_REGEXP + ")"
+    NUMBER_REGEXP += ")"
     NUMBER_NO_RANGE_REGEXP = NUMBER_START_REGEXP + '+'
 NUMBER_MATCHER = re.compile("^%s$"%NUMBER_REGEXP,re.UNICODE)
 
@@ -815,9 +805,10 @@ for canonical_name,other_names in defaults.UNITS:
     if ' ' in canonical_name: multi_word_units.append(canonical_name)
     for n in other_names:
         if ' ' in n: multi_word_units.append(n)
-MULTI_WORD_UNIT_REGEXP = '(' + \
-                       '|'.join([re.escape(str(u)) for u in multi_word_units]) \
-                       + ')'
+MULTI_WORD_UNIT_REGEXP = (
+    '(' + '|'.join(re.escape(str(u)) for u in multi_word_units)
+) + ')'
+
 
 
 # generic ingredient matcher. This is far from a good matcher -- it's
@@ -841,7 +832,7 @@ try:
  (?P<unit>\s*(%(MULTI_WORD_UNIT_REGEXP)s|[\w.]+))?\s+ # a unit
  (?P<item>.*?)$ # and the rest of our stuff...
  """
-    ING_MATCHER_REGEXP = ING_MATCHER_REGEXP%locals()
+    ING_MATCHER_REGEXP %= locals()
 except:
     print('Failure with local vars...')
     for s in ['NUMBER_FINDER_REGEXP',
@@ -870,7 +861,7 @@ def convert_fractions_to_ascii (s):
     s=re.sub(SLASH,'/',s)
     return s
 
-def fractify (decimal, divisor, approx=0.01, fractions=FRACTIONS_NORMAL):
+def fractify(decimal, divisor, approx=0.01, fractions=FRACTIONS_NORMAL):
     """Return fraction equivalent of decimal using divisor
 
     If we don't have a fit within our approximation, return the
@@ -880,54 +871,49 @@ def fractify (decimal, divisor, approx=0.01, fractions=FRACTIONS_NORMAL):
     if dividend == divisor:
         return 1
     if dividend:
-        if fractions==FRACTIONS_ASCII:
+        if (
+            fractions != FRACTIONS_ASCII
+            and fractions == FRACTIONS_ALL
+            and (dividend, divisor) in NUM_TO_FRACTIONS
+            or fractions != FRACTIONS_ASCII
+            and fractions != FRACTIONS_ALL
+            and (dividend, divisor) in NORMAL_FRACTIONS
+        ):
+            return NUM_TO_FRACTIONS[(dividend,divisor)]
+        elif fractions != FRACTIONS_ASCII and fractions == FRACTIONS_ALL:
+            if dividend in SUP_DICT: dividend = SUP_DICT[dividend]
+            if divisor in SUB_DICT: divisor = SUB_DICT[divisor]
+            return '%s%s%s'%(dividend,SLASH,divisor)
+        else:
             return "%s/%s"%(dividend,divisor)
-        elif fractions==FRACTIONS_ALL:
-            # otherwise, we have to do nice unicode magic
-            if (dividend,divisor) in NUM_TO_FRACTIONS:
-                return NUM_TO_FRACTIONS[(dividend,divisor)]
-            else:
-                if dividend in SUP_DICT: dividend = SUP_DICT[dividend]
-                if divisor in SUB_DICT: divisor = SUB_DICT[divisor]
-                return '%s%s%s'%(dividend,SLASH,divisor)
-        else: # fractions==FRACTIONS_NORMAL
-            #fallback to "normal" fractions -- 1/4, 1/2, 3/4 are special
-            if (dividend,divisor) in NORMAL_FRACTIONS:
-                return NUM_TO_FRACTIONS[(dividend,divisor)]
-            else:
-                return "%s/%s"%(dividend,divisor)
 
-def float_to_frac (n, d=[2,3,4,5,6,8,10,16],approx=0.01,fractions=FRACTIONS_NORMAL):
+def float_to_frac(n, d=[2,3,4,5,6,8,10,16],approx=0.01,fractions=FRACTIONS_NORMAL):
     """Take a number -- or anything that can become a float --
     and attempt to return a fraction with a denominator in the list `d'. We
     approximate fractions to within approx. i.e. if approx=0.01, then 0.331=1/3"""
     if USE_FRACTIONS == FRACTIONS_OFF:
         return float_to_metric(n,approx)
+    if not n: return ""
+    n=float(n)
+    i = int(n)
+    i = "%s"%int(n) if i >= 1 else ""
+    rem = n - int(n)
+    if rem==0 or rem<approx:
+        if i:
+            return "%i"%round(n)
+        else:
+            return "0"
     else:
-        if not n: return ""
-        n=float(n)
-        i = int(n)
-        if i >= 1:
-            i="%s"%int(n)
-        else:
-            i=""
-        rem = n - int(n)
-        if rem==0 or rem<approx:
-            if i:
-                return "%i"%round(n)
-            else:
-                return "0"
-        else:
-            flag = False
-            for div in d:
-                f = fractify(rem,div,approx=approx,fractions=fractions)
-                if f==1:
-                    i = int(i) + 1
-                    return "%s.00" % i
-                if f:
-                    return " ".join([i,f]).strip()
-             # use locale-specific metric formatting if fractions don't work
-            return float_to_metric(n,approx)
+        flag = False
+        for div in d:
+            f = fractify(rem,div,approx=approx,fractions=fractions)
+            if f==1:
+                i = int(i) + 1
+                return "%s.00" % i
+            if f:
+                return " ".join([i,f]).strip()
+         # use locale-specific metric formatting if fractions don't work
+        return float_to_metric(n,approx)
 
 def float_to_metric(n, approx=0.01):
     """Returns a formatted string in metric format, using locale-specific formatting"""
@@ -936,22 +922,21 @@ def float_to_metric(n, approx=0.01):
         format_string = "%."+str(decimals_to_preserve)+"f"
     else:
         format_string = "%i"
-    if n is not None:
-     if int(n) != n:
-         if (n - int(n) < approx) or ((n - int(n) + approx) > 1):
-             rounded = round(n)
-             if rounded == 0:
-                 return float_to_metric(n,approx*.01)
-             return locale.format("%i",int(rounded),True)
-         else:
-             rounded = round(n,decimals_to_preserve)
-             if rounded == 0:
-                 return float_to_metric(n,approx*.01)
-             return locale.format("%."+str(decimals_to_preserve)+"f",rounded,True) # format(formatstring, number, use_thousands_separator)
-     else:
-         return locale.format("%i",n,True)
+    if n is None:
+        return ""
+
+    if int(n) == n:
+        return locale.format("%i",n,True)
+    if (n - int(n) < approx) or ((n - int(n) + approx) > 1):
+        rounded = round(n)
+        if rounded == 0:
+            return float_to_metric(n,approx*.01)
+        return locale.format("%i",int(rounded),True)
     else:
-         return ""
+        rounded = round(n,decimals_to_preserve)
+        if rounded == 0:
+            return float_to_metric(n,approx*.01)
+        return locale.format("%."+str(decimals_to_preserve)+"f",rounded,True) # format(formatstring, number, use_thousands_separator)
 
 def float_string (s):
     """Convert string to a float, assuming it is some sort of decimal number
@@ -994,7 +979,7 @@ def float_string (s):
         # otherwise just trust our locale float
         return locale.atof(s)
 
-def frac_to_float (s):
+def frac_to_float(s):
     """We assume fractions look like this (I )?N/D"""
     if s in NUMBER_WORDS: return NUMBER_WORDS[s]
     if hasattr(s,'lower') and s.lower() in NUMBER_WORDS:
@@ -1004,8 +989,7 @@ def frac_to_float (s):
     if m:
         i = m.group('int')
         frac = m.group('frac')
-        if i: i=float_string(i)
-        else: i = 0
+        i = float_string(i) if i else 0
         if frac in UNICODE_FRACTIONS:
             return i+UNICODE_FRACTIONS[frac]
         elif frac in NUMBER_WORDS:
@@ -1070,13 +1054,13 @@ if __name__ == '__main__' and False:
                 print('(Type "list" for a list of valid units)')
                 return self.get_unit(prompt)
 
-        def get_amount (self, prompt="Enter amount: "):
+        def get_amount(self, prompt="Enter amount: "):
             amt = frac_to_float(input(prompt))
-            if not amt:
-                print("Please enter an amount!")
-                return self.get_amount(prompt)
-            else:
+            if amt:
                 return amt
+
+            print("Please enter an amount!")
+            return self.get_amount(prompt)
 
         def converter (self):
             u1 = self.get_unit("Enter source unit: ")
