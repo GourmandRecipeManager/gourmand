@@ -1,7 +1,7 @@
 from gi.repository import Gdk, Gtk
 
 
-def collect_descendants (parent, descendants=None):
+def collect_descendants(parent, descendants=None):
     """Return all descendants of parent widget.
 
     Crawls tree recursively.
@@ -11,11 +11,9 @@ def collect_descendants (parent, descendants=None):
         for c in parent.get_children():
             if c not in descendants: descendants.append(c)
             collect_descendants(c,descendants)
-    if hasattr(parent,'get_submenu'):
-        #print 'Getting submenu!'
-        if parent.get_submenu():
-            descendants.append(parent.get_submenu())
-            collect_descendants(parent.get_submenu(),descendants)
+    if hasattr(parent, 'get_submenu') and parent.get_submenu():
+        descendants.append(parent.get_submenu())
+        collect_descendants(parent.get_submenu(),descendants)
     return descendants
 
 class MnemonicManager:
@@ -65,7 +63,7 @@ class MnemonicManager:
         widgets = collect_descendants(w)
         self.add_ui(widgets)
 
-    def add_builder (self, ui=None, ui_file=None):
+    def add_builder(self, ui=None, ui_file=None):
         """Add all mnemonic widgets in Gtk.Builder object.
 
         We can be passed a Gtk.Builder (.ui) file or a Gtk.Builder object.
@@ -80,7 +78,7 @@ class MnemonicManager:
         # Check if there are more than one window, in which case we
         # each window gets its own sub_handler
         windows = [w for w in widgets if isinstance(w,Gtk.Window)]
-        if len(windows)>0:
+        if windows:
             for w in windows:
                 self.sub_managers[w]=MnemonicManager()
                 self.sub_managers[w].add_toplevel_widget(w)
@@ -88,7 +86,7 @@ class MnemonicManager:
         else:
             self.add_ui(widgets)
 
-    def add_ui (self, widgets):
+    def add_ui(self, widgets):
         added = []
         # handle menu items
         menus = [x for x in widgets if isinstance(x,Gtk.Menu)]
@@ -146,13 +144,12 @@ class MnemonicManager:
                 if page not in self.notebook_managers[nb]:
                     self.notebook_managers[nb][page]=MnemonicManager()
                 self.notebook_managers[nb][page].add_widget_mnemonic(w)
+            elif isinstance(w.get_parent(),Gtk.Notebook):
+                # make notebook tab labels (should be our only
+                # direct descendant labels) untouchable.
+                self.add_widget_mnemonic(w,untouchable=True,fix_untouchables=True)
             else:
-                if isinstance(w.get_parent(),Gtk.Notebook):
-                    # make notebook tab labels (should be our only
-                    # direct descendant labels) untouchable.
-                    self.add_widget_mnemonic(w,untouchable=True,fix_untouchables=True)
-                else:
-                    self.add_widget_mnemonic(w)
+                self.add_widget_mnemonic(w)
         more_mnemonics = []
 
     def add_treeview (self, tv):
@@ -167,7 +164,7 @@ class MnemonicManager:
                 widg.show()
                 self.add_widget_mnemonic(widg)
 
-    def add_widget_mnemonic (self, w, untouchable=False, fix_untouchables=False):
+    def add_widget_mnemonic(self, w, untouchable=False, fix_untouchables=False):
         k = Gdk.keyval_name(w.get_mnemonic_keyval())
         if w.get_text().lower().replace('_','') in self.sacred_cows:
             untouchable = True; fix_untouchables=False
@@ -182,7 +179,7 @@ class MnemonicManager:
             self.untouchable_accels.append(k)
             self.untouchable_widgs.append(w)
         if k not in self.mnemonics: self.mnemonics[k]=[]
-        if not w in self.mnemonics[k]:
+        if w not in self.mnemonics[k]:
             self.mnemonics[k].append(w)
 
     def generate_new_mnemonic (self, text):
@@ -196,14 +193,13 @@ class MnemonicManager:
         self.mnemonics[text[0].lower()].append(text)
         return '_'+text
 
-    def find_alternatives (self, w, filter_untouchables = True):
+    def find_alternatives(self, w, filter_untouchables = True):
         text = w.get_text()
         if not text: return []
         cur_ind = text.find('_')+1
         alts = [text[cur_ind].lower()]
         # Now we go through and find first letters of words...
-        if cur_ind == 1: ind=2
-        else: ind = 0
+        ind = 2 if cur_ind == 1 else 0
         ind = text.find(' ',ind)
         last_letter_that_could_be_word_start = len(text)-2
         while -1 < ind <= last_letter_that_could_be_word_start:
@@ -211,9 +207,7 @@ class MnemonicManager:
             if alt not in alts: alts.append(alt)
             ind = text.find(' ',ind+1)
         for l in list(text):
-            if l.lower() not in alts:
-                if l in list(' (),_[]:;,.!{}/=+'): continue
-                else: alts.append(l.lower())
+            if l.lower() not in alts and l not in list(' (),_[]:;,.!{}/=+'): alts.append(l.lower())
         if filter_untouchables:
             alts = [l for l in alts if l not in self.untouchable_accels]
         return alts

@@ -93,16 +93,15 @@ class html_exporter (exporter_mult):
             self.out.write('<body>')
         self.out.write('<div class="recipe" itemscope itemtype="http://schema.org/Recipe">')
 
-    def write_image (self, image):
+    def write_image(self, image):
         imgout = os.path.join(self.imagedir_absolute,"%s.jpg"%self.imgcount)
         while os.path.isfile(imgout):
             self.imgcount += 1
             imgout = os.path.join(self.imagedir_absolute,"%s.jpg"%self.imgcount)
         if not os.path.isdir(self.imagedir_absolute):
             os.mkdir(self.imagedir_absolute)
-        o = open(imgout,'wb')
-        o.write(image)
-        o.close()
+        with open(imgout,'wb') as o:
+            o.write(image)
         # we use urllib here because os.path may fsck up slashes for urls.
         self.out.write('<img src="%s" itemprop="image" alt="%s">'%(
                                                                             self.make_relative_link("%s%s.jpg"%(self.imagedir,
@@ -291,15 +290,14 @@ class website_exporter (ExporterMultirec):
         self.indexf.write('</table></div></body></html>')
         self.indexf.close()
 
-    def generate_link (self, id):
+    def generate_link(self, id):
         if id in self.added_dict:
             return self.added_dict[id]
+        rec = self.rd.get_rec(id)
+        if rec:
+            return self.generate_filename(rec,self.ext,add_id=True)
         else:
-            rec = self.rd.get_rec(id)
-            if rec:
-                return self.generate_filename(rec,self.ext,add_id=True)
-            else:
-                return None
+            return None
 
     def make_relative_link (self, filename):
         if self.outdir[-1] != os.path.sep:
