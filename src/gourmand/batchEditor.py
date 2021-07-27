@@ -14,7 +14,7 @@ class BatchEditor:
 
     def setup_ui (self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data('gourmet', 'ui/batchEditor.ui').decode())
+        self.ui.add_from_string(get_data('gourmand', 'ui/batchEditor.ui').decode())
         self.dialog = self.ui.get_object('batchEditorDialog')
         self.setFieldWhereBlankButton = self.ui.get_object('setFieldWhereBlankButton')
         self.setup_boxes()
@@ -85,11 +85,3 @@ class BatchEditor:
         else:
             self.setFieldWhereBlank = None
             self.values = None
-
-
-if __name__ == '__main__':
-    from . import GourmetRecipeManager
-    rg = GourmetRecipeManager.RecGui.instance()
-    be=BatchEditor(rg)
-    be.set_values_from_recipe(rg.rd.fetch_one(rg.rd.recipe_table))
-    be.dialog.run()

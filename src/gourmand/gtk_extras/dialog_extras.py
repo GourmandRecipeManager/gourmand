@@ -703,7 +703,7 @@ class SimpleFaqDialog (ModalDialog):
         self.index_dic = {}
         self.text = ""
 
-        faq = get_data('gourmet', 'data/FAQ').decode()
+        faq = get_data('gourmand', 'data/FAQ').decode()
         assert faq
         for l in faq.split('\n'):
             line = l.strip()

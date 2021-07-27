@@ -152,7 +152,7 @@ class TimerDialog:
         self.init_player()
         self.ui = Gtk.Builder()
         self.ui.add_from_string(
-            get_data('gourmet', 'ui/timerDialog.ui').decode())
+            get_data('gourmand', 'ui/timerDialog.ui').decode())
         self.timer = TimeSpinnerUI(
             self.ui.get_object('hoursSpinButton'),
             self.ui.get_object('minutesSpinButton'),
@@ -202,7 +202,7 @@ class TimerDialog:
     def play_tune(self):
         sound = self.sounds_and_files[cb.cb_get_active_text(
             self.soundComboBox)]
-        data = get_data('gourmet', f'data/sound/{sound}')
+        data = get_data('gourmand', f'data/sound/{sound}')
         assert data
 
         # FIXME: Delete the tempfile when we're done

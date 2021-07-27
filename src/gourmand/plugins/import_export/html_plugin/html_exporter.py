@@ -22,7 +22,7 @@ def _read_css(filename: Optional[str] = None) -> str:
         with open(filename, 'r') as fh:
             style = fh.read()
     else:
-        style = get_data('gourmet', 'data/style/default.css').decode()
+        style = get_data('gourmand', 'data/style/default.css').decode()
     assert style
     return style
 

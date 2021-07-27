@@ -23,7 +23,7 @@ class FieldEditorPlugin (ToolPlugin):
         self.action_groups.append(self.action_group)
 
     def show_field_editor (self, *args):
-        from gourmand.GourmetRecipeManager import get_application
+        from gourmand.main import get_application
         self.app = get_application()
         self.field_editor = fieldEditor.FieldEditor(self.app.rd, self.app)
         self.field_editor.valueDialog.connect('response',self.response_cb)
