@@ -679,7 +679,7 @@ class RecData (Pluggable):
                          }
                         for col in URL_SOURCES
                     ])
-                url = None
+
                 for r in recs:
                     rec_url = ''
                     for src in URL_SOURCES:
