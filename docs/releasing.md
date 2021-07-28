@@ -15,6 +15,7 @@ This lists manual tests to do prior to tagging a new release.
 - [ ] Limited Searching
 
 ## Imports
+
 - [ ] Webpage
 - [ ] Zipped Archive
 - [ ] Mealmaster
@@ -23,22 +24,21 @@ This lists manual tests to do prior to tagging a new release.
 - [ ] Ingredients from file in RecEditor ingredients tab
 
 ## Exports
+
 - [ ] HTML
 - [ ] Gourmet (+ reimport)
 - [ ] PDF
 
 ## Customization
+
 - [ ] Customize columns in Index View
 - [ ] Hide recipe widgets
 
 ## Recipe Card View
+
 - [ ] Export from this view
 - [ ] Multiply (+ print)
 - [ ] Add image
-
-## Plugins
-
-- [ ] Test response to bug in plugin (shouldn't bring down app)
 
 ## Upgrade
 
