@@ -111,8 +111,9 @@ for filename, stock_id, label, modifier, keyval in [
     ('reccard.png', 'recipe-card', None, 0, 0),
 
     ('reccard_edit.png', 'edit-recipe-card', None, 0, 0),
-     ]:
-    add_icon(load_pixbuf_from_resource(filename), stock_id, label, modifier, keyval)
+]:
+    add_icon(load_pixbuf_from_resource(filename),
+             stock_id, label, modifier, keyval)
 
 
 # Color scheme preference

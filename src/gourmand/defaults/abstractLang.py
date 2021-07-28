@@ -79,7 +79,8 @@ class AbstractLanguage:
                        ('g',(1,999)),
                        ('kg',(1,None))] }
     """
-    UNIT_GROUPS: Mapping[str, Sequence[Tuple[str, Tuple[float, Optional[float]]]]]
+    UNIT_GROUPS: Mapping[str,
+                         Sequence[Tuple[str, Tuple[float, Optional[float]]]]]
 
     """
     This if for units that require an additional
@@ -125,7 +126,7 @@ class AbstractLanguage:
     TODO: we could also annotate this as Callable without providing a default
     """
     @staticmethod
-    def guess_plurals (singular: str) -> Collection[str]:
+    def guess_plurals(singular: str) -> Collection[str]:
         raise NotImplementedError()
 
     """

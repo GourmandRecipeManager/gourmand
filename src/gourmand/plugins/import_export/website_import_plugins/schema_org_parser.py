@@ -16,10 +16,10 @@ def generate(BaseParser):
             'description': 'modifications',
             # Properties from CreativeWork (none)
             # Properties from Recipe
-            #'cookingMethod'
+            # 'cookingMethod'
             'ingredients': 'ingredients',
             'recipeIngredient': 'ingredients',
-            #'nutrition'
+            # 'nutrition'
             'recipeCategory': 'category',
             'recipeCuisine': 'cuisine',
             'recipeInstructions': 'recipe',
@@ -33,7 +33,8 @@ def generate(BaseParser):
 
         def preparse(self):
             self.preparsed_elements = []
-            self.data = scrape_schema_recipe.scrape(self.text, python_objects=True)
+            self.data = scrape_schema_recipe.scrape(
+                self.text, python_objects=True)
 
             if not self.data:
                 BaseParser.preparse(self)
@@ -54,10 +55,12 @@ def generate(BaseParser):
                         minutes = int(value.total_seconds() // 60)
                         if minutes % 60 != 0:
                             # Not full hours.
-                            self.preparsed_elements.append(("{} min".format(minutes), output_key))
+                            self.preparsed_elements.append(
+                                ("{} min".format(minutes), output_key))
                         else:
                             # Full hours.
-                            self.preparsed_elements.append(("{} h".format(minutes // 60), output_key))
+                            self.preparsed_elements.append(
+                                ("{} h".format(minutes // 60), output_key))
 
             if self.preparsed_elements:
                 self.ignore_unparsed = True

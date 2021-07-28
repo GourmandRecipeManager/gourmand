@@ -33,95 +33,99 @@ for attr in gglobals.DEFAULT_ATTR_ORDER:
 
 DEFAULT_TAGS.extend(gglobals.DEFAULT_TEXT_ATTR_ORDER)
 
-DEFAULT_TAGS.extend(['ingredients','inggroup','ignore'])
-for tag,label in [
-    ('servings',_('Servings')),
-    ('ingredients',_('Ingredients')),
-    ('inggroup',_('Ingredient Subgroup')),
-    ('ignore',_('Hide'))
-    ]:
+DEFAULT_TAGS.extend(['ingredients', 'inggroup', 'ignore'])
+for tag, label in [
+    ('servings', _('Servings')),
+    ('ingredients', _('Ingredients')),
+    ('inggroup', _('Ingredient Subgroup')),
+    ('ignore', _('Hide'))
+]:
     if tag not in DEFAULT_TAG_LABELS:
         DEFAULT_TAG_LABELS[tag] = label
 
 UI_TAG_ORDER = [
-    (_('Description'),[
-        ('title','servings'),
-        ('yields','yield_unit'),
-        ('source','rating'),
-        ('category','cuisine'),
-        ('preptime','cooktime')]),
-    (_('Text'),[('instructions','modifications')]),
-    (_('Ingredients'),[('ingredients','inggroup')]),
-    (_('Actions'),[('ignore','clear'),
-                   ('newrec',)]),
-    ]
+    (_('Description'), [
+        ('title', 'servings'),
+        ('yields', 'yield_unit'),
+        ('source', 'rating'),
+        ('category', 'cuisine'),
+        ('preptime', 'cooktime')]),
+    (_('Text'), [('instructions', 'modifications')]),
+    (_('Ingredients'), [('ingredients', 'inggroup')]),
+    (_('Actions'), [('ignore', 'clear'),
+                    ('newrec',)]),
+]
+
 
 class ConvenientImporter (importer.Importer):
     """Add some convenience methods to our standard importer.
     """
-    def add_attribute (self, attname, txt):
-        txt=txt.strip()
+
+    def add_attribute(self, attname, txt):
+        txt = txt.strip()
         if attname in self.rec:
             self.rec[attname] = self.rec[attname] + ', ' + txt
         else:
             self.rec[attname] = txt
 
-    def add_text (self, attname, txt):
+    def add_text(self, attname, txt):
         if attname in self.rec:
             self.rec[attname] = self.rec[attname] + '\n' + txt
         else:
             self.rec[attname] = txt
 
-    def add_ing_group (self, txt):
+    def add_ing_group(self, txt):
         self.group = txt.strip()
 
-    def add_ing_from_text (self, txt):
+    def add_ing_from_text(self, txt):
         parsed_dict = get_recipe_manager().parse_ingredient(txt)
         self.ing = parsed_dict
         self.commit_ing()
 
-    def add_ings_from_text (self, txt, break_at='\n'):
+    def add_ings_from_text(self, txt, break_at='\n'):
         """Add list of ingredients from block of text.
 
         By default, there is one ingredient per line of text."""
-        txt=txt.strip()
+        txt = txt.strip()
         for i in txt.split(break_at):
             if (i.strip()):
                 self.add_ing_from_text(i.strip())
+
 
 class InteractiveImporter (ConvenientImporter, NotThreadSafe):
 
     NEW_REC_TEXT = _('New Recipe')
 
     def __init__(self,
-                  custom_parser = None,
-                  tags=DEFAULT_TAGS,
-                  tag_labels=DEFAULT_TAG_LABELS,
-                  modal=True,
-                  title=_('Import recipe')):
+                 custom_parser=None,
+                 tags=DEFAULT_TAGS,
+                 tag_labels=DEFAULT_TAG_LABELS,
+                 modal=True,
+                 title=_('Import recipe')):
         self.title = title
         self.parser = custom_parser or RecipeParser()
         self.labels_by_tag = tag_labels
-        self.tags_by_label = {self.NEW_REC_TEXT:'newrec'}
-        for k,v in list(self.labels_by_tag.items()): self.tags_by_label[v]=k
+        self.tags_by_label = {self.NEW_REC_TEXT: 'newrec'}
+        for k, v in list(self.labels_by_tag.items()):
+            self.tags_by_label[v] = k
         self.tags = tags
         self.setup_window()
         self.setup_action_area()
         self.markup_marks = {}
         self.markup_partners = {}
         self.anchors = []
-        self.midno = 0 # an ID counter for markup marks we insert
+        self.midno = 0  # an ID counter for markup marks we insert
         self.labelled = []
         self.label_counts = {}
-        self.modal = modal # If we're in an embedded gtk mainloop...
+        self.modal = modal  # If we're in an embedded gtk mainloop...
         ConvenientImporter.__init__(self)
 
-    def setup_window (self):
+    def setup_window(self):
         # set our parent...
         from gourmand.main import get_application
         from gourmand.threadManager import get_thread_manager_gui
         tmg = get_thread_manager_gui()
-        self.w = Gtk.Window();
+        self.w = Gtk.Window()
         self.w.set_title(self.title)
         main_app = get_application()
         self.w.set_transient_for(main_app.window)
@@ -129,12 +133,15 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
         self.hb = Gtk.HBox()
         self.w.add(self.hb)
         self.tv = Gtk.TextView()
-        self.tv.set_size_request(600,500)
+        self.tv.set_size_request(600, 500)
         self.tv.set_wrap_mode(Gtk.WrapMode.WORD)
         self.action_area = Gtk.VBox()
-        sw = Gtk.ScrolledWindow(); sw.add(self.tv)
-        sw.set_policy(Gtk.PolicyType.NEVER,Gtk.PolicyType.AUTOMATIC)
-        self.hb.add(sw); sw.show(); self.tv.show()
+        sw = Gtk.ScrolledWindow()
+        sw.add(self.tv)
+        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.hb.add(sw)
+        sw.show()
+        self.tv.show()
         self.hb.pack_end(self.action_area, expand=False, fill=False, padding=0)
         self.action_area.show()
         self.tb = self.tv.get_buffer()
@@ -172,7 +179,8 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
                     elif t == 'newrec':
                         tag_btn = self.new_recipe_button
                     else:
-                        tag_btn = Gtk.Button.new_with_mnemonic('_' + self.labels_by_tag[t])
+                        tag_btn = Gtk.Button.new_with_mnemonic(
+                            '_' + self.labels_by_tag[t])
                         self.action_model.append([self.labels_by_tag[t], t])
                         tag_btn.connect('clicked',
                                         self.label_callback,
@@ -233,36 +241,38 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
                          self.tb.get_iter_at_offset(end_offset),
                          label)
 
-    def unhide_area (self, midno):
-        st,end = self.markup_marks[midno]
+    def unhide_area(self, midno):
+        st, end = self.markup_marks[midno]
         self.tb.remove_tag(self.ignore_tag,
                            self.tb.get_iter_at_mark(st),
                            self.tb.get_iter_at_mark(end)
                            )
 
-    def hide_range (self, st, end):
+    def hide_range(self, st, end):
         """Hide text between start and end.
 
         Return midno that can be used to unhide the range."""
-        midno = self.midno; self.midno += 1
+        midno = self.midno
+        self.midno += 1
         start_mark = Gtk.TextMark.new(f'start-markup-{midno}', False)
         end_mark = Gtk.TextMark.new(f'end-markup-{midno}', True)
         self.tb.apply_tag(self.ignore_tag,
-                       st,end)
-        self.tb.add_mark(start_mark,st)
-        self.tb.add_mark(end_mark,end)
-        self.markup_marks[midno] = (start_mark,end_mark)
+                          st, end)
+        self.tb.add_mark(start_mark, st)
+        self.tb.add_mark(end_mark, end)
+        self.markup_marks[midno] = (start_mark, end_mark)
         return midno
 
-    def label_range (self, st, end, label):
-        if self.tags_by_label.get(label,'')=='ignore':
-            midno = self.hide_range(st,end)
+    def label_range(self, st, end, label):
+        if self.tags_by_label.get(label, '') == 'ignore':
+            midno = self.hide_range(st, end)
             b = Gtk.Button(label='Ignored text: Reveal hidden text')
-            anchor = self.insert_widget(end,b)
-            def unhide_text (*args):
+            anchor = self.insert_widget(end, b)
+
+            def unhide_text(*args):
                 self.unhide_area(midno)
                 self.remove_widget(anchor)
-            b.connect('clicked',unhide_text)
+            b.connect('clicked', unhide_text)
             b.show()
             return
         if label in self.label_counts:
@@ -273,51 +283,56 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
             count = 0
         smark = Gtk.TextMark.new(f'{label}-{count}-start', True)
         emark = Gtk.TextMark.new(f'{label}-{count}-end', False)
-        self.tb.add_mark(smark,st)
+        self.tb.add_mark(smark, st)
         self.tb.add_mark(emark, end)
-        self.labelled.append((smark,emark))
+        self.labelled.append((smark, emark))
         # Now we add the labels...
         start_txt = '['
-        start_id = self.insert_markup_text(st,start_txt,self.markup_tag)
+        start_id = self.insert_markup_text(st, start_txt, self.markup_tag)
         # Now move the mark back up...
-        new_pos = self.tb.get_iter_at_mark(smark); new_pos.forward_chars(len(start_txt))
-        self.tb.move_mark(smark,new_pos)
+        new_pos = self.tb.get_iter_at_mark(smark)
+        new_pos.forward_chars(len(start_txt))
+        self.tb.move_mark(smark, new_pos)
         # Create a "Remove me" button
-        #b = Gtk.Button('_Remove tag'); b.show)(
+        # b = Gtk.Button('_Remove tag'); b.show)(
         b = Gtk.Button()
         img = Gtk.Image.new_from_icon_name(Gtk.STOCK_REMOVE, Gtk.IconSize.MENU)
         b.add(img)
         img.show()
         itr = self.tb.get_iter_at_mark(emark)
-        anchor = self.insert_widget(itr,b)
+        anchor = self.insert_widget(itr, b)
         # Set up combo button...
         labelbutton = Gtk.ComboBoxText.new()
         labelbutton.set_model(self.action_model)
-        cb.cb_set_active_text(labelbutton,label)
-        anchor2 = self.insert_widget(self.tb.get_iter_at_mark(smark),labelbutton)
+        cb.cb_set_active_text(labelbutton, label)
+        anchor2 = self.insert_widget(
+            self.tb.get_iter_at_mark(smark), labelbutton)
         # Add final bracket for end of markup
         end_bracket_itr = self.tb.get_iter_at_mark(emark)
-        end_id = self.insert_markup_text(end_bracket_itr,']',self.markup_tag)
-        self.markup_partners[start_id]=end_id; self.markup_partners[end_id]=start_id
+        end_id = self.insert_markup_text(end_bracket_itr, ']', self.markup_tag)
+        self.markup_partners[start_id] = end_id
+        self.markup_partners[end_id] = start_id
         # Now back up our itr one character (it got advanced by adding
         # the right bracket and the button)
         eitr = self.tb.get_iter_at_mark(emark)
         eitr.backward_chars(2)
-        self.tb.move_mark(emark,eitr)
+        self.tb.move_mark(emark, eitr)
         # Define callback to remove our text when button is clicked
-        def remove_markup (*args):
-            self.labelled.remove((smark,emark))
+
+        def remove_markup(*args):
+            self.labelled.remove((smark, emark))
             self.remove_markup_text(start_id)
             self.remove_markup_text(end_id)
             self.remove_widget(anchor)
             self.remove_widget(anchor2)
-        def change_mark (cb):
+
+        def change_mark(cb):
             # copy marks for safekeeping...
             new_text = cb.get_active_text()
-            sm = Gtk.TextMark.new(None,True)
-            self.tb.add_mark(sm,self.tb.get_iter_at_mark(smark))
-            em = Gtk.TextMark.new(None,False)
-            self.tb.add_mark(em,self.tb.get_iter_at_mark(emark))
+            sm = Gtk.TextMark.new(None, True)
+            self.tb.add_mark(sm, self.tb.get_iter_at_mark(smark))
+            em = Gtk.TextMark.new(None, False)
+            self.tb.add_mark(em, self.tb.get_iter_at_mark(emark))
             # remove old marks...
             remove_markup()
             # And relabel!
@@ -325,77 +340,79 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
                 self.tb.get_iter_at_mark(sm),
                 self.tb.get_iter_at_mark(em),
                 new_text
-                )
-        labelbutton.connect('changed',change_mark)
-        b.connect('clicked',remove_markup)
+            )
+        labelbutton.connect('changed', change_mark)
+        b.connect('clicked', remove_markup)
 
-    def new_recipe_cb (self, *args):
+    def new_recipe_cb(self, *args):
         # Start a new recipe at cursor
         itr = self.tb.get_iter_at_mark(self.tb.get_insert())
-        self.label_range(itr,itr,self.NEW_REC_TEXT)
+        self.label_range(itr, itr, self.NEW_REC_TEXT)
 
-    def insert_markup_text (self, itr, text, *tags):
+    def insert_markup_text(self, itr, text, *tags):
         """Insert markup text into the buffer. We do this in such a
         way that we can remove it easily later.
         """
-        midno = self.midno; self.midno += 1
+        midno = self.midno
+        self.midno += 1
         start_mark = Gtk.TextMark.new(f'start-markup-{midno}', False)
         end_mark = Gtk.TextMark.new(f'end-markup-{midno}', True)
         start_offset = itr.get_offset()
         if tags:
-            self.tb.insert_with_tags(itr,text,*tags)
+            self.tb.insert_with_tags(itr, text, *tags)
         else:
-            self.tb.insert(itr,text)
-        self.tb.add_mark(start_mark,self.tb.get_iter_at_offset(start_offset))
+            self.tb.insert(itr, text)
+        self.tb.add_mark(start_mark, self.tb.get_iter_at_offset(start_offset))
         end_offset = start_offset + len(text)
         end_itr = self.tb.get_iter_at_offset(end_offset)
-        self.tb.add_mark(end_mark,end_itr)
-        self.markup_marks[midno] = (start_mark,end_mark)
+        self.tb.add_mark(end_mark, end_itr)
+        self.markup_marks[midno] = (start_mark, end_mark)
         return midno
 
-    def insert_widget (self, itr, widget):
+    def insert_widget(self, itr, widget):
         anchor = self.tb.create_child_anchor(itr)
         self.anchors.append(anchor)
-        self.tv.add_child_at_anchor(widget,anchor)
+        self.tv.add_child_at_anchor(widget, anchor)
         widgetstart = self.tb.get_iter_at_child_anchor(anchor)
-        widgetend = widgetstart.copy(); widgetend.forward_char()
-        self.tb.apply_tag(self.markup_tag,widgetstart,widgetend)
+        widgetend = widgetstart.copy()
+        widgetend.forward_char()
+        self.tb.apply_tag(self.markup_tag, widgetstart, widgetend)
         widget.show()
         return anchor
 
-    def remove_widget (self, anchor):
+    def remove_widget(self, anchor):
         anchor_iter = self.tb.get_iter_at_child_anchor(anchor)
         delete_to = anchor_iter.copy()
         delete_to.forward_char()
-        self.tb.delete(anchor_iter,delete_to)
+        self.tb.delete(anchor_iter, delete_to)
 
-    def remove_markup_text (self, idno):
-        smark,emark = self.markup_marks[idno]
-        sitr,eitr = (self.tb.get_iter_at_mark(smark),
-                     self.tb.get_iter_at_mark(emark))
-        self.tb.delete(sitr,eitr)
+    def remove_markup_text(self, idno):
+        smark, emark = self.markup_marks[idno]
+        sitr, eitr = (self.tb.get_iter_at_mark(smark),
+                      self.tb.get_iter_at_mark(emark))
+        self.tb.delete(sitr, eitr)
 
     def clear_tags(self, *args):
         """Clear all markup in current selection, or whole buffer if
         there is no selection
         """
         cursel = self.tb.get_selection_bounds()
-        st,end = cursel or self.tb.get_bounds()
+        st, end = cursel or self.tb.get_bounds()
         st_offset = st.get_offset()
         e_offset = end.get_offset()
-        for idno,iters in list(self.markup_marks.items()):
-            lst,lend = iters
+        for idno, iters in list(self.markup_marks.items()):
+            lst, lend = iters
             if ((e_offset > self.tb.get_iter_at_mark(lst).get_offset() > st_offset)
                 or
-                (e_offset > self.tb.get_iter_at_mark(lend).get_offset() > st_offset)):
+                    (e_offset > self.tb.get_iter_at_mark(lend).get_offset() > st_offset)):
                 self.remove_markup_text(idno)
                 if idno in self.markup_partners:
                     self.remove_markup_text(self.markup_partners[idno])
-        for lst,lend in self.labelled[:]:
+        for lst, lend in self.labelled[:]:
             if ((e_offset > self.tb.get_iter_at_mark(lst).get_offset() > st_offset)
                 or
-                (e_offset > self.tb.get_iter_at_mark(lend).get_offset() > st_offset)):
-                self.labelled.remove((lst,lend))
+                    (e_offset > self.tb.get_iter_at_mark(lend).get_offset() > st_offset)):
+                self.labelled.remove((lst, lend))
         for anchor in self.anchors[:]:
             anchor_iter = self.tb.get_iter_at_child_anchor(anchor)
             if e_offset > anchor_iter.get_offset() > st_offset:
@@ -470,16 +487,16 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
             self.w.hide()
             Gtk.main_quit()
 
-    def set_text (self, txt):
-        txt = str(txt) # convert to unicode for good measure
-        txt = re.sub(r'(\n\s*\n)+','\n\n',txt) # Take out extra newlines
-        txt = self.parser.parse(txt) # Parse
+    def set_text(self, txt):
+        txt = str(txt)  # convert to unicode for good measure
+        txt = re.sub(r'(\n\s*\n)+', '\n\n', txt)  # Take out extra newlines
+        txt = self.parser.parse(txt)  # Parse
         self.set_parsed(txt)
 
     def set_parsed(self, parsed):
         #dbg_file = open('/tmp/out','w')
-        for chunk,tag in parsed:
-            #dbg_file.write(chunk)
+        for chunk, tag in parsed:
+            # dbg_file.write(chunk)
             if tag is None:
                 self.tb.insert(self.tb.get_end_iter(),
                                chunk)
@@ -487,27 +504,27 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
                 self.insert_with_label(
                     self.tb.get_end_iter(),
                     chunk,
-                    self.labels_by_tag.get(tag,tag)
-                    )
-        #dbg_file.close()
+                    self.labels_by_tag.get(tag, tag)
+                )
+        # dbg_file.close()
 
-    def do_run (self):
+    def do_run(self):
         self.w.show_all()
         if self.modal:
-            self.w.connect('delete-event',Gtk.main_quit)
+            self.w.connect('delete-event', Gtk.main_quit)
             Gtk.main()
         else:
-            self.w.connect('delete-event',lambda *args: self.w.hide())
-
+            self.w.connect('delete-event', lambda *args: self.w.hide())
 
 
 if __name__ == '__main__':
     ii = InteractiveImporter()
-    ii.w.connect('delete-event',Gtk.main_quit)
+    ii.w.connect('delete-event', Gtk.main_quit)
     ii.w.show_all()
-    ii.images = ['http://thinkle.github.io/gourmet/images/screenshots/CardView.png']
+    ii.images = [
+        'http://thinkle.github.io/gourmet/images/screenshots/CardView.png']
     ii.set_text(
-    """
+        """
 Quick Pesto Dinner
 
 Category: Quick, Easy, Summer

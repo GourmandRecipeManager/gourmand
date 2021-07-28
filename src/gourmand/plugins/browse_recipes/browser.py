@@ -117,12 +117,13 @@ class RecipeBrowserView(Gtk.IconView):
         else:
             return str(val)
 
-    def build_first_level_model (self, attribute):
+    def build_first_level_model(self, attribute):
         m = self.models[attribute] = self.new_model()
         if attribute == 'category':
             for n, val in self.rd.fetch_count(self.rd.categories_table, 'category'):
                 # FIXME: known bug here -- this includes deleted recs in the count
-                to_add = (f"{attribute}>{val}", f"{val} ({n})", self.get_pixbuf(attribute, val), val)
+                to_add = (f"{attribute}>{val}", f"{val} ({n})",
+                          self.get_pixbuf(attribute, val), val)
                 m.append(to_add)
         else:
             for n, val in self.rd.fetch_count(self.rd.recipe_table, attribute, deleted=False):
@@ -132,58 +133,61 @@ class RecipeBrowserView(Gtk.IconView):
                           self.get_pixbuf(attribute, val), val)
                 m.append(to_add)
 
-    def build_recipe_model (self, path, val):
+    def build_recipe_model(self, path, val):
         m = self.models[path] = self.new_model()
-        searches = [{'column':'deleted','operator':'=','search':False}]
+        searches = [{'column': 'deleted', 'operator': '=', 'search': False}]
         path = path.split('>')
         while path:
             _ = path.pop()
             attr = path.pop()
             if val is None:
-                searches.append({'column':attr,'search':val,'operator':'='})
+                searches.append(
+                    {'column': attr, 'search': val, 'operator': '='})
             else:
                 searches.append({'column': attr, 'search': val})
         for recipe in self.rd.search_recipes(searches, sort_by=[('title', 1)]):
             pb = get_recipe_image(recipe)
-            m.append((str(recipe.id),recipe.title,pb,None))
+            m.append((str(recipe.id), recipe.title, pb, None))
 
-    def set_path (self, path):
+    def set_path(self, path):
         self.path = ['base']
         for level in path.split('>'):
             self.path.append(level)
         self.switch_model(path)
 
-    def item_activated_cb (self, iv, path):
+    def item_activated_cb(self, iv, path):
         row = self.get_model()[path]
-        step = row[0]; val = row[3]
+        step = row[0]
+        val = row[3]
         try:
             rid = int(step)
         except ValueError:
-            self.switch_model(step,val)
+            self.switch_model(step, val)
             self.path.append(step)
-            self.emit('path-selected',step)
+            self.emit('path-selected', step)
         else:
-            self.emit('recipe-selected',rid)
+            self.emit('recipe-selected', rid)
 
-    def get_selected_recipes (self):
+    def get_selected_recipes(self):
         paths = self.get_selected_items()
         model = self.get_model()
         recipes = [int(model[p][0]) for p in paths]
-        def just_recs_filter (item):
+
+        def just_recs_filter(item):
             try:
                 int(item)
             except ValueError:
                 return False
             else:
                 return True
-        recipes = list(filter(just_recs_filter,recipes))
+        recipes = list(filter(just_recs_filter, recipes))
         return [r for r in self.rd.recipe_table.select(self.rd.recipe_table.c.id.in_(recipes)).execute()]
 
-    def reset_model (self):
+    def reset_model(self):
         self.models = {}
         self.switch_model(self.path[-1])
 
-    def back (self):
+    def back(self):
         if len(self.path) > 1:
             self.ahead = self.path.pop()
             self.switch_model(self.path[-1])
@@ -210,10 +214,10 @@ class RecipeBrowser(Gtk.VBox):
         self.view.show()
         sw.show()
 
-    def home (self, *args):
+    def home(self, *args):
         self.view.set_path('base')
 
-    def path_selected_cb (self, view, path):
+    def path_selected_cb(self, view, path):
         self.button_bar.show()
         for b in self.buttons:
             self.button_bar.remove(b)
@@ -223,19 +227,20 @@ class RecipeBrowser(Gtk.VBox):
             self.append_button(so_far + step)
             so_far += step + '>'
 
-    def append_button (self, path):
+    def append_button(self, path):
         if '>' in path:
             attribute, value = path.split('>')
             txt = self.view.convert_val(attribute, value)
         else:
             txt = path
-        self.buttons.append(Gtk.Button(REC_ATTR_DIC.get(txt,txt)))
-        self.buttons[-1].connect('clicked',lambda *args: self.view.set_path(path))
+        self.buttons.append(Gtk.Button(REC_ATTR_DIC.get(txt, txt)))
+        self.buttons[-1].connect('clicked',
+                                 lambda *args: self.view.set_path(path))
         self.button_bar.pack_start(self.buttons[-1], False, False, 0)
         self.buttons[-1].show()
 
 
-def try_out ():
+def try_out():
     import gourmand.recipeManager
     rb = RecipeBrowser(gourmand.recipeManager.get_recipe_manager())
     vb = Gtk.VBox()
@@ -243,10 +248,12 @@ def try_out ():
     rb.show()
     w = Gtk.Window()
     w.add(vb)
-    w.show(); vb.show()
-    w.set_size_request(800,500)
-    w.connect('delete-event',Gtk.main_quit)
+    w.show()
+    vb.show()
+    w.set_size_request(800, 500)
+    w.connect('delete-event', Gtk.main_quit)
     Gtk.main()
+
 
 if __name__ == '__main__':
     try_out()

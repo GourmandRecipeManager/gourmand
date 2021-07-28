@@ -21,6 +21,7 @@ class PangoToHtml(HTMLParser):
     This means that the HTML resulting from the conversion by this object may
     differ from the original that was fed to the caller.
     """
+
     def __init__(self):
         super().__init__()
         self.markup_text: str = ""  # the resulting content

@@ -18,7 +18,8 @@ class IcaSePlugin (PluginPlugin):
         return WebsiteTestState.FAILED
 
     def get_importer(self, webpage_importer):
-        IcaSeParserBase = schema_org_parser.generate(webpage_importer.WebParser)
+        IcaSeParserBase = schema_org_parser.generate(
+            webpage_importer.WebParser)
         # ica.se doesn't specify cookTime, so we use totalTime instead
         IcaSeParserBase.schema_org_mappings['totalTime'] = 'cooktime'
 
@@ -32,7 +33,8 @@ class IcaSePlugin (PluginPlugin):
                 if modifications and modifications.text == "Tips":
                     text = modifications.next_sibling
                     if text:
-                        self.preparsed_elements.append((text.strip(), "modifications"))
+                        self.preparsed_elements.append(
+                            (text.strip(), "modifications"))
 
                 if not self.recipe:
                     return

@@ -9,7 +9,6 @@ class Player:
         Gst.init()
         self.player = Gst.ElementFactory.make('playbin', 'player')
 
-
     def play_file(self, filepath: str) -> None:
         uri = pathname2url(filepath)
         self.player.set_state(Gst.State.NULL)

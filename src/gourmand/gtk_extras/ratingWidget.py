@@ -9,13 +9,13 @@ from gourmand.i18n import _
 
 PLUS_ONE_KEYS = ['plus',
                  'greater',
-                 #'Up',
-                 #'Right',
+                 # 'Up',
+                 # 'Right',
                  ]
 MINUS_ONE_KEYS = ['minus',
                   'less',
-                  #'Down',
-                  #'Left'
+                  # 'Down',
+                  # 'Left'
                   ]
 PLUS_MAX_KEYS = ['Page_Up']
 MINUS_MAX_KEYS = ['Page_Down']
@@ -53,58 +53,57 @@ class StarGenerator:
         self.unset_img = unset_img.convert('RGBA')
         self.halfset_img = halfset_img.convert('RGBA')
         self.width, self.height = self.set_img.size
-        self.set_region = self.set_img.crop((0,0,
+        self.set_region = self.set_img.crop((0, 0,
                                              self.width,
                                              self.height))
-        self.unset_region = self.unset_img.crop((0,0,
-                                             self.width,
-                                             self.height))
-        self.halfset_region = self.halfset_img.crop((0,0,
+        self.unset_region = self.unset_img.crop((0, 0,
+                                                 self.width,
+                                                 self.height))
+        self.halfset_region = self.halfset_img.crop((0, 0,
                                                      self.width,
                                                      self.height))
         self.background = background
         self.pixbufs = {}
         self.image_files = {}
 
-    def get_pixbuf(self,n,max=10):
-
+    def get_pixbuf(self, n, max=10):
         """Return a pixbuf with an image representing n/max stars"""
 
-        if (n,max) in self.pixbufs:
-            return self.pixbufs[(n,max)]
-        img = self.build_image(n,max)
-        pb=self.get_pixbuf_from_image(img)
-        self.pixbufs[(n,max)]=pb
+        if (n, max) in self.pixbufs:
+            return self.pixbufs[(n, max)]
+        img = self.build_image(n, max)
+        pb = self.get_pixbuf_from_image(img)
+        self.pixbufs[(n, max)] = pb
         return pb
 
-    def get_full_width (self, max=10):
+    def get_full_width(self, max=10):
         return self.width*max//2
 
-    def get_image (self, *args, **kwargs):
+    def get_image(self, *args, **kwargs):
         """Get an Image (PIL) object representing n/max stars
         """
         # Just an alias for semantic clarity...
-        return self.build_image(*args,**kwargs)
+        return self.build_image(*args, **kwargs)
 
-    def get_file (self, n, max=10, ext='.jpg'):
-        if ((n,max,ext) in self.image_files
+    def get_file(self, n, max=10, ext='.jpg'):
+        if ((n, max, ext) in self.image_files
             and
-            os.path.exists(self.image_files[(n,max,ext)])
+            os.path.exists(self.image_files[(n, max, ext)])
             ):
-            return self.image_files[(n,max,ext)]
-        fi = tempfile.mkstemp("%s_of_%s.%s"%(n,max,ext))
-        i = self.get_image(n,max)
+            return self.image_files[(n, max, ext)]
+        fi = tempfile.mkstemp("%s_of_%s.%s" % (n, max, ext))
+        i = self.get_image(n, max)
         i = i.convert('RGB')
         i.save(fi)
-        self.image_files[(n,max,ext)]=fi
+        self.image_files[(n, max, ext)] = fi
         return fi
 
     def build_image(self, n, max=10):
         """Build an image representing n/max stars."""
-        img=Image.new('RGBA',
-                      (self.get_full_width(max),
-                       self.height),
-                      self.background)
+        img = Image.new('RGBA',
+                        (self.get_full_width(max),
+                         self.height),
+                        self.background)
         for i in range(max//2):
             if i*2+2 <= n:
                 to_paste = self.set_region
@@ -114,10 +113,10 @@ class StarGenerator:
                 to_paste = self.unset_region
             xbase = self.width*i
             img.paste(to_paste,
-                (xbase,
-                 0,
-                 xbase+self.width,
-                 self.height))
+                      (xbase,
+                       0,
+                       xbase+self.width,
+                       self.height))
         return img
 
     def get_pixbuf_from_image(self, image, make_white_opaque=True):
@@ -143,13 +142,14 @@ star_generator = StarGenerator()
 
 # StarImage is a class that allows easy setting of an image from a value.
 
+
 class StarImage (Gtk.Image):
     __gtype_name__ = 'StarImage'
 
-    def __init__ (self,
-                  star_gen=star_generator,
-                  value=0,
-                  upper=10):
+    def __init__(self,
+                 star_gen=star_generator,
+                 value=0,
+                 upper=10):
         """Create an Image widget with value/upper stars filled in.
 
         star_gen is an instance of the StarGenerator class which will do
@@ -166,30 +166,30 @@ class StarImage (Gtk.Image):
         self.set_value(value)
 
     def set_value(self, value):
-
         """Set value. Silently floor value at 0 and cap it at self.upper"""
 
         value = min(value, self.upper)
         value = max(value, 0)
         self.set_from_pixbuf(
-            self.stars.get_pixbuf(value,self.upper)
-            )
-        self.value=value
+            self.stars.get_pixbuf(value, self.upper)
+        )
+        self.value = value
 
-    def get_value (self): return self.value
+    def get_value(self): return self.value
 
-    def set_upper (self, value):
+    def set_upper(self, value):
         """Change the upper number of stars allowed.
 
         Update our image accordingly."""
         self.upper = upper
         self.set_value(self.value)
 
-    def set_text (self, value): self.set_value(int(value))
-    def get_text (self): return "%s"%self.get_value()
+    def set_text(self, value): self.set_value(int(value))
+    def get_text(self): return "%s" % self.get_value()
 
 # Next is a Button type class that allows the user to set the value
 # via the mouse or the keyboard
+
 
 class StarButton (Gtk.Button):
     __gtype_name__ = 'StarButton'
@@ -203,11 +203,11 @@ class StarButton (Gtk.Button):
     __custom_handler_names__ = ['changed']
     _custom_handlers_ = {}
 
-    def __init__ (self,
-                  star_gen=star_generator,
-                  start_value = 0,
-                  upper=10,
-                  ):
+    def __init__(self,
+                 star_gen=star_generator,
+                 start_value=0,
+                 upper=10,
+                 ):
         """Initiate a StarButton.
 
         star_gen is an instance of the StarGenerator class which will
@@ -230,7 +230,7 @@ class StarButton (Gtk.Button):
                      self.buttonpress_cb)
         self.connect('key-press-event',
                      self.keypress_cb)
-        #self.connect('activate',
+        # self.connect('activate',
         #             self.activate_cb)
         self.connect('mnemonic-activate',
                      self.activate_cb)
@@ -241,42 +241,45 @@ class StarButton (Gtk.Button):
         self.get_value = self.image.get_value
         self.set_upper = self.image.set_upper
 
-    def set_value (self, value):
+    def set_value(self, value):
         self.image.set_value(value)
         if 'changed' in self._custom_handlers_:
             for h in self._custom_handlers_['changed']:
-                if h(self): break
+                if h(self):
+                    break
         return True
 
-    def set_text (self, value): self.set_value(int(value))
-    def get_text (self): return "%s"%self.get_value()
+    def set_text(self, value): self.set_value(int(value))
+    def get_text(self): return "%s" % self.get_value()
 
-    def connect (self, name, handler):
+    def connect(self, name, handler):
         """We do something very very bad."""
         if name in self.__custom_handler_names__:
             if name in self._custom_handlers_:
                 self._custom_handlers_[name].append(handler)
             else:
-                self._custom_handlers_[name]=[handler]
+                self._custom_handlers_[name] = [handler]
         else:
-            Gtk.Button.connect(self,name,handler)
+            Gtk.Button.connect(self, name, handler)
 
-    def activate_cb (self, *args):
+    def activate_cb(self, *args):
         self.grab_focus()
         return True
 
-    def buttonpress_cb (self, widget, event):
+    def buttonpress_cb(self, widget, event):
         x, y = event.get_coords()  # coordinates relative to widget
-        wx, wy = self.translate_coordinates(self.image, int(x), int(y))  # coordinates relative to star images
-        wx = min(self.image.get_pixbuf().get_width(), max(0, wx))  # clamp x values to star range
+        wx, wy = self.translate_coordinates(self.image, int(
+            x), int(y))  # coordinates relative to star images
+        # clamp x values to star range
+        wx = min(self.image.get_pixbuf().get_width(), max(0, wx))
         # clamping of pixel values is fine as the user can click outside the stars of the widget to get to 0 or 10
-        self.star_width =  self.image.get_pixbuf().get_width() / self.image.upper
+        self.star_width = self.image.get_pixbuf().get_width() / self.image.upper
         star = x // self.star_width
         self.set_value(star)
         return True
 
-    def keypress_cb (self, widget, event):
-        name=Gdk.keyval_name(event.keyval)
+    def keypress_cb(self, widget, event):
+        name = Gdk.keyval_name(event.keyval)
         if name in PLUS_ONE_KEYS:
             self.set_value(self.image.value+1)
             return True
@@ -316,39 +319,41 @@ class TreeWithStarMaker:
         '''
         model.set_value(treeiter,colnum,value)
     """
-    def __init__ (self,
-                  tree,
-                  star_generator,
-                  col_title=_("Rating"),
-                  col_position=-1,
-                  data_col=0,
-                  handlers=[],
-                  upper=10,
-                  editable=True,
-                  properties={}
-                  ):
-        self.tree=tree
-        self.star_generator=star_generator
-        self.col_title=col_title
-        self.col_position=col_position
-        self.data_col=data_col
+
+    def __init__(self,
+                 tree,
+                 star_generator,
+                 col_title=_("Rating"),
+                 col_position=-1,
+                 data_col=0,
+                 handlers=[],
+                 upper=10,
+                 editable=True,
+                 properties={}
+                 ):
+        self.tree = tree
+        self.star_generator = star_generator
+        self.col_title = col_title
+        self.col_position = col_position
+        self.data_col = data_col
         self.handlers = handlers
         self.upper = upper
-        self.editable=editable
+        self.editable = editable
         self.properties = properties
         # setup our column
         self.setup_column()
         self.setup_callbacks()
 
-    def connect_change_handler (self, handler): self.handlers.append(handler)
+    def connect_change_handler(self, handler): self.handlers.append(handler)
 
-    def call_handlers (self, *params):
+    def call_handlers(self, *params):
         for handler in self.handlers:
-            if handler(*params): break
+            if handler(*params):
+                break
 
-    def setup_column (self):
+    def setup_column(self):
         self.cellrenderer = Gtk.CellRendererPixbuf()
-        tot_cols=self.tree.insert_column_with_data_func(
+        tot_cols = self.tree.insert_column_with_data_func(
             self.col_position,
             self.col_title,
             self.cellrenderer,
@@ -356,55 +361,60 @@ class TreeWithStarMaker:
         if self.col_position == -1:
             self.col_position = tot_cols-1
         if self.editable:
-            self.cellrenderer.set_property('mode',Gtk.CellRendererMode.EDITABLE)
-        self.cellrenderer.set_property('xalign',0)
-        col=self.tree.get_column(self.col_position)
+            self.cellrenderer.set_property(
+                'mode', Gtk.CellRendererMode.EDITABLE)
+        self.cellrenderer.set_property('xalign', 0)
+        col = self.tree.get_column(self.col_position)
         col.set_sort_column_id(self.data_col)
-        for p,v in list(self.properties.items()):
-            col.set_property(p,v)
+        for p, v in list(self.properties.items()):
+            col.set_property(p, v)
         self.col = col
 
-    def setup_callbacks (self):
-        self.tree.connect('button-press-event',self.tree_click_callback)
-        self.tree.connect('key-press-event',self.tree_keypress_callback)
+    def setup_callbacks(self):
+        self.tree.connect('button-press-event', self.tree_click_callback)
+        self.tree.connect('key-press-event', self.tree_keypress_callback)
 
-    def cell_data_func (self, tree_column, cell, model, tree_iter):
+    def cell_data_func(self, tree_column, cell, model, tree_iter):
         """Populate our cell with a pixbuf based on an integer"""
-        val = model.get_value(tree_iter,self.data_col)
-        pb = self.star_generator.get_pixbuf(int(val),self.upper)
-        cell.set_property('pixbuf',pb)
+        val = model.get_value(tree_iter, self.data_col)
+        pb = self.star_generator.get_pixbuf(int(val), self.upper)
+        cell.set_property('pixbuf', pb)
 
-    def tree_click_callback (self, tv, event):
+    def tree_click_callback(self, tv, event):
         x = int(event.x)
         y = int(event.y)
         try:
-            path, col, cellx, celly = tv.get_path_at_pos(x,y)
+            path, col, cellx, celly = tv.get_path_at_pos(x, y)
         except:
             return
-        if col.get_property('title')==self.col_title:
+        if col.get_property('title') == self.col_title:
             # If we're changing rows, we assume our user doesn't want to
             # click this button yet. This may be bad behavior, but it seems
             # reasonable for the time being.
-            if hasattr(self,'curpath') and path == self.curpath:
-                mod=tv.get_model()
-                itr=mod.get_iter(path)
-                curval=mod.get_value(itr,0)
-                self.star_width = self.cellrenderer.get_property('pixbuf').get_width()/self.upper
-                starval = (cellx + 0.5 * self.star_width) // self.star_width  # we translate this half a half-star since you can't click before 0, as opposed to the method in the widget
-                curval = mod.get_value(itr,self.data_col)
+            if hasattr(self, 'curpath') and path == self.curpath:
+                mod = tv.get_model()
+                itr = mod.get_iter(path)
+                curval = mod.get_value(itr, 0)
+                self.star_width = self.cellrenderer.get_property(
+                    'pixbuf').get_width()/self.upper
+                # we translate this half a half-star since you can't click before 0, as opposed to the method in the widget
+                starval = (cellx + 0.5 * self.star_width) // self.star_width
+                curval = mod.get_value(itr, self.data_col)
                 self.call_handlers(starval, mod, itr, self.data_col)
             self.curpath = path
 
-    def tree_keypress_callback (self, tv, event):
-        path,col = tv.get_cursor()
-        if not col: return
-        if not path: return
+    def tree_keypress_callback(self, tv, event):
+        path, col = tv.get_cursor()
+        if not col:
+            return
+        if not path:
+            return
         if col.get_property('title') == self.col_title:
             # go ahead and edit...
-            name=Gdk.keyval_name(event.keyval)
+            name = Gdk.keyval_name(event.keyval)
             mod = tv.get_model()
             itr = mod.get_iter(path)
-            curval = mod.get_value(itr,self.data_col)
+            curval = mod.get_value(itr, self.data_col)
             if name in MINUS_ONE_KEYS:
                 #mod.set_value(itr,self.col_position,curval - 1)
                 self.call_handlers(curval - 1, mod, itr, self.data_col)
@@ -414,7 +424,7 @@ class TreeWithStarMaker:
                 self.call_handlers(curval + 1, mod, itr, self.data_col)
                 return True
             elif name in [str(x) for x in range(self.upper//2 + 1)]:
-                #mod.set_value(itr,self.col_position,int(name))
+                # mod.set_value(itr,self.col_position,int(name))
                 self.call_handlers(int(name)*2, mod, itr, self.data_col)
                 return True
 
@@ -422,14 +432,14 @@ class TreeWithStarMaker:
 # Next is a proof of concept making this work in a TreeView
 
 class Tree(Gtk.TreeView):
-    def __init__(self,stars):
+    def __init__(self, stars):
         self.stars = stars
         self.upper = 10
         self.store = Gtk.ListStore(GObject.TYPE_STRING,
                                    GObject.TYPE_INT)
         for i in range(10):
             for n in range(6):
-                self.store.append(['Test %s%s'%(i,n),n])
+                self.store.append(['Test %s%s' % (i, n), n])
         Gtk.TreeView.__init__(self)
         self.set_size_request(300, 200)
         self.set_model(self.store)
@@ -438,28 +448,30 @@ class Tree(Gtk.TreeView):
         column = Gtk.TreeViewColumn('First', rend, text=0)
         column.set_sort_column_id(0)
         self.append_column(column)
-        TreeWithStarMaker(self, self.stars, data_col=1, handlers=[self.rating_change_handler])
+        TreeWithStarMaker(self, self.stars, data_col=1,
+                          handlers=[self.rating_change_handler])
         column = Gtk.TreeViewColumn('Second', rend, )
         self.append_column(column)
 
-    def rating_change_handler (self, value, model, treeiter, colnum):
-        model.set_value(treeiter,colnum,value)
+    def rating_change_handler(self, value, model, treeiter, colnum):
+        model.set_value(treeiter, colnum, value)
+
 
 if __name__ == '__main__':
     vb = Gtk.VBox()
     s = StarGenerator()
     for i in range(10):
         hb = Gtk.HBox()
-        hb.pack_start(StarButton(s,start_value=i),False,False,0)
+        hb.pack_start(StarButton(s, start_value=i), False, False, 0)
         vb.add(hb)
-    w=Gtk.Window()
+    w = Gtk.Window()
     w.add(vb)
     b = Gtk.Button(stock=Gtk.STOCK_QUIT)
-    b.connect('clicked',lambda *args: w.hide() or Gtk.main_quit())
+    b.connect('clicked', lambda *args: w.hide() or Gtk.main_quit())
     vb.add(b)
     t = Tree(s)
     vb.add(t)
     vb.show_all()
-    w.connect('delete-event',lambda *args: w.hide() or Gtk.main_quit())
+    w.connect('delete-event', lambda *args: w.hide() or Gtk.main_quit())
     w.show_all()
     Gtk.main()

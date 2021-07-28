@@ -15,13 +15,15 @@ class NutritionModel (Gtk.TreeStore):
     UNIT_COL = 2
     ING_COL = 3
     USDA_COL = 4
-    def __init__ (self, ings, nd):
-        Gtk.TreeStore.__init__(self,GObject.TYPE_PYOBJECT,str,str,str,str)
+
+    def __init__(self, ings, nd):
+        Gtk.TreeStore.__init__(self, GObject.TYPE_PYOBJECT, str, str, str, str)
         self.nd = nd
         self.ings = ings
-        list(map(self.add_ingredient,self.ings))
+        list(map(self.add_ingredient, self.ings))
 
     def add_ingredient(self, ing):
-        r=self.nd.get_key(ing.ingkey)
+        r = self.nd.get_key(ing.ingkey)
         desc = r.desc if r else self.UNKNOWN
-        self.append(None,[ing,str(ing.amount),ing.unit,str(ing.item),desc])
+        self.append(None, [ing, str(ing.amount),
+                    ing.unit, str(ing.item), desc])

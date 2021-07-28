@@ -14,14 +14,14 @@ class KeyEditorPlugin (gourmand.plugin.ToolPlugin):
         </placeholder>
     '''
 
-    def setup_action_groups (self):
+    def setup_action_groups(self):
         self.action_group = Gtk.ActionGroup(name='KeyEditorActionGroup')
         self.action_group.add_actions([
-            ('KeyEditor',None,_('Ingredient _Key Editor'),
-             None,_('Edit ingredient keys en masse'),self.show_key_editor)
-            ])
+            ('KeyEditor', None, _('Ingredient _Key Editor'),
+             None, _('Edit ingredient keys en masse'), self.show_key_editor)
+        ])
         self.action_groups.append(self.action_group)
 
-    def show_key_editor (self, *args):
+    def show_key_editor(self, *args):
         gourmand_app = gourmand.main.get_application()
         ke = keyEditor.KeyEditor(rd=gourmand_app.rd, rg=gourmand_app)

@@ -14,13 +14,15 @@ from gourmand.plugin_loader import Pluggable
 # Begin boilerplate...
 #
 # For a fuller example, see shopping_associations
+
+
 class KeyEditorPlugin (PluginPlugin):
 
     target_pluggable = 'KeyEditorPlugin'
 
     selected_ingkeys = []
 
-    def setup_treeview_column (self, ike, key_col, instant_apply=False):
+    def setup_treeview_column(self, ike, key_col, instant_apply=False):
         '''Set up a treeview column to display your data.
 
         The key_col is the column in the treemodel which will contain
@@ -34,12 +36,12 @@ class KeyEditorPlugin (PluginPlugin):
         '''
         raise NotImplementedError
 
-    def save (self):
+    def save(self):
         '''Save any data the user has entered in your treeview column.
         '''
         pass
 
-    def offers_edit_widget (self):
+    def offers_edit_widget(self):
         '''Return True if this plugin provides an edit button for
         editing data (if you need more than an editable cellrenderer
         to let users edit your data, or would like to act on multiple
@@ -47,18 +49,19 @@ class KeyEditorPlugin (PluginPlugin):
         '''
         return False
 
-    def setup_edit_widget (self):
+    def setup_edit_widget(self):
         '''Return an edit button to let users edit your data.
         '''
         raise NotImplementedError
 
-    def selection_changed (self, ingkeys):
+    def selection_changed(self, ingkeys):
         '''Selected ingkeys have changed -- currently ingkeys are
         selected (and should be acted on by our edit_widget
         '''
         self.selected_ingkeys = ingkeys
 
 # End boilerplate
+
 
 class KeyEditorPluginManager (Pluggable):
 
@@ -78,22 +81,24 @@ class KeyEditorPluginManager (Pluggable):
 
         return KeyEditorPluginManager.__single
 
-    def __init__ (self):
-        Pluggable.__init__(self,[PluginPlugin])
+    def __init__(self):
+        Pluggable.__init__(self, [PluginPlugin])
 
-    def get_treeview_columns (self, ike, key_col, instant_apply=False):
-        return [p.setup_treeview_column(ike, key_col,instant_apply) for p in self.plugins]
+    def get_treeview_columns(self, ike, key_col, instant_apply=False):
+        return [p.setup_treeview_column(ike, key_col, instant_apply) for p in self.plugins]
 
-    def get_edit_buttons (self, ike):
+    def get_edit_buttons(self, ike):
         buttons = []
         for p in self.plugins:
             if p.offer_edit_button():
                 try:
                     buttons.append(p.setup_edit_button())
                 except:
-                    'Trouble initializing edit button for plugin',p
-                    import traceback; traceback.print_exc()
+                    'Trouble initializing edit button for plugin', p
+                    import traceback
+                    traceback.print_exc()
         return buttons
 
-def get_key_editor_plugin_manager ():
+
+def get_key_editor_plugin_manager():
     return KeyEditorPluginManager.instance()

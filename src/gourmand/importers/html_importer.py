@@ -14,46 +14,53 @@ from gourmand.i18n import _
 
 from . import importer
 
-DEFAULT_SOCKET_TIMEOUT=45.0
-URLOPEN_SOCKET_TIMEOUT=15.0
+DEFAULT_SOCKET_TIMEOUT = 45.0
+URLOPEN_SOCKET_TIMEOUT = 15.0
 
 socket.setdefaulttimeout(DEFAULT_SOCKET_TIMEOUT)
 # To add additional HTML import sites, see html_rules.py
 
-def read_socket_w_progress (socket, progress, message):
+
+def read_socket_w_progress(socket, progress, message):
     """Read piecemeal reporting progress as we go."""
-    if not progress: data = socket.read()
+    if not progress:
+        data = socket.read()
     else:
         bs = 1024 * 8
-        if hasattr(socket,'headers'):
-            fs = int(socket.headers.get('content-length',-1))
-        else: fs = -1
+        if hasattr(socket, 'headers'):
+            fs = int(socket.headers.get('content-length', -1))
+        else:
+            fs = -1
         block = socket.read(bs)
         data = block
         sofar = bs
         while block:
-            if fs>0: progress(float(sofar)/fs, message)
-            else: progress(-1, message)
+            if fs > 0:
+                progress(float(sofar)/fs, message)
+            else:
+                progress(-1, message)
             sofar += bs
             block = socket.read(bs)
             data += block
     socket.close()
     return data
 
-def get_url (url, progress):
+
+def get_url(url, progress):
     """Return data from URL, possibly displaying progress."""
     if isinstance(url, str):
         socket.setdefaulttimeout(URLOPEN_SOCKET_TIMEOUT)
         sock = urllib.request.urlopen(url)
         socket.setdefaulttimeout(DEFAULT_SOCKET_TIMEOUT)
-        return read_socket_w_progress(sock,progress,_('Retrieving %s'%url))
+        return read_socket_w_progress(sock, progress, _('Retrieving %s' % url))
     else:
         sock = url
-        return read_socket_w_progress(sock,progress,_('Retrieving file'))
+        return read_socket_w_progress(sock, progress, _('Retrieving file'))
+
 
 class MyBeautifulSoup (BeautifulSoup.ICantBelieveItsBeautifulSoup):
 
-    def __init__ (self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         # Avoid invalid doctype decls of the type
         # <!DOCTYPE foo ... />
         # From the overly XML zealous folks at sfgate...
@@ -62,14 +69,15 @@ class MyBeautifulSoup (BeautifulSoup.ICantBelieveItsBeautifulSoup):
             (re.compile('<!([^<>]*)/>',),
              lambda x: '<!'+x.group(1)+'>'
              )
-            )
-        kwargs['avoidParserProblems']=True
-        BeautifulSoup.ICantBelieveItsBeautifulSoup.__init__(self,*args,**kwargs)
+        )
+        kwargs['avoidParserProblems'] = True
+        BeautifulSoup.ICantBelieveItsBeautifulSoup.__init__(
+            self, *args, **kwargs)
 
+    def handle_comment(self, text): pass
+    def handle_decl(self, data): pass
+    def handle_pi(self, text): pass
 
-    def handle_comment (self, text): pass
-    def handle_decl (self, data): pass
-    def handle_pi (self, text): pass
 
 class BeautifulSoupScraper:
     """We take a set of rules and create a scraper using BeautifulSoup.
@@ -94,47 +102,49 @@ class BeautifulSoupScraper:
     """
     TEXT = 'text'
     MARKUP = 'markup'
-    def __init__ (self, rules):
+
+    def __init__(self, rules):
         """Set up a scraper according to a list of rules."""
         self.rules = rules
 
-    def feed_url (self, url,progress=None):
+    def feed_url(self, url, progress=None):
         """Feed ourselves a url.
 
         URL can be a string or an already open socket.
         """
         self.url = url
-        self.feed_data(get_url(url,progress))
+        self.feed_data(get_url(url, progress))
 
-    def feed_data (self, data):
+    def feed_data(self, data):
         self.soup = MyBeautifulSoup(data)
 
-    def scrape_url (self, url, progress=None):
-        self.feed_url(url,progress)
+    def scrape_url(self, url, progress=None):
+        self.feed_url(url, progress)
         return self.scrape()
 
-    def scrape_data (self, data):
+    def scrape_data(self, data):
         self.feed_data(data)
         return self.scrape()
 
-    def scrape (self):
+    def scrape(self):
         """Do our actual scraping according to our rules."""
         self.dic = {}
         for rule in self.rules:
             self.apply_rule(rule)
         return self.dic
 
-    def apply_rule (self, rule):
+    def apply_rule(self, rule):
         """Apply a rule from our rule list."""
-        if len(rule)==3:
-            store_as,tagpath,retmethod = rule
-            post_processing=None
-        elif len(rule)==4:
-            store_as,tagpath,retmethod,post_processing=rule
+        if len(rule) == 3:
+            store_as, tagpath, retmethod = rule
+            post_processing = None
+        elif len(rule) == 4:
+            store_as, tagpath, retmethod, post_processing = rule
         else:
-            raise Exception("Rule %s is invalid (it should be 3 or 4 items long)." % rule)
+            raise Exception(
+                "Rule %s is invalid (it should be 3 or 4 items long)." % rule)
         tag = self.get_tag_according_to_path(tagpath)
-        self.store_tag(store_as,tag,retmethod,post_processing)
+        self.store_tag(store_as, tag, retmethod, post_processing)
 
     def post_process(self, post_processing, value, tag):
         """Post process value according to post_processing
@@ -150,25 +160,28 @@ class BeautifulSoupScraper:
         If force_match is True, return '' if there is no
         match. Otherwise, default to the unadulterated value.
         """
-        if isinstance(post_processing, tuple) and len(post_processing)==2:
-            regexp=re.compile(post_processing[0],re.UNICODE)
-            m=regexp.search(value)
-            if m: return m.groups()[0]
-            if post_processing[1]: return ""
-            else: return value
+        if isinstance(post_processing, tuple) and len(post_processing) == 2:
+            regexp = re.compile(post_processing[0], re.UNICODE)
+            m = regexp.search(value)
+            if m:
+                return m.groups()[0]
+            if post_processing[1]:
+                return ""
+            else:
+                return value
         elif callable(post_processing):
-            return post_processing(value,tag)
+            return post_processing(value, tag)
         else:
             return value
 
-    def get_tag_according_to_path (self, path):
+    def get_tag_according_to_path(self, path):
         """Follow path to tag.
 
         Path is a list of instructions.
         """
         base = self.soup
         for step in path:
-            base=self.follow_path(base,step)
+            base = self.follow_path(base, step)
             if isinstance(base, list):
                 # then we'd better be the last step
                 break
@@ -187,8 +200,9 @@ class BeautifulSoupScraper:
          'index': NUMBER or [FIRST,LAST],
          }
         """
-        if not base: return # path ran out...
-        ind=step.get('index',0)
+        if not base:
+            return  # path ran out...
+        ind = step.get('index', 0)
         if 'regexp' in step:
             ret = base.fetchText(re.compile(step['regexp']))
         elif 'string' in step:
@@ -199,136 +213,151 @@ class BeautifulSoupScraper:
                 if isinstance(ind, list):
                     get_to = ind[-1]
                 elif isinstance(ind, int):
-                    get_to=ind
+                    get_to = ind
                 if not get_to or get_to < 0:
                     get_to = None
                 else:
                     get_to += 1
             if get_to:
                 ret = base.fetch(step.get('tag'),
-                                 step.get('attributes',{}),
+                                 step.get('attributes', {}),
                                  get_to)
             else:
-                ret = base.fetch(step.get('tag'),step.get('attributes',{}))
+                ret = base.fetch(step.get('tag'), step.get('attributes', {}))
         if ret:
             # if we have moveto, we do it with our index -- for
             # example, if we have step['moveto']='parent', we grab the
             # parents of each tag we would otherwise return. This can
             # also work for previousSibling, nextSibling, etc.
             if 'moveto' in step:
-                ret = [getattr(o,step['moveto']) for o in ret]
+                ret = [getattr(o, step['moveto']) for o in ret]
             else:
-                for motion in ['firstNext','firstPrevious','findParent']:
+                for motion in ['firstNext', 'firstPrevious', 'findParent']:
                     if motion in step:
-                        ret = [getattr(o,motion)(step[motion]) for o in ret]
+                        ret = [getattr(o, motion)(step[motion]) for o in ret]
                         break
             if isinstance(ind, (list, tuple)):
                 return ret[ind[0]:ind[1]]
             if ind < len(ret):
                 return ret[ind]
             print('Problem following path.')
-            print('I am supposed to get item: ',ind)
-            print('from: ',ret)
+            print('I am supposed to get item: ', ind)
+            print('from: ', ret)
             print('instructions were : ', end=' ')
-            try: print('base: ',base)
-            except UnicodeDecodeError: print('(ugly unicodeness)')
-            try: print('step: ',step)
-            except UnicodeDecodeError: print('(ugly unicodeness)')
+            try:
+                print('base: ', base)
+            except UnicodeDecodeError:
+                print('(ugly unicodeness)')
+            try:
+                print('step: ', step)
+            except UnicodeDecodeError:
+                print('(ugly unicodeness)')
 
     def store_tag(self, name, tag, method, post_processing=None):
         """Store our tag in our dictionary according to our method."""
         if isinstance(tag, list):
-            for t in tag: self.store_tag(name,t,method,post_processing)
+            for t in tag:
+                self.store_tag(name, t, method, post_processing)
             return
-        if method == self.TEXT and tag: val = get_text(tag)
-        elif method == self.TEXT or method == self.MARKUP and not tag: val = ""
-        elif method == self.MARKUP: val = tag.prettify()
-        else: #otherwise, we assume our method is an attribute name
+        if method == self.TEXT and tag:
+            val = get_text(tag)
+        elif method == self.TEXT or method == self.MARKUP and not tag:
+            val = ""
+        elif method == self.MARKUP:
+            val = tag.prettify()
+        else:  # otherwise, we assume our method is an attribute name
             val = ""
             if tag:
-                for aname,aval in tag.attrs:
-                    if aname==method: val=aval
+                for aname, aval in tag.attrs:
+                    if aname == method:
+                        val = aval
         if post_processing:
-            val=self.post_process(post_processing, val, tag)
-        if not val: return # don't store empty values
+            val = self.post_process(post_processing, val, tag)
+        if not val:
+            return  # don't store empty values
         if name in self.dic:
             curval = self.dic[name]
             if isinstance(curval, list):
                 self.dic[name].append(val)
             else:
-                self.dic[name] = [self.dic[name],val]
+                self.dic[name] = [self.dic[name], val]
         else:
             self.dic[name] = val
+
 
 class GenericScraper (BeautifulSoupScraper):
     """A very simple scraper.
 
     We grab a list of images and all the text.
     """
-    def __init__ (self):
-        BeautifulSoupScraper.__init__(self,
-            [['text',
-              [{'tag':'body',
-                # Believe it or not, I've found recipe webpages with
-                # more than one body tag
-                'index':[0,None],
-                }],
-              'text',
-              ],
-             ['images',
-              [{'tag':'img',
-                'index':[0,None]}],
-              'src',
-              ],
-             ['title',
-              [{'tag':'title'}],
-              'text',],
-             ]
-            )
 
-    def scrape (self):
+    def __init__(self):
+        BeautifulSoupScraper.__init__(self,
+                                      [['text',
+                                        [{'tag': 'body',
+                                          # Believe it or not, I've found recipe webpages with
+                                          # more than one body tag
+                                          'index': [0, None],
+                                          }],
+                                          'text',
+                                        ],
+                                          ['images',
+                                           [{'tag': 'img',
+                                            'index': [0, None]}],
+                                           'src',
+                                           ],
+                                          ['title',
+                                           [{'tag': 'title'}],
+                                           'text', ],
+                                       ]
+                                      )
+
+    def scrape(self):
         dic = BeautifulSoupScraper.scrape(self)
-        text = dic.get('title','')+'\n'+dic.get('text','')
-        images = dic.get('images',[])
+        text = dic.get('title', '')+'\n'+dic.get('text', '')
+        images = dic.get('images', [])
         if not isinstance(images, list):
             images = [images]
-        images = [urllib.basejoin(self.url,i) for i in images]
-        return text,images
+        images = [urllib.basejoin(self.url, i) for i in images]
+        return text, images
+
 
 class FancyTextGetter:
     """Starting with a BeautifulSoup tag, get text in some kind of reasonable w3mish way.
     """
 
     IS_BREAK = ['br']
-    TWO_LB_BEFORE = ['table','p','blockquote']
-    LB_BEFORE = ['tr','li']
+    TWO_LB_BEFORE = ['table', 'p', 'blockquote']
+    LB_BEFORE = ['tr', 'li']
     TAB_BEFORE = ['td']
-    IGNORE = ['script','meta','select']
+    IGNORE = ['script', 'meta', 'select']
 
-    def __call__ (self, top_tag, strip=True):
+    def __call__(self, top_tag, strip=True):
         self.text = ''
-        if hasattr(top_tag,'contents'):
+        if hasattr(top_tag, 'contents'):
             self.add_tag(top_tag)
         else:
             self.text = top_tag.string
         if strip:
             self.text = self.text.strip()
             # No more than two spaces!
-            self.text = re.sub(r'\n\t',r'\n',self.text)
-            self.text = re.sub(r'\n\s*\n\s+',r'\n\n',self.text)
+            self.text = re.sub(r'\n\t', r'\n', self.text)
+            self.text = re.sub(r'\n\s*\n\s+', r'\n\n', self.text)
         try:
-            return str(self.text,errors='ignore')
+            return str(self.text, errors='ignore')
         except:
-            print('Odd encoding problems with ',self.text)
+            print('Odd encoding problems with ', self.text)
             return self.text
 
-    def add_tag (self, t):
-        for item in t.contents: self.get_text_fancy(item)
+    def add_tag(self, t):
+        for item in t.contents:
+            self.get_text_fancy(item)
 
     def get_text_fancy(self, item):
-        #print 'get_text_fancy looking at:',item
-        if self.text and hasattr(item,'name'):
-            if item.name in self.IGNORE: return
+        # print 'get_text_fancy looking at:',item
+        if self.text and hasattr(item, 'name'):
+            if item.name in self.IGNORE:
+                return
             if item.name in self.IS_BREAK:
                 self.text += '\n'
                 return
@@ -338,57 +367,64 @@ class FancyTextGetter:
                 self.text += '\n'
             elif item.name in self.TAB_BEFORE:
                 self.text += '\t'
-        if hasattr(item,'contents'):
+        if hasattr(item, 'contents'):
             self.add_tag(item)
         else:
             try:
-                s = item.string.encode('utf8','replace')
+                s = item.string.encode('utf8', 'replace')
                 self.text += s
             except UnicodeDecodeError:
                 print('UNICODE DECODING ERROR IN TAG', end=' ')
-                if hasattr(item,'name'):
+                if hasattr(item, 'name'):
                     print(item.name)
-                if hasattr(item,'fetchParents'):
-                    print('CHILD OF: ', '<'.join(p.name for p in item.fetchParents()))
+                if hasattr(item, 'fetchParents'):
+                    print('CHILD OF: ', '<'.join(
+                        p.name for p in item.fetchParents()))
+
 
 get_text = FancyTextGetter()
 
 img_src_regexp = re.compile('<img[^>]+src=[\'\"]([^\'"]+)')
 
-def get_image_from_tag (iurl, page_url):
-    if not iurl: return
-    iurl = urllib.basejoin(page_url,iurl)
-    tmpfi,info=urllib.request.urlretrieve(iurl)
+
+def get_image_from_tag(iurl, page_url):
+    if not iurl:
+        return
+    iurl = urllib.basejoin(page_url, iurl)
+    tmpfi, info = urllib.request.urlretrieve(iurl)
     with open(tmpfi, 'rb') as ifi:
         return ifi.read()
 
-def scrape_url (url, progress=None):
+
+def scrape_url(url, progress=None):
     if isinstance(url, str):
         domain = url.split('/')[2]
     if domain in SUPPORTED_URLS:
         bss = BeautifulSoupScraper(SUPPORTED_URLS[domain])
     else:
         bss = None
-        for regexp,v in list(SUPPORTED_URLS_REGEXPS.items()):
-            if re.match(regexp,domain):
-                bss=BeautifulSoupScraper(v)
+        for regexp, v in list(SUPPORTED_URLS_REGEXPS.items()):
+            if re.match(regexp, domain):
+                bss = BeautifulSoupScraper(v)
                 break
     if bss:
-        return bss.scrape_url(url,progress=progress)
+        return bss.scrape_url(url, progress=progress)
 
-def add_to_fn (fn):
+
+def add_to_fn(fn):
     '''Add 1 to a filename.'''
-    f,e=os.path.splitext(fn)
+    f, e = os.path.splitext(fn)
     try:
-        f,n=os.path.splitext(f)
+        f, n = os.path.splitext(f)
         n = int(n[1:])
         n += 1
-        return f + "%s%s"%(os.path.extsep,n) + e
+        return f + "%s%s" % (os.path.extsep, n) + e
     except:
-        return f + "%s1"%os.path.extsep + e
+        return f + "%s1" % os.path.extsep + e
+
 
 def import_url(url, rd, progress=None, add_webpage_source=True, threaded=False,
-                interactive=True):
+               interactive=True):
     """Import information from URL.
     We handle HTML with scrape_url.
 
@@ -397,28 +433,31 @@ def import_url(url, rd, progress=None, add_webpage_source=True, threaded=False,
     hand back a class, but our importer stuff is a little munged up
     with gui-ness and it's just going to have to be ugly for now
     """
-    if progress: progress(0.01,'Fetching webpage')
-    sock=urllib.request.urlopen(url)
-    header=sock.headers.get('content-type','text/html')
-    if progress: progress(0.02, 'Reading headers')
-    if header.find('html')>=0:
-        #return scrape_url(url,progress)
+    if progress:
+        progress(0.01, 'Fetching webpage')
+    sock = urllib.request.urlopen(url)
+    header = sock.headers.get('content-type', 'text/html')
+    if progress:
+        progress(0.02, 'Reading headers')
+    if header.find('html') >= 0:
+        # return scrape_url(url,progress)
         return WebPageImporter(rd,
                                url,
                                prog=progress,
                                add_webpage_source=add_webpage_source,
                                threaded=threaded,
                                interactive=interactive)
-    elif header=='application/zip':
+    elif header == 'application/zip':
         import zip_importer
-        return zip_importer.zipfile_to_filelist(sock,progress,os.path.splitext(url.split('/')[-1])[0])
+        return zip_importer.zipfile_to_filelist(sock, progress, os.path.splitext(url.split('/')[-1])[0])
     else:
-        fn = os.path.join(tempfile.tempdir,url.split('/')[-1])
+        fn = os.path.join(tempfile.tempdir, url.split('/')[-1])
         while os.path.exists(fn):
-            fn=add_to_fn(fn)
-        with open(fn,'w') as ofi:
-            ofi.write(get_url(sock,progress))
+            fn = add_to_fn(fn)
+        with open(fn, 'w') as ofi:
+            ofi.write(get_url(sock, progress))
         return [fn]
+
 
 class WebPageImporter (importer.Importer):
     """Import a webpage as a recipe
@@ -435,40 +474,42 @@ class WebPageImporter (importer.Importer):
     import rules and register them with SUPPORTED_URLS.
     """
 
-    JOIN_AS_PARAGRAPHS = ['instructions','modifications','ingredient_block']
+    JOIN_AS_PARAGRAPHS = ['instructions', 'modifications', 'ingredient_block']
 
-    def __init__ (self, rd, url, add_webpage_source=True,
-                  threaded=False, total=0, prog=None,conv=None,
-                  interactive=True):
-        self.add_webpage_source=add_webpage_source
+    def __init__(self, rd, url, add_webpage_source=True,
+                 threaded=False, total=0, prog=None, conv=None,
+                 interactive=True):
+        self.add_webpage_source = add_webpage_source
         self.url = url
         self.prog = prog
         self.interactive = interactive
         importer.Importer.__init__(self, rd, total=total, prog=prog,
                                    do_markup=True, conv=conv)
 
-    def run (self):
+    def run(self):
         """Import our recipe to our database.
 
         This must be called after self.d is already populated by scraping
         our web page.
         """
-        debug('Scraping url %s'%self.url,0)
+        debug('Scraping url %s' % self.url, 0)
         try:
             self.d = scrape_url(self.url, progress=self.prog)
         except:
-            print('Trouble using default recipe filter to download %s'%self.url)
+            print('Trouble using default recipe filter to download %s' % self.url)
             traceback.print_exc()
             print('We will use a generic importer instead.')
             self.d = {}
-        debug('Scraping url returned %s'%self.d,0)
+        debug('Scraping url returned %s' % self.d, 0)
         do_generic = not self.d
         if not do_generic:
             try:
-                if self.prog: self.prog(-1,'Parsing webpage based on template.')
+                if self.prog:
+                    self.prog(-1, 'Parsing webpage based on template.')
                 self.get_url_based_on_template()
             except:
-                if not self.interactive: raise
+                if not self.interactive:
+                    raise
                 do_generic = True
                 print("""Automated HTML Import failed
                 ***Falling back to generic import***
@@ -491,18 +532,20 @@ class WebPageImporter (importer.Importer):
             if not self.interactive:
                 raise Exception("Unable to find importer for %s" % self.url)
             # Interactive we go...
-            self.prog(-1,_("Don't recognize this webpage. Using generic importer..."))
+            self.prog(-1, _("Don't recognize this webpage. Using generic importer..."))
             gs = GenericScraper()
-            text,images = gs.scrape_url(self.url, progress=self.prog)
+            text, images = gs.scrape_url(self.url, progress=self.prog)
             if not text and not images:
-                raise Exception("Unable to obtain text or images from url %s" % self.url)
+                raise Exception(
+                    "Unable to obtain text or images from url %s" % self.url)
             from . import interactive_importer
             ii = interactive_importer.InteractiveImporter(self.rd)
             ii.set_text(text)
-            ii.add_attribute('link',self.url)
+            ii.add_attribute('link', self.url)
             ii.set_images(images)
             ii.run()
-            if self.prog: self.prog(1,_('Import complete.'))
+            if self.prog:
+                self.prog(1, _('Import complete.'))
             return
 
     def get_url_based_on_template(self):
@@ -510,66 +553,74 @@ class WebPageImporter (importer.Importer):
         """
         self.start_rec()
         # Set link
-        self.rec['link']=self.url
+        self.rec['link'] = self.url
         # Add webpage as source
         if self.add_webpage_source:
             # add Domain as source
             domain = self.url.split('/')[2]
-            src=self.d.get('source',None)
-            add_str = '(%s)'%domain
+            src = self.d.get('source', None)
+            add_str = '(%s)' % domain
             if isinstance(src, list):
                 src.append(add_str)
             elif src:
                 src = [src, add_str]
             else:
-                src = domain # no parens if we're the only source
-            self.d['source']=src
-        for k,v in list(self.d.items()):
-            debug('processing %s:%s'%(k,v),1)
-            if self.prog: self.prog(-1,_('Importing recipe'))
+                src = domain  # no parens if we're the only source
+            self.d['source'] = src
+        for k, v in list(self.d.items()):
+            debug('processing %s:%s' % (k, v), 1)
+            if self.prog:
+                self.prog(-1, _('Importing recipe'))
             # parsed ingredients...
-            if k=='ingredient_parsed':
+            if k == 'ingredient_parsed':
                 if not isinstance(v, list):
                     v = [v]
                 for ingdic in v:
 
-                    if self.prog: self.prog(-1,_('Processing ingredients'))
+                    if self.prog:
+                        self.prog(-1, _('Processing ingredients'))
                     # we take a special keyword, "text", which gets
                     # parsed
                     if 'text' in ingdic:
-                        d = self.rd.parse_ingredient(ingdic['text'],conv=self.conv)
+                        d = self.rd.parse_ingredient(
+                            ingdic['text'], conv=self.conv)
                         if d:
-                            for dk,dv in list(d.items()):
+                            for dk, dv in list(d.items()):
                                 if dk not in ingdic or not ingdic[dk]:
-                                    ingdic[dk]=dv
+                                    ingdic[dk] = dv
                         elif 'item' not in ingdic:
-                            ingdic['item']=ingdic['text']
+                            ingdic['item'] = ingdic['text']
                         del ingdic['text']
                     self.start_ing(**ingdic)
                     self.commit_ing()
                 continue
 
             elif isinstance(v, list):
-                v = "\n".join(v) if k in self.JOIN_AS_PARAGRAPHS else " ".join(v)
+                v = "\n".join(
+                    v) if k in self.JOIN_AS_PARAGRAPHS else " ".join(v)
             # Ingredients in blocks
             if k == 'ingredient_block':
                 for l in v.split('\n'):
-                    if self.prog: self.prog(-1,_('Processing ingredients.'))
-                    dic=self.rd.parse_ingredient(l,conv=self.conv)
+                    if self.prog:
+                        self.prog(-1, _('Processing ingredients.'))
+                    dic = self.rd.parse_ingredient(l, conv=self.conv)
                     if dic:
                         self.start_ing(**dic)
                         self.commit_ing()
 
             elif k == 'image':
                 try:
-                    if v: img = get_image_from_tag(v,self.url)
+                    if v:
+                        img = get_image_from_tag(v, self.url)
                 except:
                     print('Error retrieving image')
-                    print('tried to retrieve image from %s'%v)
+                    print('tried to retrieve image from %s' % v)
                 else:
                     if img:
                         self.rec['image'] = img
-            else: self.rec[k]=v
-        #print 'COMMITTING RECIPE',self.rec
+            else:
+                self.rec[k] = v
+        # print 'COMMITTING RECIPE',self.rec
         self.commit_rec()
-        if self.prog: self.prog(1,_('Import complete.'))
+        if self.prog:
+            self.prog(1, _('Import complete.'))

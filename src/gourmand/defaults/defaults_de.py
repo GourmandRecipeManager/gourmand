@@ -24,9 +24,9 @@ class Language(AbstractLanguage):
 
     CREDITS = ""
 
-    #The next line can be used to determine some things about how to handle this language
-    LANG_PROPERTIES={'hasAccents':True, 'capitalisedNouns':True,'useFractions':False}
-
+    # The next line can be used to determine some things about how to handle this language
+    LANG_PROPERTIES = {'hasAccents': True,
+                       'capitalisedNouns': True, 'useFractions': False}
 
     # TRANSLATOR WARNING: DO NOT TRANSLATE THE FIELD NAMES: ONLY THE VALUES!!!
 
@@ -41,20 +41,20 @@ class Language(AbstractLanguage):
     # Feel free to change the number or content of categories to be consistent
     # with what users in your locale are likely to be familiar with.
 
-    fields={'cuisine': ['deutsch', 'amerikanisch','italienisch','französisch',
-                'mexikanisch','asiatisch','indisch','griechisch','vegetarisch'],
+    fields = {'cuisine': ['deutsch', 'amerikanisch', 'italienisch', 'französisch',
+                          'mexikanisch', 'asiatisch', 'indisch', 'griechisch', 'vegetarisch'],
 
-            'rating' : ['5 - ausgezeichnet','4 - lecker',
-                '3 - OK','2 - mittelmäßig','1 - vergiss es!',
-                        '(nicht geprüft)'],
+              'rating': ['5 - ausgezeichnet', '4 - lecker',
+                         '3 - OK', '2 - mittelmäßig', '1 - vergiss es!',
+                         '(nicht geprüft)'],
 
-            'source' : [],
+              'source': [],
 
-            'category' :[
-                 'Nachspeise','Vorspeise','Hauptgericht',
-                 'Beilage','Salat','Suppe','Frühstück',
-                 'Picknick','Andere','Plan'],
-                      }
+              'category': [
+        'Nachspeise', 'Vorspeise', 'Hauptgericht',
+        'Beilage', 'Salat', 'Suppe', 'Frühstück',
+        'Picknick', 'Andere', 'Plan'],
+    }
 
     # In English, there are a heck of a lot of synonyms. This is a list
     # for those synonyms.  [u"preferred word","alternate word","alternate word"]
@@ -64,57 +64,58 @@ class Language(AbstractLanguage):
 
     # note from translator: some terms are not standard but used in common langugage, some are used in a fautive manner,
     # I decided to put them in different sections so it is still clear what is a synonym and what should not be a synonym.
-    SYNONYMS=[
+    SYNONYMS = [
         # the first item of each list is the default
         ["Cocktailtomaten", "Tomaten, cherry"],
-        ["Alfaalfa","Alfapha","Luzerne"],
-        ["Porree","Lauch"],
-        ["Frühlingszwiebel","Lauch-Zwiebeln"],
-        ["Zuckermelone","Gartenmelone"],
-        ["Bleichsellerie","Stangensellerie", "Straudensellerie"],
-        ["Hammelfleisch","Hammel"],
-        ["Kalbfleisch","Kalb"],
-        ["Truthahn","Puter","Pute"],
-        ["Rindfleisch","Rind"],
-        ["Rotbusch","Rooibos","Rooibosch"],
-        ["Seelachs","Köhler"],
-        ["Anschovis","Anchovis","Sardelle"],
-        ["Kabeljau","Dorsch"],
+        ["Alfaalfa", "Alfapha", "Luzerne"],
+        ["Porree", "Lauch"],
+        ["Frühlingszwiebel", "Lauch-Zwiebeln"],
+        ["Zuckermelone", "Gartenmelone"],
+        ["Bleichsellerie", "Stangensellerie", "Straudensellerie"],
+        ["Hammelfleisch", "Hammel"],
+        ["Kalbfleisch", "Kalb"],
+        ["Truthahn", "Puter", "Pute"],
+        ["Rindfleisch", "Rind"],
+        ["Rotbusch", "Rooibos", "Rooibosch"],
+        ["Seelachs", "Köhler"],
+        ["Anschovis", "Anchovis", "Sardelle"],
+        ["Kabeljau", "Dorsch"],
         ["Nutella", "Nusspli"],
-        ["Tomatenmark","Tomatenkonzentrat"],
-        ["Weizenmehl","Mehl, weiß"],
-        ["Soja-Milch","Sojamilch","Soya-Milch", "Soja Milch"],
-        ["Soja-Sauce", "sauce soja","sauce soya","Soya-Sauce","Sojasoße", "Sojasosse"],
-        ["Soja","Soya"],
-        ["Sojabohnen","Soyabohnen"],
-        ["Püree","Kartoffelpüree"],
-        ["Müsli","Muesli"],
-        ["Nudeln","Pasta"],
-        ["Chile","Chili","Chilli"],
+        ["Tomatenmark", "Tomatenkonzentrat"],
+        ["Weizenmehl", "Mehl, weiß"],
+        ["Soja-Milch", "Sojamilch", "Soya-Milch", "Soja Milch"],
+        ["Soja-Sauce", "sauce soja", "sauce soya",
+            "Soya-Sauce", "Sojasoße", "Sojasosse"],
+        ["Soja", "Soya"],
+        ["Sojabohnen", "Soyabohnen"],
+        ["Püree", "Kartoffelpüree"],
+        ["Müsli", "Muesli"],
+        ["Nudeln", "Pasta"],
+        ["Chile", "Chili", "Chilli"],
         ["Zucchini", "Zuchini", "Courgette"],
-        ["Tafeltrauben","Trauben, weiß","Trauben, grün"],
-        ["Garam Masala","Masala","Massala","Garam Massala"],
-        ["Gemüsebouillon","Gemüsebrühe"],
-        ["Hühnerbouillon","Hühnerbrühe"],
-        ["Muskat","Muskatnuss","Muscat","Muscatnuss"],
-        ["Sesammus","Tahin"],
+        ["Tafeltrauben", "Trauben, weiß", "Trauben, grün"],
+        ["Garam Masala", "Masala", "Massala", "Garam Massala"],
+        ["Gemüsebouillon", "Gemüsebrühe"],
+        ["Hühnerbouillon", "Hühnerbrühe"],
+        ["Muskat", "Muskatnuss", "Muscat", "Muscatnuss"],
+        ["Sesammus", "Tahin"],
         ["Brokkoli", "Broccoli"],
-        ["Kräuter","gemischte Kräuter"],
-        ["Langkornreis","Reis"],
-        ["Eierschwammerl","Pfifferlinge"],
-        ["Herrenpilze","Steinpilze"],
-        ["Paradeiser","Tomaten"],
+        ["Kräuter", "gemischte Kräuter"],
+        ["Langkornreis", "Reis"],
+        ["Eierschwammerl", "Pfifferlinge"],
+        ["Herrenpilze", "Steinpilze"],
+        ["Paradeiser", "Tomaten"],
 
         # Irregular plurals
-        ["Äpfel","Apfel"],
-        ["Pfirsiche","Pfirsich"],
+        ["Äpfel", "Apfel"],
+        ["Pfirsiche", "Pfirsich"],
         ["Nüsse", "Nuss"],
-        ["Eier","Ei"]
+        ["Eier", "Ei"]
 
-        #non-standard usage
+        # non-standard usage
 
-        #fautive/discouraged usages
-         ]
+        # fautive/discouraged usages
+    ]
 
     # A DICTIONARY CONTAINING INGREDIENT KEYS AND NDBNO for the USDA
     # nutritional database. For these items, we will have nutritional
@@ -133,9 +134,8 @@ class Language(AbstractLanguage):
     #             }
 
     AMBIGUOUS = {
-        'Sellerie':['Sellerie','Staudensellerie'],
-        }
-
+        'Sellerie': ['Sellerie', 'Staudensellerie'],
+    }
 
     # triplicates ITEM, KEY, SHOPPING CATEGORY
     # These will be defaults.
@@ -159,214 +159,351 @@ class Language(AbstractLanguage):
     # can send me a list of category headings and ingredients for your
     # locale and I'll do the necessary formatting <Thomas_Hinkle@alumni.brown.edu>
 
-    INGREDIENT_DATA = [  ## G e m ü s e
-        ("Alfaalfa", "Alfalfa", "Gemüse"),                                   # alfalfa sprouts
-        ("Anis", "Anis", "Gemüse"),                                          # anise
-        ("Artischocke", "Artischocke", "Gemüse"),                            # artichoke
-        ("Ölranke", "Ölranke", "Gemüse"),                                    # rocket
-        ("Spargel", "Spargel", "Gemüse"),                                    # asparagus (white)
-        ("weißer Spargel", "Spargel, weißer", "Gemüse"),                     # asparagus - white
-        ("grüner Spargel", "Spargel, grüner", "Gemüse"),                     # asparagus - green
-        ("Aubergine", "Aubergine", "Gemüse"),                                # aubergine
-        ("Avocado", "Avocado", "Gemüse"),                                    # avocado
-        ("Brokkoli", "Brokkoli", "Gemüse"),                                  # broccoli
-        ("Spinat", "Spinat", "Gemüse"),                                      # spinach
-        ("Rosenkohl", "Kohl, Rosenkohl", "Gemüse"),                          # brussels sprouts
-        ("Kohl", "Kohl", "Gemüse"),                                          # cabbage
-        ("Weißkohl", "Kohl, Weißkohl", "Gemüse"),                            # white cabbage
-        ("Rotkohl", "Kohl, Rotkohl", "Gemüse"),                              # red cabbage
-        ("Blumenkohl", "Kohl, Blumenkohl", "Gemüse"),                        # cauliflower
-        ("Chinakohl", "Kohl, Chinakohl", "Gemüse"),                          # china cabbage
-        ("Kohlrabi", "Kohl, Kohlrabi", "Gemüse"),                            # kohlrabi
+    INGREDIENT_DATA = [  # G e m ü s e
+        # alfalfa sprouts
+        ("Alfaalfa", "Alfalfa", "Gemüse"),
+        # anise
+        ("Anis", "Anis", "Gemüse"),
+        # artichoke
+        ("Artischocke", "Artischocke", "Gemüse"),
+        # rocket
+        ("Ölranke", "Ölranke", "Gemüse"),
+        # asparagus (white)
+        ("Spargel", "Spargel", "Gemüse"),
+        # asparagus - white
+        ("weißer Spargel", "Spargel, weißer", "Gemüse"),
+        # asparagus - green
+        ("grüner Spargel", "Spargel, grüner", "Gemüse"),
+        # aubergine
+        ("Aubergine", "Aubergine", "Gemüse"),
+        # avocado
+        ("Avocado", "Avocado", "Gemüse"),
+        # broccoli
+        ("Brokkoli", "Brokkoli", "Gemüse"),
+        # spinach
+        ("Spinat", "Spinat", "Gemüse"),
+        # brussels sprouts
+        ("Rosenkohl", "Kohl, Rosenkohl", "Gemüse"),
+        # cabbage
+        ("Kohl", "Kohl", "Gemüse"),
+        # white cabbage
+        ("Weißkohl", "Kohl, Weißkohl", "Gemüse"),
+        # red cabbage
+        ("Rotkohl", "Kohl, Rotkohl", "Gemüse"),
+        # cauliflower
+        ("Blumenkohl", "Kohl, Blumenkohl", "Gemüse"),
+        # china cabbage
+        ("Chinakohl", "Kohl, Chinakohl", "Gemüse"),
+        # kohlrabi
+        ("Kohlrabi", "Kohl, Kohlrabi", "Gemüse"),
         ("Grünkohl", "Kohl, Grünkohl", "Gemüse"),                            # kale
 
-        ("Bleichsellerie", "Bleichsellerie", "Gemüse"),                      # celery
-        ("Zitronengras", "Zitronengras", "Gemüse"),                          # lemon grass
+        ("Bleichsellerie", "Bleichsellerie",
+         "Gemüse"),                      # celery
+        # lemon grass
+        ("Zitronengras", "Zitronengras", "Gemüse"),
         ("Mais", "Mais", "Gemüse"),                                          # corn
 
-        ("Champignons", "Champignons", "Gemüse"),                            # button mushrooms
-        ("Pilze", "Pilze", "Gemüse"),                                        # large mushrooms
-        ("Steinpilz", "Steinpilze", "Gemüse"),                               # mushrooms
-        ("Pfifferlinge", "Pfifferlinge", "Gemüse"),                          # other woodland fungus
+        # button mushrooms
+        ("Champignons", "Champignons", "Gemüse"),
+        # large mushrooms
+        ("Pilze", "Pilze", "Gemüse"),
+        # mushrooms
+        ("Steinpilz", "Steinpilze", "Gemüse"),
+        # other woodland fungus
+        ("Pfifferlinge", "Pfifferlinge", "Gemüse"),
 
-        ("Senfkeimlinge", "Senfkeimlinge", "Gemüse"),                        # mustard greens
-        ("Brennessel", "Brennessel", "Gemüse"),                              # nettles
+        # mustard greens
+        ("Senfkeimlinge", "Senfkeimlinge", "Gemüse"),
+        # nettles
+        ("Brennessel", "Brennessel", "Gemüse"),
         ("Okra", "Okra", "Gemüse"),                                          # okra
         ("Schnittlauch", "Schnittlauch", "Gemüse"),                          # chives
 
         ("Zwiebeln", "Zwiebeln", "Gemüse"),                                  # onion
-        ("Schalotte", "Schalotte", "Gemüse"),                                # shallot
-        ("Frühlingszwiebel", "Frühlingszwiebel", "Gemüse"),                  # spring onion, scallion
-        ("rote Zwiebeln, rot", "Zwiebeln, rote", "Gemüse"),                  # red (spanish) onion
-        ("weiße Zwiebeln", "Zwiebeln, weiße", "Gemüse"),                     # white onion
-        ("gelbe Zwiebeln", "Zwiebeln, gelbe", "Gemüse"),                     # yellow onion
-        ("Metzgerzwiebeln", "Zwiebeln, Metzger-", "Gemüse"),                 # large onion (salad)
-        ("Speisezwiebeln", "Zwiebeln, Speise-", "Gemüse"),                   # standard cooking onion
+        # shallot
+        ("Schalotte", "Schalotte", "Gemüse"),
+        # spring onion, scallion
+        ("Frühlingszwiebel", "Frühlingszwiebel", "Gemüse"),
+        # red (spanish) onion
+        ("rote Zwiebeln, rot", "Zwiebeln, rote", "Gemüse"),
+        ("weiße Zwiebeln", "Zwiebeln, weiße",
+         "Gemüse"),                     # white onion
+        ("gelbe Zwiebeln", "Zwiebeln, gelbe",
+         "Gemüse"),                     # yellow onion
+        ("Metzgerzwiebeln", "Zwiebeln, Metzger-",
+         "Gemüse"),                 # large onion (salad)
+        # standard cooking onion
+        ("Speisezwiebeln", "Zwiebeln, Speise-", "Gemüse"),
         ("Knoblauch", "Knoblauch", "Gemüse"),                                # garlic
         ("Porree", "Porree", "Gemüse"),                                      # leek
 
-        ("Paprika", "Paprika", "Gemüse"),                                    # pepper
-        ("rote Paprika", "Paprika, rote", "Gemüse"),                         # red bell pepper
+        # pepper
+        ("Paprika", "Paprika", "Gemüse"),
+        # red bell pepper
+        ("rote Paprika", "Paprika, rote", "Gemüse"),
         ("grüne Paprika", "Paprika, grüne", "Gemüse"),                       #
         ("gelbe Paprika", "Paprika, gelbe", "Gemüse"),                       #
-        ("Chile", "Chile", "Gemüse"),                                        # chilli pepper
-        ("Jalapeño-Chile", "Chile, Jalapeño", "Gemüse"),                     # jalapeño pepper
-        ("Habanero-Chile", "Chile, Habanero", "Gemüse"),                     # habanero pepper
+        # chilli pepper
+        ("Chile", "Chile", "Gemüse"),
+        # jalapeño pepper
+        ("Jalapeño-Chile", "Chile, Jalapeño", "Gemüse"),
+        # habanero pepper
+        ("Habanero-Chile", "Chile, Habanero", "Gemüse"),
 
         ("Radieschen", "Radieschen", "Gemüse"),                              # radish
-        ("Rote Beet", "Rote Beet", "Gemüse"),                                # beetroot
-        ("Möhren", "Möhren", "Gemüse"),                                      # carrot
-        ("Rettich", "Rettich", "Gemüse"),                                    # horse radish
-        ("Wasabi", "Wasabi", "Gemüse"),                                      # japanese horseraddish
-        ("Sellerie", "Sellerie", "Gemüse"),                                  # celeriac
-        ("Pastinake", "Pastinake", "Gemüse"),                                # parsnip
-        ("Kohlrübe", "Kohlrübe", "Gemüse"),                                  # turnip
-        ("Fenchel", "Fenchel", "Gemüse"),                                    # fennel
+        # beetroot
+        ("Rote Beet", "Rote Beet", "Gemüse"),
+        # carrot
+        ("Möhren", "Möhren", "Gemüse"),
+        # horse radish
+        ("Rettich", "Rettich", "Gemüse"),
+        # japanese horseraddish
+        ("Wasabi", "Wasabi", "Gemüse"),
+        # celeriac
+        ("Sellerie", "Sellerie", "Gemüse"),
+        # parsnip
+        ("Pastinake", "Pastinake", "Gemüse"),
+        # turnip
+        ("Kohlrübe", "Kohlrübe", "Gemüse"),
+        # fennel
+        ("Fenchel", "Fenchel", "Gemüse"),
 
-        ("Kopfsalat", "Kopfsalat", "Gemüse"),                                # lettuce
+        # lettuce
+        ("Kopfsalat", "Kopfsalat", "Gemüse"),
         ("Rucolasalat", "Rucolasalat", "Gemüse"),                            # rucola
-        ("Friseesalat", "Friseesalat", "Gemüse"),                            # open lettuce
-        ("Feldsalat", "Feldesalat", "Gemüse"),                               # lettuce
+        # open lettuce
+        ("Friseesalat", "Friseesalat", "Gemüse"),
+        # lettuce
+        ("Feldsalat", "Feldesalat", "Gemüse"),
 
-        ("Saubohnen", "Saubohnen", "Gemüse"),                                # broad beans
-        ("Bobby Bohnen", "Bobby Bohnen", "Gemüse"),                          # small green beans
-        ("Haricots", "Haricots", "Gemüse"),                                  # haricot beans
-        ("Carbasc", "Carbasc", "Gemüse"),                                    # runner beans
+        # broad beans
+        ("Saubohnen", "Saubohnen", "Gemüse"),
+        # small green beans
+        ("Bobby Bohnen", "Bobby Bohnen", "Gemüse"),
+        # haricot beans
+        ("Haricots", "Haricots", "Gemüse"),
+        # runner beans
+        ("Carbasc", "Carbasc", "Gemüse"),
         ("Erbsen", "Erbsen", "Gemüse"),                                      # peas
-        ("Zuckererbsen", "Zuckererbsen", "Gemüse"),                          # mange tous
+        # mange tous
+        ("Zuckererbsen", "Zuckererbsen", "Gemüse"),
 
-        ("Zucchini", "Zucchini", "Gemüse"),                                  # zucchini
-        ("Gurke (Salat-)", "Gurke (Salat-)", "Gemüse"),                      # cucumber
+        # zucchini
+        ("Zucchini", "Zucchini", "Gemüse"),
+        ("Gurke (Salat-)", "Gurke (Salat-)",
+         "Gemüse"),                      # cucumber
 
-        ("Kürbis", "Kürbis", "Gemüse"),                                      # pumpkin
+        # pumpkin
+        ("Kürbis", "Kürbis", "Gemüse"),
 
-        ("Cocktailtomaten", "Tomaten, Cocktail-", "Gemüse"),                 # cocktail (cherry) tomato
-        ("Tomaten", "Tomaten", "Gemüse"),                                    # cherry tomato
-        ("Rispentomaten", "Tomaten, Rispen-", "Gemüse"),                     # tomato on stems
+        # cocktail (cherry) tomato
+        ("Cocktailtomaten", "Tomaten, Cocktail-", "Gemüse"),
+        # cherry tomato
+        ("Tomaten", "Tomaten", "Gemüse"),
+        # tomato on stems
+        ("Rispentomaten", "Tomaten, Rispen-", "Gemüse"),
 
         ("Kartoffel", "Kartoffel", "Gemüse"),                                # potato
-        ("Speisekartoffeln", "Kartoffeln, Speise-", "Gemüse"),               # standard cooking potatoes
-        ("Süßkartoffel", "Süßkartoffel", "Gemüse"),                          # sweet potato
+        # standard cooking potatoes
+        ("Speisekartoffeln", "Kartoffeln, Speise-", "Gemüse"),
+        # sweet potato
+        ("Süßkartoffel", "Süßkartoffel", "Gemüse"),
 
         ("Jamswurzel", "Jamswurzel", "Gemüse"),                              # yam
-        ("Wasserkastanie", "Wasserkastanie", "Gemüse"),                      # water chestnut
-        ("Brunnenkresse", "Brunnenkresse", "Gemüse"),                        # watercress
+        # water chestnut
+        ("Wasserkastanie", "Wasserkastanie", "Gemüse"),
+        # watercress
+        ("Brunnenkresse", "Brunnenkresse", "Gemüse"),
 
         ("Oliven", "Oliven", "Gemüse"),                                      #
         ("grüne Oliven", "Oliven, grüne", "Gemüse"),                         #
         ("schwarze Oliven", "Oliven, schwarze", "Gemüse"),                   #
 
-        ## H ü l s e n f r u c h t e
-        ("grüne Bohnen", "Bohnen, grüne", "Gemüse"),                         # green beans
-        ("weiße Bohnen", "Bohnen, weiße", "Hülsenfrüchte"),                  # green beans
-        ("Azuki Bohnen", "Bohnen, Azuki", "Hülsenfrüchte"),                  # azuki beans
-        ("schwarze Bohnen", "Bohnen, schwarze", "Hülsenfrüchte"),            # black beans
-        ("Borlottibohnen", "Bohnen, Borlotti-", "Hülsenfrüchte"),            # borlotti beans (not sure)
-        ("Kichererbsen", "Kichererbsen", "Hülsenfrüchte"),                   # chickpeas, garbanzos, or ceci beans
-        ("Kidneybohnen", "Bohnen, Kidney-", "Hülsenfrüchte"),                # kidney beans
-        ("Teller-Linsen", "Linsen, Teller-", "Hülsenfrüchte"),               # standard lentils
-        ("rote Linsen", "Linsen, rote", "Hülsenfrüchte"),                    # red lentils
-        ("grüne Linsen", "Linsen, grüne", "Hülsenfrüchte"),                  # green lentils
-        ("schwarze Linsen", "Linsen, schwarze", "Hülsenfrüchte"),            # black lentils
-        ("Gartenbohnen", "Gartenbohnen", "Gemüse"),                          # lima bean or butter bean
-        ("Mungbohnen", "Bohnen, Mung-", "Hülsenfrüchte"),                    # mung beans
+        # H ü l s e n f r u c h t e
+        # green beans
+        ("grüne Bohnen", "Bohnen, grüne", "Gemüse"),
+        ("weiße Bohnen", "Bohnen, weiße",
+         "Hülsenfrüchte"),                  # green beans
+        ("Azuki Bohnen", "Bohnen, Azuki",
+         "Hülsenfrüchte"),                  # azuki beans
+        ("schwarze Bohnen", "Bohnen, schwarze",
+         "Hülsenfrüchte"),            # black beans
+        # borlotti beans (not sure)
+        ("Borlottibohnen", "Bohnen, Borlotti-", "Hülsenfrüchte"),
+        # chickpeas, garbanzos, or ceci beans
+        ("Kichererbsen", "Kichererbsen", "Hülsenfrüchte"),
+        ("Kidneybohnen", "Bohnen, Kidney-",
+         "Hülsenfrüchte"),                # kidney beans
+        ("Teller-Linsen", "Linsen, Teller-",
+         "Hülsenfrüchte"),               # standard lentils
+        # red lentils
+        ("rote Linsen", "Linsen, rote", "Hülsenfrüchte"),
+        # green lentils
+        ("grüne Linsen", "Linsen, grüne", "Hülsenfrüchte"),
+        ("schwarze Linsen", "Linsen, schwarze",
+         "Hülsenfrüchte"),            # black lentils
+        # lima bean or butter bean
+        ("Gartenbohnen", "Gartenbohnen", "Gemüse"),
+        # mung beans
+        ("Mungbohnen", "Bohnen, Mung-", "Hülsenfrüchte"),
         ("Sojabohnen", "Bohnen, Soja-", "Hülsenfrüchte"),                    # soybeans
-        ("grüne Erbsen", "Erbsen, grüne", "Hülsenfrüchte"),                  # green dried peas
-        ("gelbe Erbsen", "Erbsen, gelbe", "Hülsenfrüchte"),                  # yellow dried peas
+        # green dried peas
+        ("grüne Erbsen", "Erbsen, grüne", "Hülsenfrüchte"),
+        # yellow dried peas
+        ("gelbe Erbsen", "Erbsen, gelbe", "Hülsenfrüchte"),
         ("Schälerbsen", "Erbsen, Schälerbsen", "Hülsenfrüchte"),             #
 
-        ## F r u c h t e
-        ("Obst", "Obst", "Obst"),                                            # general fruit
-        ("Äpfel", "Äpfel", "Obst"),                                          # apple
+        # F r u c h t e
+        # general fruit
+        ("Obst", "Obst", "Obst"),
+        # apple
+        ("Äpfel", "Äpfel", "Obst"),
         ("rote Äpfel", "Äpfel, rote", "Obst"),                               #
         ("goldene Äpfel", "Äpfel, goldene", "Obst"),                         #
         ("Granny Smith Äpfel", "Äpfel, Granny Smith", "Obst"),               #
         ("Fuji Äpfel", "Äpfel, Fuji-", "Obst"),                              #
-        ("grüne Äpfel", "Äpfel, grüne", "Obst"),                             # green apple
-        ("Granatäpfel", "Granatäpfel", "Obst"),                              # pomegranate
-        ("Quitte", "Quitte", "Obst"),                                        # quince
-        ("Hagebutten", "Hagebutten", "Obst"),                                # rose hip
-        ("Aprikosen", "Aprikosen", "Obst"),                                  # apricot
+        # green apple
+        ("grüne Äpfel", "Äpfel, grüne", "Obst"),
+        # pomegranate
+        ("Granatäpfel", "Granatäpfel", "Obst"),
+        # quince
+        ("Quitte", "Quitte", "Obst"),
+        # rose hip
+        ("Hagebutten", "Hagebutten", "Obst"),
+        # apricot
+        ("Aprikosen", "Aprikosen", "Obst"),
         ("Birnen", "Birnen", "Obst"),                                        # pear
-        ("Conference Birnen", "Birnen, Conference", "Obst"),                 # pear, large conference
-        ("William Birnen", "Birnen, William", "Obst"),                       # pear, standard william
-        ("Kirschen", "Kirschen", "Obst"),                                    # cherry
+        ("Conference Birnen", "Birnen, Conference",
+         "Obst"),                 # pear, large conference
+        # pear, standard william
+        ("William Birnen", "Birnen, William", "Obst"),
+        # cherry
+        ("Kirschen", "Kirschen", "Obst"),
         ("Pflaumen", "Pflaumen", "Obst"),                                    # plum
         ("Pfirsiche", "Pfirsiche", "Obst"),                                  # peach
-        ("Nektarinen", "Nektarinen", "Obst"),                                # nectarine
-        ("Brombeeren", "Beeren, Brombeeren", "Obst"),                        # blackberry
-        ("Himbeeren", "Beeren, Himbeeren", "Obst"),                          # raspberry
-        ("Erdbeeren", "Beeren, Erdbeeren", "Obst"),                          # raspberry
-        ("Heidelbeeren", "Beeren, Heidelbeeren", "Obst"),                    # bilberry
-        ("Blaubeeren", "Beeren, Blaubeeren", "Obst"),                        # blueberry
-        ("Preiselbeeren", "Beeren, Preiselbeeren", "Obst"),                  # cranberry
-        ("Johannisbeeren", "Beeren, Johannisbeeren", "Obst"),                # red currant
-        ("schwarze Johannisbeeren", "Beeren, schwarze Johannisbeeren", "Obst"),  # black currant
-        ("Holunderbeeren", "Beeren, Holunderbeeren", "Obst"),                # elderberry
-        ("Stachelbeeren", "Stachelbeeren", "Obst"),                          # gooseberry
-        ("Kiwi", "Kiwi", "Obst"),                                            # kiwi fruit
-        ("Papaya", "Papaya", "Obst"),                                        # pawpaw
-        ("Zuckermelonen", "Zucker-", "Obst"),                                # cantaloupe
-        ("Honigmelonen", "Melonen, Honig-", "Obst"),                         # honeydew melon
-        ("Galiamelonen", "Melonen, Galia-", "Obst"),                         # galia melon
-        ("Netzmelonen", "Melonen, Netz-", "Obst"),                           # net melon
-        ("Wassermelonen", "Melonen, Wasser-", "Obst"),                       # watermelon
+        # nectarine
+        ("Nektarinen", "Nektarinen", "Obst"),
+        ("Brombeeren", "Beeren, Brombeeren",
+         "Obst"),                        # blackberry
+        # raspberry
+        ("Himbeeren", "Beeren, Himbeeren", "Obst"),
+        # raspberry
+        ("Erdbeeren", "Beeren, Erdbeeren", "Obst"),
+        ("Heidelbeeren", "Beeren, Heidelbeeren",
+         "Obst"),                    # bilberry
+        ("Blaubeeren", "Beeren, Blaubeeren",
+         "Obst"),                        # blueberry
+        ("Preiselbeeren", "Beeren, Preiselbeeren",
+         "Obst"),                  # cranberry
+        ("Johannisbeeren", "Beeren, Johannisbeeren",
+         "Obst"),                # red currant
+        ("schwarze Johannisbeeren",
+         "Beeren, schwarze Johannisbeeren", "Obst"),  # black currant
+        ("Holunderbeeren", "Beeren, Holunderbeeren",
+         "Obst"),                # elderberry
+        # gooseberry
+        ("Stachelbeeren", "Stachelbeeren", "Obst"),
+        # kiwi fruit
+        ("Kiwi", "Kiwi", "Obst"),
+        # pawpaw
+        ("Papaya", "Papaya", "Obst"),
+        # cantaloupe
+        ("Zuckermelonen", "Zucker-", "Obst"),
+        # honeydew melon
+        ("Honigmelonen", "Melonen, Honig-", "Obst"),
+        # galia melon
+        ("Galiamelonen", "Melonen, Galia-", "Obst"),
+        # net melon
+        ("Netzmelonen", "Melonen, Netz-", "Obst"),
+        ("Wassermelonen", "Melonen, Wasser-",
+         "Obst"),                       # watermelon
         ("Feigen", "Feigen", "Obst"),                                        # fig
         ("Weintrauben", "Weintrauben", "Obst"),                              # grape
-        ("Tafeltrauben", "Weintrauben, Tafel", "Obst"),                      # green grapes
-        ("blaue Weintrauben", "Weintrauben, blau", "Obst"),                  # black grapes
+        ("Tafeltrauben", "Weintrauben, Tafel",
+         "Obst"),                      # green grapes
+        ("blaue Weintrauben", "Weintrauben, blau",
+         "Obst"),                  # black grapes
         ("Datteln", "Datteln", "Obst"),                                      # date
-        ("Grapefruit", "Grapefruit", "Obst"),                                # grapefruit
+        # grapefruit
+        ("Grapefruit", "Grapefruit", "Obst"),
         ("Limetten", "Limetten", "Obst"),                                    # lime
-        ("Kumquat", "Kumquat", "Obst"),                                      # kumquat
+        # kumquat
+        ("Kumquat", "Kumquat", "Obst"),
         ("Zitronen", "Zitronen", "Obst"),                                    # lemon
-        ("Mandarinen", "Mandarinen", "Obst"),                                # mandarin
-        ("Klementinen", "Klementinen", "Obst"),                              # clementine
-        ("Tangerinen", "Tangerinen", "Obst"),                                # tangerine
-        ("Orangen", "Orangen", "Obst"),                                      # orange
-        ("Ugli", "Ugli", "Obst"),                                            # ugli fruit
-        ("Guave", "Guave", "Obst"),                                          # guava
-        ("Litschi", "Litschi", "Obst"),                                      # lychee
-        ("Passionsfrucht", "Passionsfrucht", "Obst"),                        # passion fruit
-        ("Banane", "Banane", "Obst"),                                        # banana
-        ("Wegerich", "Wegerich", "Obst"),                                    # plantain
-        ("Kokosnuss", "Kokosnuss", "Obst"),                                  # coconut
-        ("Durion", "Durion", "Obst"),                                        # durian
-        ("Mango", "Mangue", "Obst"),                                         # mango
-        ("Papaya", "Papaya", "Obst"),                                        # papaya
-        ("Ananas", "Ananas", "Obst"),                                        # pineapple
-        ("Tamarinde", "Tamarinde", "Obst"),                                  # tamarind
-        ("Rhabarber", "Rhabarber", "Obst"),                                  # rhubarb
+        # mandarin
+        ("Mandarinen", "Mandarinen", "Obst"),
+        # clementine
+        ("Klementinen", "Klementinen", "Obst"),
+        # tangerine
+        ("Tangerinen", "Tangerinen", "Obst"),
+        # orange
+        ("Orangen", "Orangen", "Obst"),
+        # ugli fruit
+        ("Ugli", "Ugli", "Obst"),
+        # guava
+        ("Guave", "Guave", "Obst"),
+        # lychee
+        ("Litschi", "Litschi", "Obst"),
+        # passion fruit
+        ("Passionsfrucht", "Passionsfrucht", "Obst"),
+        # banana
+        ("Banane", "Banane", "Obst"),
+        # plantain
+        ("Wegerich", "Wegerich", "Obst"),
+        # coconut
+        ("Kokosnuss", "Kokosnuss", "Obst"),
+        # durian
+        ("Durion", "Durion", "Obst"),
+        # mango
+        ("Mango", "Mangue", "Obst"),
+        # papaya
+        ("Papaya", "Papaya", "Obst"),
+        # pineapple
+        ("Ananas", "Ananas", "Obst"),
+        # tamarind
+        ("Tamarinde", "Tamarinde", "Obst"),
+        # rhubarb
+        ("Rhabarber", "Rhabarber", "Obst"),
 
-        ## M e e r e s f r ü c h t e
+        # M e e r e s f r ü c h t e
         ("Anchovis", "Anchovis", "Meeresfrüchte"),                           # anchovy
         ("Barsch", "Barsch", "Meeresfrüchte"),                               # bass
         ("Kugelfisch", "Kugelfisch", "Meeresfrüchte"),                       # blowfish
-        ("Wels", "Wels", "Meeresfrüchte"),                                   # catfish
+        # catfish
+        ("Wels", "Wels", "Meeresfrüchte"),
         ("Dorsch", "Dorsch", "Meeresfrüchte"),                               # cod
         ("Aal", "Aal", "Meeresfrüchte"),                                     # eel
-        ("Flunder", "Flunder", "Meeresfrüchte"),                             # flounder
+        # flounder
+        ("Flunder", "Flunder", "Meeresfrüchte"),
         ("Schellfisch", "Schellfisch", "Meeresfrüchte"),                     # haddock
-        ("Haddock", "Haddock", "Meeresfrüchte"),                             # smoked haddock
+        # smoked haddock
+        ("Haddock", "Haddock", "Meeresfrüchte"),
         ("Heilbutt", "Heilbutt", "Meeresfrüchte"),                           # halibut
         ("Zander", "Zander", "Meeresfrüchte"),                               # pike
         ("Seelachs", "Seelachs", "Meeresfrüchte"),                           # pollock
-        ("Sardine", "Sardine", "Meeresfrüchte"),                             # sardine
+        # sardine
+        ("Sardine", "Sardine", "Meeresfrüchte"),
         ("Sprotte", "Sprotte", "Meeresfrüchte"),                             # sprat
         ("Lachs", "Lachs", "Meeresfrüchte"),                                 # salmon
         ("Sägebarsch", "Sägebarsch", "Meeresfrüchte"),                       # sea bass
         ("Hai", "Hai", "Meeresfrüchte"),                                     # shark
         ("Seezunge", "Seezunge", "Meeresfrüchte"),                           # sole
-        ("Stör", "Stör", "Meeresfrüchte"),                                   # sturgeon
-        ("Schwertfisch", "Schwertfisch", "Meeresfrüchte"),                   # swordfish
+        # sturgeon
+        ("Stör", "Stör", "Meeresfrüchte"),
+        ("Schwertfisch", "Schwertfisch",
+         "Meeresfrüchte"),                   # swordfish
         ("Forelle", "Forelle", "Meeresfrüchte"),                             # trout
         ("Thunfisch", "Thunfisch", "Meeresfrüchte"),                         # tuna
-        ("Weißfisch", "Weißfisch", "Meeresfrüchte"),                         # whitefish
+        # whitefish
+        ("Weißfisch", "Weißfisch", "Meeresfrüchte"),
         ("Wittling", "Wittling", "Meeresfrüchte"),                           # whiting
-        ("Rogen", "Rogen", "Meeresfrüchte"),                                 # roe of fish
+        # roe of fish
+        ("Rogen", "Rogen", "Meeresfrüchte"),
         ("Kaviar", "Kaviar", "Meeresfrüchte"),                               # caviar
         ("Krebs", "Krebs", "Meeresfrüchte"),                                 # crab
-        ("Hummer", "Hummer", "Meeresfrüchte"),                               # lobster
+        # lobster
+        ("Hummer", "Hummer", "Meeresfrüchte"),
         ("Garnele", "Garnele", "Meeresfrüchte"),                             # prawns
         ("Krabbe", "Krabbe", "Meeresfrüchte"),                               # shrimp
         ("Klaffmuschel", "Klaffmuschel", "Meeresfrüchte"),                   # clam
@@ -377,207 +514,354 @@ class Language(AbstractLanguage):
         ("Kalmar", "Kalmar", "Meeresfrüchte"),                               # squid
         ("Kammuschel", "Kammuschel", "Meeresfrüchte"),                       # scallop
 
-        ## F l e i s c h
-        ("Speck", "Speck", "Fleisch"),                                       # chopped bacon
-        ("Bacon", "Bacon", "Fleisch"),                                       # bacon
+        # F l e i s c h
+        # chopped bacon
+        ("Speck", "Speck", "Fleisch"),
+        # bacon
+        ("Bacon", "Bacon", "Fleisch"),
         ("Schinken", "Schinken", "Fleisch"),                                 # ham
-        ("Hammel", "Hammel", "Fleisch"),                                     # mutton
+        # mutton
+        ("Hammel", "Hammel", "Fleisch"),
         ("Lamm", "Lamm", "Fleisch"),                                         # lamb
         ("Kalb", "Kalb", "Fleisch"),                                         # veal
-        ("Steak", "Steak", "Fleisch"),                                       # steak
-        ("Hamburger", "Hamburger", "Fleisch"),                               # hamburger
-        ("Roastbeef", "Roastbeef", "Fleisch"),                               # roast beef
-        ("Hähnchen", "Hähnchen", "Fleisch"),                                 # chicken
-        ("Pute", "Pute", "Fleisch"),                                         # turkey
+        # steak
+        ("Steak", "Steak", "Fleisch"),
+        # hamburger
+        ("Hamburger", "Hamburger", "Fleisch"),
+        # roast beef
+        ("Roastbeef", "Roastbeef", "Fleisch"),
+        # chicken
+        ("Hähnchen", "Hähnchen", "Fleisch"),
+        # turkey
+        ("Pute", "Pute", "Fleisch"),
         ("Ente", "Ente", "Fleisch"),                                         # duck
-        ("Gans", "Gans", "Fleisch"),                                         # goose
+        # goose
+        ("Gans", "Gans", "Fleisch"),
         ("Rind", "Rind", "Fleisch"),                                         # beef
-        ("Hackfleisch", "Hackfleisch", "Fleisch"),                           # mince beef
+        # mince beef
+        ("Hackfleisch", "Hackfleisch", "Fleisch"),
         ("Hase", "Hase", "Fleisch"),                                         # hare
         ("Kaninchen", "Kaninchen", "Fleisch"),                               # rabbit
         ("Hirsch", "Hirsch", "Fleisch"),                                     # deer
-        ("Hühnerbrust", "Hühnerbrust", "Fleisch"),                           # chicken breast
+        # chicken breast
+        ("Hühnerbrust", "Hühnerbrust", "Fleisch"),
         ("Schweinefleisch", "Schweinefleisch", "Fleisch"),                   # pork
-        ("Chorizo", "Chorizo", "Fleisch"),                                   # chorizo
-        ("Salami", "Salami", "Fleisch"),                                     # salami
-        ("Wurst", "Wurst", "Fleisch"),                                       # sausage
-        ("Bratwurst", "Bratwurst", "Fleisch"),                               # sausage
-        ("Weißwurst", "Weißwurst", "Fleisch"),                               # sausage
-        ("Currywurst", "Currywurst", "Fleisch"),                             # sausage
+        # chorizo
+        ("Chorizo", "Chorizo", "Fleisch"),
+        # salami
+        ("Salami", "Salami", "Fleisch"),
+        # sausage
+        ("Wurst", "Wurst", "Fleisch"),
+        # sausage
+        ("Bratwurst", "Bratwurst", "Fleisch"),
+        # sausage
+        ("Weißwurst", "Weißwurst", "Fleisch"),
+        # sausage
+        ("Currywurst", "Currywurst", "Fleisch"),
 
-        ## L e b e n s m i t t e l
-        ("Weizenmehl", "Mehl, Weizen-", "Lebensmittel"),                     # all purpose flour
-        ("Vollkorn Weizenmehl", "Mehl, Vollkorn Weizen-", "Lebensmittel"),   # wholemeal flour
+        # L e b e n s m i t t e l
+        # all purpose flour
+        ("Weizenmehl", "Mehl, Weizen-", "Lebensmittel"),
+        ("Vollkorn Weizenmehl", "Mehl, Vollkorn Weizen-",
+         "Lebensmittel"),   # wholemeal flour
         ("Hirsemehl", "Mehl, Hirse-", "Lebensmittel"),                       # flour
-        ("Roggenmischung", "Mehl, Roggenmischung", "Lebensmittel"),          # rye flour
-        ("Backpulver", "Backpulver", "Lebensmittel"),                        # baking powder
-        ("Natron", "Natron", "Lebensmittel"),                                # baking soda
-        ("Schokolade", "Schokolade", "Lebensmittel"),                        # chocolate
-        ("Schokotröpfen", "Schokotröpfen", "Lebensmittel"),                  # chocolate chips
+        ("Roggenmischung", "Mehl, Roggenmischung",
+         "Lebensmittel"),          # rye flour
+        # baking powder
+        ("Backpulver", "Backpulver", "Lebensmittel"),
+        # baking soda
+        ("Natron", "Natron", "Lebensmittel"),
+        # chocolate
+        ("Schokolade", "Schokolade", "Lebensmittel"),
+        # chocolate chips
+        ("Schokotröpfen", "Schokotröpfen", "Lebensmittel"),
         ("Zucker", "Zucker", "Lebensmittel"),                                # suger
-        ("Süßstoff", "Süßstoff", "Lebensmittel"),                            # artificial sweetner
-        ("brauner Zucker", " Zucker, braun", "Lebensmittel"),                # brown suger
-        ("weißer Zucker", "Zucker, weiß", "Lebensmittel"),                   # white sugar
-        ("Raffinade", "Zucker, Raffinade", "Lebensmittel"),                  # castor sugar
+        # artificial sweetner
+        ("Süßstoff", "Süßstoff", "Lebensmittel"),
+        ("brauner Zucker", " Zucker, braun",
+         "Lebensmittel"),                # brown suger
+        ("weißer Zucker", "Zucker, weiß",
+         "Lebensmittel"),                   # white sugar
+        ("Raffinade", "Zucker, Raffinade",
+         "Lebensmittel"),                  # castor sugar
         ("Salz", "Salz", "Lebensmittel"),                                    # salt
-        ("Meersalz", "Salz, Meer-", "Lebensmittel"),                         # sea salt
-        ("Rosinen", "Rosinen", "Lebensmittel"),                              # currents
+        # sea salt
+        ("Meersalz", "Salz, Meer-", "Lebensmittel"),
+        # currents
+        ("Rosinen", "Rosinen", "Lebensmittel"),
         ("Sultanienen", "Sultanienen", "Lebensmittel"),                      # sultanas
-        ("geraspelte Kokosnuss", "Kokosnuss, geraspelt", "Lebensmittel"),    # (modifier?)
-        ("Vanille", "Vanille", "Lebensmittel"),                              # vanilla
-        ("Vanilleessenz", "Vanilleessenz", "Lebensmittel"),                  # vanilla extract
+        ("geraspelte Kokosnuss", "Kokosnuss, geraspelt",
+         "Lebensmittel"),    # (modifier?)
+        # vanilla
+        ("Vanille", "Vanille", "Lebensmittel"),
+        # vanilla extract
+        ("Vanilleessenz", "Vanilleessenz", "Lebensmittel"),
         ("Walnusskerne", "Walnusskerne", "Lebensmittel"),                    # walnut
-        ("Cashewnüsse", "Cashewnüsse", "Lebensmittel"),                      # cashew nut
-        ("Mandeln", "Mandeln", "Lebensmittel"),                              # almonds
+        # cashew nut
+        ("Cashewnüsse", "Cashewnüsse", "Lebensmittel"),
+        # almonds
+        ("Mandeln", "Mandeln", "Lebensmittel"),
         ("Erdnüsse", "Erdnüsse", "Lebensmittel"),                            # peanut
-        ("Kartoffelpüree", "Kartoffelpüree", "Lebensmittel"),                # potato mash
-        ("Klöße", "Klöße", "Lebensmittel"),                                  # potato dumplings
-        ("Polenta", "Polenta", "Lebensmittel"),                              # yellow cornmeal
-        ("kernige Haferflocken", "Haferflocken, kernig", "Lebensmittel"),    # rolled oats
-        ("zarte Haferflocken", "Haferflocken, zart", "Lebensmittel"),        # fine rolled oats
-        ("Ketchup", "Ketchup", "Lebensmittel"),                              # ketchup
-        ("Mayonnaise", "Mayonnaise", "Lebensmittel"),                        # mayonnaise
-        ("Knäckebrot", "Knäckebrot", "Lebensmittel"),                        # ryebread wafers
-        ("Dosentomaten", "Tomaten, Dosen-", "Lebensmittel"),                 # canned tomatoes
-        ("Dosenmais", "Mais, Dosen-", "Lebensmittel"),                       # canned sweetcorn
+        ("Kartoffelpüree", "Kartoffelpüree",
+         "Lebensmittel"),                # potato mash
+        # potato dumplings
+        ("Klöße", "Klöße", "Lebensmittel"),
+        # yellow cornmeal
+        ("Polenta", "Polenta", "Lebensmittel"),
+        ("kernige Haferflocken", "Haferflocken, kernig",
+         "Lebensmittel"),    # rolled oats
+        ("zarte Haferflocken", "Haferflocken, zart",
+         "Lebensmittel"),        # fine rolled oats
+        # ketchup
+        ("Ketchup", "Ketchup", "Lebensmittel"),
+        # mayonnaise
+        ("Mayonnaise", "Mayonnaise", "Lebensmittel"),
+        # ryebread wafers
+        ("Knäckebrot", "Knäckebrot", "Lebensmittel"),
+        # canned tomatoes
+        ("Dosentomaten", "Tomaten, Dosen-", "Lebensmittel"),
+        # canned sweetcorn
+        ("Dosenmais", "Mais, Dosen-", "Lebensmittel"),
 
-        ("Sonnenblumenkerne", "Sonnenblumenkerne", "Lebensmittel"),          # sunflower seeds
-        ("Sesammus", "Sesammus", "Lebensmittel"),                            # sesame seeds
+        ("Sonnenblumenkerne", "Sonnenblumenkerne",
+         "Lebensmittel"),          # sunflower seeds
+        # sesame seeds
+        ("Sesammus", "Sesammus", "Lebensmittel"),
 
-        ("Zitronensaft", "Zitronensaft", "Lebensmittel"),                    # lemon juice
-        ("Zitronenkonzentrat", "Zitronenkonzentrat", "Lebensmittel"),        # lemon concentrate
-        ("Limettensaft", "Saft, Limetten-", "Lebensmittel"),                 # lime juice
-        ("Orangensaft", "Saft, Orangen", "Lebensmittel"),                    # whole orange juice
-        ("Orangennektar", "Saft, Orangennektar", "Lebensmittel"),            # orange juice
+        # lemon juice
+        ("Zitronensaft", "Zitronensaft", "Lebensmittel"),
+        ("Zitronenkonzentrat", "Zitronenkonzentrat",
+         "Lebensmittel"),        # lemon concentrate
+        ("Limettensaft", "Saft, Limetten-",
+         "Lebensmittel"),                 # lime juice
+        # whole orange juice
+        ("Orangensaft", "Saft, Orangen", "Lebensmittel"),
+        ("Orangennektar", "Saft, Orangennektar",
+         "Lebensmittel"),            # orange juice
 
-        ("Tomatensuppe", "Tomatensuppe", "Lebensmittel"),                    # tomato sauce
+        # tomato sauce
+        ("Tomatensuppe", "Tomatensuppe", "Lebensmittel"),
         ("Bouillon", "Bouillon", "Lebensmittel"),                            # broth
-        ("Gemüsebouillon", "Bouillon, Gemüse-", "Lebensmittel"),             # vegetable broth
-        ("Hühnerbouillon", "Bouillon, Hühner-", "Lebensmittel"),             # broth, chicken
-        ("Hollandaise", "Hollandaise", "Lebensmittel"),                      # hollandais sauce
+        ("Gemüsebouillon", "Bouillon, Gemüse-",
+         "Lebensmittel"),             # vegetable broth
+        ("Hühnerbouillon", "Bouillon, Hühner-",
+         "Lebensmittel"),             # broth, chicken
+        # hollandais sauce
+        ("Hollandaise", "Hollandaise", "Lebensmittel"),
 
-        ("gehackte Tomaten", "Tomaten, gehackt", "Lebensmittel"),            # chopped tomato
-        ("geschälte Tomaten", "Tomaten, geschält", "Lebensmittel"),          # peeled tomato
-        ("passierte Tomaten", "Tomaten, passiert", "Lebensmittel"),          # mashed tomato
-        ("Tomatenmark", "Tomatenmark", "Lebensmittel"),                      # pureed tomato
+        ("gehackte Tomaten", "Tomaten, gehackt",
+         "Lebensmittel"),            # chopped tomato
+        ("geschälte Tomaten", "Tomaten, geschält",
+         "Lebensmittel"),          # peeled tomato
+        ("passierte Tomaten", "Tomaten, passiert",
+         "Lebensmittel"),          # mashed tomato
+        # pureed tomato
+        ("Tomatenmark", "Tomatenmark", "Lebensmittel"),
 
-        ("Kekse", "Kekse", "Lebensmittel"),                                  # biscuits
-        ("Müsli", "Müsli", "Lebensmittel"),                                  # muesli
-        ("Pudding", "Pudding", "Lebensmittel"),                              # instant custard pudding
-        ("Stärke", "Stärke", "Lebensmittel"),                                # corn starch
+        # biscuits
+        ("Kekse", "Kekse", "Lebensmittel"),
+        # muesli
+        ("Müsli", "Müsli", "Lebensmittel"),
+        # instant custard pudding
+        ("Pudding", "Pudding", "Lebensmittel"),
+        # corn starch
+        ("Stärke", "Stärke", "Lebensmittel"),
 
-        ## R e i s   u n d   T e i g w a r e n
+        # R e i s   u n d   T e i g w a r e n
         ("Nudeln", "Nudeln", "Reis & Teigwaren"),                            # pasta
-        ("Spaghetti", "Spagghetti", "Reis & Teigwaren"),                     # spaghetti
-        ("Penne", "Penne", "Reis & Teigwaren"),                              # pasta tubes
+        # spaghetti
+        ("Spaghetti", "Spagghetti", "Reis & Teigwaren"),
+        # pasta tubes
+        ("Penne", "Penne", "Reis & Teigwaren"),
         ("Canelonni", "Canelonni", "Reis & Teigwaren"),                      #
-        ("Fusilli", "Fusilli", "Reis & Teigwaren"),                          # pasta twirls
-        ("Riccioli", "Riccioli", "Reis & Teigwaren"),                        # pasta twirls
-        ("Lasagna", "Lasagna", "Reis & Teigwaren"),                          # pasta sheets
-        ("Vermicelli", "Vermicelli", "Reis & Teigwaren"),                    # vermicelli
+        # pasta twirls
+        ("Fusilli", "Fusilli", "Reis & Teigwaren"),
+        # pasta twirls
+        ("Riccioli", "Riccioli", "Reis & Teigwaren"),
+        # pasta sheets
+        ("Lasagna", "Lasagna", "Reis & Teigwaren"),
+        # vermicelli
+        ("Vermicelli", "Vermicelli", "Reis & Teigwaren"),
 
         ("Teig", "Teig", "Reis & Teigwaren"),                                # dough
-        ("Hefeteig", "Teig, Hefe-", "Reis & Teigwaren"),                     # pastry dough
-        ("Pizzateig", "Teig, Pizza-", "Reis & Teigwaren"),                   # pizza dough
+        # pastry dough
+        ("Hefeteig", "Teig, Hefe-", "Reis & Teigwaren"),
+        # pizza dough
+        ("Pizzateig", "Teig, Pizza-", "Reis & Teigwaren"),
 
-        ("Langkornreis", "Reis, Langkorn-", "Reis & Teigwaren"),             # rice longcorn
-        ("Basmatireis", "Reis, Basmati-", "Reis & Teigwaren"),               # basmati rice
-        ("Milchreis", "Reis, Milch-", "Reis & Teigwaren"),                   # pudding rice
-        ("Naturreis", "Reis, Natur-", "Reis & Teigwaren"),                   # whole rice
-        ("Wildreis", "Reis, Wild-", "Reis & Teigwaren"),                     # wild (black) rice
-        ("Spitzenlangkornreis", "Reis, Spitzenlangkorn-", "Reis & Teigwaren"),  # rice longcorn cook
+        ("Langkornreis", "Reis, Langkorn-",
+         "Reis & Teigwaren"),             # rice longcorn
+        ("Basmatireis", "Reis, Basmati-",
+         "Reis & Teigwaren"),               # basmati rice
+        # pudding rice
+        ("Milchreis", "Reis, Milch-", "Reis & Teigwaren"),
+        # whole rice
+        ("Naturreis", "Reis, Natur-", "Reis & Teigwaren"),
+        # wild (black) rice
+        ("Wildreis", "Reis, Wild-", "Reis & Teigwaren"),
+        ("Spitzenlangkornreis", "Reis, Spitzenlangkorn-",
+         "Reis & Teigwaren"),  # rice longcorn cook
 
-        ## B r o t
-        ("Brot", "Brot, allgemeines", "Brot"),                               # bread, any
-        ("Weißbrot", "Brot, weiß", "Brot"),                                  # white bread
-        ("Toastbrot", "Brot, Toast-", "Brot"),                               # sliced white toasting bread
-        ("Vollkornbrot", "Brot, Vollkorn-", "Brot"),                         # wholemeal bread
-        ("Sonnenblumenkernbrot", "Brot, Sonnenblumenkern-", "Brot"),         # sunflower seed wholmeal
-        ("Kürbiskernbrot", "Brot, Kürbiskern-", "Brot"),                     # pupkin seed wholemeal
-        ("Sesambrot", "Brot, Sesam-", "Brot"),                               # sesame seed wholemeal
-        ("Dreikornbrot", "Brot, Dreikorn-", "Brot"),                         # 3 corn wholemeal bread
-        ("Krustenbrot", "Brot, Krusten-", "Brot"),                           # Crusty wholemeal bread
-        ("Landbrot", "Brot, Land-", "Brot"),                                 # wholemeal bread
-        ("Fladenbrot", "Brot, Fladen-", "Brot"),                             # turkish round bread
-        ("Pumpernickel", "Pumpernickel", "Brot"),                            # pumpernickel bread
+        # B r o t
+        # bread, any
+        ("Brot", "Brot, allgemeines", "Brot"),
+        # white bread
+        ("Weißbrot", "Brot, weiß", "Brot"),
+        # sliced white toasting bread
+        ("Toastbrot", "Brot, Toast-", "Brot"),
+        # wholemeal bread
+        ("Vollkornbrot", "Brot, Vollkorn-", "Brot"),
+        ("Sonnenblumenkernbrot", "Brot, Sonnenblumenkern-",
+         "Brot"),         # sunflower seed wholmeal
+        # pupkin seed wholemeal
+        ("Kürbiskernbrot", "Brot, Kürbiskern-", "Brot"),
+        # sesame seed wholemeal
+        ("Sesambrot", "Brot, Sesam-", "Brot"),
+        # 3 corn wholemeal bread
+        ("Dreikornbrot", "Brot, Dreikorn-", "Brot"),
+        # Crusty wholemeal bread
+        ("Krustenbrot", "Brot, Krusten-", "Brot"),
+        # wholemeal bread
+        ("Landbrot", "Brot, Land-", "Brot"),
+        # turkish round bread
+        ("Fladenbrot", "Brot, Fladen-", "Brot"),
+        # pumpernickel bread
+        ("Pumpernickel", "Pumpernickel", "Brot"),
 
-        ## K r ä u t e r   u n d   G e w ü r z e
-        ("Kräuter", "Kräuter, gemischt", "Gemüse"),                          # mixed herbs
-        ("Petersilie", "Petersilie", "Gemüse"),                              # parsley
-        ("schwarze Pfeffer", "Pfeffer schwarz", "Kräuter u Gewürze"),        # black pepper
-        ("Cayennepfeffer", "Pfeffer, Cayenne", "Kräuter u Gewürze"),         # cayenne
-        ("Kräuter de Provence", "Kräuter de Provence", "Kräuter u Gewürze"), # Herbs de Provence
-        ("Kräutersalz", "Kräutersalz", "Kräuter u Gewürze"),                 # Herbed salt
-        ("Lorbeerblatt", "Lorbeerblatt", "Kräuter u Gewürze"),               # Bay leaf
+        # K r ä u t e r   u n d   G e w ü r z e
+        # mixed herbs
+        ("Kräuter", "Kräuter, gemischt", "Gemüse"),
+        # parsley
+        ("Petersilie", "Petersilie", "Gemüse"),
+        ("schwarze Pfeffer", "Pfeffer schwarz",
+         "Kräuter u Gewürze"),        # black pepper
+        ("Cayennepfeffer", "Pfeffer, Cayenne",
+         "Kräuter u Gewürze"),         # cayenne
+        ("Kräuter de Provence", "Kräuter de Provence",
+         "Kräuter u Gewürze"),  # Herbs de Provence
+        # Herbed salt
+        ("Kräutersalz", "Kräutersalz", "Kräuter u Gewürze"),
+        ("Lorbeerblatt", "Lorbeerblatt",
+         "Kräuter u Gewürze"),               # Bay leaf
         ("Gewürznelken", "Gewürznelken", "Kräuter u Gewürze"),                #
-        ("Chilipulver", "Chilipulver", "Kräuter u Gewürze"),                 # (modifier?)
-        ("Curry", "Curry", "Kräuter u Gewürze"),                             # curry powder
-        ("Currypaste", "Currypaste", "Kräuter u Gewürze"),                   # curry paste
-        ("Madras Curry", "Curry, madras", "Kräuter u Gewürze"),              # hotter curry powder
+        # (modifier?)
+        ("Chilipulver", "Chilipulver", "Kräuter u Gewürze"),
+        # curry powder
+        ("Curry", "Curry", "Kräuter u Gewürze"),
+        # curry paste
+        ("Currypaste", "Currypaste", "Kräuter u Gewürze"),
+        # hotter curry powder
+        ("Madras Curry", "Curry, madras", "Kräuter u Gewürze"),
         ("Garam Masala", "Garam Masala", "Kräuter u Gewürze"),                #
-        ("Zimtschote", "Zimt, Zimtschote", "Kräuter u Gewürze"),             # (modifier?)
-        ("gemahlener Zimt", "Zimt, gemahlener", "Kräuter u Gewürze"),        # (modifier?)
-        ("Korianderkerne", "Korianderkerne", "Kräuter u Gewürze"),           # (modifier?)
-        ("gemahlener Koriander", "Koriander, gemahlener", "Kräuter u Gewürze"),  # (modifier?)
-        ("Cuminkerne", "Cuminkerne", "Kräuter u Gewürze"),                   # (modifier?)
-        ("gemahlener Cumin", "Cumin, gemahlener", "Kräuter u Gewürze"),      # (modifier?)
-        ("Senfkerne", "Senfkerne", "Kräuter u Gewürze"),                     # (modifier?)
-        ("Senf", "Senf", "Kräuter u Gewürze"),                               # (modifier?)
-        ("Dijon-Senf", "Senf, Dijon", "Kräuter u Gewürze"),                  # (modifier?)
+        ("Zimtschote", "Zimt, Zimtschote",
+         "Kräuter u Gewürze"),             # (modifier?)
+        ("gemahlener Zimt", "Zimt, gemahlener",
+         "Kräuter u Gewürze"),        # (modifier?)
+        ("Korianderkerne", "Korianderkerne",
+         "Kräuter u Gewürze"),           # (modifier?)
+        ("gemahlener Koriander", "Koriander, gemahlener",
+         "Kräuter u Gewürze"),  # (modifier?)
+        # (modifier?)
+        ("Cuminkerne", "Cuminkerne", "Kräuter u Gewürze"),
+        ("gemahlener Cumin", "Cumin, gemahlener",
+         "Kräuter u Gewürze"),      # (modifier?)
+        # (modifier?)
+        ("Senfkerne", "Senfkerne", "Kräuter u Gewürze"),
+        # (modifier?)
+        ("Senf", "Senf", "Kräuter u Gewürze"),
+        # (modifier?)
+        ("Dijon-Senf", "Senf, Dijon", "Kräuter u Gewürze"),
         ("Muskatnuss", "Muskatnuss", "Kräuter u Gewürze"),                   # nutmeg
         ("Paprika, gemahlen", "Paprika, gemahlen", "Kräuter u Gewürze"),      #
-        ("Ingwerpulver", "Ingwer, Ingwerpulver", "Kräuter u Gewürze"),       # ground ginger
-        ("Kurkuma", "Kurkuma", "Kräuter u Gewürze"),                         # turmeric, curcuma
-        ("Majoran", "Majoran", "Kräuter u Gewürze"),                         # turmeric, curcuma
+        ("Ingwerpulver", "Ingwer, Ingwerpulver",
+         "Kräuter u Gewürze"),       # ground ginger
+        # turmeric, curcuma
+        ("Kurkuma", "Kurkuma", "Kräuter u Gewürze"),
+        # turmeric, curcuma
+        ("Majoran", "Majoran", "Kräuter u Gewürze"),
         ("Oregano", "Oregano", "Kräuter u Gewürze"),                         # oregano
-        ("Basilikum, gerebelt", "Basilikum, gerebelt", "Kräuter u Gewürze"), # basil, crushed
-        ("frisches Basilikum", "Basilikum, frisches", "Kräuter u Gewürze"),  # fresh basil leaves
-        ("frischer Koriander", "Koriander, frischer", "Kräuter u Gewürze"),  # fresh coriander leaves
-        ("frisches Schnittlauch", "Schnittlauch, frisches", "Kräuter u Gewürze"),  # fresh chives
-        ("frischer Ingwer", "Ingwer, frischer", "Kräuter u Gewürze"),        # fresh ginger
-        ("Ingwerpaste", "Ingwerpaste", "Kräuter u Gewürze"),                 # ginger paste
+        ("Basilikum, gerebelt", "Basilikum, gerebelt",
+         "Kräuter u Gewürze"),  # basil, crushed
+        ("frisches Basilikum", "Basilikum, frisches",
+         "Kräuter u Gewürze"),  # fresh basil leaves
+        ("frischer Koriander", "Koriander, frischer",
+         "Kräuter u Gewürze"),  # fresh coriander leaves
+        ("frisches Schnittlauch", "Schnittlauch, frisches",
+         "Kräuter u Gewürze"),  # fresh chives
+        ("frischer Ingwer", "Ingwer, frischer",
+         "Kräuter u Gewürze"),        # fresh ginger
+        # ginger paste
+        ("Ingwerpaste", "Ingwerpaste", "Kräuter u Gewürze"),
 
-        ## M a r m e l a d e
-        ("Pflaumenmarmelade", "Marmelade, Pflaumen-", "Konfitüren"),         # plum jam
-        ("Aprikosenmarmelade", "Marmelade, Aprikosen-", "Konfitüren"),       # apricot jam
-        ("Orangenmamalade", "Marmalade, Orangen-", "Konfitüren"),            # orange jam
-        ("Marmelade", "Marmelade", "Konfitüren"),                            # jam - general
-        ("Erdbeermarmelade", "Marmelade, Erdbeer-", "Konfitüren"),           # strawberry jam
-        ("Himbeermarmelade", "Marmelade, Himbeer-", "Konfitüren"),           # raspberry jam
-        ("Erdnussbutter", "Erdnussbutter", "Konfitüren"),                    # peanut butter
-        ("Nutella", "Nutella", "Konfitüren"),                                # nussply
-        ("Sesammus", "Sesammus", "Konfitüren"),                              # tahini - sesame spread
+        # M a r m e l a d e
+        ("Pflaumenmarmelade", "Marmelade, Pflaumen-",
+         "Konfitüren"),         # plum jam
+        ("Aprikosenmarmelade", "Marmelade, Aprikosen-",
+         "Konfitüren"),       # apricot jam
+        ("Orangenmamalade", "Marmalade, Orangen-",
+         "Konfitüren"),            # orange jam
+        # jam - general
+        ("Marmelade", "Marmelade", "Konfitüren"),
+        ("Erdbeermarmelade", "Marmelade, Erdbeer-",
+         "Konfitüren"),           # strawberry jam
+        ("Himbeermarmelade", "Marmelade, Himbeer-",
+         "Konfitüren"),           # raspberry jam
+        # peanut butter
+        ("Erdnussbutter", "Erdnussbutter", "Konfitüren"),
+        # nussply
+        ("Nutella", "Nutella", "Konfitüren"),
+        # tahini - sesame spread
+        ("Sesammus", "Sesammus", "Konfitüren"),
         ("Honig", "Honig", "Konfitüren"),                                    # honey
 
-        ## I n t e r n a t i o n a l
-        ("Tartex", "Tartex", "International"),                               # tartex spread
-        ("Kokosmilch", "Kokusmilch", "International"),                       # coconut milk
-        ("Kokoscreme", "Kokuscreme", "International"),                       # coconut cream
-        ("grüne Currypaste", "Currypaste, grüne", "International"),          # green curry paste
-        ("rote Currypaste", "Currypaste, rote", "International"),            # red curry paste
-        ("Reisessig", "Essig, Reis-", "International"),                      # rice vinegar
+        # I n t e r n a t i o n a l
+        # tartex spread
+        ("Tartex", "Tartex", "International"),
+        # coconut milk
+        ("Kokosmilch", "Kokusmilch", "International"),
+        # coconut cream
+        ("Kokoscreme", "Kokuscreme", "International"),
+        ("grüne Currypaste", "Currypaste, grüne",
+         "International"),          # green curry paste
+        ("rote Currypaste", "Currypaste, rote",
+         "International"),            # red curry paste
+        # rice vinegar
+        ("Reisessig", "Essig, Reis-", "International"),
         ("Salsa", "Salsa", "International"),                                 # salsam
-        ("Sesamkerne", "Sesamkerne", "International"),                       # sesame seeds
-        ("Soja-Sauce", "Soja-Sauce", "International"),                       # soy sauce
-        ("Sojacreme", "Sojacreme", "International"),                         # soya cream
+        # sesame seeds
+        ("Sesamkerne", "Sesamkerne", "International"),
+        # soy sauce
+        ("Soja-Sauce", "Soja-Sauce", "International"),
+        # soya cream
+        ("Sojacreme", "Sojacreme", "International"),
         ("Bulgur", "Bulgur", "International"),                               # bulgar
-        ("Couscous", "Couscous", "International"),                           # couscous
-        ("Falafel", "Falafel", "International"),                             # felafel
+        # couscous
+        ("Couscous", "Couscous", "International"),
+        # felafel
+        ("Falafel", "Falafel", "International"),
         ("Tofu", "Tofu", "International"),                                   # tofu
-        ("Pak-choï", "Pak-choï", "Gemüse"),                                  # bok choy
+        # bok choy
+        ("Pak-choï", "Pak-choï", "Gemüse"),
 
-        ## M i l c h p r o d u k t e
-        ("Milch", "Milch", "Milchprodukte"),                                 # milk, unspecified
-        ("Käse", "Käse, allgemeiner", "Milchprodukte"),                      # cheese, any
+        # M i l c h p r o d u k t e
+        # milk, unspecified
+        ("Milch", "Milch", "Milchprodukte"),
+        # cheese, any
+        ("Käse", "Käse, allgemeiner", "Milchprodukte"),
         ("Butter", "Butter", "Milchprodukte"),                               # butter
         ("Margarine", "Margarine", "Milchprodukte"),                          #
         ("Eier", "Eier", "Milchprodukte"),                                   # egg
         ("frische Milch", "Milch, frische", "Milchprodukte"),                # milk
-        ("fettarme Milch", "Milch, fettarme", "Milchprodukte"),              # skimmed milk
-        ("H-Milch", "Milch, H-Milch", "Milchprodukte"),                      # long-life milk
-        ("Sojamilch", "Milch, Sojamilch", "Milchprodukte"),                  # soya milk
-        ("Buttermilch", "Milch, Buttermilch", "Milchprodukte"),              # buttermilk
-        ("Sauerrahm", "Sauerrahm", "Milchprodukte"),                         # sour cream
+        ("fettarme Milch", "Milch, fettarme",
+         "Milchprodukte"),              # skimmed milk
+        # long-life milk
+        ("H-Milch", "Milch, H-Milch", "Milchprodukte"),
+        ("Sojamilch", "Milch, Sojamilch",
+         "Milchprodukte"),                  # soya milk
+        ("Buttermilch", "Milch, Buttermilch",
+         "Milchprodukte"),              # buttermilk
+        # sour cream
+        ("Sauerrahm", "Sauerrahm", "Milchprodukte"),
         ("Sahne", "Sahne", "Milchprodukte"),                                 #
         ("Sahne 10% Fett", "Sahne, 10% Fett", "Milchprodukte"),              #
         ("Sahne 15% Fett", "Sahne, 15% Fett", "Milchprodukte"),              #
@@ -586,53 +870,94 @@ class Language(AbstractLanguage):
         ("Quark", "Quark", "Milchprodukte"),                                 #
         ("Speisequark Magerstufe", "Quark, Speise- Magerstufe", "Milchprodukte"),  #
         ("Kräuterquark", "Quark, Kräuter", "Milchprodukte"),                 #
-        ("Cheddar-Käse", "Käse, Cheddar", "Milchprodukte"),                  # cheddar cheese
-        ("Hartkäse", "Käse, Hart-", "Milchprodukte"),                        # general hard cheese
-        ("Hüttenkäse", "Käse, Hüttenkäse", "Milchprodukte"),                 # cottage cheese
-        ("Schnittkäse", "Käse, Schnittkäse", "Milchprodukte"),               # cottage cheese
-        ("Fetakäse", "Käse, Fetakäse", "Milchprodukte"),                     # feta cheese
-        ("Ziegenkäse", "Käse, Ziegenkäse", "Milchprodukte"),                 # fresh cheese white goat
-        ("Schaffskäse", "Schaffskäse", "Milchprodukte"),                     # sheeps cheese
-        ("Emmentaler", "Käse, Emmentalerkäse", "Milchprodukte"),             # emmental
-        ("Mozzarella", "Käse, Mozzarella", "Milchprodukte"),                 # mozzarella cheese
-        ("Parmesan", "Käse, Parmesan", "Milchprodukte"),                     # parmesan cheese
-        ("Provolone", "Käse, Provolone", "Milchprodukte"),                   # provolone cheese
-        ("Ricotta", "Käse, Ricotta", "Milchprodukte"),                       # ricotta cheese
-        ("Gouda", "Käse, Gouda", "Milchprodukte"),                           # cheese Gouda
-        ("Brie", "Käse, Brie", "Milchprodukte"),                             # cheese Brie
-        ("Streichkäse", "Käse, Steich", "Milchprodukte"),                    # spreading cheese
-        ("Philladelphia", "Käse, Philladelphia", "Milchprodukte"),           # philladelphia cheese
+        # cheddar cheese
+        ("Cheddar-Käse", "Käse, Cheddar", "Milchprodukte"),
+        # general hard cheese
+        ("Hartkäse", "Käse, Hart-", "Milchprodukte"),
+        # cottage cheese
+        ("Hüttenkäse", "Käse, Hüttenkäse", "Milchprodukte"),
+        ("Schnittkäse", "Käse, Schnittkäse",
+         "Milchprodukte"),               # cottage cheese
+        # feta cheese
+        ("Fetakäse", "Käse, Fetakäse", "Milchprodukte"),
+        # fresh cheese white goat
+        ("Ziegenkäse", "Käse, Ziegenkäse", "Milchprodukte"),
+        # sheeps cheese
+        ("Schaffskäse", "Schaffskäse", "Milchprodukte"),
+        ("Emmentaler", "Käse, Emmentalerkäse",
+         "Milchprodukte"),             # emmental
+        # mozzarella cheese
+        ("Mozzarella", "Käse, Mozzarella", "Milchprodukte"),
+        # parmesan cheese
+        ("Parmesan", "Käse, Parmesan", "Milchprodukte"),
+        # provolone cheese
+        ("Provolone", "Käse, Provolone", "Milchprodukte"),
+        # ricotta cheese
+        ("Ricotta", "Käse, Ricotta", "Milchprodukte"),
+        # cheese Gouda
+        ("Gouda", "Käse, Gouda", "Milchprodukte"),
+        # cheese Brie
+        ("Brie", "Käse, Brie", "Milchprodukte"),
+        # spreading cheese
+        ("Streichkäse", "Käse, Steich", "Milchprodukte"),
+        ("Philladelphia", "Käse, Philladelphia",
+         "Milchprodukte"),           # philladelphia cheese
 
-        ## h e i ß e   G e t r ä n k e
-        ("schwarzer Tee", "Tee, schwarzer", "Getränke, heiß"),               # black tea
-        ("gemahlener Kaffee, ", "Kaffee, gemahlener", "Getränke, heiß"),     # ground coffee
-        ("gemahler entkoffeinierter Kaffee", "Kaffee, gemahlener entkoffeinierter", "Getränke, heiß"),  # decaff ground coffee
-        ("Kaffeefilter", "Kaffeefilter", "Getränke, heiß"),                  # coffee filters
-        ("Kakao", "Kakao", "Getränke, heiß"),                                # drinking chocolate
-        ("Carokaffee", "Carokaffee", "Getränke, heiß"),                      # caro coffee
-        ("Früchtetee, ", "Tee, Früchtetee", "Getränke, heiß"),               # fruit tea
-        ("Pfefferminztee", "Tee, Pfefferminztee", "Getränke, heiß"),         # peppermint tea
-        ("Hagebuttentee", "Tee, Hagebuttentee", "Getränke, heiß"),           # rosehip tea
-        ("Kamillentee", "Tee, Kamillentee", "Getränke, heiß"),               # camomile tea
-        ("Fencheltee", "Tee, Fencheltee", "Getränke, heiß"),                 # fenchel tea
-        ("Rotbuschtee", "Tee, Rotbuschtee", "Getränke, heiß"),               # roobusch tea
-        ("Kräutertee", "Tee, Kräutertee", "Getränke, heiß"),                 # herb tea
-        ("grüner Tee", "Tee, grüner", "Getränke, heiß"),                     # green tea
-        ("Yogitee", "Tee, Yogitee", "Getränke, heiß"),                       # yogi (ayurvedic) tea
+        # h e i ß e   G e t r ä n k e
+        ("schwarzer Tee", "Tee, schwarzer",
+         "Getränke, heiß"),               # black tea
+        ("gemahlener Kaffee, ", "Kaffee, gemahlener",
+         "Getränke, heiß"),     # ground coffee
+        ("gemahler entkoffeinierter Kaffee", "Kaffee, gemahlener entkoffeinierter",
+         "Getränke, heiß"),  # decaff ground coffee
+        # coffee filters
+        ("Kaffeefilter", "Kaffeefilter", "Getränke, heiß"),
+        # drinking chocolate
+        ("Kakao", "Kakao", "Getränke, heiß"),
+        # caro coffee
+        ("Carokaffee", "Carokaffee", "Getränke, heiß"),
+        ("Früchtetee, ", "Tee, Früchtetee",
+         "Getränke, heiß"),               # fruit tea
+        ("Pfefferminztee", "Tee, Pfefferminztee",
+         "Getränke, heiß"),         # peppermint tea
+        ("Hagebuttentee", "Tee, Hagebuttentee",
+         "Getränke, heiß"),           # rosehip tea
+        ("Kamillentee", "Tee, Kamillentee",
+         "Getränke, heiß"),               # camomile tea
+        ("Fencheltee", "Tee, Fencheltee",
+         "Getränke, heiß"),                 # fenchel tea
+        ("Rotbuschtee", "Tee, Rotbuschtee",
+         "Getränke, heiß"),               # roobusch tea
+        ("Kräutertee", "Tee, Kräutertee",
+         "Getränke, heiß"),                 # herb tea
+        # green tea
+        ("grüner Tee", "Tee, grüner", "Getränke, heiß"),
+        # yogi (ayurvedic) tea
+        ("Yogitee", "Tee, Yogitee", "Getränke, heiß"),
 
-        ## F l u ß i g k e i t e n
-        ("Tafelessig", "Essig, Tafel-", "Flüssigkeiten"),                    # table vinegar
-        ("Obstessig", "Essig, Obst-", "Flüssigkeiten"),                      # table vinegar
-        ("Balsamico-Essig", "Essig, Balsamico-", "Flüssigkeiten"),           # balsamic vinegar
-        ("Sonnenblumenöl", "Öl, Sonnenblumenöl", "Flüssigkeiten"),           # sunflower oil
-        ("Olivenöl", "Öl, Olivenöl", "Flüssigkeiten"),                       # olive oil
-        ("Sesamöl", "Öl, Sesamöl", "Flüssigkeiten"),                         # sesame oil
-        ("Pflanzenöl", "Öl, Pflanzenöl", "Flüssigkeiten"),                   # vegetable oil
-        ("Sojaöl", "Öl, Sojaöl", "Flüssigkeiten"),                           # soya oil
-        ("Weißwein", "Wein, weiß", "Flüssigkeiten"),                         # white wine
-        ("Rotwein", "Wein, rot", "Flüssigkeiten"),                           # red wine
+        # F l u ß i g k e i t e n
+        # table vinegar
+        ("Tafelessig", "Essig, Tafel-", "Flüssigkeiten"),
+        # table vinegar
+        ("Obstessig", "Essig, Obst-", "Flüssigkeiten"),
+        ("Balsamico-Essig", "Essig, Balsamico-",
+         "Flüssigkeiten"),           # balsamic vinegar
+        ("Sonnenblumenöl", "Öl, Sonnenblumenöl",
+         "Flüssigkeiten"),           # sunflower oil
+        # olive oil
+        ("Olivenöl", "Öl, Olivenöl", "Flüssigkeiten"),
+        # sesame oil
+        ("Sesamöl", "Öl, Sesamöl", "Flüssigkeiten"),
+        # vegetable oil
+        ("Pflanzenöl", "Öl, Pflanzenöl", "Flüssigkeiten"),
+        # soya oil
+        ("Sojaöl", "Öl, Sojaöl", "Flüssigkeiten"),
+        # white wine
+        ("Weißwein", "Wein, weiß", "Flüssigkeiten"),
+        # red wine
+        ("Rotwein", "Wein, rot", "Flüssigkeiten"),
 
-        ## t h i n g   y o u   s h o u l d   h a v e   a t   h o m e
+        # t h i n g   y o u   s h o u l d   h a v e   a t   h o m e
         ("Wasser", "Wasser", "Flüssigkeiten")                                # water
     ]
 
@@ -643,24 +968,23 @@ class Language(AbstractLanguage):
     # (u"unit1",u"unit2"):conversion_factor, where unit1 contains conversion_factor X unit2
     # For example: 1 cup has 16 tablespoons.
     CONVERTER_TABLE = {
-        ("Tasse", "EL"):16,
-        ("EL", "TL"):3,
-        ("pt.", "Tasse"):2,
-        ("qt.", "Tasse"):4,
-        ("l", "ml"):1000,
-        ("l", "cl"):100,
-        ("l", "dl"):10,
-        ("oz.", "g"):28.35,
-        ("kg", "g"):1000,
-        ("g", "mg"):1000,
-        ("TL", "Tröpchen"):76,
-        ("Dose, mittel", "g"):400,
-        ("Dose, groß",   "g"):800,
-        ("Dose, klein",  "g"):200,
-        ("lb.", "oz."):16,
-        ("l", "qt."):1.057
+        ("Tasse", "EL"): 16,
+        ("EL", "TL"): 3,
+        ("pt.", "Tasse"): 2,
+        ("qt.", "Tasse"): 4,
+        ("l", "ml"): 1000,
+        ("l", "cl"): 100,
+        ("l", "dl"): 10,
+        ("oz.", "g"): 28.35,
+        ("kg", "g"): 1000,
+        ("g", "mg"): 1000,
+        ("TL", "Tröpchen"): 76,
+        ("Dose, mittel", "g"): 400,
+        ("Dose, groß",   "g"): 800,
+        ("Dose, klein",  "g"): 200,
+        ("lb.", "oz."): 16,
+        ("l", "qt."): 1.057
     }
-
 
     # DENSITIES of common foods. This allows us to convert between mass and volume.
     # Translators: You may be best off translating the food names below, since lists
@@ -695,7 +1019,7 @@ class Language(AbstractLanguage):
         "Zucker glace": 0.6        # sugar, confectioners
     }
 
-    ### ORIGINAL TABLES FROM ENGLISH
+    # ORIGINAL TABLES FROM ENGLISH
 
     # Standard unit names and alternate unit names that might appear.  For
     # example: u"c." is our standard abbreviation for cup.  u"cup",u"c." or
@@ -709,31 +1033,47 @@ class Language(AbstractLanguage):
     # e.g. [u"c.", [u"cup",...]]
     #
     UNITS = [
-        ("ml", ["Milliliter", "milliliter", "Milliliters", "milliliters", "ml", "ml."]),
-        ("cl", ["Centiliter", "centiliter", "Centiliters", "centiliters", "cl", "cl."]),
-        ("dl", ["Deciliter", "deciliter", "Deciliters", "deciliters", "dl", "dl."]),
+        ("ml", ["Milliliter", "milliliter",
+         "Milliliters", "milliliters", "ml", "ml."]),
+        ("cl", ["Centiliter", "centiliter",
+         "Centiliters", "centiliters", "cl", "cl."]),
+        ("dl", ["Deciliter", "deciliter",
+         "Deciliters", "deciliters", "dl", "dl."]),
         ("l", ["Liter", "Liters", "liter", "liters", "l.", "lit.", "l"]),
 
         ("g", ["Gramm", "Gramme", "gramm", "gramme", "g.", "g", "gram", "grams"]),
-        ("mg", ["Milligramm", "milligramm", "Milligramme", "milligramme", "mg.", "mg", "milligram", "milligrams"]),
-        ("kg", ["Kilogramm", "kilogramm", "Kilogramme", "kilogramme", "kg.", "kg", "kilogram", "kilograms"]),
+        ("mg", ["Milligramm", "milligramm", "Milligramme",
+         "milligramme", "mg.", "mg", "milligram", "milligrams"]),
+        ("kg", ["Kilogramm", "kilogramm", "Kilogramme",
+         "kilogramme", "kg.", "kg", "kilogram", "kilograms"]),
 
-        ("cm", ["Centimeter", "centimeter", "Centimeters", "centimeters", "cm", "cm."]),
-        ("mm", ["Millimeter", "millimeter", "Millimeters", "millimeters", "mm", "mm."]),
+        ("cm", ["Centimeter", "centimeter",
+         "Centimeters", "centimeters", "cm", "cm."]),
+        ("mm", ["Millimeter", "millimeter",
+         "Millimeters", "millimeters", "mm", "mm."]),
         ("m", ["Meter", "meter", "Meters", "meters", "m", "m."]),
 
-        ("Tröpfchen", ["Tröpfchen", "tröpfchen", "troepfchen", "Troepfchen", "drop", "drops"]),
-        ("TL", ["Teelöffel", "Teelöffeln", "teelöffel", "teelöffeln", "tl", "TL", "tsp", "tsp.", "tea spoon", "teaspoon"]),
-        ("EL", ["Esslöffel", "Esslöffeln", "esslöffel", "esslöffeln", "el", "EL", "tbs", "tbsp", "tbs.", "tbsp.", "table spoon", "tablespoon"]),
-        ("Tasse", ["Tasse", "Tassen", "tasse", "tassen", "cup", "c.", "cups", "Glas", "glas", "Glass", "glass"]),
+        ("Tröpfchen", ["Tröpfchen", "tröpfchen",
+         "troepfchen", "Troepfchen", "drop", "drops"]),
+        ("TL", ["Teelöffel", "Teelöffeln", "teelöffel", "teelöffeln",
+         "tl", "TL", "tsp", "tsp.", "tea spoon", "teaspoon"]),
+        ("EL", ["Esslöffel", "Esslöffeln", "esslöffel", "esslöffeln", "el",
+         "EL", "tbs", "tbsp", "tbs.", "tbsp.", "table spoon", "tablespoon"]),
+        ("Tasse", ["Tasse", "Tassen", "tasse", "tassen", "cup",
+         "c.", "cups", "Glas", "glas", "Glass", "glass"]),
         ("Becher", ["Becher", "becher"]),
 
-        ("St.", ["St.", "Stück", "Stücke", "Stueck", "Stuecke", "Mal", "stück", "stücke", "stueck", "stuecke", "mal", "piece", "pieces", "St", "st"]),
-        ("Dose, mittel", ["Dose, mittel", "dose, mittel", "mittlere Dose", "mittlere dose"]),
-        ("Dose, groß", ["Dose, groß", "dose, groß", "größe Dose", "größe dose"]),
-        ("Dose, klein", ["Dose, klein", "dose, klein", "kleine Dose", "kleine dose"]),
+        ("St.", ["St.", "Stück", "Stücke", "Stueck", "Stuecke", "Mal", "stück",
+         "stücke", "stueck", "stuecke", "mal", "piece", "pieces", "St", "st"]),
+        ("Dose, mittel", ["Dose, mittel", "dose, mittel",
+         "mittlere Dose", "mittlere dose"]),
+        ("Dose, groß", ["Dose, groß", "dose, groß",
+         "größe Dose", "größe dose"]),
+        ("Dose, klein", ["Dose, klein", "dose, klein",
+         "kleine Dose", "kleine dose"]),
         ("Zeh", ["Zeh", "Zehen", "zeh", "zehen"]),  # garlic
-        ("Paket", ["Paket", "Pakete", "paket", "pakete", "Packung", "packung", "pack"]),
+        ("Paket", ["Paket", "Pakete", "paket",
+         "pakete", "Packung", "packung", "pack"]),
         ("Prise", ["Prise", "Prisen", "prise", "prisen"]),  # pinch
         ("Bund", ["Bund", "Bunde", "bund", "bunde"]),  # bunch
 
@@ -745,69 +1085,69 @@ class Language(AbstractLanguage):
 
     ]
 
-    METRIC_RANGE = (1,999)
+    METRIC_RANGE = (1, 999)
 
     # The following sets up unit groups. Users will be able to turn
     # these on or off (American users, for example, would likely turn
     # off metric units, since we don't use them).
     # (User choice not implemented yet)
     UNIT_GROUPS = {
-        'metric mass':[('mg',METRIC_RANGE),
-                       ('g',METRIC_RANGE),
-                       ('kg',(1,None))],
-        'metric volume':[('ml',METRIC_RANGE),
-                         ('cl',(1,99)),
-                         ('dl',(1,9)),
-                         ('l',(1,None)),],
-        'imperial weight':[('oz.',(0.25,32)),
-                           ('lb.',(0.25,None)),
-                           ],
-        'imperial volume':[('Tröpfchen',(0,3)),
-                           ('TL',(0.125,3)),
-                           ('EL',(1,4)),
-                           ('Tasse',(0.25,6)),
-                           ('pt.',(1,1)),
-                           ('qt.',(1,3))]
-        }
+        'metric mass': [('mg', METRIC_RANGE),
+                        ('g', METRIC_RANGE),
+                        ('kg', (1, None))],
+        'metric volume': [('ml', METRIC_RANGE),
+                          ('cl', (1, 99)),
+                          ('dl', (1, 9)),
+                          ('l', (1, None)), ],
+        'imperial weight': [('oz.', (0.25, 32)),
+                            ('lb.', (0.25, None)),
+                            ],
+        'imperial volume': [('Tröpfchen', (0, 3)),
+                            ('TL', (0.125, 3)),
+                            ('EL', (1, 4)),
+                            ('Tasse', (0.25, 6)),
+                            ('pt.', (1, 1)),
+                            ('qt.', (1, 3))]
+    }
 
     # The units here need to correspond to the standard unit names defined
     # above in UNITS
     CROSS_UNIT_TABLE = {
-        ## This if for units that require an additional
-        ## bit of information -- i.e. to convert between
-        ## volume and mass you need the density of an
-        ## item.  In these cases, the additional factor
-        ## will be provided as an 'item' that is then looked
-        ## up in the dictionary referenced here (i.e. the density_table)
-        ## currently, 'density' is the only keyword used
-        ("pt.", "lb.")  :('density',1),
-        ("EL", "oz.")   :('density',0.5),
-        ("Tasse", "oz."):('density',8),
-        ("l", "kg")     :('density',1),
-        ("ml", "g")     :('density',1),
-        }
+        # This if for units that require an additional
+        # bit of information -- i.e. to convert between
+        # volume and mass you need the density of an
+        # item.  In these cases, the additional factor
+        # will be provided as an 'item' that is then looked
+        # up in the dictionary referenced here (i.e. the density_table)
+        # currently, 'density' is the only keyword used
+        ("pt.", "lb."): ('density', 1),
+        ("EL", "oz."): ('density', 0.5),
+        ("Tasse", "oz."): ('density', 8),
+        ("l", "kg"): ('density', 1),
+        ("ml", "g"): ('density', 1),
+    }
 
     # The units here need to correspond to the standard unit names defined
     # in UNITS.  These are some core conversions from mass-to-volume,
     # assuming a density of 1 (i.e. the density of water).
     VOL_TO_MASS_TABLE = {
-        ("pt.", "lb.") : 1,
-        ("tbs.", "oz.") : 0.5,
-        ("c.", "oz.") : 8,
-        ("pt.", "oz.") : 16,
-        ("ml", "g") : 1,
-        ("ml", "mg") : 1000,
+        ("pt.", "lb."): 1,
+        ("tbs.", "oz."): 0.5,
+        ("c.", "oz."): 8,
+        ("pt.", "oz."): 16,
+        ("ml", "g"): 1,
+        ("ml", "mg"): 1000,
         ("ml", "kg"): 0.001,
         ("cl", "kg"): 0.01,
-        ("cl", "g") : 10,
-        ("dl", "kg") : 0.1,
-        ("dl", "g") : 100,
-        ("l", "kg") : 1
-        }
+        ("cl", "g"): 10,
+        ("dl", "kg"): 0.1,
+        ("dl", "g"): 100,
+        ("l", "kg"): 1
+    }
 
-    ### From translator :
-    ### FRENCH PART TO BE REVISED !!! US units != UK units != Canadian units !!!
-    ### I will work on these later...
+    # From translator :
+    # FRENCH PART TO BE REVISED !!! US units != UK units != Canadian units !!!
+    # I will work on these later...
     # VOL_TO_MASS_TABLE = {
     #     (u"chop",u"lb") : 1,                    #(warning, might not be accurate, see below)
     #     (u"c. à table",u"oz") : 0.5,
@@ -824,20 +1164,20 @@ class Language(AbstractLanguage):
 
     # TIME ABBREVIATIONS (this is new!)
     TIME_ABBREVIATIONS = {
-        'sec':'Sek.',
-        'min':'Min.',
-        'hr':'Std.'
-        }
+        'sec': 'Sek.',
+        'min': 'Min.',
+        'hr': 'Std.'
+    }
 
-    IGNORE = ["und","mit","von","für",
-              "kalt","kalter","kalte","kaltes","kalten",
-              "warm","warmer","warme","warmes","warmen",
-              "dünn","dünner","dünne","dünnes","dünnen",
-              "dick","dicker","dicke","dickes","dicken"
+    IGNORE = ["und", "mit", "von", "für",
+              "kalt", "kalter", "kalte", "kaltes", "kalten",
+              "warm", "warmer", "warme", "warmes", "warmen",
+              "dünn", "dünner", "dünne", "dünnes", "dünnen",
+              "dick", "dicker", "dicke", "dickes", "dicken"
               ]
 
     NUMBERS: Mapping[float, Collection[str]] = {
-        }
+    }
 
     # These functions are rather important! Our goal is simply to
     # facilitate look ups -- if the user types in u"tomatoes", we want to
@@ -847,31 +1187,32 @@ class Language(AbstractLanguage):
     # of possible hits rather than to get the plural/singular form "right".
 
     @staticmethod
-    def guess_singulars (s):
+    def guess_singulars(s):
         # Note - German, here we're not only going to try to make nouns singular,
         # we could also get an adjective, so lets also take the adjectival endings off
-        if len(s)<3: return []
+        if len(s) < 3:
+            return []
         ret = []
-        if s[-1]=='n':
-            if s[-2]=='e':
-                ret.append(s[0:-2]) # try chopping off 'en'
-            if (s[-2]!='u') & (s[-2]!='o') & (s[-2]!='a') & (s[-2]!='i'):
-                ret.append(s[0:-1]) # try chopping off the n
+        if s[-1] == 'n':
+            if s[-2] == 'e':
+                ret.append(s[0:-2])  # try chopping off 'en'
+            if (s[-2] != 'u') & (s[-2] != 'o') & (s[-2] != 'a') & (s[-2] != 'i'):
+                ret.append(s[0:-1])  # try chopping off the n
 
-        if s[-1]=='s':
-            ret.append(s[0:-1]) # try chopping off the s
-            if s[-2]=='e':
-                ret.append(s[0:-2]) # try chopping off 'es'
+        if s[-1] == 's':
+            ret.append(s[0:-1])  # try chopping off the s
+            if s[-2] == 'e':
+                ret.append(s[0:-2])  # try chopping off 'es'
 
-        if s[-1]=='e':
-            ret.append(s[0:-1]) # try chopping off the 'e'
+        if s[-1] == 'e':
+            ret.append(s[0:-1])  # try chopping off the 'e'
 
-        if (s[-1]=='r') & (s[-2]=='e'):
-            ret.append(s[0:-2]) # try chopping off the 'er'
+        if (s[-1] == 'r') & (s[-2] == 'e'):
+            ret.append(s[0:-2])  # try chopping off the 'er'
 
         return ret
 
     @staticmethod
-    def guess_plurals (s):
+    def guess_plurals(s):
         # Ditto above, assume this could also be an adjective, so try adding the common agreements
         return [s+'n', s+'en', s+'e', s+'er', s+'s', s+'es']

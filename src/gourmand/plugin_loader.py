@@ -52,7 +52,7 @@ class MasterLoader:
         'mycookbook_plugin',
         'epub_plugin',
         'copy_paste_plugin'
-        ]
+    ]
 
     @classmethod
     def instance(cls):
@@ -84,13 +84,14 @@ class MasterLoader:
         """Look through plugin directories for legacy gourmet-plugins."""
         ret: Dict[str, object] = {}
         for d in directories:
-            debug('Loading plugins from %s'%os.path.realpath(d),1)
+            debug('Loading plugins from %s' % os.path.realpath(d), 1)
             plugins = glob.glob(os.path.join(d, '*.gourmet-plugin'))
             for ppath in plugins:
-                debug('Found %s'%ppath,1)
+                debug('Found %s' % ppath, 1)
                 plugin_set = LegacyPlugin(ppath)
                 if plugin_set.module in ret:
-                    print('Ignoring duplicate plugin ',plugin_set.module,'found in ',ppath)
+                    print('Ignoring duplicate plugin ',
+                          plugin_set.module, 'found in ', ppath)
                 else:
                     ret[plugin_set.module] = plugin_set
         return ret
@@ -99,9 +100,12 @@ class MasterLoader:
     def load_plugins_from_namespace() -> Dict[str, object]:
         """Look for plugins in the gourmand.plugins namespace."""
         debug('Loading plugins from namespace', 1)
-        exporters = list(pkg_resources.iter_entry_points('gourmand.plugins.exporters'))
-        file_importers = list(pkg_resources.iter_entry_points('gourmand.plugins.fileimporters'))
-        web_importers = list(pkg_resources.iter_entry_points('gourmand.plugins.webimporters'))
+        exporters = list(pkg_resources.iter_entry_points(
+            'gourmand.plugins.exporters'))
+        file_importers = list(pkg_resources.iter_entry_points(
+            'gourmand.plugins.fileimporters'))
+        web_importers = list(pkg_resources.iter_entry_points(
+            'gourmand.plugins.webimporters'))
 
         ret: Dict[str, object] = {}
         for entrypoint in exporters:
@@ -126,13 +130,14 @@ class MasterLoader:
         for p in self.active_plugin_sets:
             if p in self.available_plugin_sets:
                 try:
-                    self.active_plugins.extend(self.available_plugin_sets[p].plugins)
+                    self.active_plugins.extend(
+                        self.available_plugin_sets[p].plugins)
                 except:
-                    print('WARNING: Failed to load plugin %s'%p)
+                    print('WARNING: Failed to load plugin %s' % p)
                     self.errors[p] = traceback.format_exc()
                     logging.exception('')
             else:
-                print('Plugin ',p,'not found')
+                print('Plugin ', p, 'not found')
 
     def save_active_plugins(self):
         prefs = Prefs.instance()
@@ -142,11 +147,12 @@ class MasterLoader:
     def check_dependencies(self, plugin_set):
         if plugin_set.dependencies:
             depends = plugin_set.dependencies or []
-            missing = [dep for dep in depends if dep not in self.active_plugin_sets]
+            missing = [
+                dep for dep in depends if dep not in self.active_plugin_sets]
             if missing:
-                raise DependencyError(plugin_set,missing)
+                raise DependencyError(plugin_set, missing)
 
-    def check_if_depended_upon (self, plugin_set):
+    def check_if_depended_upon(self, plugin_set):
         """Return a list of active plugin set objects that depend on
         plugin_set.
         """
@@ -159,7 +165,8 @@ class MasterLoader:
                         if plugin_set.module in ps.dependencies:
                             depending_on_me.append(ps)
                     except:
-                        print('Problem checking dependencies of ',ps,ps.Dependencies)
+                        print('Problem checking dependencies of ',
+                              ps, ps.Dependencies)
                         raise
         return depending_on_me
 
@@ -179,22 +186,23 @@ class MasterLoader:
         self.active_plugins.extend(plugin_set.plugins)
         for plugin in plugin_set.plugins:
             for klass in list(self.pluggables_by_class.keys()):
-                if issubclass(plugin,klass):
+                if issubclass(plugin, klass):
                     for pluggable in self.pluggables_by_class[klass]:
-                        pluggable.plugin_plugin(self.get_instantiated_plugin(plugin))
+                        pluggable.plugin_plugin(
+                            self.get_instantiated_plugin(plugin))
 
-    def deactivate_plugin_set (self, plugin_set: 'LegacyPlugin'):
+    def deactivate_plugin_set(self, plugin_set: 'LegacyPlugin'):
         # Deactivate any plugin sets that depend upon us...
         for ps in self.check_if_depended_upon(plugin_set):
             self.deactivate_plugin_set(ps)
         if plugin_set.module in self.active_plugin_sets:
             self.active_plugin_sets.remove(plugin_set.module)
         else:
-            print('Odd',plugin_set.module,'is not listed as active.')
+            print('Odd', plugin_set.module, 'is not listed as active.')
         if plugin_set.get_module():
             for plugin in plugin_set.plugins:
                 for klass in list(self.pluggables_by_class.keys()):
-                    if issubclass(plugin,klass):
+                    if issubclass(plugin, klass):
                         for pluggable in self.pluggables_by_class[klass]:
                             plugin().deactivate(pluggable)
 
@@ -204,29 +212,30 @@ class MasterLoader:
 
     def get_instantiated_plugin(self, plugin):
         if plugin not in self.instantiated_plugins:
-            debug('Instantiate %s from %s'%(plugin,
-                                            plugin.__module__),
+            debug('Instantiate %s from %s' % (plugin,
+                                              plugin.__module__),
                   1)
             self.instantiated_plugins[plugin] = plugin()
 
         return self.instantiated_plugins[plugin]
 
-    def register_pluggable (self, pluggable, klass):
+    def register_pluggable(self, pluggable, klass):
         if klass not in self.pluggables_by_class:
             self.pluggables_by_class[klass] = []
         self.pluggables_by_class[klass].append(pluggable)
         for p in self.active_plugins:
-            if issubclass(p,klass):
+            if issubclass(p, klass):
                 try:
                     plugin_instance = self.get_instantiated_plugin(p)
                 except:
-                    print('WARNING: Failed to instantiate plugin %s of type %s'%(p,klass))
+                    print(
+                        'WARNING: Failed to instantiate plugin %s of type %s' % (p, klass))
                     self.errors[p] = traceback.format_exc()
                     traceback.print_exc()
                 else:
                     pluggable.plugin_plugin(plugin_instance)
 
-    def unregister_pluggable (self, pluggable, klass):
+    def unregister_pluggable(self, pluggable, klass):
         self.pluggables_by_class[klass].remove(pluggable)
 
 
@@ -236,7 +245,7 @@ class Plugin:
     def __init__(self, plugin_class: type):
         self.props = dict.fromkeys(
             ['Name', 'Comment', 'Authors', 'Version', 'API_Version', 'Website',
-             'Copyright','Dependencies'])
+             'Copyright', 'Dependencies'])
         self._loaded = plugin_class
         self.name = plugin_class.__name__
         self.comment = self._loaded.__doc__.split('\n')[0]
@@ -303,7 +312,7 @@ class LegacyPlugin:
         else:
             return self._loaded
 
-    def __getattr__ (self, attr):
+    def __getattr__(self, attr):
         if attr == 'plugins':
             return self.get_plugins()
         elif attr in self.props:
@@ -315,7 +324,7 @@ class LegacyPlugin:
     def get_plugins(self):
         return self.get_module().plugins
 
-    def load_plugin_file_data (self,plugin_info_file):
+    def load_plugin_file_data(self, plugin_info_file):
         # This should really use GKeyFile but there are no python
         # bindings that I can find atm. One possibility would be to
         # use this:
@@ -327,86 +336,89 @@ class LegacyPlugin:
         for line in plugin_info_file.readlines():
             if '[Gourmet Plugin]' in line:
                 pass
-            elif line.find('=')>0:
-                key,val = line.split('=')
-                key = key.strip(); val = val.strip()
+            elif line.find('=') > 0:
+                key, val = line.split('=')
+                key = key.strip()
+                val = val.strip()
                 key = key.strip('_')
                 if (loc is not None) and ('[' in key):
-                    key,locale = key.strip(']').split('[')
-                    if locale==loc:
+                    key, locale = key.strip(']').split('[')
+                    if locale == loc:
                         self.props[key] = val
-                    elif locale[:2]==loc[:2]:
+                    elif locale[:2] == loc[:2]:
                         self.props[key] = val
                 else:
-                    self.props[key]=val
+                    self.props[key] = val
             else:
-                print('Ignoring line',line)
+                print('Ignoring line', line)
         if self.dependencies:
-            self.props['Dependencies'] = [d.strip() for d in self.dependencies.split(',')]
+            self.props['Dependencies'] = [d.strip()
+                                          for d in self.dependencies.split(',')]
+
 
 class Pluggable:
     """A plugin-able class."""
 
-    def __init__ (self, plugin_klasses):
+    def __init__(self, plugin_klasses):
         """plugin_klasses is the list class of which each of our
         plugins should be a sub-class.
 
         A pluggable can take multiple types of sub-classes if it
         likes.
         """
-        #print 'Pluggable.__init__([',plugin_klasses,'])'
-        self.pre_hooks = {} # stores hooks to be run before methods by
-                            # method name
-        self.post_hooks = {} # stores hooks to be run after methods by
-                             # method name
+        # print 'Pluggable.__init__([',plugin_klasses,'])'
+        self.pre_hooks = {}  # stores hooks to be run before methods by
+        # method name
+        self.post_hooks = {}  # stores hooks to be run after methods by
+        # method name
         self.loader = MasterLoader.instance()
         self.klasses = plugin_klasses
         self.plugins = []
         for klass in self.klasses:
-            #print 'register self ',self,'as pluggable for ',klass
-            self.loader.register_pluggable(self,klass)
+            # print 'register self ',self,'as pluggable for ',klass
+            self.loader.register_pluggable(self, klass)
 
-    def plugin_plugin (self, plugin_instance):
+    def plugin_plugin(self, plugin_instance):
         try:
             self.plugins.append(plugin_instance)
             plugin_instance.activate(self)
         except:
-            print('WARNING: PLUGIN FAILED TO LOAD',plugin_instance)
+            print('WARNING: PLUGIN FAILED TO LOAD', plugin_instance)
             traceback.print_exc()
 
-    def destroy (self):
-        self.loader.unregister_pluggable(self,self.klass)
+    def destroy(self):
+        self.loader.unregister_pluggable(self, self.klass)
         for pi in self.plugins:
             pi.deactivate(self)
 
-    def run_pre_hook (self, fname, *args, **kwargs):
-        for hook in self.pre_hooks.get(fname,[]):
+    def run_pre_hook(self, fname, *args, **kwargs):
+        for hook in self.pre_hooks.get(fname, []):
             try:
-                new_args,new_kwargs = hook(self,*args,**kwargs)
-                assert(isinstance(args,tuple))
-                assert(isinstance(kwargs,dict))
+                new_args, new_kwargs = hook(self, *args, **kwargs)
+                assert(isinstance(args, tuple))
+                assert(isinstance(kwargs, dict))
             except:
-                print('WARNING',hook,'did not return args,kwargs')
+                print('WARNING', hook, 'did not return args,kwargs')
             else:
-                args,kwargs = new_args,new_kwargs
-        return args,kwargs
+                args, kwargs = new_args, new_kwargs
+        return args, kwargs
 
-    def run_post_hook (self, fname, retval, *args, **kwargs):
-        for hook in self.post_hooks.get(fname,[]):
-            retval = hook(retval,self,*args,**kwargs)
+    def run_post_hook(self, fname, retval, *args, **kwargs):
+        for hook in self.post_hooks.get(fname, []):
+            retval = hook(retval, self, *args, **kwargs)
         return retval
 
     def add_hook(self, type, name, hook):
-        hookdic = self.pre_hooks if type==PRE else self.post_hooks
+        hookdic = self.pre_hooks if type == PRE else self.post_hooks
         if name not in hookdic:
             hookdic[name] = []
         hookdic[name].append(hook)
 
     def remove_hook(self, type, name, hook):
-        hookdic = self.pre_hooks if type==PRE else self.post_hooks
+        hookdic = self.pre_hooks if type == PRE else self.post_hooks
         hookdic.pop(name, None)
 
-    def get_plugin_by_module (self, module):
+    def get_plugin_by_module(self, module):
         for p in self.plugins:
             if p.__module__ == module:
                 return p
@@ -414,23 +426,24 @@ class Pluggable:
 
 class DependencyError (Exception):
 
-    def __init__ (self, pluginset, missing_dependencies):
+    def __init__(self, pluginset, missing_dependencies):
         self.plugin_set = pluginset
         self.dependencies = missing_dependencies
-        print(self.plugin_set,'requires but did not find',self.dependencies)
+        print(self.plugin_set, 'requires but did not find', self.dependencies)
 
-    def __repr__ (self):
+    def __repr__(self):
         return ('<DependencyError '
                 + repr(self.plugin_set)
                 + ' missing required dependencies '
                 + repr(self.dependencies)
                 )
 
-def pluggable_method (f):
-    def _ (self, *args, **kwargs):
+
+def pluggable_method(f):
+    def _(self, *args, **kwargs):
         '''Run hooks around method'''
-        args,kwargs = self.run_pre_hook(f.__name__,*args,**kwargs)
-        retval = f(self,*args,**kwargs)
-        retval = self.run_post_hook(f.__name__,retval,*args,**kwargs)
+        args, kwargs = self.run_pre_hook(f.__name__, *args, **kwargs)
+        retval = f(self, *args, **kwargs)
+        retval = self.run_post_hook(f.__name__, retval, *args, **kwargs)
         return retval
     return _

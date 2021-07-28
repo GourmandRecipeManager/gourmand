@@ -1,20 +1,20 @@
-### Copyright (C) 2005 Thomas M. Hinkle
-### Copyright (C) 2009 Rolf Leggewie
+# Copyright (C) 2005 Thomas M. Hinkle
+# Copyright (C) 2009 Rolf Leggewie
 ###
-### This library is free software; you can redistribute it and/or
-### modify it under the terms of the GNU General Public License as
-### published by the Free Software Foundation; either version 2 of the
-### License, or (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
 ###
-### This library is distributed in the hope that it will be useful,
-### but WITHOUT ANY WARRANTY; without even the implied warranty of
-### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-### General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
 ###
-### You should have received a copy of the GNU General Public License
-### along with this library; if not, write to the Free Software
-### Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
-### USA
+# You should have received a copy of the GNU General Public License
+# along with this library; if not, write to the Free Software
+# Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301
+# USA
 
 # Largely based on hypertext.py example in pygtk docs by
 # Maik Hertha <maik.hertha@berlin.de>
@@ -47,8 +47,9 @@ class LinkedPangoBuffer(PangoBuffer):
                     raise ValueError("Cannot handle duplicated link bodies",
                                      body, self.markup_dict[body], href)
                 self.markup_dict[body] = href
-                m = self.href_regexp.search(txt,m.end())
-            txt = self.href_regexp.sub(r'<span %s>\2</span>'%self.url_markup,txt)
+                m = self.href_regexp.search(txt, m.end())
+            txt = self.href_regexp.sub(
+                r'<span %s>\2</span>' % self.url_markup, txt)
         super().set_text(txt)
 
     def get_text(self,
@@ -95,10 +96,10 @@ class LinkedTextView(Gtk.TextView):
         self.set_buffer(self.make_buffer())
         buf = self.get_buffer()
         self.set_text = buf.set_text
-        self.connect('key-press-event',self.key_press_event)
-        self.connect('event-after',self.event_after)
-        self.connect('motion-notify-event',self.motion_notify_event)
-        self.connect('visibility-notify-event',self.visibility_notify_event)
+        self.connect('key-press-event', self.key_press_event)
+        self.connect('event-after', self.event_after)
+        self.connect('motion-notify-event', self.motion_notify_event)
+        self.connect('visibility-notify-event', self.visibility_notify_event)
 
     def make_buffer(self):
         return LinkedPangoBuffer()
@@ -126,11 +127,10 @@ class LinkedTextView(Gtk.TextView):
             or selection[0].get_offset() == selection[1].get_offset()
         )
 
-
         # Check for a left mouse click (as set by the system, not hardware).
         if (event.type == Gdk.EventType.BUTTON_RELEASE
             and button == 1
-            and not selecting):
+                and not selecting):
             x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                      int(event.x), int(event.y))
             _, itr = text_view.get_iter_at_location(x, y)
@@ -170,17 +170,19 @@ class LinkedTextView(Gtk.TextView):
     # Update the cursor image if the pointer moved.
     def motion_notify_event(self, text_view, event):
         x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
-            int(event.x), int(event.y))
+                                                 int(event.x), int(event.y))
         self.set_cursor_if_appropriate(text_view, x, y)
         return False
 
     # Also update the cursor image if the window becomes visible
     # (e.g. when a window covering it got iconified).
     def visibility_notify_event(self, text_view, event):
-        _, wx, wy, _ = text_view.get_window(Gtk.TextWindowType.WIDGET).get_pointer()
-        bx, by = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, wx, wy)
+        _, wx, wy, _ = text_view.get_window(
+            Gtk.TextWindowType.WIDGET).get_pointer()
+        bx, by = text_view.window_to_buffer_coords(
+            Gtk.TextWindowType.WIDGET, wx, wy)
 
-        self.set_cursor_if_appropriate (text_view, bx, by)
+        self.set_cursor_if_appropriate(text_view, bx, by)
         return False
 
     def follow_if_link(self,
@@ -211,10 +213,10 @@ class LinkedTextView(Gtk.TextView):
 
 
 if __name__ == '__main__':
-    def print_link (tv,l):
+    def print_link(tv, l):
         print(l)
     tv = LinkedTextView()
-    tv.connect('link-activated',print_link)
+    tv.connect('link-activated', print_link)
     w = Gtk.Window()
     w.add(tv)
     tv.get_buffer().set_text("""This is some text

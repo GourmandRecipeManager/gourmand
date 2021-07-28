@@ -41,26 +41,26 @@ class CheckEncoding:
         encoding that decodes our text cleanly. We return a tuple (encoding,decoded_text)"""
         for e in self.encodings:
             try:
-                t=self.txt.decode(e)
-                return (e,t)
+                t = self.txt.decode(e)
+                return (e, t)
             except UnicodeDecodeError:
                 pass
 
-    def get_encodings (self):
+    def get_encodings(self):
         encs = self.test_all_encodings(self.encodings)
         if encs:
             return encs
         else:
             return self.test_all_encodings(self.all_encodings)
 
-    def test_all_encodings (self,encodings=None):
+    def test_all_encodings(self, encodings=None):
         """Test all encodings and return a dictionary of possible encodings."""
         if not encodings:
-            encodings=self.all_encodings
+            encodings = self.all_encodings
         self.possible_encodings = {}
         for e in encodings:
             try:
-                d=self.txt.decode(e)
+                d = self.txt.decode(e)
                 if d and (d not in self.possible_encodings.values()):
                     # if we don't already have this possibility, add
                     self.possible_encodings[e] = d
@@ -68,8 +68,10 @@ class CheckEncoding:
                 pass
         return self.possible_encodings
 
+
 class GetFile(CheckEncoding):
     """Handed a filename, return a list of lines."""
+
     def __init__(self, file: str, encodings=None):
         super().__init__(file, encodings)
         encs: Dict[str, str] = self.get_encodings()
@@ -80,7 +82,7 @@ class GetFile(CheckEncoding):
                 encoding = list(encs.keys())[0]
             self.enc = encoding
             self.lines = encs[self.enc].splitlines()
-            debug('reading file %s as encoding %s'%(file, self.enc))
+            debug('reading file %s as encoding %s' % (file, self.enc))
         else:
             raise Exception("Cannot decode file %s" % file)
 
@@ -96,7 +98,8 @@ class EncodingDialog(de.OptionDialog):
     context_lines = 2
 
     def __init__(self, default=None, label=_("Select encoding"),
-                 sublabel=_("Cannot determine proper encoding. Please select the correct encoding from the following list."),
+                 sublabel=_(
+                     "Cannot determine proper encoding. Please select the correct encoding from the following list."),
                  expander_label=_("See _file with encoding"),
                  encodings=None):
         self.diff_lines = {}
@@ -116,12 +119,14 @@ class EncodingDialog(de.OptionDialog):
         self.created = False
         self.expander.set_expanded(True)
 
-    def setup_motion_buttons (self):
+    def setup_motion_buttons(self):
         self.hbb = Gtk.HButtonBox()
         self.fb = Gtk.Button('Next Difference')
         self.pb = Gtk.Button('Previous Difference')
-        self.pb.connect('clicked',lambda *args: self.move_to_difference(forward=False))
-        self.fb.connect('clicked',lambda *args: self.move_to_difference(forward=True))
+        self.pb.connect(
+            'clicked', lambda *args: self.move_to_difference(forward=False))
+        self.fb.connect(
+            'clicked', lambda *args: self.move_to_difference(forward=True))
         self.hbb.add(self.pb)
         self.hbb.add(self.fb)
         self.evb.add(self.hbb)
@@ -131,7 +136,7 @@ class EncodingDialog(de.OptionDialog):
         super().get_option(widget)
         self.change_encoding()
 
-    def create_options (self):
+    def create_options(self):
         options = list(self.encodings.keys())
         masterlist = CheckEncoding.encodings + CheckEncoding.all_encodings
         options.sort(key=lambda x: masterlist.index(x))
@@ -146,62 +151,68 @@ class EncodingDialog(de.OptionDialog):
         self.evb.show_all()
         return self.expander_label, self.evb
 
-    def setup_buffers (self):
-        self.encoding_buffers={}
-        for k,t in list(self.encodings.items()):
-            self.encoding_buffers[k]=Gtk.TextBuffer()
-            self.highlight_tags = [self.encoding_buffers[k].create_tag(background='yellow')]
-            self.line_highlight_tags = [self.encoding_buffers[k].create_tag(background='green')]
-            self.set_buffer_text(self.encoding_buffers[k],t)
+    def setup_buffers(self):
+        self.encoding_buffers = {}
+        for k, t in list(self.encodings.items()):
+            self.encoding_buffers[k] = Gtk.TextBuffer()
+            self.highlight_tags = [
+                self.encoding_buffers[k].create_tag(background='yellow')]
+            self.line_highlight_tags = [
+                self.encoding_buffers[k].create_tag(background='green')]
+            self.set_buffer_text(self.encoding_buffers[k], t)
 
-    def change_encoding (self, _widget=None):
+    def change_encoding(self, _widget=None):
         if self.cursor_already_set:
-            im=self.buffer.get_insert()
-            ti=self.buffer.get_iter_at_mark(im)
-            offset=ti.get_offset()
+            im = self.buffer.get_insert()
+            ti = self.buffer.get_iter_at_mark(im)
+            offset = ti.get_offset()
         self.tv.set_buffer(self.encoding_buffers[self.ret])
         self.buffer = self.encoding_buffers[self.ret]
-        debug('changed text to encoding %s'%self.ret,0)
+        debug('changed text to encoding %s' % self.ret, 0)
 
-    def move_to_difference (self, forward=True):
+    def move_to_difference(self, forward=True):
         dkeys = list(self.diff_lines.keys())
         dkeys.sort()
         if forward:
             self.current_error += 1
         else:
             self.current_error = self.current_error - 1
-        if self.current_error > len(dkeys): self.current_error = 0
-        if self.current_error < 0: self.current_error = len(dkeys)-1
-        mark=self.buffer.create_mark(
+        if self.current_error > len(dkeys):
+            self.current_error = 0
+        if self.current_error < 0:
+            self.current_error = len(dkeys)-1
+        mark = self.buffer.create_mark(
             None,
-            self.buffer.get_iter_at_line_index(dkeys[self.current_error],0),
+            self.buffer.get_iter_at_line_index(dkeys[self.current_error], 0),
             False,
-            )
-        self.tv.scroll_to_mark(mark,0)
+        )
+        self.tv.scroll_to_mark(mark, 0)
 
     def set_buffer_text(self, buffer, text):
         """Set buffer text to show encoding differences."""
         lines = text.splitlines()
         totl = len(lines)
         shown = []
-        for line,diffs in list(self.diff_lines.items()):
-            if line in shown: continue
+        for line, diffs in list(self.diff_lines.items()):
+            if line in shown:
+                continue
             start_at = line - self.context_lines
             start_at = max(start_at, 0)
             end_at = line + self.context_lines
-            if end_at >= totl: end_at = totl-1
+            if end_at >= totl:
+                end_at = totl-1
             if start_at != 0:
                 buffer.insert_with_tags(buffer.get_end_iter(),
                                         '\n...\n',
                                         )
-            for n in range(start_at,end_at):
+            for n in range(start_at, end_at):
                 if n in shown:
                     continue
                 shown.append(n)
                 l = lines[n]
-                if n==line:
+                if n == line:
                     start = 0
-                    for sdiff,ediff in diffs:
+                    for sdiff, ediff in diffs:
                         buffer.insert_with_tags(buffer.get_end_iter(),
                                                 l[start:sdiff],
                                                 *self.line_highlight_tags)
@@ -213,7 +224,7 @@ class EncodingDialog(de.OptionDialog):
                                             l[start:],
                                             *self.line_highlight_tags)
                 else:
-                    buffer.insert_with_tags(buffer.get_end_iter(),l)
+                    buffer.insert_with_tags(buffer.get_end_iter(), l)
 
     def diff_texts(self):
         """Compare different encoding for characters where they differ."""

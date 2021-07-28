@@ -11,21 +11,22 @@ class SpellPlugin (RecEditorPlugin, UIPlugin):
     ui_string = '''
     '''
 
-    def activate (self, recEditor):
-        UIPlugin.activate(self,recEditor)
+    def activate(self, recEditor):
+        UIPlugin.activate(self, recEditor)
         for module in self.pluggable.modules:
             tvs = harvest_textviews(module.main)
             for tv in tvs:
                 SpellChecker(tv)
 
-def harvest_textviews (widget):
-    if isinstance(widget,Gtk.TextView):
+
+def harvest_textviews(widget):
+    if isinstance(widget, Gtk.TextView):
         return [widget]
     else:
         tvs = []
-        if hasattr(widget,'get_children'):
+        if hasattr(widget, 'get_children'):
             for child in widget.get_children():
                 tvs.extend(harvest_textviews(child))
-        elif hasattr(widget,'get_child'):
+        elif hasattr(widget, 'get_child'):
             tvs.extend(harvest_textviews(widget.get_child()))
         return tvs

@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class WebsiteTestState(Enum):
-    
+
     SUCCESS = 5
     FAILED = 0
 

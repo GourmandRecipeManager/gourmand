@@ -15,15 +15,16 @@ class MCBPlugin (ImporterPlugin):
 
     name = _('MCB File')
     patterns = ['*.mcb']
-    mimetypes = ['application/zip','application/x-gzip','multipart/x-zip','multipart/x-gzip']
+    mimetypes = ['application/zip', 'application/x-gzip',
+                 'multipart/x-zip', 'multipart/x-gzip']
 
-    def test_file (self, filename):
+    def test_file(self, filename):
         return True
 
     def get_importer(self, filename):
-        xmlfilename=''
+        xmlfilename = ''
 
-        #Unzip in a temporary directory
+        # Unzip in a temporary directory
         try:
             zf = zipfile.ZipFile(filename)
         except zipfile.BadZipfile:
@@ -33,17 +34,17 @@ class MCBPlugin (ImporterPlugin):
             (dirname, filename) = os.path.split(name)
             if not filename:
                 continue
-            fulldirpath = os.path.join(tempdir,dirname)
-            #Create the images dir if not exists yet
+            fulldirpath = os.path.join(tempdir, dirname)
+            # Create the images dir if not exists yet
             if not os.path.exists(fulldirpath):
                 os.mkdir(fulldirpath, 0o775)
             with open(os.path.join(tempdir, name), 'wb') as outfile:
                 outfile.write(zf.read(name))
-            #Get the path to the xml file to import it
+            # Get the path to the xml file to import it
             if filename.endswith(".xml"):
                 xmlfilename = os.path.join(tempdir, filename)
 
-                #fix the xml file
+                # fix the xml file
                 parser = etree.XMLParser(recover=True)
                 tree = etree.parse(xmlfilename, parser)
                 fixedxmlfilename = xmlfilename+'fixed'

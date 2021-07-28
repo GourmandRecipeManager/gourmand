@@ -116,6 +116,7 @@ class PangoBuffer(Gtk.TextBuffer):
 
 class SimpleEditor:
     """A demo of the TextBufferedMarkup class"""
+
     def __init__(self):
         self.w = Gtk.Window()
         vb = Gtk.VBox()

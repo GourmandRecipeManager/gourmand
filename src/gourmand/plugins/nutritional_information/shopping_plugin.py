@@ -27,18 +27,18 @@ class ShoppingNutritionalInfoPlugin (ShoppingListPlugin):
     '''
     name = 'shopping_nutritional_info'
 
-    def setup_action_groups (self):
+    def setup_action_groups(self):
         self.nutritionShoppingActionGroup = Gtk.ActionGroup(name='NutritionShoppingActionGroup')  # noqa
         self.nutritionShoppingActionGroup.add_actions([
-            ('Tools',None,_('Tools')),
-            ('ShoppingNutritionalInfo', # name
-             'nutritional-info', # stock
-             _('Nutritional Information'), # label
-             '<Ctrl><Shift>N', #key-command
+            ('Tools', None, _('Tools')),
+            ('ShoppingNutritionalInfo',  # name
+             'nutritional-info',  # stock
+             _('Nutritional Information'),  # label
+             '<Ctrl><Shift>N',  # key-command
              _('Get nutritional information for current list'),
-             self.show_nutinfo # callback
+             self.show_nutinfo  # callback
              )
-            ])
+        ])
         self.action_groups.append(self.nutritionShoppingActionGroup)
 
     def show_nutinfo(self, *args):
@@ -46,7 +46,7 @@ class ShoppingNutritionalInfoPlugin (ShoppingListPlugin):
         rr = sg.recs
         rd = gourmand.recipeManager.get_recipe_manager()
         rg = gourmand.main.get_application()
-        if not hasattr(self,'nutrition_window'):
+        if not hasattr(self, 'nutrition_window'):
             self.create_nutrition_window()
         nutinfo = None
         # Add recipes...
@@ -56,31 +56,35 @@ class ShoppingNutritionalInfoPlugin (ShoppingListPlugin):
                                                rd)
             nutinfo = nutinfo + ni if nutinfo else ni
         # Add extras...
-        for amt,unit,item in sg.extras:
-            ni = rd.nd.get_nutinfo_for_item(item,amt,unit)
+        for amt, unit, item in sg.extras:
+            ni = rd.nd.get_nutinfo_for_item(item, amt, unit)
             nutinfo = nutinfo + ni if nutinfo else ni
         self.nl.set_nutinfo(nutinfo)
         self.nutrition_window.present()
 
-    def create_nutrition_window (self):
+    def create_nutrition_window(self):
         self.nutrition_window = Gtk.Dialog(_('Nutritional Information'),
-                            self.pluggable.w,
-                            buttons=(Gtk.STOCK_CLOSE,Gtk.ResponseType.CLOSE)
-                            )
-        self.nutrition_window.set_default_size(400,550)
+                                           self.pluggable.w,
+                                           buttons=(Gtk.STOCK_CLOSE,
+                                                    Gtk.ResponseType.CLOSE)
+                                           )
+        self.nutrition_window.set_default_size(400, 550)
         self.nutrition_window.set_icon(
             self.nutrition_window.render_icon('nutritional-info',
                                               Gtk.IconSize.MENU)
-            )
+        )
         self.nl = NutritionLabel(Prefs.instance())
-        self.sw = Gtk.ScrolledWindow(); self.sw.set_policy(Gtk.PolicyType.NEVER,Gtk.PolicyType.AUTOMATIC)
-        self.sw.add_with_viewport(self.nl); self.sw.show()
+        self.sw = Gtk.ScrolledWindow()
+        self.sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.sw.add_with_viewport(self.nl)
+        self.sw.show()
         self.nutrition_window.vbox.pack_start(self.sw, True, True, 0)
-        self.nutrition_window.connect('response',self.response_cb)
-        self.nutrition_window.connect('close',self.response_cb)
-        self.nl.yieldLabel.set_markup('<b>'+_('Amount for Shopping List')+'</b>')
+        self.nutrition_window.connect('response', self.response_cb)
+        self.nutrition_window.connect('close', self.response_cb)
+        self.nl.yieldLabel.set_markup(
+            '<b>'+_('Amount for Shopping List')+'</b>')
         self.nl.show()
 
-    def response_cb (self, *args):
+    def response_cb(self, *args):
         # We only allow one response -- closing the window!
         self.nutrition_window.hide()

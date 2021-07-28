@@ -13,5 +13,5 @@ class NutritionMainPlugin (MainPlugin):
         pixbuf = load_pixbuf_from_resource('Nutrition.png')
         _add_icon(pixbuf, 'nutritional-info', _('Nutritional Information'))
         nutritionGrabberGui.check_for_db(pluggable.rd)
-        pluggable.nd = nutrition.NutritionData(pluggable.rd,pluggable.conv)
+        pluggable.nd = nutrition.NutritionData(pluggable.rd, pluggable.conv)
         pluggable.rd.nd = pluggable.nd

@@ -19,7 +19,7 @@ RECIPE_HEADER = Template('''<?xml version="1.0" encoding="utf-8" standalone="no"
 </head>
 <body>
 ''')
-RECIPE_FOOT= "</body></html>"
+RECIPE_FOOT = "</body></html>"
 
 
 class EpubWriter():
@@ -29,7 +29,6 @@ class EpubWriter():
     """
 
     _default_style = 'epubdefault.css'
-
 
     def __init__(self, outFileName):
         """
@@ -47,7 +46,8 @@ class EpubWriter():
         self.toc = []
 
         # set metadata
-        self.ebook.set_identifier("Cookme") # TODO: Something meaningful or time?
+        # TODO: Something meaningful or time?
+        self.ebook.set_identifier("Cookme")
         self.ebook.set_title("My Cookbook")
         self.ebook.set_language(self.lang)
 
@@ -74,10 +74,8 @@ class EpubWriter():
         else:
             style = get_data('gourmet', f'data/style/{self._default_style}')
         assert style
-        recipe_css = epub.EpubItem(  uid="style"
-                                , file_name=cssFileName
-                                , media_type="text/css"
-                                , content=style)
+        recipe_css = epub.EpubItem(
+            uid="style", file_name=cssFileName, media_type="text/css", content=style)
         self.ebook.add_item(recipe_css)
         self.recipeCss = recipe_css
         return cssFileName
@@ -94,7 +92,7 @@ class EpubWriter():
         epimg.media_type = "image/jpeg"
         epimg.set_content(imageData)
         self.ebook.add_item(epimg)
-        return epimg.file_name;
+        return epimg.file_name
 
     def getFileForRecipeID(self, id, ext=".xhtml"):
         """
@@ -102,7 +100,7 @@ class EpubWriter():
         @param id The id which is also passed during addRecipeText
         @return A filename for reference
         """
-        return "recipe_%i%s" % (id,ext)
+        return "recipe_%i%s" % (id, ext)
 
     def addRecipeText(self, uniqueId, title, text):
         """ Adds the recipe text as a chapter.
@@ -113,14 +111,14 @@ class EpubWriter():
 
         c1 = epub.EpubHtml(title=title, file_name=fileName, lang=self.lang)
         c1.content = text.encode('utf-8')
-        c1.add_item( self.recipeCss )
+        c1.add_item(self.recipeCss)
 
         # add chapter
         self.ebook.add_item(c1)
         self.spine.append(c1)
 
         # define Table Of Contents
-        self.toc.append( epub.Link(fileName, title, uniqueName) )
+        self.toc.append(epub.Link(fileName, title, uniqueName))
 
     def finish(self):
         """ Finish the book and writes it to the disk.
@@ -135,20 +133,21 @@ class EpubWriter():
 
         epub.write_epub(self.outFileName, self.ebook, {})
 
+
 class epub_exporter (exporter_mult):
-    def __init__ (self, rd, r, out, conv=None,
-                  doc=None,
-                  # exporter_mult args
-                  mult=1,
-                  change_units=True,
-                  ):
+    def __init__(self, rd, r, out, conv=None,
+                 doc=None,
+                 # exporter_mult args
+                 mult=1,
+                 change_units=True,
+                 ):
         self.doc = doc
 
         # This document will be appended by the strings to join them in the
         # last step and pass it to the ebookwriter.
         self.preparedDocument = []
 
-        #self.link_generator=link_generator
+        # self.link_generator=link_generator
         exporter_mult.__init__(self, rd, r, out,
                                conv=conv,
                                imgcount=1,
@@ -157,63 +156,69 @@ class epub_exporter (exporter_mult):
                                do_markup=True,
                                use_ml=True)
 
-    def htmlify (self, text):
-        t=text.strip()
-        #t=xml.sax.saxutils.escape(t)
-        t="<p>%s</p>"%t
-        t=re.sub('\n\n+','</p><p>',t)
-        t=re.sub('\n','<br>',t)
+    def htmlify(self, text):
+        t = text.strip()
+        # t=xml.sax.saxutils.escape(t)
+        t = "<p>%s</p>" % t
+        t = re.sub('\n\n+', '</p><p>', t)
+        t = re.sub('\n', '<br>', t)
         return t
 
     def get_title(self):
         """Returns the title of the book in an unescaped format"""
-        title = self._grab_attr_(self.r,'title')
-        if not title: title = _('Recipe')
+        title = self._grab_attr_(self.r, 'title')
+        if not title:
+            title = _('Recipe')
         return str(title)
 
-    def write_head (self):
+    def write_head(self):
         self.preparedDocument.append(
-            RECIPE_HEADER.substitute(title=self.get_title()) )
+            RECIPE_HEADER.substitute(title=self.get_title()))
         self.preparedDocument.append("<h1>%s</h1>"
-             % xml.sax.saxutils.escape(self.get_title()))
+                                     % xml.sax.saxutils.escape(self.get_title()))
 
-    def write_image (self, image):
-        imagePath = self.doc.addJpegImage( image)
-        self.preparedDocument.append('<img src="%s" itemprop="image"/>' % imagePath)
+    def write_image(self, image):
+        imagePath = self.doc.addJpegImage(image)
+        self.preparedDocument.append(
+            '<img src="%s" itemprop="image"/>' % imagePath)
 
-    def write_inghead (self):
-        self.preparedDocument.append('<div class="ing"><h2>%s</h2><ul class="ing">'%_('Ingredients'))
+    def write_inghead(self):
+        self.preparedDocument.append(
+            '<div class="ing"><h2>%s</h2><ul class="ing">' % _('Ingredients'))
 
-    def write_text (self, label, text):
-        attr = gglobals.NAME_TO_ATTR.get(label,label)
+    def write_text(self, label, text):
+        attr = gglobals.NAME_TO_ATTR.get(label, label)
         if attr == 'instructions':
-            self.preparedDocument.append('<div class="%s"><h2 class="%s">%s</h2><div itemprop="recipeInstructions">%s</div></div>' % (attr,label,label,self.htmlify(text)))
+            self.preparedDocument.append(
+                '<div class="%s"><h2 class="%s">%s</h2><div itemprop="recipeInstructions">%s</div></div>' % (attr, label, label, self.htmlify(text)))
         else:
-            self.preparedDocument.append('<div class="%s"><h2 class="%s">%s</h2>%s</div>' % (attr,label,label,self.htmlify(text)))
+            self.preparedDocument.append(
+                '<div class="%s"><h2 class="%s">%s</h2>%s</div>' % (attr, label, label, self.htmlify(text)))
 
-    def handle_italic (self, chunk): return "<em>" + chunk + "</em>"
-    def handle_bold (self, chunk): return "<strong>" + chunk + "</strong>"
-    def handle_underline (self, chunk): return "<u>" + chunk + "</u>"
+    def handle_italic(self, chunk): return "<em>" + chunk + "</em>"
+    def handle_bold(self, chunk): return "<strong>" + chunk + "</strong>"
+    def handle_underline(self, chunk): return "<u>" + chunk + "</u>"
 
-    def write_attr_head (self):
+    def write_attr_head(self):
         self.preparedDocument.append("<div class='header'>")
 
-    def write_attr (self, label, text):
-        attr = gglobals.NAME_TO_ATTR.get(label,label)
-        if attr=='link':
+    def write_attr(self, label, text):
+        attr = gglobals.NAME_TO_ATTR.get(label, label)
+        if attr == 'link':
             webpage = text.strip('http://')
             webpage = webpage.split('/')[0]
-            self.preparedDocument.append('<a href="%s">'%text +
-                           _('Original Page from %s')%webpage +
-                           '</a>\n')
+            self.preparedDocument.append('<a href="%s">' % text +
+                                         _('Original Page from %s') % webpage +
+                                         '</a>\n')
         elif attr == 'rating':
             rating, rest = text.split('/', 1)
-            self.preparedDocument.append('<p class="%s" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><span class="label">%s:</span> <span itemprop="ratingValue">%s</span><span>/%s</span></p>\n' % (attr, label.capitalize(), rating, rest))
+            self.preparedDocument.append(
+                '<p class="%s" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><span class="label">%s:</span> <span itemprop="ratingValue">%s</span><span>/%s</span></p>\n' % (attr, label.capitalize(), rating, rest))
         else:
             itemprop = None
             if attr == 'title':
                 itemprop = 'name'
-                return # Title is already printed
+                return  # Title is already printed
             elif attr == 'category':
                 itemprop = 'recipeCategory'
             elif attr == 'cuisine':
@@ -227,17 +232,19 @@ class epub_exporter (exporter_mult):
             elif attr == 'instructions':
                 itemprop = 'recipeInstructions'
             if itemprop:
-                self.preparedDocument.append('<p class="%s"><span class="label">%s:</span> <span itemprop="%s">%s</span></p>\n' % (attr, label.capitalize(), itemprop, xml.sax.saxutils.escape(text)))
+                self.preparedDocument.append('<p class="%s"><span class="label">%s:</span> <span itemprop="%s">%s</span></p>\n' % (
+                    attr, label.capitalize(), itemprop, xml.sax.saxutils.escape(text)))
             else:
-                self.preparedDocument.append("<p class='%s'><span class='label'>%s:</span> %s</p>\n"%(attr, label.capitalize(), xml.sax.saxutils.escape(text)))
+                self.preparedDocument.append("<p class='%s'><span class='label'>%s:</span> %s</p>\n" % (
+                    attr, label.capitalize(), xml.sax.saxutils.escape(text)))
 
-    def write_attr_foot (self):
+    def write_attr_foot(self):
         self.preparedDocument.append("</div>")
 
-    def write_grouphead (self, name):
-        self.preparedDocument.append("<h3 class='inggroup'>%s<h3/>"%name)
+    def write_grouphead(self, name):
+        self.preparedDocument.append("<h3 class='inggroup'>%s<h3/>" % name)
 
-    def write_groupfoot (self):
+    def write_groupfoot(self):
         pass
 
     def _write_ing_impl(self, amount, unit, item, link, optional):
@@ -249,56 +256,61 @@ class epub_exporter (exporter_mult):
             for o in [amount, unit, item]
         )
 
-
-        self.preparedDocument.append('<div class="ingamount">%s</div>' % (amount if len(amount) != 0 else "&nbsp;"))
-        self.preparedDocument.append('<div class="ingunit">%s</div>' % (unit if len(unit) != 0 else "&nbsp;"))
+        self.preparedDocument.append(
+            '<div class="ingamount">%s</div>' % (amount if len(amount) != 0 else "&nbsp;"))
+        self.preparedDocument.append(
+            '<div class="ingunit">%s</div>' % (unit if len(unit) != 0 else "&nbsp;"))
 
         if item:
             if link:
-                self.preparedDocument.append( "<a href='%s'>%s</a>"% (link, item ))
+                self.preparedDocument.append(
+                    "<a href='%s'>%s</a>" % (link, item))
             else:
                 self.preparedDocument.append(item)
 
         if optional:
-            self.preparedDocument.append("(%s)"%_('optional'))
+            self.preparedDocument.append("(%s)" % _('optional'))
         self.preparedDocument.append("</li>\n")
 
-    def write_ingref (self, amount, unit, item, refid, optional):
+    def write_ingref(self, amount, unit, item, refid, optional):
         refFile = self.doc.getFileForRecipeID(refid)
         self._write_ing_impl(amount, unit, item, refFile, optional)
 
-    def write_ing (self, amount=1, unit=None,
-                   item=None, key=None, optional=False):
+    def write_ing(self, amount=1, unit=None,
+                  item=None, key=None, optional=False):
         self._write_ing_impl(amount, unit, item, None, optional)
 
-    def write_ingfoot (self):
+    def write_ingfoot(self):
         self.preparedDocument.append('</ul>\n</div>\n')
 
-    def write_foot (self):
+    def write_foot(self):
         self.preparedDocument.append(RECIPE_FOOT)
 
-        self._grab_attr_(self.r,'id')
-        self.doc.addRecipeText(self._grab_attr_(self.r,'id'), self.get_title(), "".join(self.preparedDocument) )
+        self._grab_attr_(self.r, 'id')
+        self.doc.addRecipeText(self._grab_attr_(
+            self.r, 'id'), self.get_title(), "".join(self.preparedDocument))
+
 
 class website_exporter (ExporterMultirec):
-    def __init__ (self, rd, recipe_table, out, conv=None, ext='epub', copy_css=True,
-                  css: Optional[str] = None,
-                  index_rows=['title','category','cuisine','rating','yields'],
-                  change_units=False,
-                  mult=1):
+    def __init__(self, rd, recipe_table, out, conv=None, ext='epub', copy_css=True,
+                 css: Optional[str] = None,
+                 index_rows=['title', 'category',
+                             'cuisine', 'rating', 'yields'],
+                 change_units=False,
+                 mult=1):
 
         self.doc = EpubWriter(out)
         self.doc.addRecipeCssFromFile(css)
 
-        self.ext=ext
+        self.ext = ext
 
-        self.index_rows=index_rows
-        self.exportargs={ 'change_units':change_units,
-                         'mult':mult,
-                         'doc':self.doc}
+        self.index_rows = index_rows
+        self.exportargs = {'change_units': change_units,
+                           'mult': mult,
+                           'doc': self.doc}
 
         if conv:
-            self.exportargs['conv']=conv
+            self.exportargs['conv'] = conv
         ExporterMultirec.__init__(self, rd, recipe_table, out,
                                   one_file=True,
                                   create_file=False,
@@ -306,10 +318,10 @@ class website_exporter (ExporterMultirec):
                                   exporter=epub_exporter,
                                   exporter_kwargs=self.exportargs)
 
-    def recipe_hook (self, rec, filename, exporter):
+    def recipe_hook(self, rec, filename, exporter):
         """Add index entry"""
         # TODO: Do some cool things here.
         pass
 
-    def write_footer (self):
+    def write_footer(self):
         self.doc.finish()

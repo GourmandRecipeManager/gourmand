@@ -13,27 +13,27 @@ class FieldEditorPlugin (ToolPlugin):
     </placeholder>
     '''
 
-    def setup_action_groups (self):
-        self.action_group = Gtk.ActionGroup(name='FieldEditorPluginActionGroup')
+    def setup_action_groups(self):
+        self.action_group = Gtk.ActionGroup(
+            name='FieldEditorPluginActionGroup')
         self.action_group.add_actions([
-            ('FieldEditor',None,_('Field Editor'),
-             None,_('Edit fields across multiple recipes at a time.'),self.show_field_editor
-            ),
-            ])
+            ('FieldEditor', None, _('Field Editor'),
+             None, _(
+                 'Edit fields across multiple recipes at a time.'), self.show_field_editor
+             ),
+        ])
         self.action_groups.append(self.action_group)
 
-    def show_field_editor (self, *args):
+    def show_field_editor(self, *args):
         from gourmand.GourmetRecipeManager import get_application
         self.app = get_application()
         self.field_editor = fieldEditor.FieldEditor(self.app.rd, self.app)
-        self.field_editor.valueDialog.connect('response',self.response_cb)
+        self.field_editor.valueDialog.connect('response', self.response_cb)
         self.field_editor.show()
 
-    def response_cb (self, d, r):
-        if r==Gtk.ResponseType.APPLY:
+    def response_cb(self, d, r):
+        if r == Gtk.ResponseType.APPLY:
             self.app.update_attribute_models()
-
-
 
 
 plugins = [FieldEditorPlugin]

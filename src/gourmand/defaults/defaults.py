@@ -10,7 +10,7 @@ deflang = 'en'
 lang: AbstractLanguage
 
 if os.name == 'posix':
-    locale.setlocale(locale.LC_ALL,'')
+    locale.setlocale(locale.LC_ALL, '')
     loc, enc = locale.getlocale()
 
 # Windows locales are named differently, e.g. German_Austria instead of de_AT
@@ -24,29 +24,33 @@ elif sys.platform == "win32":
 importLang: Optional[AbstractLanguage] = None
 if loc:
     try:
-        importLang = __import__('defaults_%s'%loc,globals(),locals(), level=1).Language
+        importLang = __import__('defaults_%s' %
+                                loc, globals(), locals(), level=1).Language
     except ImportError:
         try:
-            importLang = __import__('defaults_%s'%loc[0:2],globals(),locals(), level=1).Language
+            importLang = __import__(
+                'defaults_%s' % loc[0:2], globals(), locals(), level=1).Language
         except ImportError:
-            importLang = __import__('defaults_%s'%deflang,globals(),locals(), level=1).Language
+            importLang = __import__(
+                'defaults_%s' % deflang, globals(), locals(), level=1).Language
 
 if not importLang:
-    lang = __import__('defaults_%s'%deflang,globals(),locals()).Language
+    lang = __import__('defaults_%s' % deflang, globals(), locals()).Language
 else:
     lang = importLang
 
 # The next item is used to allow us to know some things about handling the language
 try:
-    langProperties=lang.LANG_PROPERTIES
+    langProperties = lang.LANG_PROPERTIES
 except AttributeError:
-    lang.LANG_PROPERTIES=langProperties={'hasAccents':False, 'capitalisedNouns':False, 'useFractions':True}
+    lang.LANG_PROPERTIES = langProperties = {
+        'hasAccents': False, 'capitalisedNouns': False, 'useFractions': True}
     # 'hasAccents' includes accents, umlauts etc, that might not be correctly handled
     # by eg lower()
     # 'capitalisedNouns' means that you don't want to use lower() anyway, cos it's
     #  ungramatical e.g. in the german Language, Nouns are written with Capital-Letters.
 
-## now we set up our dictionaries
+# now we set up our dictionaries
 lang.keydic = defaultdict(list)
 for variants in lang.SYNONYMS:
     preferred = variants[0]
@@ -58,21 +62,22 @@ for preferred, alternatives in lang.AMBIGUOUS.items():
 for itemname, key, _ in lang.INGREDIENT_DATA:
     lang.keydic[key].append(itemname)
 
-lang.shopdic = {key: shoppingCategory for (_, key, shoppingCategory) in lang.INGREDIENT_DATA}
+lang.shopdic = {key: shoppingCategory for (
+    _, key, shoppingCategory) in lang.INGREDIENT_DATA}
 
 lang.unit_group_lookup = {}
 
 unit_rounding_guide = {
-    'ml':1,
-    'l':0.001,
-    'mg':1,
-    'g':1,
-    'tsp.':0.075,
-    'Tbs.':0.02,
-    'c.':0.125,
-    }
+    'ml': 1,
+    'l': 0.001,
+    'mg': 1,
+    'g': 1,
+    'tsp.': 0.075,
+    'Tbs.': 0.02,
+    'c.': 0.125,
+}
 
-if hasattr(lang,'unit_rounding_guide') and lang.unit_rounding_guide:
+if hasattr(lang, 'unit_rounding_guide') and lang.unit_rounding_guide:
     unit_rounding_guide.update(lang.unit_rounding_guide)
 
 lang.unit_rounding_guide = unit_rounding_guide
@@ -83,16 +88,17 @@ for groupname, magnitudes in lang.UNIT_GROUPS.items():
         lang.unit_group_lookup[unit] = groupname, no
 
 WORD_TO_SING_PLUR_PAIR = {}
-if hasattr(lang,'PLURALS'):
+if hasattr(lang, 'PLURALS'):
     for forms in lang.PLURALS:
         for f in forms:
             WORD_TO_SING_PLUR_PAIR[f] = forms
 
-def get_pluralized_form (word, n):
+
+def get_pluralized_form(word, n):
     from gettext import ngettext
     if not word:
         return ''
-    lword=word.lower()
+    lword = word.lower()
     if lword in WORD_TO_SING_PLUR_PAIR:
         forms = list(WORD_TO_SING_PLUR_PAIR[lword])
         forms += [n]

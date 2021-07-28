@@ -8,4 +8,4 @@ plugins = [
     export_plugin.NutritionBaseExporterPlugin,
     shopping_plugin.ShoppingNutritionalInfoPlugin,
     nutPrefsPlugin.NutritionPrefs,
-    ]
+]
