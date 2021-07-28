@@ -23,7 +23,7 @@ class FieldEditor:
         self.rg = rg
         self.ui = Gtk.Builder()
         self.ui.add_from_string(
-            get_data('gourmet', 'ui/valueEditor.ui').decode())
+                get_data('gourmand', 'ui/valueEditor.ui').decode())
         self.__setup_widgets__()
         self.__setup_treeview__()
         self.ui.connect_signals({

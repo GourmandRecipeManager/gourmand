@@ -55,7 +55,7 @@ class EpubWriter():
         # ebook.add_metadata('DC', 'publisher', "Gourmet")
 
         # TODO: Add real author from somewhere
-        self.ebook.add_author("Gourmet")
+        self.ebook.add_author("Gourmand")
 
         # This adds the field also known as keywords in some programs.
         self.ebook.add_metadata('DC', 'subject', "cooking")
@@ -72,7 +72,7 @@ class EpubWriter():
             with open(filename, 'rb') as fh:
                 style = fh.read()
         else:
-            style = get_data('gourmet', f'data/style/{self._default_style}')
+            style = get_data('gourmand', f'data/style/{self._default_style}')
         assert style
         recipe_css = epub.EpubItem(
             uid="style", file_name=cssFileName, media_type="text/css", content=style)

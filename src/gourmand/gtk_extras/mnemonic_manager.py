@@ -321,28 +321,3 @@ class MnemonicManager:
                 break
             found = txt.lower().find(new_mnemonic, index+1)
         widget.set_text_with_mnemonic(txt[0:index] + '_' + txt[index:])
-
-
-if __name__ == '__main__':
-    from pkgutil import get_data
-    mm = MnemonicManager()
-    ui = Gtk.Builder()
-    ui.add_from_string(get_data('gourmet', 'ui/app.ui').decode())
-    mm.add_builder(ui)
-    #tree = ui.get_widget('recTree')
-    #rend = Gtk.CellRendererText()
-    #cols = ['Cuisine','Rating','Preparation Time','Cooking Time','Title','Servings']
-    # for i,l in enumerate(cols):
-    #    col =  Gtk.TreeViewColumn('_'+l,text=i)
-    #    tree.append_column(col)
-    #mod = Gtk.ListStore(*[str]*(i+1))
-    #for n in range(10): mod.append(cols)
-    # tree.set_model(mod)
-    # mm.add_treeview(tree)
-    mm.fix_conflicts_peacefully()
-
-    def show():
-        ui.get_widget('app').show()
-        ui.get_widget('app').connect('delete-event', Gtk.main_quit)
-        Gtk.main()
-    show()

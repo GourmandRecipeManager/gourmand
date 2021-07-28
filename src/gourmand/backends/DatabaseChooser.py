@@ -19,12 +19,11 @@ class DatabaseChooser:
         self.possible_dbs = ['sqlite', 'mysql']
         self.need_connection_info = ['mysql']
         self.need_file_info = ['sqlite']
-        self.default_file_directory = gglobals.gourmetdir
-        self.default_files = {'sqlite': 'recipes.db'
-                              }
+        self.default_file_directory = gglobals.gourmanddir
+        self.default_files = {'sqlite':'recipes.db'}
         self.ui = Gtk.Builder()
         self.ui.add_from_string(
-            get_data('gourmet', 'ui/databaseChooser.ui').decode())
+            get_data('gourmand', 'ui/databaseChooser.ui').decode())
         self.connection_widgets = ['hostEntry', 'userEntry', 'pwEntry', 'dbEntry',
                                    'hostLabel', 'userLabel', 'pwLabel', 'dbLabel',
                                    'pwCheckButton']

@@ -348,7 +348,7 @@ class GourmandApplication:
             else:
                 translator = defaults.CREDITS
 
-        logo = load_pixbuf_from_resource('gourmet.svg')
+        logo = load_pixbuf_from_resource('gourmand.svg')
 
         # load LICENSE text file
         license_text = get_data('gourmand', 'data/LICENSE').decode()
@@ -959,7 +959,7 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
 
     def setup_main_window(self):
         self.window = self.app = Gtk.Window()
-        self.window.set_icon(load_pixbuf_from_resource('gourmet.svg'))
+        self.window.set_icon(load_pixbuf_from_resource('gourmand.svg'))
         saver = WidgetSaver.WindowSaver(
             self.window,
             self.prefs.get('app_window', {'window_size': (800, 600)})

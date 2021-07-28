@@ -47,4 +47,5 @@ modules:
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
       - type: git
+        branch: main
         url: https://github.com/GourmandRecipeManager/gourmand
