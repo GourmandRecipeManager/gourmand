@@ -6,16 +6,16 @@ goal to respect your contribution accordingly.
 
 Although this document focuses on code contributions, you can contribute in
 several ways:
+
 - File a bug report.
 - Add or improve documentation.
 - Promote the project to others.
-
 
 ## Contributing Code
 
 In general, the process for contributing code is:
 
-1. Pick or open an [issue](https://github.com/thinkle/gourmet/issues) to work
+1. Pick or open an [issue](https://github.com/GourmandRecipeManager/gourmand/issues) to work
    on
 2. Post a comment expressing your intent to make sure nobody else is already
    working on it
@@ -23,15 +23,12 @@ In general, the process for contributing code is:
 4. Hack the code, and when ready
 5. Push your changes to your forked repo and create a pull request.
 
-Make sure to also check out our upcoming [milestones](https://github.com/thinkle/gourmet/milestones).
-
-
 ## Setting Up a Development Environment
 
-You'll want to clone Gourmet to your computer and probably
-[fork](https://github.com/thinkle/gourmet/fork) it as well.
+Fork and clone Gourmand.
 
 Ensure your system has the necessary prerequisites installed:
+
 - [Python](https://www.python.org/), which is what Gourmet is written in.
 - [PyGObject](https://pygobject.readthedocs.io/en/latest/) for GTK+ 3 and
   other GNOME libraries. You may either install your system's `pygobject`
@@ -50,46 +47,49 @@ Ensure your system has the necessary prerequisites installed:
   and associated GObject introspection data.
 
 **Note:** Although some prerequisites are optional, the development install of
-Gourmet enables all plugins and features, so you probably want to install all
+Gourmand enables all plugins and features, so you probably want to install all
 prerequisites to avoid any issues.
 
 You may want to setup a [Python virtual
 environment](https://docs.python.org/3/library/venv.html). This is optional but
 highly recommended:
+
 ```bash
-$ python -m venv --prompt gourmet env
-$ source env/bin/activate
-(gourmet) $ pip install -U pip setuptools wheel
+$ python -m venv --prompt gourmand venv
+$ source venv/bin/activate
+(gourmand) $ pip install -U pip setuptools wheel
 ```
 
-Then install Gourmet itself:
+Then install Gourmand itself:
+
 ```bash
-(gourmet) $ pip install -r development.in
+(gourmand) $ pip install -r development.in
 ```
+
 This installs the remaining Python dependencies and Gourmet itself in editable
 mode, which allows you to run Gourmet and see your changes without having to
 reinstall it.
 
 **Note:** If you encounter an error during the installation of
 `pygtkspellcheck`, first install `pyenchant` and `pygobject` on their own:
+
 ```bash
-(gourmet) $ pip install pyenchant pygobject
-(gourmet) $ pip install -r development.in
+(gourmand) $ pip install pyenchant pygobject
+(gourmand) $ pip install -r development.in
 ```
 
-You should now be able to launch and run Gourmet:
-```bash
-(gourmet) $ gourmet
-```
+You should now be able to launch and run Gourmand:
 
+```bash
+(gourmand) $ gourmand
+```
 
 ## Style
 
-Gourmet is an old code base, consequently its style is not always consistent or
-conformant to contemporary tastes. We are not interested in bikeshedding, but
-please follow [PEP 8](http://www.python.org/dev/peps/pep-0008/) when writing new
+Gourmand is an old code base, consequently its style is not always consistent or
+conformant to contemporary tastes.  
+Please follow [PEP 8](http://www.python.org/dev/peps/pep-0008/) when writing new
 code, and when working on old code, please tidy up as you go.
-
 
 ## Issues and Suggestions
 
