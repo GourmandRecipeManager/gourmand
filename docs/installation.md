@@ -6,7 +6,7 @@ The AppImage can be copied from one computer to another.
 
 ## AppImage
 
-The AppImage is available from the [release page](https://github.com/GourmandRecipeManager/gourmand/releases/tag/v1.0.0).
+The AppImage is available from the [release page](https://github.com/GourmandRecipeManager/gourmand/releases/).
 Download the it and mark it as executable:
 
 ```sh
@@ -31,7 +31,7 @@ sudo apt-get install flatpak
 ```
 
 As Gourmand is still under active development, the flatpak is not available from
-Flathub, and instead must be [downloaded and installed manually](https://github.com/GourmandRecipeManager/gourmand/releases/tag/v1.0.0).
+Flathub, and instead must be [downloaded and installed manually](https://github.com/GourmandRecipeManager/gourmand/releases/).
 
 In a terminal, execute the following:
 
@@ -67,7 +67,7 @@ flatpak remove io.github.GourmandRecipeManager.Gourmand
 
 ## Python Wheel
 
-[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/tag/v1.0.0)
+[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/)
 Dependencies must be manually installed.
 
 ### Unbutu 20.04, Linux Mint 20
@@ -110,7 +110,7 @@ Then install some of the dependencies:
     pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python-sqlalchemy mingw-w64-x86_64-gstreamer mingw-w64-x86_64-poppler mingw-w64-x86_64-python-reportlab
 ```
 
-[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/tag/v1.0.0) and install it:
+[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/) and install it:
 
 ```sh
     python3 -m pip install gourmand-1.0.0-py3-none-any.whl
