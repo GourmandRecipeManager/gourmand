@@ -855,13 +855,15 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
 
     def save (self, *args):
         debug("save (self, *args):",5)
-        self.doSave(de.select_file(_("Save Shopping List As..."),
-                                   filename=os.path.join(os.path.expanduser("~"),
-                                                         "%s %s"%(_('Shopping List'),
-                                                                  time.strftime("%x").replace("/","-"),
-                                                                  )),
-                                   action=Gtk.FileChooserAction.SAVE,
-                                   ))
+        filename = de.select_file(_("Save Shopping List As..."),
+                                  filename=os.path.join(os.path.expanduser("~"),
+                                   "%s %s.txt" % (_('Shopping List'),
+                                               time.strftime("%x").replace("/", "-"),
+                                               )),
+                                   action=Gtk.FileChooserAction.SAVE)
+        if not filename:
+            return
+        self.doSave(*filename)
 
     def printList (self, *args):
         debug("printList (self, *args):",0)

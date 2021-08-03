@@ -161,7 +161,7 @@ class PDFSimpleWriter (PDFPrinter):
     def begin_print(self,
                     operation: Gtk.PrintOperation,
                     context: Gtk.PrintContext):
-        filename = tempfile.mkstemp()
+        _, filename = tempfile.mkstemp()
         writer = pdf_exporter.PdfWriter()
         writer.setup_document(filename, **self.args)
         # Playback all the commands we recorded
@@ -188,7 +188,7 @@ class PDFRecipePrinter (PDFPrinter):
     def begin_print(self,
                     operation: Gtk.PrintOperation,
                     context: Gtk.PrintContext):
-        fn = tempfile.mkstemp()
+        _, fn = tempfile.mkstemp()
         pe = pdf_exporter.PdfExporterMultiDoc(self.rd, self.recs, fn,
                                               change_units=self.change_units,
                                               mult=self.mult)
