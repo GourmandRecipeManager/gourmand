@@ -56,7 +56,8 @@ class ExportManager (plugin_loader.Pluggable):
                                            filters=self.get_single_filters(),
                                            parent=parent
                                            )
-        if not filename: return
+        if not filename:
+            return
         if not exp_type or not self.can_export_type(exp_type):
             de.show_message(label=_('Gourmet cannot export file of type "%s"')%os.path.splitext(filename)[1])
             return
@@ -108,19 +109,20 @@ class ExportManager (plugin_loader.Pluggable):
                                                           ext),
                                      parent=parent,
                                      filters=self.get_multiple_filters())
-        if fn:
-            prefs['rec_exp_directory']=os.path.split(fn)[0]
-            prefs['save_recipes_as']=os.path.splitext(fn)[1]
-            instance = self.do_multiple_export(recs, fn, exp_type)
-            if not instance:
-                de.show_message(
-                    okay=Gtk.STOCK_CLOSE,
-                    cancel=False,
-                    label=_('Unable to export: unknown filetype "%s"'%fn),
-                    sublabel=_('Please make sure to select a filetype from the dropdown menu when saving.'),
-                    message_type=Gtk.MessageType.ERROR,
-                    )
-                return
+        if not fn:
+            return
+
+        prefs['rec_exp_directory']=os.path.split(fn)[0]
+        prefs['save_recipes_as']=os.path.splitext(fn)[1]
+        instance = self.do_multiple_export(recs, fn, exp_type)
+        if not instance:
+            de.show_message(
+                okay=Gtk.STOCK_CLOSE,
+                cancel=False,
+                label=_('Unable to export: unknown filetype "%s"'%fn),
+                sublabel=_('Please make sure to select a filetype from the dropdown menu when saving.'),
+                message_type=Gtk.MessageType.ERROR,
+                )
 
     def get_extra_prefs (self, myexp, extra_prefs):
         if extra_prefs == EXTRA_PREFS_AUTOMATIC:

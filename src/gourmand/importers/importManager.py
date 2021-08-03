@@ -240,9 +240,9 @@ class ImportManager (plugin_loader.Pluggable):
             elif content_type:
                 ext = self.guess_extension(content_type)
         if ext:
-            tf = tempfile.mkstemp('.' + ext)
+            _, tf = tempfile.mkstemp('.' + ext)
         else:
-            tf = tempfile.mkstemp()
+            _, tf = tempfile.mkstemp()
         self.tempfiles[url] = tf
         with open(tf, "wb") as fout:
             fout.write(data)
