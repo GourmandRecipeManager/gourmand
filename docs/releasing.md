@@ -28,6 +28,7 @@ This lists manual tests to do prior to tagging a new release.
 - [ ] HTML
 - [ ] Gourmet (+ reimport)
 - [ ] PDF
+- [ ] Print
 
 ## Customization
 
@@ -37,9 +38,15 @@ This lists manual tests to do prior to tagging a new release.
 ## Recipe Card View
 
 - [ ] Export from this view
-- [ ] Multiply (+ print)
-- [ ] Add image
+- [ ] Multiply
+- [ ] Modify image
 
 ## Upgrade
 
-- [ ] Test upgrade from last stable version
+- [ ] Test upgrade from previous stable version
+
+## Installation and Launch
+
+- [ ] From wheel
+- [ ] From Flatpak
+- [ ] From AppImage
