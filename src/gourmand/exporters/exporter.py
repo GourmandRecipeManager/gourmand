@@ -310,7 +310,7 @@ class exporter (SuspendableThread, Pluggable):
         more = True
         while more:
             fd = Pango.FontDescription()
-            ai.get_font(fd, None, None)
+            ai.get_font(fd)
             start, end = ai.range()
             # The range should never split up a code point in the UTF-8
             chunk = xml.sax.saxutils.escape(b[start:end].decode('utf-8'))
