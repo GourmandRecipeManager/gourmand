@@ -912,7 +912,7 @@ def saveas_file(title: str,
     try:
         filename, export_type = sfd.run()
         return filename, export_type
-    except TypeError:
+    except ValueError:
         return '', ''
 
 
