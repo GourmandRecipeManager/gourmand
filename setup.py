@@ -189,16 +189,13 @@ setup(
         'requests==2.25.1',
         'sqlalchemy==1.3.22',
         'toml==0.10.2',
+        'recipe-scrapers',
     ],
     extras_require={
         'epub-export': ['ebooklib==0.17.1'],
         'pdf-export': ['reportlab==3.5.67'],
         'spellcheck': ['pyenchant',
                        'pygtkspellcheck'],
-        'web-import': ['keyring==21.0.0',
-                       'rdflib==5.0.0',
-                       'scrape-schema-recipe==0.1.5',
-                       'selenium==3.141.0'],
     },
     cmdclass={
         'bdist_wheel': BuildWheel,

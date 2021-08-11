@@ -10,7 +10,7 @@ deflang = 'en'
 lang: AbstractLanguage
 
 if os.name == 'posix':
-    locale.setlocale(locale.LC_ALL,'')
+    locale.setlocale(locale.LC_ALL, '')
     loc, enc = locale.getlocale()
 
 # Windows locales are named differently, e.g. German_Austria instead of de_AT

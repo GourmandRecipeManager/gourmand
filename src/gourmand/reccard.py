@@ -649,8 +649,8 @@ class RecCardDisplay (plugin_loader.Pluggable):
     def forget_remembered_optional_ingredients (self):
         pass
 
-    def offer_url (self, label, url):
-        if hasattr(self,'progress_dialog'):
+    def offer_url(self, label: str, url: str):
+        if hasattr(self, 'progress_dialog'):
             self.hide_progress_dialog()
         # Clear existing messages...
         for child in self.messagebox.get_children():
