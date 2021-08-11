@@ -37,13 +37,12 @@ def find_entry(widget) -> Optional[Gtk.Entry]:
     """Recurse through all the children widgets to find the first Gtk.Entry."""
     if isinstance(widget, Gtk.Entry):
         return widget
-    else:
-        if not hasattr(widget, 'get_children'):
-            return
-        for child in widget.get_children():
-            e = find_entry(child)
-            if e is not None:
-                return e
+    if not hasattr(widget, 'get_children'):
+        return
+    for child in widget.get_children():
+        e = find_entry(child)
+        if e is not None:
+            return e
 
 
 class RecRef:
@@ -64,8 +63,8 @@ class RecCard:
         self.__rec_gui = rec_gui
         self.__rec_editor: Optional[RecEditor] = None
         self.__rec_display: Optional[RecCardDisplay] = None
-        self.__new: bool = True if recipe is None else False
-        self.__current_rec: 'RowProxy' = recipe if recipe else rec_gui.rd.new_rec()  # noqa
+        self.__new: bool = recipe is None
+        self.__current_rec: 'RowProxy' = recipe or rec_gui.rd.new_rec()
 
         self.conf = []  # This list is unused, and should be refactored out
 
@@ -86,9 +85,7 @@ class RecCard:
 
     @property
     def edited(self) -> bool:
-        if self.__rec_editor is not None and self.__rec_editor.edited:
-            return True
-        return False
+        return bool(self.__rec_editor is not None and self.__rec_editor.edited)
 
     @edited.setter
     def edited(self, val: bool) -> None:
@@ -904,7 +901,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.module_tab_by_name = {}
         for klass in self.editor_module_classes:
             instance = klass(self)
-            tab_label = Gtk.Label(label=instance.label)
+            tab_label = Gtk.Label.new(instance.label)
             n = self.notebook.append_page(
                 instance.main,
                 tab_label=tab_label)
@@ -1151,8 +1148,6 @@ class IngredientEditorModule (RecEditorModule):
              None,None),
             ('AddIngredientGroup',None,_('Add group'),
              '<Control>G',None,self.ingtree_ui.ingNewGroupCB),
-            ('PasteIngredient',Gtk.STOCK_PASTE,_('Paste ingredients'),
-             '<Control>V',None,self.paste_ingredients_cb),
             ('ImportIngredients',None,_('Import from file'),
              '<Control>O',None,self.import_ingredients_cb),
             ('AddRecipeAsIngredient',None,_('Add _recipe'),
@@ -1252,7 +1247,7 @@ class TextEditor:
         self.copyPasteActionGroup = Gtk.ActionGroup(name='CopyPasteActionGroup')
         self.copyPasteActionGroup.add_actions([
             ('Copy',Gtk.STOCK_COPY,None,None,None,self.do_copy),
-            ('Paste',Gtk.STOCK_PASTE,None,None,None,self.do_paste),
+            ('Paste',Gtk.STOCK_PASTE,None,'<Control>V',None,self.paste_cb),
             ('Cut',Gtk.STOCK_CUT,None,None,None,self.do_cut),
             ])
         self.cb = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
@@ -1307,13 +1302,12 @@ class TextEditor:
         if isinstance(widget, Gtk.TextView):
             widget.get_buffer().cut_clipboard(self.cb, widget.get_editable())
 
-    def do_paste(self, action: Gtk.Action):
+    def paste_cb(self, action: Gtk.Action):
         # Get any widget to get a hold of the window
         w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]  # noqa
         window = w.get_toplevel()
 
         widget = window.get_focus()  # Get the widget under focus
-
         if isinstance(widget, Gtk.TextView):
             buf = widget.get_buffer()
             buf.paste_clipboard(self.cb, None, widget.get_editable())

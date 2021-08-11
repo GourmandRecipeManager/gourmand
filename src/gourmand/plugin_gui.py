@@ -101,7 +101,9 @@ class PluginChooser:
         plugin_set = ls[path][1]
         prev_state = ls[path][0]
         state = not prev_state
+        print('aye')
         self.do_change_plugin(plugin_set, state, ls)
+        print('nay')
         ls[path][0] = state
 
     def do_change_plugin (self, plugin_set, state, ls):

@@ -4,7 +4,7 @@ import tempfile
 
 import gourmand.exporters.exporter as exporter
 from gourmand.exporters.exportManager import ExportManager
-from gourmand.GourmetRecipeManager import get_application
+from gourmand.main import get_application
 
 from .emailer import Emailer
 
