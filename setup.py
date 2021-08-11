@@ -184,7 +184,7 @@ setup(
     install_requires=[
         'beautifulsoup4==4.9.3',
         'lxml==4.6.3',
-        'pillow>=7.0.0',
+        'pillow==8.3.0',
         'pygobject==3.40.1',
         'requests==2.25.1',
         'sqlalchemy==1.3.22',
