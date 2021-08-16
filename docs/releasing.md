@@ -17,7 +17,6 @@ This lists manual tests to do prior to tagging a new release.
 ## Imports
 
 - [ ] Webpage
-- [ ] Zipped Archive
 - [ ] Mealmaster
 - [ ] Mastercook
 - [ ] Gourmet
@@ -25,8 +24,9 @@ This lists manual tests to do prior to tagging a new release.
 
 ## Exports
 
+- [ ] Several Recipes
 - [ ] HTML
-- [ ] Gourmet (+ reimport)
+- [ ] Gourmet
 - [ ] PDF
 - [ ] Print
 
@@ -34,6 +34,10 @@ This lists manual tests to do prior to tagging a new release.
 
 - [ ] Customize columns in Index View
 - [ ] Hide recipe widgets
+
+## Plugins
+
+- [ ] Enable/Disable plugins
 
 ## Recipe Card View
 
