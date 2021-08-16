@@ -693,9 +693,9 @@ class RecData (Pluggable):
             plugin_version = 0
         try:
             plugin.update_version(
-                gourmet_stored=(sup, maj, minor),
+                gourmand_stored=(sup, maj, minor),
                 plugin_stored=plugin_version,
-                gourmet_current=(current_super, current_major, current_minor),
+                gourmand_current=(current_super, current_major, current_minor),
                 plugin_current=plugin.version)
         except:
             print('Problem updating plugin',plugin,plugin.name)
