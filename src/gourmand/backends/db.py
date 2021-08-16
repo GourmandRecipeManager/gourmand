@@ -763,7 +763,7 @@ class RecData (Pluggable):
         if column_names is not None:
             raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
         if sort_by is None:
-            sorty_by = []
+            sort_by = []
         return  table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
             *make_simple_select_arg(criteria,table1,table2)
             ).execute().fetchall()
