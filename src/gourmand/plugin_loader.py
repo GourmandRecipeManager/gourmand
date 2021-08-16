@@ -167,9 +167,8 @@ class MasterLoader:
         return depending_on_me
 
     def activate_plugin_set(self, plugin_set: 'LegacyPlugin'):
-        """Activate a set of plugins.
-        """
-        if plugin_set in self.active_plugin_sets:
+        """Activate a set of plugins."""
+        if plugin_set.module in self.active_plugin_sets:
             return
         self.check_dependencies(plugin_set)
         # plugin_set.get_module() returns None if there's been a
