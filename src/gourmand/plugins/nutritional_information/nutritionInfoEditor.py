@@ -243,9 +243,6 @@ class NutStore (pageable_store.PageableViewStore):
                                       }
                                    )
         vw = select.execute().fetchall()
-        #vw = self.rd.fetch_join(self.rd.nutritionaliases_table,self.rd.nutrition_table,
-        #                        'ndbno','ndbno',sort_by=[('ingkey',1)],
-        #                        **search_kwargs)
         # We must show ingredients whether we have them or not...
         extras = []
         if self.ingredients:
