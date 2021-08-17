@@ -760,10 +760,9 @@ class RecData (Pluggable):
 
     def fetch_join (self, table1, table2, col1, col2,
                     column_names=None, sort_by=None, **criteria):
+        # TODO: this function might be unused
         if column_names is not None:
             raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
-        if sort_by is None:
-            sort_by = []
         return  table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
             *make_simple_select_arg(criteria,table1,table2)
             ).execute().fetchall()
