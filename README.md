@@ -4,6 +4,8 @@
 
 Gourmand is a fork of the Gourmet Recipe Manager: a manager, editor, and organizer for recipes.  
 
+![recipe view](docs/recipe_view.png)
+
 ## Requirements and Installation
 
 Installation instruction are found in the [installation guide](docs/installation.md).
