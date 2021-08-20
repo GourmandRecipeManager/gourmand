@@ -156,8 +156,8 @@ class mealmaster_exporter (exporter_mult):
                 group = i[0]
                 width = 70
                 dashes = width - len(group)
-                left_side = dashes/2 - 5
-                right_side = dashes/2
+                left_side = int(dashes/2 - 5)
+                right_side = int(dashes / 2)
                 self.out.write("-----%s%s%s\r\n" % (left_side * "-",
                                                     group.upper(),
                                                     right_side * "-")

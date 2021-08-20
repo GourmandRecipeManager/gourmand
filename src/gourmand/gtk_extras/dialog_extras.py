@@ -904,8 +904,8 @@ def saveas_file(title: str,
     try:
         filename, export_type = sfd.run()
         return filename, export_type
-    except TypeError:
-        return None, None
+    except ValueError:
+        return '', ''
 
 
 def get_type_for_filters(fname, filters):
@@ -1070,7 +1070,7 @@ class FileSelectorDialog:
         else:
             self.fsd.set_current_name(stem)
 
-    def run(self) -> Optional[List[str]]:
+    def run(self) -> List[str]:
         """Return a list of filenames.
 
         If saving files, the file type is also returned as the last entry in
@@ -1085,7 +1085,7 @@ class FileSelectorDialog:
                 export_type = self.fsd.get_filter().get_name()
                 filenames.append(export_type)
         else:  # response == Gtk.ResponseType.CANCEL:
-            filenames = None
+            filenames = []
 
         self.quit()
         return filenames

@@ -761,9 +761,9 @@ class RecData (Pluggable):
             plugin_version = 0
         try:
             plugin.update_version(
-                gourmet_stored=(sup, maj, minor),
+                gourmand_stored=(sup, maj, minor),
                 plugin_stored=plugin_version,
-                gourmet_current=(current_super, current_major, current_minor),
+                gourmand_current=(current_super, current_major, current_minor),
                 plugin_current=plugin.version)
         except:
             print('Problem updating plugin', plugin, plugin.name)
@@ -793,23 +793,27 @@ class RecData (Pluggable):
             t.end()
 
     # basic DB access functions
-    def fetch_all(self, table, sort_by=[], **criteria):
-        return table.select(*make_simple_select_arg(criteria, table),
-                            **{'order_by': make_order_by(sort_by, table)}
+    def fetch_all (self, table, sort_by=None, **criteria):
+        if sort_by is None:
+            sort_by = []
+        return table.select(*make_simple_select_arg(criteria,table),
+                            **{'order_by':make_order_by(sort_by,table)}
                             ).execute().fetchall()
 
     def fetch_one(self, table, **criteria):
         """Fetch one item from table and arguments"""
         return table.select(*make_simple_select_arg(criteria, table)).execute().fetchone()
 
-    def fetch_count(self, table, column, sort_by=[], **criteria):
+    def fetch_count (self, table, column, sort_by=None, **criteria):
         """Return a counted view of the table, with the count stored in the property 'count'"""
-        return sqlalchemy.select(
-            [sqlalchemy.func.count(getattr(table.c, column)).label('count'),
-             getattr(table.c, column)],
-            *make_simple_select_arg(criteria, table),
-            **{'group_by': column,
-               'order_by': make_order_by(sort_by, table, count_by=column),
+        if sort_by is None:
+            sort_by = []
+        result =  sqlalchemy.select(
+            [sqlalchemy.func.count(getattr(table.c,column)).label('count'),
+             getattr(table.c,column)],
+            *make_simple_select_arg(criteria,table),
+            **{'group_by':column,
+               'order_by':make_order_by(sort_by,table,count_by=column),
                }
         ).execute().fetchall()
 
@@ -821,14 +825,14 @@ class RecData (Pluggable):
         else:
             return table.count().execute().fetchone()[0]
 
-    def fetch_join(self, table1, table2, col1, col2,
-                   column_names=None, sort_by=[], **criteria):
-        if column_names:
-            raise Exception(
-                "column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
-        return table1.join(table2, getattr(table1.c, col1) == getattr(table2.c, col2)).select(
-            *make_simple_select_arg(criteria, table1, table2)
-        ).execute().fetchall()
+    def fetch_join (self, table1, table2, col1, col2,
+                    column_names=None, sort_by=None, **criteria):
+        # TODO: this function might be unused
+        if column_names is not None:
+            raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
+        return  table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
+            *make_simple_select_arg(criteria,table1,table2)
+            ).execute().fetchall()
 
     def fetch_food_groups_for_search(self, words):
         """Return food groups that match a given set of words."""

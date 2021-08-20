@@ -105,27 +105,27 @@ class ExportManager (plugin_loader.Pluggable):
                                   get_user_special_dir(
                                       UserDirectory.DIRECTORY_DOCUMENTS)
                                   )
-        fn, exp_type = de.saveas_file(_("Export recipes"),
-                                      filename="%s%s%s%s" % (exp_directory,
-                                                             os.path.sep,
-                                                             _('recipes'),
-                                                             ext),
-                                      parent=parent,
-                                      filters=self.get_multiple_filters())
-        if fn:
-            prefs['rec_exp_directory'] = os.path.split(fn)[0]
-            prefs['save_recipes_as'] = os.path.splitext(fn)[1]
-            instance = self.do_multiple_export(recs, fn, exp_type)
-            if not instance:
-                de.show_message(
-                    okay=Gtk.STOCK_CLOSE,
-                    cancel=False,
-                    label=_('Unable to export: unknown filetype "%s"' % fn),
-                    sublabel=_(
-                        'Please make sure to select a filetype from the dropdown menu when saving.'),
-                    message_type=Gtk.MessageType.ERROR,
+        fn, exp_type=de.saveas_file(_("Export recipes"),
+                                    filename="%s%s%s%s"%(exp_directory,
+                                                         os.path.sep,
+                                                         _('recipes'),
+                                                         ext),
+                                    parent=parent,
+                                    filters=self.get_multiple_filters())
+        if not fn:
+            return
+
+        prefs['rec_exp_directory']=os.path.split(fn)[0]
+        prefs['save_recipes_as']=os.path.splitext(fn)[1]
+        instance = self.do_multiple_export(recs, fn, exp_type)
+        if not instance:
+            de.show_message(
+                okay=Gtk.STOCK_CLOSE,
+                cancel=False,
+                label=_('Unable to export: unknown filetype "%s"'%fn),
+                sublabel=_('Please make sure to select a filetype from the dropdown menu when saving.'),
+                message_type=Gtk.MessageType.ERROR,
                 )
-                return
 
     def get_extra_prefs(self, myexp, extra_prefs):
         if extra_prefs == EXTRA_PREFS_AUTOMATIC:

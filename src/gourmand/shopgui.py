@@ -889,16 +889,17 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         else:
             debug("clear cancelled", 2)
 
-    def save(self, *args):
-        debug("save (self, *args):", 5)
-        self.doSave(de.select_file(_("Save Shopping List As..."),
-                                   filename=os.path.join(os.path.expanduser("~"),
-                                                         "%s %s" % (_('Shopping List'),
-                                                                    time.strftime(
-                                                                        "%x").replace("/", "-"),
-                                                                    )),
-                                   action=Gtk.FileChooserAction.SAVE,
-                                   ))
+    def save (self, *args):
+        debug("save (self, *args):",5)
+        filename = de.select_file(_("Save Shopping List As..."),
+                                  filename=os.path.join(os.path.expanduser("~"),
+                                   "%s %s.txt" % (_('Shopping List'),
+                                               time.strftime("%x").replace("/", "-"),
+                                               )),
+                                   action=Gtk.FileChooserAction.SAVE)
+        if not filename:
+            return
+        self.doSave(*filename)
 
     def printList(self, *args):
         debug("printList (self, *args):", 0)
@@ -959,9 +960,8 @@ class OptionalIngDialog (de.ModalDialog):
         self.ret = {}
         self.create_tree()
         self.cb = Gtk.CheckButton("Always use these settings")
-        self.cb.set_active(prefs.get('remember_optionals_by_default', False))
-        alignment = Gtk.Alignment.new()
-        alignment.set_property('xalign', 1.0)
+        self.cb.set_active(prefs.get('remember_optionals_by_default',False))
+        alignment = Gtk.Alignment.new(1.0, 0, 0, 0)
         alignment.add(self.cb)
         self.vbox.add(alignment)
         alignment.show()
@@ -1023,8 +1023,7 @@ class OptionalIngDialog (de.ModalDialog):
 
     def run(self):
         self.show()
-        if self.modal:
-            Gtk.main()
+        Gtk.main()
         if self.cb.get_active() and self.ret:
             # if we are saving our settings permanently...
             # we add ourselves to the shopoptional attribute

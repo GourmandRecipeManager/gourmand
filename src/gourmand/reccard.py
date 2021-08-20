@@ -917,7 +917,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.module_tab_by_name = {}
         for klass in self.editor_module_classes:
             instance = klass(self)
-            tab_label = Gtk.Label(label=instance.label)
+            tab_label = Gtk.Label.new(instance.label)
             n = self.notebook.append_page(
                 instance.main,
                 tab_label=tab_label)
@@ -1181,8 +1181,6 @@ class IngredientEditorModule (RecEditorModule):
              None, None),
             ('AddIngredientGroup', None, _('Add group'),
              '<Control>G', None, self.ingtree_ui.ingNewGroupCB),
-            ('PasteIngredient', Gtk.STOCK_PASTE, _('Paste ingredients'),
-             '<Control>V', None, self.paste_ingredients_cb),
             ('ImportIngredients', None, _('Import from file'),
              '<Control>O', None, self.import_ingredients_cb),
             ('AddRecipeAsIngredient', None, _('Add _recipe'),
@@ -1287,7 +1285,7 @@ class TextEditor:
             name='CopyPasteActionGroup')
         self.copyPasteActionGroup.add_actions([
             ('Copy', Gtk.STOCK_COPY, None, None, None, self.do_copy),
-            ('Paste', Gtk.STOCK_PASTE, None, None, None, self.do_paste),
+            ('Paste', Gtk.STOCK_PASTE, None, '<Control>V', None, self.do_paste),
             ('Cut', Gtk.STOCK_CUT, None, None, None, self.do_cut),
         ])
         self.cb = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
@@ -1342,13 +1340,12 @@ class TextEditor:
         if isinstance(widget, Gtk.TextView):
             widget.get_buffer().cut_clipboard(self.cb, widget.get_editable())
 
-    def do_paste(self, action: Gtk.Action):
+    def paste_cb(self, action: Gtk.Action):
         # Get any widget to get a hold of the window
         w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]  # noqa
         window = w.get_toplevel()
 
         widget = window.get_focus()  # Get the widget under focus
-
         if isinstance(widget, Gtk.TextView):
             buf = widget.get_buffer()
             buf.paste_clipboard(self.cb, None, widget.get_editable())

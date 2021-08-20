@@ -7,7 +7,7 @@ GenericName=Recipe Manager
 X-GNOME-FullName=Gourmand Recipe Manager
 Categories=GTK;Utility;
 Comment=Organize recipes, create shopping lists, calculate nutritional information, and more.
-Icon=io.github.GourmandRecipeMananger.Gourmand
+Icon=io.github.GourmandRecipeManager.Gourmand
 
 Exec=gourmand
 Terminal=false

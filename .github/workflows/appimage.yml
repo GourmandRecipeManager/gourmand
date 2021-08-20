@@ -34,7 +34,8 @@ jobs:
           sed -i -e 's|/opt/python3.8/bin/python3.8|/usr/bin/gourmand|g' ./squashfs-root/AppRun
           rm squashfs-root/*.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/usr/share/applications/io.github.GourmandRecipeManager.Gourmand.desktop
-          cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/
+          cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/io.github.GourmandRecipeManager.Gourmand.desktop
+          cp data/io.github.GourmandRecipeManager.Gourmand.appdata.xml squashfs-root/usr/share/metainfo/io.github.GourmandRecipeManager.Gourmand.desktop.appdata.xml
           convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
           convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
 
