@@ -115,7 +115,7 @@ def make_order_by(sort_by, table, count_by=None, join_tables=[]):
                     table, join_tables, col))
         if isinstance(col.type, Text):
             # Sort nulls last rather than first using case statement...
-            col = case([(col == None, '"%s"' % 'z'*20),
+            col = case([(col is None, '"%s"' % 'z'*20),
                         (col == '', '"%s"' % 'z'*20),
                         ], else_=func.lower(col))
         if direction == 1:  # Ascending
@@ -804,11 +804,11 @@ class RecData (Pluggable):
         """Fetch one item from table and arguments"""
         return table.select(*make_simple_select_arg(criteria, table)).execute().fetchone()
 
-    def fetch_count (self, table, column, sort_by=None, **criteria):
+    def fetch_count(self, table, column, sort_by=None, **criteria):
         """Return a counted view of the table, with the count stored in the property 'count'"""
         if sort_by is None:
             sort_by = []
-        result =  sqlalchemy.select(
+        return sqlalchemy.select(
             [sqlalchemy.func.count(getattr(table.c,column)).label('count'),
              getattr(table.c,column)],
             *make_simple_select_arg(criteria,table),
@@ -825,12 +825,12 @@ class RecData (Pluggable):
         else:
             return table.count().execute().fetchone()[0]
 
-    def fetch_join (self, table1, table2, col1, col2,
-                    column_names=None, sort_by=None, **criteria):
+    def fetch_join(self, table1, table2, col1, col2,
+                   column_names=None, sort_by=None, **criteria):
         # TODO: this function might be unused
         if column_names is not None:
             raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
-        return  table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
+        return table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
             *make_simple_select_arg(criteria,table1,table2)
             ).execute().fetchall()
 
