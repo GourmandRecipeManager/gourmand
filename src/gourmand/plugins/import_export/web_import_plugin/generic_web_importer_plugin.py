@@ -12,23 +12,24 @@ from . import webpage_importer
 class GenericWebImporter (ImporterPlugin, Pluggable):
 
     name = _('Webpage')
-    patterns = ['*.htm','*.html','*.xhtml']
-    mimetypes = ['text/html','text/xhtml','application/xhtml+xml','application/xhtml','application/html']
+    patterns = ['*.htm', '*.html', '*.xhtml']
+    mimetypes = ['text/html', 'text/xhtml', 'application/xhtml+xml',
+                 'application/xhtml', 'application/html']
     targets = ['webimport_plugin']
 
-    def __init__ (self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         Pluggable.__init__(self, [PluginPlugin])
 
-    def activate (self, pluggable):
-        print('activate GenericWebImporter for pluggable',pluggable)
-        return ImporterPlugin.activate(self,pluggable)
+    def activate(self, pluggable):
+        print('activate GenericWebImporter for pluggable', pluggable)
+        return ImporterPlugin.activate(self, pluggable)
 
-    def test_file (self, filename):
+    def test_file(self, filename):
         '''Given a file name, test whether the file is of this type.'''
-        #if filename.endswith('.htm') or filename.endswith('.xhtml') or filename.endswith('.html'):
-        return -1 # We are a fallback option
+        # if filename.endswith('.htm') or filename.endswith('.xhtml') or filename.endswith('.html'):
+        return -1  # We are a fallback option
 
-    def test_url (self, url, data, content_type):
+    def test_url(self, url, data, content_type):
         for p in self.plugins:
             if p.test_url(url, data):
                 return 1
@@ -39,7 +40,7 @@ class GenericWebImporter (ImporterPlugin, Pluggable):
             return None
         else:
             if 'html' in content_type:
-                return -1 # We are the fallback option
+                return -1  # We are the fallback option
 
     def get_web_importer(self, url: str,
                          data: Union[bytes, str], content_type: str) -> Any:
@@ -54,9 +55,9 @@ class GenericWebImporter (ImporterPlugin, Pluggable):
                 highest = test_val.value
         return importer(url, data)
 
-    def get_importer (self, filename):
+    def get_importer(self, filename):
         url = 'file://'+filename
         with open(filename, 'r') as f:
             data = f.read()
         content_type = 'text/html'
-        return self.get_web_importer(url,data,content_type)
+        return self.get_web_importer(url, data, content_type)

@@ -44,11 +44,11 @@ class ClipboardExporter:
         # Each item in self.recipes is a set of (a recipe, its ingredients).
         for recipe, ingredients in self.recipes:
             # The ingredients have the name, quantity, and units attached
-            formatted_ingredients = []
-            for ingredient in ingredients:
-                formatted_ingredients.append(
-                    f"{ingredient.amount} {ingredient.unit} {ingredient.item}"
-                )
+            formatted_ingredients = [
+                f"{ingredient.amount} {ingredient.unit} {ingredient.item}"
+                for ingredient in ingredients
+            ]
+
             formatted_ingredients = '\n'.join(formatted_ingredients)
 
             # The description is optional, but we add extra formatting, to make

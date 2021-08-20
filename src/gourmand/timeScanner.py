@@ -21,7 +21,7 @@ time_matcher = re.compile(
     NUMBER_FINDER_REGEXP.replace('int', 'int2').replace('frac', 'frac2') + ')?'
     + r'\s*' + '(?P<unit>' + '|'.join(all_units) + r')(?=$|\W)',
     re.UNICODE
-    )
+)
 
 
 def make_time_links(s: str) -> str:
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
         15-25 seconds.
         """
-        )
+    )
 
     w = Gtk.Window()
     w.add(tv)

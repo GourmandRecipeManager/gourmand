@@ -11,16 +11,16 @@ class ConverterPlugin (ToolPlugin):
     <menuitem action="UnitConverter"/>
     </placeholder>'''
 
-    def setup_action_groups (self):
+    def setup_action_groups(self):
         self.action_group = Gtk.ActionGroup(name='ConverterPluginActionGroup')
         self.action_group.add_actions([
-            ('UnitConverter',None,_('_Unit Converter'),
-             None,_('Calculate unit conversions'),self.show_unit_converter)
-            ]
-                                      )
+            ('UnitConverter', None, _('_Unit Converter'),
+             None, _('Calculate unit conversions'), self.show_unit_converter)
+        ]
+        )
         self.action_groups.append(self.action_group)
 
-    def show_unit_converter (self, *args):
+    def show_unit_converter(self, *args):
         try:
             umodel = self.pluggable.umodel
         except AttributeError:
@@ -29,5 +29,6 @@ class ConverterPlugin (ToolPlugin):
             except:
                 umodel = None
         convertGui.ConvGui(unitModel=umodel)
+
 
 plugins = [ConverterPlugin]

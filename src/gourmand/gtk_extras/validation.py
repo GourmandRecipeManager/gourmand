@@ -74,7 +74,7 @@ class ValidatingEntry(Gtk.VBox, GObject.GObject):
         self.warning.set_use_markup(True)
 
     def _show_warning(self):
-        if not self.warned > 0:
+        if self.warned <= 0:
             self.warned = time.time()
             self.warning_box.show_all()
 
@@ -165,8 +165,11 @@ class TimeEntry(ValidatingEntry):
             partial_unit = ''
 
         has_number = NUMBER_MATCHER.match(number)
-        has_unit = any([unit.startswith(partial_unit)
-                        for unit in self.conv.unit_to_seconds.keys()])
+        has_unit = any(
+            unit.startswith(partial_unit)
+            for unit in self.conv.unit_to_seconds.keys()
+        )
+
         if not (has_number and has_unit):
             return self._error_msg
 
@@ -225,15 +228,14 @@ class NumberEntry(ValidatingEntry):
     def set_value(self, number: int):
         if self.default_to_fractions:
             self.set_text(float_to_frac(number, fractions=FRACTIONS_ASCII))
+        elif self.decimals >= 0:
+            decimals = self.decimals
+            while number < 10 ** -decimals:
+                decimals += 1
+            format_string = "%" + "." + "%i" % decimals + "f"
+            self.set_text(format_string % number)
         else:
-            if self.decimals >= 0:
-                decimals = self.decimals
-                while number < 10 ** -decimals:
-                    decimals += 1
-                format_string = "%" + "." + "%i" % decimals + "f"
-                self.set_text(format_string % number)
-            else:
-                self.set_text(str(number))
+            self.set_text(str(number))
 
     def get_value(self) -> float:
         return frac_to_float(self.get_text())

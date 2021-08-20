@@ -21,6 +21,7 @@ class PangoToHtml(HTMLParser):
     This means that the HTML resulting from the conversion by this object may
     differ from the original that was fed to the caller.
     """
+
     def __init__(self):
         super().__init__()
         self.markup_text: str = ""  # the resulting content
@@ -124,12 +125,11 @@ class PangoToHtml(HTMLParser):
                 name = attribute['name']
 
                 if vtype == "GdkColor":  # Convert colours to html
-                    if name in ['foreground-gdk', 'background-gdk']:
-                        opening, closing = self.tag2html[name]
-                        hex_color = self.pango_to_html_hex(value)
-                        opening = opening.format(hex_color)
-                    else:
+                    if name not in ['foreground-gdk', 'background-gdk']:
                         continue  # no idea!
+                    opening, closing = self.tag2html[name]
+                    hex_color = self.pango_to_html_hex(value)
+                    opening = opening.format(hex_color)
                 else:
                     opening, closing = self.tag2html.get(value, ('', ''))
 
@@ -169,9 +169,8 @@ class PangoToHtml(HTMLParser):
                 self.current_opening_tags.append(opening_tag)
                 self.current_closing_tags.append(closing_tag)
 
-        if self.current_opening_tags:
-            if 'foreground' and '<u>' in self.current_opening_tags[-1]:
-                self.is_colored_and_underlined = True
+        if self.current_opening_tags and '<u>' in self.current_opening_tags[-1]:
+            self.is_colored_and_underlined = True
 
     def handle_data(self, data: str) -> None:
         target = self.links.get(data)

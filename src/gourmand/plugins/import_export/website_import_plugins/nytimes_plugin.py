@@ -57,11 +57,12 @@ NYT_CUISINES = [
     "Vietnamese",
 ]
 
+
 class NYTPlugin(PluginPlugin):
 
     target_pluggable = 'webimport_plugin'
 
-    def test_url (self, url, data):
+    def test_url(self, url, data):
         if 'nytimes.com' in url:
             return WebsiteTestState.SUCCESS
         return WebsiteTestState.FAILED
@@ -75,7 +76,7 @@ class NYTPlugin(PluginPlugin):
 
             def preparse(self):
                 NYTParserBase.preparse(self)
-                
+
                 if not self.recipe:
                     return
 
@@ -87,6 +88,5 @@ class NYTPlugin(PluginPlugin):
                     cuisine = self.recipe["recipeCuisine"].capitalize()
                     if cuisine in NYT_CUISINES:
                         self.preparsed_elements.append((cuisine, "cuisine"))
-
 
         return NYTParser

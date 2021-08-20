@@ -187,11 +187,7 @@ class NumberDialog (ModalDialog):
         self.vbox.add(self.hbox)
         self.spinButton = Gtk.SpinButton()
 
-        if not default:
-            val = 0
-        else:
-            val = float(default)
-
+        val = 0 if not default else float(default)
         self.adjustment = Gtk.Adjustment(val,
                                          lower=min,
                                          upper=max,
@@ -479,10 +475,7 @@ class PreferencesDialog(ModalDialog):
         If apply_func is True, we will have an apply button, which
         will hand the option tuple as its argument. Otherwise, okay will simply
         return the list on okay."""
-        if apply_func:
-            modal = False
-        else:
-            modal = True
+        modal = not apply_func
         self.apply_func = apply_func
         self.options = options
         ModalDialog.__init__(self, okay=True, label=label,
@@ -539,16 +532,15 @@ class PreferencesDialog(ModalDialog):
         self.show()
         if self.apply_func:
             return
-        else:
-            Gtk.main()
-            return self.ret
+        Gtk.main()
+        return self.ret
 
     def okcb(self, *args):
         if self.apply_func:
-            if self.apply.get_property('sensitive'):
-                # if there are unsaved changes...
-                if getBoolean(label="Would you like to apply the changes you've made?"):
-                    self.applycb()
+            if self.apply.get_property('sensitive') and getBoolean(
+                label="Would you like to apply the changes you've made?"
+            ):
+                self.applycb()
             self.hide()
         else:
             self.table.apply()
@@ -1001,7 +993,10 @@ class FileSelectorDialog:
     def setup_buttons(self):
         """Set our self.buttons attribute"""
         if not self.buttons:
-            if self.action == Gtk.FileChooserAction.OPEN or self.action == Gtk.FileChooserAction.SELECT_FOLDER:
+            if self.action in [
+                Gtk.FileChooserAction.OPEN,
+                Gtk.FileChooserAction.SELECT_FOLDER,
+            ]:
                 self.buttons = (
                     Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
             else:
@@ -1032,18 +1027,15 @@ class FileSelectorDialog:
             self.do_saveas = False
             return
         self.do_saveas = True
-        n = 0
         self.ext_to_filter = {}
         self.name_to_ext = {}
-        for name, mimetypes, regexps in self.filters:
+        for n, (name, mimetypes, regexps) in enumerate(self.filters):
             # name_to_ext lets us grab the correct extension from our active iter
             self.name_to_ext[name] = os.path.splitext(regexps[0])[-1]
             for r in regexps:
                 ext = os.path.splitext(r)[-1]
                 # ext_to_filter let's us select the correct iter from the extension typed in
                 self.ext_to_filter[ext] = self.fsd.list_filters()[n]
-            n += 1
-
         self.fn = None
         self.fsd.connect('notify::filter', self.change_file_extension)
         self.fsd.connect('selection-changed', self.update_filetype_widget)
@@ -1141,10 +1133,7 @@ class ImageSelectorDialog (FileSelectorDialog):
 
     def update_preview(self, *args):
         uri = self.fsd.get_uri()
-        thumbnail = None
-        if uri is not None:
-            thumbnail = make_thumbnail(uri)
-
+        thumbnail = make_thumbnail(uri) if uri is not None else None
         if thumbnail is not None:
             self.preview.set_from_pixbuf(image_to_pixbuf(thumbnail))
             self.preview.show()

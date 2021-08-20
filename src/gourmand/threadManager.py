@@ -38,11 +38,13 @@ from gourmand.i18n import _
 # _IdleObject etc. based on example John Stowers
 # <john.stowers@gmail.com>
 
+
 class _IdleObject(GObject.GObject):
     """
     Override GObject.GObject to always emit signals in the main thread
     by emitting on an idle handler
     """
+
     def __init__(self):
         GObject.GObject.__init__(self)
 
@@ -51,32 +53,38 @@ class _IdleObject(GObject.GObject):
             print('emit', *args)
         GLib.idle_add(GObject.GObject.emit, self, *args)
 
+
 class Terminated (Exception):
-    def __init__ (self, value):
-        self.value=value
+    def __init__(self, value):
+        self.value = value
+
     def __str__(self):
         return repr(self.value)
 
-class SuspendableThread (threading.Thread, _IdleObject):
 
+class SuspendableThread (threading.Thread, _IdleObject):
 
     """A class for long-running processes that shouldn't interrupt the
     GUI.
     """
 
     __gsignals__ = {
-        'completed' : (GObject.SignalFlags.RUN_LAST, None, []),
-        'progress' : (GObject.SignalFlags.RUN_LAST, None,
-                     [GObject.TYPE_FLOAT, GObject.TYPE_STRING]), #percent complete, progress bar text
-        'error' : (GObject.SignalFlags.RUN_LAST, None, [GObject.TYPE_INT, # error number
-                                                                GObject.TYPE_STRING, # error name
-                                                                GObject.TYPE_STRING # stack trace
-                                                                ]),
-        'stopped': (GObject.SignalFlags.RUN_LAST, None, []), # emitted when we are stopped
-        'pause': (GObject.SignalFlags.RUN_LAST, None, []), # emitted when we pause
-        'resume': (GObject.SignalFlags.RUN_LAST, None, []), # emitted when we resume
-        'done': (GObject.SignalFlags.RUN_LAST, None, []), # emitted when/however we finish
-        }
+        'completed': (GObject.SignalFlags.RUN_LAST, None, []),
+        'progress': (GObject.SignalFlags.RUN_LAST, None,
+                     [GObject.TYPE_FLOAT, GObject.TYPE_STRING]),  # percent complete, progress bar text
+        'error': (GObject.SignalFlags.RUN_LAST, None, [GObject.TYPE_INT,  # error number
+                                                       GObject.TYPE_STRING,  # error name
+                                                       GObject.TYPE_STRING  # stack trace
+                                                       ]),
+        # emitted when we are stopped
+        'stopped': (GObject.SignalFlags.RUN_LAST, None, []),
+        # emitted when we pause
+        'pause': (GObject.SignalFlags.RUN_LAST, None, []),
+        # emitted when we resume
+        'resume': (GObject.SignalFlags.RUN_LAST, None, []),
+        # emitted when/however we finish
+        'done': (GObject.SignalFlags.RUN_LAST, None, []),
+    }
 
     def __init__(self, name=None):
         self.initialized = False
@@ -87,19 +95,20 @@ class SuspendableThread (threading.Thread, _IdleObject):
         _IdleObject.__init__(self)
         threading.Thread.__init__(self, name=name)
 
-    def initialize_thread (self):
+    def initialize_thread(self):
         self.initialized = True
         self.start()
 
-    def connect_subthread (self, subthread):
+    def connect_subthread(self, subthread):
         '''For subthread subthread, connect to error and pause signals and
         and emit as if they were our own.'''
-        subthread.connect('error',lambda st,enum,ename,strace: self.emit('error',enum,ename,strace))
-        subthread.connect('stopped',lambda st: self.emit('stopped'))
-        subthread.connect('pause',lambda st: self.emit('pause'))
-        subthread.connect('resume',lambda st: self.emit('resume'))
+        subthread.connect('error', lambda st, enum, ename,
+                          strace: self.emit('error', enum, ename, strace))
+        subthread.connect('stopped', lambda st: self.emit('stopped'))
+        subthread.connect('pause', lambda st: self.emit('pause'))
+        subthread.connect('resume', lambda st: self.emit('resume'))
 
-    def run (self):
+    def run(self):
         try:
             self.do_run()
         except Terminated:
@@ -112,42 +121,43 @@ class SuspendableThread (threading.Thread, _IdleObject):
         self.done = True
         self.emit('done')
 
-    def do_run (self):
+    def do_run(self):
         # Note that sub-classes need to call check_for_sleep
         # periodically, otherwise pausing & cancelling won't work
         raise NotImplementedError
 
-    def suspend (self):
+    def suspend(self):
         self.suspended = True
 
-    def resume (self):
+    def resume(self):
         self.suspended = False
 
-    def terminate (self):
+    def terminate(self):
         self.terminated = True
         self.emit('stopped')
 
-    def check_for_sleep (self):
+    def check_for_sleep(self):
         """Check whether we have been suspended or terminated.
         """
         emit_resume = False
         if self.terminated:
-            raise Terminated('%s terminated'%self.name)
+            raise Terminated('%s terminated' % self.name)
         if self.suspended:
             self.emit('pause')
             emit_resume = True
         while self.suspended:
             if self.terminated:
-                raise Terminated('%s terminated'%self.name)
+                raise Terminated('%s terminated' % self.name)
             time.sleep(1)
         if emit_resume:
             self.emit('resume')
 
-    def __repr__ (self):
+    def __repr__(self):
         try:
             return threading.Thread.__repr__(self)
         except AssertionError:
-            return '<SuspendableThread %s - uninitialized>'%self.name
+            return '<SuspendableThread %s - uninitialized>' % self.name
+
 
 class NotThreadSafe:
 
@@ -156,6 +166,7 @@ class NotThreadSafe:
     added to a thread manager.
     """
     pass
+
 
 class ThreadManager:
 
@@ -168,52 +179,52 @@ class ThreadManager:
 
         return ThreadManager.__single
 
-    def __init__ (self, max_concurrent_threads = 2):
+    def __init__(self, max_concurrent_threads=2):
         self.max_concurrent_threads = max_concurrent_threads
         self.thread_queue = []
         self.count = 0
         self.active_count = 0
         self.threads = []
 
-    def add_thread (self, thread):
+    def add_thread(self, thread):
         try:
-            assert(isinstance(thread,SuspendableThread))
+            assert(isinstance(thread, SuspendableThread))
         except AssertionError:
-            print('Class',thread,type(thread),'is not a SuspendableThread')
+            print('Class', thread, type(thread), 'is not a SuspendableThread')
             raise
-        if isinstance(thread,NotThreadSafe):
-            raise TypeError("Thread %s is NotThreadSafe"%thread)
+        if isinstance(thread, NotThreadSafe):
+            raise TypeError("Thread %s is NotThreadSafe" % thread)
         self.threads.append(thread)
-        thread.connect('pause',self.register_thread_paused)
-        thread.connect('resume',self.register_thread_resume)
-        thread.connect('done',self.register_thread_done)
+        thread.connect('pause', self.register_thread_paused)
+        thread.connect('resume', self.register_thread_resume)
+        thread.connect('done', self.register_thread_done)
         if self.active_count < self.max_concurrent_threads:
             self.active_count += 1
             thread.initialize_thread()
         else:
             self.thread_queue.append(thread)
 
-    def register_thread_done (self, thread):
+    def register_thread_done(self, thread):
         if thread in self.threads:
             self.threads.remove(thread)
             self.active_count -= 1
             self.start_queued_threads()
 
-    def register_thread_paused (self, thread):
+    def register_thread_paused(self, thread):
         self.active_count -= 1
         self.start_queued_threads()
 
-    def register_thread_resume (self, thread):
+    def register_thread_resume(self, thread):
         self.active_count += 1
 
-    def resume_thread (self, thread):
+    def resume_thread(self, thread):
         if self.active_count < self.max_concurrent_threads:
             thread.resume()
             self.active_count += 1
         else:
             self.thread_queue.append(thread)
 
-    def start_queued_threads (self):
+    def start_queued_threads(self):
         while self.active_count < self.max_concurrent_threads and self.thread_queue:
             thread_to_add = self.thread_queue.pop()
             self.active_count += 1
@@ -222,7 +233,8 @@ class ThreadManager:
             else:
                 thread_to_add.initialize_thread()
 
-def get_thread_manager ():
+
+def get_thread_manager():
     return ThreadManager.instance()
 
 
@@ -239,7 +251,7 @@ class ThreadManagerGui:
 
         return ThreadManagerGui.__single
 
-    def __init__ (self, messagebox=None):
+    def __init__(self, messagebox=None):
         self.tm = get_thread_manager()
         self.threads = {}
 
@@ -250,10 +262,10 @@ class ThreadManagerGui:
         else:
             self.messagebox = messagebox
 
-        self.to_remove = [] # a list of widgets to remove when we close...
+        self.to_remove = []  # a list of widgets to remove when we close...
 
-    def response (self, dialog, response):
-        if response==Gtk.ResponseType.CLOSE:
+    def response(self, dialog, response):
+        if response == Gtk.ResponseType.CLOSE:
             self.close()
 
     def importer_thread_done(self, thread):
@@ -283,7 +295,7 @@ class ThreadManagerGui:
         infobox.get_content_area().add(label)
         self.messagebox.show()
 
-    def register_thread_with_dialog (self, description, thread):
+    def register_thread_with_dialog(self, description, thread):
         threadbox = Gtk.InfoBar()
         threadbox.set_message_type(Gtk.MessageType.INFO)
         pb = Gtk.ProgressBar()
@@ -292,7 +304,8 @@ class ThreadManagerGui:
         threadbox.add_action_widget(pause_button, self.PAUSE)
         dlab = Gtk.Label(label=description)
         dlab.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
-        cancel_button = threadbox.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
+        cancel_button = threadbox.add_button(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
         vbox = Gtk.VBox()
         vbox.pack_start(dlab, expand=True, fill=True, padding=0)
         vbox.pack_start(pb, expand=True, fill=True, padding=0)
@@ -302,26 +315,27 @@ class ThreadManagerGui:
         self.messagebox.show()
 
         #for b in threadbox.buttons: b.show()
-        thread.connect('completed',self.thread_done,threadbox)
-        thread.connect('error',self.thread_error,threadbox)
-        thread.connect('stopped',self.thread_stopped,threadbox)
-        thread.connect('pause',self.thread_pause,threadbox)
-        thread.connect('resume',self.thread_resume,threadbox)
-        thread.connect('progress',self.progress_update,pb)
-        pause_button.connect('clicked',self.pause_cb,thread)
-        cancel_button.connect('clicked',self.cancel_cb,thread)
+        thread.connect('completed', self.thread_done, threadbox)
+        thread.connect('error', self.thread_error, threadbox)
+        thread.connect('stopped', self.thread_stopped, threadbox)
+        thread.connect('pause', self.thread_pause, threadbox)
+        thread.connect('resume', self.thread_resume, threadbox)
+        thread.connect('progress', self.progress_update, pb)
+        pause_button.connect('clicked', self.pause_cb, thread)
+        cancel_button.connect('clicked', self.cancel_cb, thread)
 
-    def pause_cb (self, b, thread):
+    def pause_cb(self, b, thread):
         if b.get_active():
             thread.suspend()
         else:
             self.tm.resume_thread(thread)
 
-    def cancel_cb (self, b, thread):
+    def cancel_cb(self, b, thread):
         thread.terminate()
 
-    def thread_done (self, thread, threadbox):
-        for b in threadbox.get_action_area().get_children(): b.hide()
+    def thread_done(self, thread, threadbox):
+        for b in threadbox.get_action_area().get_children():
+            b.hide()
         threadbox.add_button(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE)
         threadbox.connect('response', lambda ib, response_id: ib.hide())
         self.to_remove.append(threadbox)
@@ -336,7 +350,7 @@ class ThreadManagerGui:
             widget.hide()
         threadbox.hide()
 
-    def progress_update (self, thread, perc, txt, pb):
+    def progress_update(self, thread, perc, txt, pb):
         if perc >= 0.0:
             pb.set_fraction(perc)
         else:
@@ -356,27 +370,27 @@ class ThreadManagerGui:
     def thread_stopped(self, thread: Any, threadbox: Gtk.InfoBar):
         threadbox.hide()
 
-    def thread_pause (self, thread: Any, threadbox: Gtk.InfoBar):
+    def thread_pause(self, thread: Any, threadbox: Gtk.InfoBar):
         pb = threadbox.get_content_area().get_children()[0].get_children()[1]
         txt = pb.get_text()
         txt += self.paused_text
         pb.set_text(txt)
 
-    def thread_resume (self, thread: Any, threadbox: Gtk.InfoBar):
+    def thread_resume(self, thread: Any, threadbox: Gtk.InfoBar):
         pb = threadbox.get_content_area().get_children()[0].get_children()[1]
         txt = pb.get_text()
         if txt.find(self.paused_text):
             txt = txt[:-len(self.paused_text)]
             pb.set_text(txt)
 
-    def show (self, *args):
+    def show(self, *args):
         self.messagebox.show()
 
-    def delete_event_cb (self, *args):
+    def delete_event_cb(self, *args):
         self.messagebox.hide()
         return True
 
-    def close (self, *args):
+    def close(self, *args):
         while self.to_remove:
             box_to_remove = self.to_remove.pop()
             for w in box_to_remove.widgets:
@@ -384,56 +398,59 @@ class ThreadManagerGui:
                 self.pbtable.remove(w)
         self.messagebox.hide()
 
-    def show_traceback (self, button: Gtk.Button, errno: int,
-                        errname: str, traceback: str):
+    def show_traceback(self, button: Gtk.Button, errno: int,
+                       errname: str, traceback: str):
         show_message(label=_('Error'),
-                     sublabel=_('Error %s: %s') % (errno,errname),
+                     sublabel=_('Error %s: %s') % (errno, errname),
                      expander=(_('Traceback'), traceback))
 
-def get_thread_manager_gui ():
+
+def get_thread_manager_gui():
     return ThreadManagerGui.instance()
 
 
 if __name__ == '__main__':
     from gi.repository import Gtk
+
     class TestThread (SuspendableThread):
 
-        def do_run (self):
+        def do_run(self):
             for n in range(1000):
                 time.sleep(0.01)
-                self.emit('progress',n/1000.0,'%s of 1000'%n)
+                self.emit('progress', n/1000.0, '%s of 1000' % n)
                 self.check_for_sleep()
 
     class TestError (SuspendableThread):
 
-        def do_run (self):
+        def do_run(self):
             for n in range(1000):
                 time.sleep(0.01)
-                if n==100: raise AttributeError("This is a phony error")
-                self.emit('progress',n/1000.0,'%s of 1000'%n)
+                if n == 100:
+                    raise AttributeError("This is a phony error")
+                self.emit('progress', n/1000.0, '%s of 1000' % n)
                 self.check_for_sleep()
-
 
     class TestInterminable (SuspendableThread):
 
-        def do_run (self):
+        def do_run(self):
             while 1:
                 time.sleep(0.1)
-                self.emit('progress',-1,'Working interminably')
+                self.emit('progress', -1, 'Working interminably')
                 self.check_for_sleep()
 
     tm = get_thread_manager()
     tmg = get_thread_manager_gui()
-    for desc,thread in [
-        ('Interminable 1',TestInterminable()),
-        ('Linear 1',TestThread()),
-        ('Linear 2',TestThread()),
-        ('Interminable 2',TestInterminable()),
-        ('Error 3',TestError())
-        ]:
+    for desc, thread in [
+        ('Interminable 1', TestInterminable()),
+        ('Linear 1', TestThread()),
+        ('Linear 2', TestThread()),
+        ('Interminable 2', TestInterminable()),
+        ('Error 3', TestError())
+    ]:
         tm.add_thread(thread)
-        tmg.register_thread_with_dialog(desc,thread)
-    def quit (*args): Gtk.main_quit()
-    tmg.dialog.connect('delete-event',quit)
+        tmg.register_thread_with_dialog(desc, thread)
+
+    def quit(*args): Gtk.main_quit()
+    tmg.dialog.connect('delete-event', quit)
     tmg.show()
     Gtk.main()

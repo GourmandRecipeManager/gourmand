@@ -84,17 +84,13 @@ class RecHandler(xml_importer.RecHandler):
                     print(str(e))
 
         # times fixing
-        if name == 'cooktime' or name == 'preptime':
+        if name in ['cooktime', 'preptime']:
             self.elbuf = self.elbuf.replace('mn', 'min')
             if re.match('([0-9]*)min', self.elbuf):
                 self.elbuf = self.elbuf.replace('min', ' min')
 
         # other tags
-        if name == self.ING_TAG:
-            self.current_section = ''
-        elif name == self.INSTR_TAG:
-            self.current_section = ''
-        elif name == self.COMMENT_TAG:
+        if name in [self.ING_TAG, self.INSTR_TAG, self.COMMENT_TAG]:
             self.current_section = ''
         elif name in self.RECTAGS:
             obj = self.rec

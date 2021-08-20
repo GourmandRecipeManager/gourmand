@@ -72,31 +72,29 @@ class TimeSpinnerUI:
 
         Returns a bool to notify the event-loop on whether the timer is done.
         """
-        if self.is_running:
-            if self.previous_iter_time is None or self.remaining is None:
-                # 1 second is removed from the remaining time, in order to have
-                # a smooth start of the timer.
-                # Without this subtraction, after `self.previous_iter_time` is
-                # set, the elapsed time for this initial iteration is
-                # calculated, but the difference too small, making the first
-                # timer second last two iterations (hence two actual seconds).
-                self.remaining = self.get_time() - 1
-                self.previous_iter_time = time.time()
-
-            now = time.time()
-            elapsed = now - self.previous_iter_time
-            self.previous_iter_time = now
-
-            self.remaining = self.remaining - elapsed
-            self.set_time(self.remaining)
-
-            if self.remaining <= 0:
-                self.finish_timer()
-                return False
-            else:
-                return True
-        else:
+        if not self.is_running:
             return False
+        if self.previous_iter_time is None or self.remaining is None:
+            # 1 second is removed from the remaining time, in order to have
+            # a smooth start of the timer.
+            # Without this subtraction, after `self.previous_iter_time` is
+            # set, the elapsed time for this initial iteration is
+            # calculated, but the difference too small, making the first
+            # timer second last two iterations (hence two actual seconds).
+            self.remaining = self.get_time() - 1
+            self.previous_iter_time = time.time()
+
+        now = time.time()
+        elapsed = now - self.previous_iter_time
+        self.previous_iter_time = now
+
+        self.remaining = self.remaining - elapsed
+        self.set_time(self.remaining)
+
+        if self.remaining > 0:
+            return True
+        self.finish_timer()
+        return False
 
     def start_cb(self, *args):
         if not self.is_running:
@@ -186,10 +184,7 @@ class TimerDialog:
     def note_changed_cb(self, entry):
         txt = entry.get_text()
         self.note = txt
-        if txt:
-            txt = _('Timer') + ': ' + txt
-        else:
-            txt = _('Timer')
+        txt = _('Timer') + ': ' + txt if txt else _('Timer')
         self.timerDialog.set_title(txt)
         self.mainLabel.set_markup(
             '<span weight="bold" size="larger">' +
