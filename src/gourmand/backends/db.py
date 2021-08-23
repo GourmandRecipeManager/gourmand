@@ -446,23 +446,6 @@ class RecData (Pluggable):
         self.setup_unitdict_table()
         self.setup_convtable_table()
 
-    def backup_db(self):
-        """Make a backup copy of the DB -- this ensures experimental
-        code won't permanently screw our users."""
-        backup_file_name = self.filename + '.backup-' + time.strftime('%d-%m-%y')
-        while os.path.exists(backup_file_name):
-            backup_file_name += 'I'
-        print(f'Making a backup copy of DB to {backup_file_name}')
-        print('You can use it to restore if something ugly happens.')
-        shutil.copy(self.filename, backup_file_name)
-        show_message(
-            title=_("Upgrading database"),
-            label=_("Upgrading database"),
-            sublabel=_("Depending on the size of your database, this may be an intensive process and may take  some time. Your data has been automatically backed up in case something goes wrong."),
-            expander=(_("Details"),
-                      _("A backup has been made in %s in case something goes wrong. If this upgrade fails, you can manually rename your backup file recipes.db to recover it for use with older Gourmet.")%backup_file_name),
-            message_type=Gtk.MessageType.INFO)
-
     def update_version_info(self, version_string: str):
         """Report our version to the database.
 
@@ -501,7 +484,7 @@ class RecData (Pluggable):
             # Change from servings to yields! ( we use the plural to avoid a headache with keywords)
             if stored_info.version_super == 0 and stored_info.version_major < 16:
                 print('Database older than 0.16.0 -- updating', sv_text)
-                self.backup_db()
+                backup_database(self.filename)
                 from sqlalchemy.sql.expression import func
 
                 # We need to unpickle Booleans that have erroneously remained
@@ -564,7 +547,7 @@ class RecData (Pluggable):
                                                 ).execute()
             if stored_info.version_super == 0 and stored_info.version_major < 14:
                 print('Database older than 0.14.0 -- updating',sv_text)
-                self.backup_db()
+                backup_database(self.filename)
                 # Name changes to make working with IDs make more sense
                 # (i.e. the column named 'id' should always be a unique
                 # identifier for a given table -- it should not be used to
@@ -592,7 +575,7 @@ class RecData (Pluggable):
             # Add recipe_hash, ingredient_hash and link fields
             # (These all get added in 0.13.0)
             if stored_info.version_super == 0 and stored_info.version_major <= 12:
-                self.backup_db()
+                backup_database(self.filename)
                 print('UPDATE FROM < 0.13.0...',sv_text)
                 # Don't change the table defs here without changing them
                 # above as well (for new users) - sorry for the stupid
@@ -650,7 +633,7 @@ class RecData (Pluggable):
 
             if stored_info.version_super == 0 and stored_info.version_major <= 11 and stored_info.version_minor <= 3:
                 print('version older than 0.11.4 -- doing update',sv_text)
-                self.backup_db()
+                backup_database(self.filename)
                 print('Fixing broken ingredient-key view from earlier versions.')
                 # Drop keylookup_table table, which wasn't being properly kept up
                 # to date...
@@ -2142,3 +2125,25 @@ class dbDic:
 
 def get_database (*args, **kwargs):
     return RecData.instance_for(*args, **kwargs)
+
+
+def backup_database(filename: Path) -> Path:
+    backup_name = filename.with_name(filename.name + '.backup-' + time.strftime('%d-%m-%y'))
+
+    while backup_name.is_file():
+        backup_name = backup_name.with_name(backup_name.name + 'I')
+
+    show_message(
+        title=_("Database Backup"),
+        label=_("Database Backup"),
+        sublabel=_("Depending on the size of your database, this may take some time."),
+        expander=(_("Details"),
+                  _("A backup will be made as %s in case something goes wrong."
+                    " If this upgrade fails, you can manually rename the "
+                    "backup file to recipes.db to recover it.") % backup_name),
+        message_type=Gtk.MessageType.INFO)
+
+    shutil.copy(filename, backup_name)
+
+    assert backup_name.is_file()
+    return backup_name
