@@ -2,13 +2,13 @@
 Version=1.0
 Type=Application
 
-Name=Gourmet
+Name=Gourmand
 GenericName=Recipe Manager
-X-GNOME-FullName=Gourmet Recipe Manager
+X-GNOME-FullName=Gourmand Recipe Manager
 Categories=GTK;Utility;
 Comment=Organize recipes, create shopping lists, calculate nutritional information, and more.
-Icon=io.github.thinkle.Gourmet
+Icon=io.github.GourmandRecipeManager.Gourmand
 
-Exec=gourmet
+Exec=gourmand
 Terminal=false
 StartupNotify=true
