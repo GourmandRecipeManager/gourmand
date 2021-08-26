@@ -52,14 +52,6 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
                 if link.endswith('jpg'):
                     uris.append(link)
             image = ImageBrowser(uris=uris)
-        recipes.append(recipe)
-
-        # Convert the recipe into the expected namedtuple `recipe_tuple`
-        # expected by the rest of the application.
-        rec = Recipe()
-        rec.title = recipe.title()
-        rec.instructions = recipe.instructions()
-        rec.ingredients = recipe.ingredients()
 
         # Gourmet has a 5-stars rating, stored as int between 0 and 10.
         # We assume that if the value is a float below 5, it's scaled to 5, and
@@ -67,6 +59,39 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
         rating = recipe.ratings()
         if isinstance(rating, float) and rating <= 5.0:
             rating = rating * 2
-        rec.rating = int(rating)
+        rating = int(rating)
+
+        # recipe_scrapers keeps servings, yield, and yield units in one string
+        yields, yield_unit = recipe.yields().split()
+        yields = int(yields)
+
+        # Convert the recipe into the expected namedtuple `recipe_tuple`
+        # expected by the rest of the application.
+        rec = Recipe(
+                id=None,
+                title=recipe.title(),
+                instructions=recipe.instructions(),
+                modifications=None,
+                cuisine=None,
+                rating=rating,
+                description=None,
+                source=recipe.author(),  # TODO: could this be done better?
+                totaltime=recipe.total_time(),
+                preptime=None,  # TODO: future recipe_scrapers will have them
+                cooktime=None,  # TODO: future recipe_scrapers will have them
+                servings=yields,
+                yields=yields,
+                yield_unit=yield_unit,
+                ingredients=recipe.ingredients(),
+                image=image,
+                thumb=image,
+                deleted=False,
+                recipe_hash=None,
+                ingredient_hash=None,
+                link=recipe.canonical_url(),
+                last_modified=None,
+                nutrients=recipe.nutrients()
+                )
+        recipes.append(rec)
 
     return recipes, failed
