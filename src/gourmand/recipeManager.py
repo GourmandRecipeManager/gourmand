@@ -1,9 +1,7 @@
-import os.path
-
 from gourmand import convert, shopping
 
 from . import gglobals
-from .backends.db import RecData, RecipeManager, dbDic
+from .backends.db import RecipeManager, dbDic
 from .gtk_extras import dialog_extras as de
 from .optionparser import args
 
