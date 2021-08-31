@@ -11,8 +11,7 @@ from gourmand.i18n import _
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
 from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
                                     get_thread_manager_gui)
-
-from .webextras import URLReader
+from gourmand.importers.web_importer import import_urls, supported_sites
 
 
 class ImportFileList (Exception):
@@ -56,34 +55,26 @@ class ImportManager (plugin_loader.Pluggable):
         self.app = get_application()
         self.prefs = self.app.prefs
 
-    def offer_web_import(self, parent: Gtk.Window = None):
-        """Offer to import a URL.
-
-        Once the file is downloaded, it can be treated by any of our
-        normal plugins for acting on files, or by special web-aware
-        plugins.
-        """
-        if url:
-            return self.import_url(url)
-
-
     def offer_import(self, parent: Optional[Gtk.Window] = None):
         """Offer to import url or files."""
 
-        # Get the list of supported websites to offer validation
-        # Get the list of filters
-        from recipe_scrapers import SCRAPERS
-        uri = de.get_uri(label=_('Open recipe...'),
-                         sublabel=_('Enter a recipe file path or website address.'),
-                         entryLabel=_('Path:'),
-                         entryTip=_('Enter the address of a website or recipe archive.'),
-                         default_character_width=60,
-                         filters=self.get_filters(),
-                         supported_urls=list(SCRAPERS.keys()),
-                         select_multiple=True
-                        )
-        if uri:
-            self.import_filenames(uri)
+        uris = de.get_uri(label=_('Open recipe...'),
+                          sublabel=_('Enter a recipe file path or website address.'),
+                          entryLabel=_('Path:'),
+                          entryTip=_('Enter the address of a website or recipe archive.'),
+                          default_character_width=60,
+                          filters=self.get_filters(),
+                          supported_urls=supported_sites,
+                          select_multiple=True
+                          )
+        if uris is None:
+            return
+
+        # There should be only a single url
+        if urlparse(uris[-1]).netloc:
+            import_urls(uris)
+        else:
+            self.import_filenames(uris)
 
     def import_filenames(self, filenames: List[str]) -> List[Any]:
         """Import list of filenames, filenames, based on our currently

@@ -11,7 +11,7 @@ from gourmand import convert, image_utils
 from gourmand.gdebug import TimeAction, debug, print_timer_info
 from gourmand.i18n import _
 from gourmand.keymanager import KeyManager
-from gourmand.recipeManager import get_recipe_manager  # Get hold of database
+from gourmand.recipeManager import get_recipe_manager
 from gourmand.threadManager import SuspendableThread, Terminated
 
 # Convenience functions
