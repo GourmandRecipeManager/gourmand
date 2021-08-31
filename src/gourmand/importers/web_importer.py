@@ -1,21 +1,16 @@
 """Import recipes from the web using recipe-scrapers."""
-from typing import Any, Dict, List, Tuple
+from typing import List, Tuple
 from urllib.parse import urlparse
 
 from recipe_scrapers import SCRAPERS, scrape_me
 from gourmand.structure import Recipe
-from gourmand.image_utils import ImageBrowser, make_thumbnail 
-
-
-# The following imformation are used within the Plugin window
-AUTHOR = 'Gourmand Team'
-COPYRIGHT = 'MIT'
-WEBSITE = ''
+from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail, ThumbnailSize
+from gourmand.recipeManager import get_recipe_manager
 
 supported_sites = list(SCRAPERS.keys())
 
 
-def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
+def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
     """Import recipes.
 
     urls is a list of urls which will be imported one after the other.
@@ -31,14 +26,15 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
     Gourmand can then store the imported recipes and notify the users of
     any failures.
     """
-    recipes = []
-    failed: List[str] = []
+    imported: List[str] = []
+    unsupported: List[str] = []
+    database = get_recipe_manager()
 
     # Filter websites that are not supported by recipe-scrapers.
     for url in urls:
         url_ = urlparse(url).netloc.strip('www.')
         if url_ not in supported_sites:
-            failed.append(url)
+            unsupported.append(url)
             urls.remove(url)
 
     for url in urls:
@@ -47,6 +43,10 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
         # to let the user select one.
         if recipe.image():
             image = make_thumbnail(recipe.image())
+            thumbnail = image.copy()
+            thumbnail.thumbnail((40, 40))
+            thumbnail = image_to_bytes(thumbnail)
+            image = image_to_bytes(image)
         else:
             uris = []
             for schema in recipe.links():
@@ -54,6 +54,10 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
                 if link.endswith('jpg'):
                     uris.append(link)
             image = ImageBrowser(uris=uris)
+            thumbnail = image.copy()
+            thumbnail.thumbnail((40, 40))
+            thumbnail = image_to_bytes(thumbnail)
+            image = image_to_bytes(image)
 
         # Gourmet has a 5-stars rating, stored as int between 0 and 10.
         # We assume that if the value is a float below 5, it's scaled to 5, and
@@ -74,19 +78,19 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
                 title=recipe.title(),
                 instructions=recipe.instructions(),
                 modifications=None,
-                cuisine=None,
+                cuisine='',
                 rating=rating,
-                description=None,
+                description='',
                 source=recipe.author(),  # TODO: could this be done better?
                 totaltime=recipe.total_time(),
-                preptime=None,  # TODO: future recipe_scrapers will have them
-                cooktime=None,  # TODO: future recipe_scrapers will have them
+                preptime=0,  # TODO: future recipe_scrapers will have them
+                cooktime=0,  # TODO: future recipe_scrapers will have them
                 servings=yields,
                 yields=yields,
                 yield_unit=yield_unit,
                 ingredients=recipe.ingredients(),
                 image=image,
-                thumb=image,
+                thumb=thumbnail,
                 deleted=False,
                 recipe_hash=None,
                 ingredient_hash=None,
@@ -94,6 +98,20 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
                 last_modified=None,
                 nutrients=recipe.nutrients()
                 )
-        recipes.append(rec)
 
-    return recipes, failed
+        rec = rec._asdict()
+        rec.pop('id')
+        rec.pop('servings')
+        recipe_id = database.add_rec(rec)['id']
+
+        ingredients = [database.parse_ingredient(ingredient)
+                       for ingredient in recipe.ingredients()]
+        for position, ingredient in enumerate(ingredients):
+            ingredient['recipe_id'] = recipe_id
+            ingredient['position'] = position
+            ingredient['deleted'] = False
+        database.add_ings(ingredients)
+
+        imported.append(url)
+
+    return imported, unsupported

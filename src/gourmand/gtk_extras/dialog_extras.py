@@ -1198,13 +1198,15 @@ class URIDialog(EntryDialog):
             if not uri:  # Do nothing, but disable ok button
                 self.ok_button.set_sensitive(False)
                 return 
-
-            if ';' in uri:  # Match files from FileSelectorDialog
-                supported = True
-            elif Path(uri).is_file():
-                supported = True
-            elif uri_ in supported_urls:
-                supported = True
+            try:
+                if ';' in uri:  # Match files from FileSelectorDialog
+                    supported = True
+                elif uri_ in supported_urls:
+                    supported = True
+                elif Path(uri).is_file():
+                    supported = True
+            except OSError:  # pasted text instead of url or filename
+                pass
 
             if supported:
                 self.ok_button.set_sensitive(True)

@@ -60,7 +60,7 @@ class ImportManager (plugin_loader.Pluggable):
 
         uris = de.get_uri(label=_('Open recipe...'),
                           sublabel=_('Enter a recipe file path or website address.'),
-                          entryLabel=_('Path:'),
+                          entryLabel=_('Location:'),
                           entryTip=_('Enter the address of a website or recipe archive.'),
                           default_character_width=60,
                           filters=self.get_filters(),
@@ -75,6 +75,8 @@ class ImportManager (plugin_loader.Pluggable):
             import_urls(uris)
         else:
             self.import_filenames(uris)
+
+        self.app.redo_search()  # Trigger a refresh of the recipe tree
 
     def import_filenames(self, filenames: List[str]) -> List[Any]:
         """Import list of filenames, filenames, based on our currently
@@ -143,8 +145,6 @@ class ImportManager (plugin_loader.Pluggable):
     def follow_up (self, threadmanager, importer):
         if hasattr(importer,'post_run'):
             importer.post_run()
-        if hasattr(self,'app'):
-            self.app.make_rec_visible()
 
     def setup_thread (self, importer, label, connect_follow_up=True):
         tm = get_thread_manager()
