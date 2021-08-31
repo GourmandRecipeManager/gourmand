@@ -23,7 +23,7 @@ from gourmand.gtk_extras import treeview_extras as te
 from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
 from gourmand.importers.importManager import ImportManager
-from gourmand.plugins.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
                                     get_thread_manager_gui)

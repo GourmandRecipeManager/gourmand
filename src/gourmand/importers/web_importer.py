@@ -12,6 +12,8 @@ AUTHOR = 'Gourmand Team'
 COPYRIGHT = 'MIT'
 WEBSITE = ''
 
+supported_sites = list(SCRAPERS.keys())
+
 
 def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
     """Import recipes.
@@ -35,7 +37,7 @@ def load(urls: List[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
     # Filter websites that are not supported by recipe-scrapers.
     for url in urls:
         url_ = urlparse(url).netloc.strip('www.')
-        if url_ not in SCRAPERS.keys():
+        if url_ not in supported_sites:
             failed.append(url)
             urls.remove(url)
 

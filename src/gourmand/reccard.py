@@ -29,7 +29,7 @@ from gourmand.i18n import _
 from gourmand.importers.importer import parse_range
 from gourmand.plugin import (IngredientControllerPlugin, RecDisplayPlugin,
                              RecEditorModule, RecEditorPlugin, ToolPlugin)
-from gourmand.plugins.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 
 
