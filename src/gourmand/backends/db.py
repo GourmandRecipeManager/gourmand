@@ -1224,7 +1224,7 @@ class RecData (Pluggable):
         """
         cats = []
         if 'category' in dic:
-            cats = dic['category'].split(', ')
+            cats = dic['category'].split(',')
             del dic['category']
         if 'servings' in dic:
             if 'yields' in dic:
@@ -1253,7 +1253,7 @@ class RecData (Pluggable):
             else:
                 ID = ret.id
             for c in cats:
-                if c: self.do_add_cat({'recipe_id':ID,'category':c})
+                if c: self.do_add_cat({'recipe_id':ID,'category':c.strip()})
             self.update_hashes(ret)
             return ret
 

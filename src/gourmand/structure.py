@@ -25,5 +25,6 @@ Recipe = namedtuple('Recipe', ['id',
                                'link',
                                'last_modified',
                                'nutrients',
+                               'category',
                                ]
                     )

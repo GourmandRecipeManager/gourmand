@@ -81,10 +81,10 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 cuisine='',
                 rating=rating,
                 description='',
-                source=recipe.author(),  # TODO: could this be done better?
+                source=recipe.author(),
                 totaltime=recipe.total_time(),
-                preptime=0,  # TODO: future recipe_scrapers will have them
-                cooktime=0,  # TODO: future recipe_scrapers will have them
+                preptime=recipe.schema.prep_time(),
+                cooktime=recipe.schema.cook_time(),
                 servings=yields,
                 yields=yields,
                 yield_unit=yield_unit,
@@ -96,7 +96,8 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 ingredient_hash=None,
                 link=recipe.canonical_url(),
                 last_modified=None,
-                nutrients=recipe.nutrients()
+                nutrients=recipe.nutrients(),
+                category=recipe.schema.category()
                 )
 
         rec = rec._asdict()
