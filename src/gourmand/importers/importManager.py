@@ -1,4 +1,3 @@
-import tempfile
 from fnmatch import fnmatch
 from typing import Any, List, Optional, Tuple
 from urllib.parse import urlparse
@@ -22,6 +21,7 @@ class ImportFileList (Exception):
     imports (for zip files etc)"""
     def __init__ (self, filelist):
         self.filelist = filelist
+
 
 class ImportManager (plugin_loader.Pluggable):
 
@@ -161,38 +161,6 @@ class ImportManager (plugin_loader.Pluggable):
     def get_importer (self, name):
         return self.plugins_by_name[name]
 
-    def get_tempfilename(self, url: str,
-                         data: bytes,
-                         content_type: str) -> str:
-        """Get a temporary filename for the file to parse.
-
-        The url is a page where a recipe is found, for which Gourmet should have
-        a plugin.
-        data is the retrieved html document.
-        content_type is the mime-type string representation (eg. 'text/html')
-
-        The value returned is a string containing the temporary file path.
-
-        TODO: self.tempfiles could store pathlib.Path objects, and this function
-              return these.
-        """
-        if url in self.tempfiles:
-            return self.tempfiles[url]
-        else:
-            fn = url.split('/')[-1]
-            if '.' in fn:
-                ext = fn.split('.')[-1]
-            elif content_type:
-                ext = self.guess_extension(content_type)
-        if ext:
-            _, tf = tempfile.mkstemp('.' + ext)
-        else:
-            _, tf = tempfile.mkstemp()
-        self.tempfiles[url] = tf
-        with open(tf, "wb") as fout:
-            fout.write(data)
-        return self.tempfiles[url]
-
     def guess_extension (self, content_type):
         if content_type in self.extensions_by_mimetype:
             answers = list(self.extensions_by_mimetype[content_type].items())
@@ -251,10 +219,6 @@ class ImportManager (plugin_loader.Pluggable):
         else:
             self.plugins.remove(plugin)
 
-def get_import_manager ():
-    return ImportManager.instance()
 
-if __name__ == '__main__':
-    im = ImportManager.instance()
-    im.offer_import()
-    Gtk.main()
+def get_import_manager():
+    return ImportManager.instance()
