@@ -210,16 +210,6 @@ class RecIndex:
         self.rvw: List['RowProxy'] = self.rd.search_recipes(self.searches,
                                                             sort_by=self.sort_by)
 
-    def make_rec_visible (self, *args):
-        """Make sure recipe REC shows up in our index."""
-        # if not self.rg.wait_to_filter:
-        # self.setup_search_views()
-        self.redo_search()
-        # debug('make_rec_visible',0)
-        # self.visible.append(rec.id)
-        # if not self.rg.wait_to_filter:
-        #     self.rmodel_filter.refilter()
-
     def search_entry_activate_cb (self, *args):
         if self.rmodel._get_length_()==1:
             self.rec_tree_select_rec()

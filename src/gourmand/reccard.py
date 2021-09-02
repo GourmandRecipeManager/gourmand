@@ -1037,7 +1037,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.reccard.new = False
         self.rg.rd.save()
         self.rg.update_go_menu()
-        self.rg.make_rec_visible()  # Trigger a refresh of the recipe tree
+        self.rg.redo_search()  # Trigger a refresh of the recipe tree
         self.reccard.update_recipe(self.current_rec)  # update display (if any)
 
     def revert_cb (self, *args):

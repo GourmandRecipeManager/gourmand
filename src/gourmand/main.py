@@ -1063,7 +1063,7 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
         self.app.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
         def show ():
             rc=reccard.RecCard(self)
-            self.make_rec_visible(rc.current_rec)
+            self.redo_search()
             self.rc[rc.current_rec.id]=rc
             self.app.get_window().set_cursor(None)
             self.update_go_menu()
