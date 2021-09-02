@@ -2,7 +2,7 @@ import gi
 import pytest
 
 gi.require_version("Gtk", "3.0")
-from gourmand.plugins.web_imports import load  # noqa
+from gourmand.importers.web_importer import import_urls  # noqa
 
 @pytest.mark.parametrize(
     'urls, expected_pass, expected_fails',
@@ -21,8 +21,8 @@ from gourmand.plugins.web_imports import load  # noqa
         ),
      ],
 )
-def test_clipboard_exporter(urls, expected_pass, expected_fails):
-    recipes, failures = load(urls)
+def test_import_urls(urls, expected_pass, expected_fails):
+    recipes, failures = import_urls(urls)
 
     assert len(recipes) == expected_pass
     assert failures == expected_fails
