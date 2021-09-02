@@ -46,12 +46,9 @@ class MasterLoader:
         'archive_plugin',
         'pdf_plugin',
         'plaintext_plugin',
-        'web_import_plugin',
-        'website_import_plugins',
         'krecipe_plugin',
         'mycookbook_plugin',
         'epub_plugin',
-        'copy_paste_plugin'
         ]
 
     @classmethod
