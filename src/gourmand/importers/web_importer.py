@@ -2,7 +2,9 @@
 from typing import List, Tuple
 from urllib.parse import urlparse
 
+from gi.repository import Gtk
 from recipe_scrapers import SCRAPERS, scrape_me
+
 from gourmand.structure import Recipe
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
 from gourmand.recipeManager import get_recipe_manager
@@ -41,6 +43,8 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
         recipe = scrape_me(url)
         # Fetch the image if available, or else open an ImageBrowser
         # to let the user select one.
+        image = thumbnail = None
+
         if recipe.image():
             image = make_thumbnail(recipe.image())
             thumbnail = image.copy()
@@ -53,11 +57,14 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 link = schema.get('href', '')
                 if link.endswith('jpg'):
                     uris.append(link)
-            image = ImageBrowser(uris=uris)
-            thumbnail = image.copy()
-            thumbnail.thumbnail((40, 40))
-            thumbnail = image_to_bytes(thumbnail)
-            image = image_to_bytes(image)
+            browser = ImageBrowser(parent=None, uris=uris)
+            response = browser.run()
+            browser.destroy()
+            if response == Gtk.ResponseType.OK:
+                thumbnail = browser.image.copy()
+                thumbnail.thumbnail((40, 40))
+                thumbnail = image_to_bytes(thumbnail)
+                image = image_to_bytes(browser.image)
 
         # Gourmet has a 5-stars rating, stored as int between 0 and 10.
         # We assume that if the value is a float below 5, it's scaled to 5, and
