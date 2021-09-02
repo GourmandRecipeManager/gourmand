@@ -41,7 +41,7 @@ def cached(func):
 
 
 @cached
-def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Pixbuf]:
+def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Image]:
     """Create an in-memory thumbnail from the given uri path.
 
     This function is used when browsing images to add to a recipe: thumbnails

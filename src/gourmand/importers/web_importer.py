@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from recipe_scrapers import SCRAPERS, scrape_me
 from gourmand.structure import Recipe
-from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail, ThumbnailSize
+from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
 from gourmand.recipeManager import get_recipe_manager
 
 supported_sites = list(SCRAPERS.keys())

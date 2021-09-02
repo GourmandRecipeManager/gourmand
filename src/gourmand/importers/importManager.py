@@ -23,7 +23,7 @@ class ImportFileList (Exception):
         self.filelist = filelist
 
 
-class ImportManager (plugin_loader.Pluggable):
+class ImportManager(plugin_loader.Pluggable):
 
     '''A class to
     manage importers.
@@ -50,10 +50,10 @@ class ImportManager (plugin_loader.Pluggable):
                                          )
         self.get_app_and_prefs()
 
-    def get_app_and_prefs (self):
+    def get_app_and_prefs(self):
+        # FIXME: this function and self.app exist to work around circular imports
         from gourmand.main import get_application
         self.app = get_application()
-        self.prefs = self.app.prefs
 
     def offer_import(self, parent: Optional[Gtk.Window] = None):
         """Offer to import url or files."""

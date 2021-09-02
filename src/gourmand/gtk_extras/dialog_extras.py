@@ -1217,7 +1217,6 @@ class URIDialog(EntryDialog):
         self.entry.find_errors_in_progress = validate
         self.entry.find_completed_errors = validate
 
-
     def select_file(self, button: Gtk.Button):
         filenames = select_file(filters=self.filters,
                                 title=_('Select File(s)'),
