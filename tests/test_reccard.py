@@ -1,4 +1,3 @@
-from tempfile import TemporaryDirectory
 from pathlib import Path
 
 import gi
@@ -75,7 +74,7 @@ def check_ings(check_dics, ings):
                 val = getattr(ings[n], k)
                 assert val == expected
             except (AssertionError, IndexError):
-                msg = f"{k} is {val}, should be {expected} in entry {ings[n]}"
+                msg = f"{k} is {val}, should be {expected} in entry {ings} for index {n}"
                 raise AssertionError(msg)
         n -= 1
 
@@ -297,17 +296,16 @@ def do_undo_save_sensitivity(rc):
         print_("DONE TESTING", wname)
 
 
-def test_reccard():
-    with TemporaryDirectory(prefix='gourmand_', suffix='_test_reccard') as tmpdir:
-        gglobals.gourmanddir = Path(tmpdir)
-        rec_gui = get_application()
-        rec_card = RecCard(rec_gui)
+def test_reccard(tmp_path):
+    gglobals.gourmanddir = tmp_path
+    rec_gui = get_application()
+    rec_card = RecCard(rec_gui)
 
-        do_ingredients_editing(rec_card)
-        print('Ingredient Editing test passed!')
-        do_ingredients_undo(rec_card)
-        print('Ingredient Revert test passed!')
-        # do_undo_save_sensitivity(rec_card)
-        print('Undo properly sensitizes save widget.')
-        do_ingredients_group_editing(rec_card)
-        print('Ing Group Editing works.')
+    do_ingredients_editing(rec_card)
+    print('Ingredient Editing test passed!')
+    do_ingredients_undo(rec_card)
+    print('Ingredient Revert test passed!')
+    # do_undo_save_sensitivity(rec_card)
+    print('Undo properly sensitizes save widget.')
+    do_ingredients_group_editing(rec_card)
+    print('Ing Group Editing works.')

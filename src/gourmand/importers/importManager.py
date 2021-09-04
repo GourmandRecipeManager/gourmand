@@ -7,10 +7,10 @@ from gi.repository import Gtk
 import gourmand.gtk_extras.dialog_extras as de
 import gourmand.plugin_loader as plugin_loader
 from gourmand.i18n import _
+from gourmand.importers.web_importer import import_urls, supported_sites
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
 from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
                                     get_thread_manager_gui)
-from gourmand.importers.web_importer import import_urls, supported_sites
 
 
 class ImportFileList (Exception):
