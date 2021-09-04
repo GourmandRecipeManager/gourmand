@@ -11,7 +11,7 @@ from gourmand import (__version__, batchEditor, convert, plugin, plugin_gui,
                       shopgui)
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.defaults.defaults import lang as defaults
-from gourmand.exporters.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import copy_to_clipboard
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
@@ -711,8 +711,7 @@ class StuffThatShouldBePlugins:
         recipes = self.get_selected_recs_from_rec_tree()
         ingredients = [self.rd.rd.get_ings(recipe.id)
                        for recipe in recipes]
-        ce = ClipboardExporter(list(zip(recipes, ingredients)))
-        ce.export()
+        copy_to_clipboard(list(zip(recipes, ingredients)))
 
     def batch_edit_recs (self, *args):
         recs = self.get_selected_recs_from_rec_tree()

@@ -1,84 +1,58 @@
-"""Basic example of a Gourmet export plugin."""
-from pathlib import Path
+"""Export a recipe to the system's clipboard.
+
+This plugin demonstrates how to create an export plugin.
+"""
 from typing import List, Tuple
 
 from gi.repository import Gdk, Gtk
 
 
-class ClipboardExporter:
-    """Export a recipe to the system's clipboard.
+def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
+    """Copy recipes to the clipboard.
 
-    This plugin demonstrates how to create an export plugin.
-    The exported recipe
+    The expected list should contain tupes of (recipe, ingredients) that
+    belong together.
     """
-    AUTHOR = 'Gourmet Team'
-    COPYRIGHT = 'MIT'
-    WEBSITE = ''
+    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    formatted_recipes = []
 
-    def __init__(self,
-                 recipes: List[Tuple['RowProxy', 'RowProxy']] = None,
-                 export_path: Path = None):
-        """Create the exporter.
+    # Each item in self.recipes is a set of (a recipe, its ingredients).
+    for recipe, ingredients in recipes:
 
-        Two arguments are given to an exporter: a list of selected recipes and
-        their ingredients (two entries in the database,
-        sqlalchemy.RowProxy objects), and the path to export to, a pathlib.Path
-        object.
+        # The ingredients have the name, quantity, and units attached
+        formatted_ingredients = []
+        for ingredient in ingredients:
+            string = f'{ingredient.amount} ' if ingredient.amount else ''
+            string += f'{ingredient.unit} ' if ingredient.unit else ''
+            string += ingredient.item
+            formatted_ingredients.append(string)
 
-        You can do here any setting up you need.
+        formatted_ingredients = '\n'.join(formatted_ingredients)
 
-        This plugin is special as nothing is done with the export_path, as it's
-        aiming for the clipboard!
-        """
-        self.recipes = recipes
-        self.export_path = export_path
+        # Now that the ingredients are formatted, the title, yield,
+        # description etc. can be extracted.
+        # The rating, for instance, is omitted: let the recipient make
+        # their opinion!
+        formatted_recipe = f'# {recipe.title}\n\n'
+        formatted_recipe += f'{recipe.source}\n' if recipe.source else ''
+        formatted_recipe += f'{recipe.link}\n' if recipe.link else ''
+        formatted_recipe += '\n' if recipe.source or recipe.link else ''
+        formatted_recipe += f'{recipe.yields} {recipe.yield_unit}\n\n' if recipe.yields else ''  # noqa
 
-    def export(self):
-        """Copy a recipe and its image to the clipboard.
+        formatted_recipe += f'{recipe.description}\n\n' if recipe.description else ''  # noqa
+        formatted_recipe += f'{formatted_ingredients}\n\n'
 
-        This function is called by Gourmet following the creation of the object.
-        """
-        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        recipes = []
+        formatted_recipe += f'{recipe.instructions}\n'
 
-        # Each item in self.recipes is a set of (a recipe, its ingredients).
-        for recipe, ingredients in self.recipes:
-            # The ingredients have the name, quantity, and units attached
-            formatted_ingredients = []
-            for ingredient in ingredients:
-                formatted_ingredients.append(
-                    f"{ingredient.amount} {ingredient.unit} {ingredient.item}"
-                )
-            formatted_ingredients = '\n'.join(formatted_ingredients)
+        formatted_recipes.append(formatted_recipe)
 
-            # The description is optional, but we add extra formatting, to make
-            # the text clearer.
-            if recipe.description is not None:
-                description = f'\n{recipe.description}\n'
-            else:
-                description = ''
-            # Now that the ingredients and description are formatted, the title,
-            # yields, description etc. can be extracted. The rating, for
-            # instance, is omitted: let the recipient make their own opinion!
-            formatted_recipe = f"""
-# {recipe.title}
+    # Join all the recipes as one text to put in the clipboard.
+    formatted_recipes = '\n\n'.join(formatted_recipes)
+    clipboard.set_text(formatted_recipes, -1)
 
-{recipe.source}
-{recipe.yields} {recipe.yield_unit}
-{description}
-{formatted_ingredients}
-
-{recipe.instructions}
-"""
-            recipes.append(formatted_recipe)
-
-        # Join all the recipes as one text to put in the clipboard.
-        recipes = '\n'.join(recipes)
-        clipboard.set_text(recipes, -1)
-
-        # Although not used here, the image can also be retrieved.
-        # They are stored as jpegs in the database:
-        # if recipe.image is not None:
-        #     image_filename = self.export_path / f'{recipe.title}.jpg'
-        #     with open(image_filename, 'wb') as fout:
-        #         fout.write(recipe.image)
+    # Although not used here, the image can also be retrieved.
+    # They are stored as jpegs in the database:
+    # if recipe.image is not None:
+    #     image_filename = self.export_path / f'{recipe.title}.jpg'
+    #     with open(image_filename, 'wb') as fout:
+    #         fout.write(recipe.image)
