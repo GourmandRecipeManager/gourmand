@@ -10,7 +10,7 @@ from PIL import Image
 from gourmand import Undo, convert, defaults
 from gourmand import image_utils as iu
 from gourmand import plugin_loader, prefs, timeScanner
-from gourmand.exporters.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import copy_to_clipboard
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
@@ -594,8 +594,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
 
         ingredients = self.rg.rd.get_ings(self.current_rec.id)
         # The exporter can do several recipes at once, hence the list of tuples.
-        ce = ClipboardExporter([(self.current_rec, ingredients)])
-        ce.export()
+        copy_to_clipboard([(self.current_rec, ingredients)])
 
     def print_cb(self, action: Gtk.Action):
         if self.reccard.edited:
