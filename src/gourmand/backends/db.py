@@ -1263,6 +1263,9 @@ class RecData (Pluggable):
         return self.add_ing(dic)
 
     def add_ing (self, dic):
+        if 'deleted' not in dic:
+            dic['deleted'] = False
+
         try:
             return self.do_add_ing(dic)
         except:
@@ -1272,7 +1275,11 @@ class RecData (Pluggable):
     def add_ings (self, dics: List[Dict[str, Any]]):
         """Add multiple ingredient dictionaries at a time."""
         for d in dics:
-            for key in ['refid','unit','amount','rangeamount','item','ingkey','optional','shopoptional','inggroup','position']:
+            if 'deleted' not in d:
+                d['deleted'] = False
+            for key in ['refid', 'unit', 'amount', 'rangeamount', 'item',
+                        'ingkey', 'optional', 'shopoptional', 'inggroup',
+                        'position']:
                 if key not in d:
                     d[key] = None
         try:
