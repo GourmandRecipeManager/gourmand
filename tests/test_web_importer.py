@@ -2,6 +2,7 @@ import gi
 import pytest
 
 gi.require_version("Gtk", "3.0")
+from gourmand import gglobals  # noqa: import not at top
 from gourmand.importers.web_importer import import_urls  # noqa
 
 @pytest.mark.parametrize(
@@ -21,7 +22,8 @@ from gourmand.importers.web_importer import import_urls  # noqa
         ),
      ],
 )
-def test_import_urls(urls, expected_pass, expected_fails):
+def test_import_urls(tmp_path, urls, expected_pass, expected_fails):
+    gglobals.gourmanddir = tmp_path
     recipes, failures = import_urls(urls)
 
     assert len(recipes) == expected_pass

@@ -10,6 +10,7 @@ from PIL import Image
 from gourmand import Undo, convert, defaults
 from gourmand import image_utils as iu
 from gourmand import plugin_loader, prefs, timeScanner
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
@@ -29,7 +30,6 @@ from gourmand.i18n import _
 from gourmand.importers.importer import parse_range
 from gourmand.plugin import (IngredientControllerPlugin, RecDisplayPlugin,
                              RecEditorModule, RecEditorPlugin, ToolPlugin)
-from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 
 

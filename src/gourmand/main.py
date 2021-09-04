@@ -11,6 +11,7 @@ from gourmand import (__version__, batchEditor, convert, plugin, plugin_gui,
                       shopgui)
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.defaults.defaults import lang as defaults
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
@@ -23,7 +24,6 @@ from gourmand.gtk_extras import treeview_extras as te
 from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
 from gourmand.importers.importManager import ImportManager
-from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
                                     get_thread_manager_gui)
