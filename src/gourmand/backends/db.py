@@ -3,7 +3,7 @@ import re
 import shutil
 import time
 from pathlib import Path
-from typing import Any, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import sqlalchemy
 import sqlalchemy.orm
@@ -1214,20 +1214,17 @@ class RecData (Pluggable):
         return unmerged
 
     def modify_ing (self, ing, ingdict):
-        self.validate_ingdic(ingdict)
         return self.do_modify_ing(ing,ingdict)
 
-    def add_rec (self, dic, accept_ids=False):
-        """Dictionary is a dictionary of column values for our recipe.
-        Return the ID of the newly created recipe.
+    def add_rec(self, dic: Dict[str, Any]) -> 'RowProxy':
+        """Add a recipe to the database.
 
-        If accept_ids is True, we accept recipes with IDs already
-        set. These IDs need to have been reserved with the new_id()
-        method.
+        The function expect a dictionary of column values for the recipe,
+        and returns the entry in the database as a RowProxy.
         """
         cats = []
         if 'category' in dic:
-            cats = dic['category'].split(', ')
+            cats = dic['category'].split(',')
             del dic['category']
         if 'servings' in dic:
             if 'yields' in dic:
@@ -1256,7 +1253,7 @@ class RecData (Pluggable):
             else:
                 ID = ret.id
             for c in cats:
-                if c: self.do_add_cat({'recipe_id':ID,'category':c})
+                if c: self.do_add_cat({'recipe_id':ID,'category':c.strip()})
             self.update_hashes(ret)
             return ret
 
@@ -1266,20 +1263,18 @@ class RecData (Pluggable):
         return self.add_ing(dic)
 
     def add_ing (self, dic):
-        self.validate_ingdic(dic)
         try:
             return self.do_add_ing(dic)
         except:
             print('Problem adding',dic)
             raise
 
-    def add_ings (self, dics):
+    def add_ings (self, dics: List[Dict[str, Any]]):
         """Add multiple ingredient dictionaries at a time."""
         for d in dics:
-            self.validate_ingdic(d)
-            for k in ['refid','unit','amount','rangeamount','item','ingkey','optional','shopoptional','inggroup','position']:
-                if not k in d:
-                    d[k] = None
+            for key in ['refid','unit','amount','rangeamount','item','ingkey','optional','shopoptional','inggroup','position']:
+                if key not in d:
+                    d[key] = None
         try:
             # Warning: this method relies on all the dictionaries
             # looking identical. validate_ingdic should be taking care
@@ -1370,12 +1365,6 @@ class RecData (Pluggable):
         insert_statement = self.recipe_table.insert()
         select = self.recipe_table.select(self.recipe_table.c.id==insert_statement.execute(**rdict).inserted_primary_key[0])
         return select.execute().fetchone()
-
-    def validate_ingdic(self, dic):
-        """Do any necessary validation and modification of ingredient dictionaries."""
-        # FIXME: this function can be refactored out
-        if 'deleted' not in dic:
-            dic['deleted'] = False
 
     def do_modify_rec (self, rec, dic):
         """This is what other DBs should subclass."""
@@ -2081,13 +2070,7 @@ class dbDic:
         dics = []
         for k in d:
             store_v = d[k]
-            # FIXME: This used to convert bytes to unicode.
-            #  Is it still needed?
-            if isinstance(store_v, str):
-                store_v = str(store_v)
-            if isinstance(k, str):
-                k = str(k)
-            dics.append({self.kp:k,self.vp:store_v})
+            dics.append({self.kp: k, self.vp: store_v})
         self.vw.insert().execute(*dics)
 
     def keys (self):

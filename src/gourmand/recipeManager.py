@@ -1,9 +1,7 @@
-import os.path
-
 from gourmand import convert, shopping
 
 from . import gglobals
-from .backends.db import RecData, RecipeManager, dbDic
+from .backends.db import RecipeManager, dbDic
 from .gtk_extras import dialog_extras as de
 from .optionparser import args
 
@@ -77,10 +75,10 @@ class SimpleCLI:
                 except:
                     print('invalid input.')
 
-def get_recipe_manager (**kwargs):
+def get_recipe_manager(**kwargs):
     return RecipeManager.instance_for(**kwargs)
 
-def default_rec_manager ():
+def default_rec_manager():
     return get_recipe_manager(**dbargs)
 
 if __name__ == '__main__':

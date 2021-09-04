@@ -29,7 +29,7 @@ from gourmand.i18n import _
 from gourmand.importers.importer import parse_range
 from gourmand.plugin import (IngredientControllerPlugin, RecDisplayPlugin,
                              RecEditorModule, RecEditorPlugin, ToolPlugin)
-from gourmand.plugins.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 
 
@@ -646,8 +646,8 @@ class RecCardDisplay (plugin_loader.Pluggable):
     def forget_remembered_optional_ingredients (self):
         pass
 
-    def offer_url (self, label, url):
-        if hasattr(self,'progress_dialog'):
+    def offer_url(self, label: str, url: str):
+        if hasattr(self, 'progress_dialog'):
             self.hide_progress_dialog()
         # Clear existing messages...
         for child in self.messagebox.get_children():
@@ -1037,7 +1037,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.reccard.new = False
         self.rg.rd.save()
         self.rg.update_go_menu()
-        self.rg.make_rec_visible()  # Trigger a refresh of the recipe tree
+        self.rg.redo_search()  # Trigger a refresh of the recipe tree
         self.reccard.update_recipe(self.current_rec)  # update display (if any)
 
     def revert_cb (self, *args):

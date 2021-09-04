@@ -23,7 +23,7 @@ from gourmand.gtk_extras import treeview_extras as te
 from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
 from gourmand.importers.importManager import ImportManager
-from gourmand.plugins.clipboard_exporter import ClipboardExporter
+from gourmand.exporters.clipboard_exporter import ClipboardExporter
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
                                     get_thread_manager_gui)
@@ -646,9 +646,6 @@ class ImporterExporter:
             self.__import_manager = ImportManager.instance()
         return self.__import_manager
 
-    def import_webpageg(self, action: Gtk.Action):
-        self.importManager.offer_web_import(parent=self.app.get_toplevel())
-
     def do_import(self, action: Gtk.Action):
         self.importManager.offer_import(parent=self.app.get_toplevel())
 
@@ -767,8 +764,7 @@ ui_string = '''<ui>
 <menubar name="RecipeIndexMenuBar">
   <menu name="File" action="File">
     <menuitem action="New"/>
-    <menuitem action="ImportFile"/>
-    <menuitem action="ImportWeb"/>
+    <menuitem action="Import"/>
     <separator/>
     <menuitem action="ExportSelected"/>
     <menuitem action="ExportAll"/>
@@ -1002,10 +998,8 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
             ('File',None,_('_File')),
             ('New',Gtk.STOCK_NEW,_('_New'),
              None,None,self.new_rec_card),
-            ('ImportFile',None,_('_Import file'),
-             '<Control>M',_('Import recipe from file'),self.do_import),
-            ('ImportWeb',None,_('Import _webpage'),
-             '<Control><Shift>M',_('Import recipe from webpage'),self.import_webpageg),
+            ('Import',None,_('_Import Recipe'),
+             '<Control>M',_('Import recipe from file or page'),self.do_import),
             ('ExportAll',None,_('Export _all recipes'),
              '<Control><Shift>T',_('Export all recipes to file'),lambda *args: self.do_export(export_all=True)),
             ('Quit', Gtk.STOCK_QUIT, _('_Quit'),
@@ -1069,7 +1063,7 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
         self.app.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
         def show ():
             rc=reccard.RecCard(self)
-            self.make_rec_visible(rc.current_rec)
+            self.redo_search()
             self.rc[rc.current_rec.id]=rc
             self.app.get_window().set_cursor(None)
             self.update_go_menu()

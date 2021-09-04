@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for taking an interest in contributing to Gourmet! We appreciate that
+Thank you for taking an interest in contributing to Gourmand! We appreciate that
 you're thinking about offering your time to improving the project, and it's our
 goal to respect your contribution accordingly.
 
@@ -20,7 +20,7 @@ In general, the process for contributing code is:
 2. Post a comment expressing your intent to make sure nobody else is already
    working on it
 3. Set up a development environment, as described below
-4. Hack the code, and when ready
+4. Do your changes, and when ready
 5. Push your changes to your forked repo and create a pull request.
 
 ## Setting Up a Development Environment
