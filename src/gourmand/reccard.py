@@ -1106,7 +1106,6 @@ class IngredientEditorModule (RecEditorModule):
         <toolitem  action="AddIngredientGroup"/>
         <toolitem action="AddRecipeAsIngredient"/>
         <separator/>
-        <toolitem action="ImportIngredients"/>
         <toolitem action="PasteIngredient"/>
         <separator/>
       </toolbar>
@@ -1147,8 +1146,6 @@ class IngredientEditorModule (RecEditorModule):
              None,None),
             ('AddIngredientGroup',None,_('Add group'),
              '<Control>G',None,self.ingtree_ui.ingNewGroupCB),
-            ('ImportIngredients',None,_('Import from file'),
-             '<Control>O',None,self.import_ingredients_cb),
             ('AddRecipeAsIngredient',None,_('Add _recipe'),
              '<Control>R',_('Add another recipe as an ingredient in this recipe'),
              lambda *args: RecSelector(self.rg, self)),
@@ -1200,16 +1197,6 @@ class IngredientEditorModule (RecEditorModule):
             )
         return itr
 
-    def import_ingredients(self, filename: str) -> None:
-        with open(filename, 'r') as ifi:
-            for line in ifi:
-                self.add_ingredient_from_line(line)
-
-    def import_ingredients_cb (self, *args):
-        f = de.select_file(_("Choose a file containing your ingredient list."),
-                           action=Gtk.FileChooserAction.OPEN)
-        if f:  # knowingly work with only a single file
-            add_with_undo(self, lambda *args: self.import_ingredients(f[0]))
 
     def paste_ingredients_cb(self, action: Gtk.Action):
         self.cb = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
