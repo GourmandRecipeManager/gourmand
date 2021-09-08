@@ -1142,13 +1142,15 @@ class IngredientEditorModule (RecEditorModule):
         self.ingredientEditorActionGroup = Gtk.ActionGroup(name='IngredientEditorActionGroup')  # noqa
         self.ingredientEditorOnRowActionGroup = Gtk.ActionGroup(name='IngredientEditorOnRowActionGroup')  # noqa
         self.ingredientEditorActionGroup.add_actions([
-            ('AddIngredient',Gtk.STOCK_ADD,_('Add ingredient'),
-             None,None),
-            ('AddIngredientGroup',None,_('Add group'),
-             '<Control>G',None,self.ingtree_ui.ingNewGroupCB),
-            ('AddRecipeAsIngredient',None,_('Add _recipe'),
-             '<Control>R',_('Add another recipe as an ingredient in this recipe'),
-             lambda *args: RecSelector(self.rg, self)),
+            ('AddIngredient', Gtk.STOCK_ADD, _('Add ingredient'), None, None),
+
+            ('PasteIngredient', Gtk.STOCK_PASTE, None, '<Control>V', None,
+             lambda args: add_with_undo(self, self.paste_ingredients_cb)),
+
+            ('AddIngredientGroup', None, _('Add group'), '<Control>G', None, self.ingtree_ui.ingNewGroupCB),
+
+            ('AddRecipeAsIngredient', None, _('Add _recipe'), '<Control>R',
+             _('Add another recipe as an ingredient in this recipe'), lambda *args: RecSelector(self.rg, self)),
             ])
         self.ingredientEditorOnRowActionGroup.add_actions([
             ('DeleteIngredient',Gtk.STOCK_DELETE,_('Delete'),
@@ -1197,17 +1199,12 @@ class IngredientEditorModule (RecEditorModule):
             )
         return itr
 
+    def paste_ingredients_cb(self):
+        text = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).wait_for_text()
 
-    def paste_ingredients_cb(self, action: Gtk.Action):
-        self.cb = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        def add_ings_from_clippy(cb, text):
-            if text:
-                def do_add():
-                    for l in text.split('\n'):
-                        if l.strip():
-                            self.add_ingredient_from_line(l)
-                add_with_undo(self, lambda *args: do_add())
-        self.cb.request_text(add_ings_from_clippy)
+        for line in text.split('\n'):
+            if line.strip():
+                self.add_ingredient_from_line(line)
 
     def delete_cb (self, *args):
         debug("delete_cb (self, *args):",5)
