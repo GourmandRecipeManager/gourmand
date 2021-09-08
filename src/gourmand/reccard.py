@@ -828,7 +828,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
             recipe = self.recipe_display.current_rec
         self.current_rec = recipe
         self.setup_defaults()
-        self.conf: List[Gtk.Widget] = []
+        self.conf: List[Union[Gtk.Widget, WidgetSaver.WindowSaver]] = []
         self.setup_ui_manager()
         #self.setup_undo()
         self.setup_main_interface()
@@ -982,7 +982,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.last_merged_action_groups = None
         self.notebook_change_cb()
 
-    def set_edited (self, edited):
+    def set_edited(self, edited: bool):
         self.edited = edited
         if edited:
             self.mainRecEditActionGroup.get_action('Save').set_sensitive(True)
@@ -1094,7 +1094,6 @@ class IngredientEditorModule (RecEditorModule):
           <menuitem action="MoveIngredientDown"/>
           <separator/>
           <menuitem action="AddRecipeAsIngredient"/>
-          <menuitem action="ImportIngredients"/>
           </placeholder>
         </menu>
       </menubar>
@@ -1122,25 +1121,25 @@ class IngredientEditorModule (RecEditorModule):
         self.ingtree_ui = IngredientTreeUI(self, self.ui.get_object('ingTree'))
         self.setup_action_groups()
         self.update_from_database()
-        self.quickEntry = self.ui.get_object('quickIngredientEntry')
-        self.ui.connect_signals({'addQuickIngredient':self.quick_add})
+        self.entry = self.ui.get_object('quickIngredientEntry')
+        self.ui.connect_signals({'addQuickIngredient': self.quick_add})
 
-    def quick_add (self, *args):
-        txt = str(self.quickEntry.get_text())
-        prev_iter,group_iter = self.ingtree_ui.get_previous_iter_and_group_iter()
+    def quick_add(self, *args):
+        txt = str(self.entry.get_text())
+        prev_iter, group_iter = self.ingtree_ui.get_previous_iter_and_group_iter()
         add_with_undo(self,
-                      lambda *args: self.add_ingredient_from_line(txt,
-                                                                  prev_iter=prev_iter,
-                                                                  group_iter=group_iter)
+                      lambda *args: self.add_ingredient_from_line(
+                          txt,
+                          prev_iter=prev_iter,
+                          group_iter=group_iter)
                       )
-        self.quickEntry.set_text('')
+        self.entry.set_text('')
 
     def update_from_database (self):
         self.ingtree_ui.set_tree_for_rec(self.current_rec)
 
-    def setup_action_groups (self):
+    def setup_action_groups(self):
         self.ingredientEditorActionGroup = Gtk.ActionGroup(name='IngredientEditorActionGroup')  # noqa
-        self.ingredientEditorOnRowActionGroup = Gtk.ActionGroup(name='IngredientEditorOnRowActionGroup')  # noqa
         self.ingredientEditorActionGroup.add_actions([
             ('AddIngredient', Gtk.STOCK_ADD, _('Add ingredient'), None, None),
 
@@ -1152,6 +1151,8 @@ class IngredientEditorModule (RecEditorModule):
             ('AddRecipeAsIngredient', None, _('Add _recipe'), '<Control>R',
              _('Add another recipe as an ingredient in this recipe'), lambda *args: RecSelector(self.rg, self)),
             ])
+
+        self.ingredientEditorOnRowActionGroup = Gtk.ActionGroup(name='IngredientEditorOnRowActionGroup')  # noqa
         self.ingredientEditorOnRowActionGroup.add_actions([
             ('DeleteIngredient',Gtk.STOCK_DELETE,_('Delete'),
              #'Delete', # Binding to the delete key meant delete
@@ -1164,16 +1165,29 @@ class IngredientEditorModule (RecEditorModule):
             ('MoveIngredientDown',Gtk.STOCK_GO_DOWN,_('Down'),
              '<Control>Down',None,self.ingtree_ui.ingDownCB),
             ])
-        for group in [self.ingredientEditorActionGroup,
-                      self.ingredientEditorOnRowActionGroup,
-                      ]:
-            fix_action_group_importance(group)
+
+        fix_action_group_importance(self.ingredientEditorActionGroup)
+        fix_action_group_importance(self.ingredientEditorOnRowActionGroup)
+
         self.action_groups.append(self.ingredientEditorActionGroup)
         self.action_groups.append(self.ingredientEditorOnRowActionGroup)
 
-    def add_ingredient_from_line (self, line, group_iter=None, prev_iter=None):
-        """Add an ingredient to our list from a line of plain text"""
-        d=self.rg.rd.parse_ingredient(line, conv=self.rg.conv)
+    def add_ingredient_from_line(self,
+                                 line: str,
+                                 group_iter: Optional[Gtk.TreeIter] = None,
+                                 prev_iter: Optional[Gtk.TreeIter] = None):
+        """Add an ingredient to the list from a line of plain text.
+
+        The line will parsed if it matches the expected format of
+        "{amount} {unit} {item}".
+
+        `group_iter` is a tree iterator used to put the item under the group,
+        if the group is selected in the tree.
+        `prev_iter` is a tree iterator used to keep track of a previously
+        selected item, so that the new ingredient can be added right below it in
+        the tree.
+        """
+        d = self.rg.rd.parse_ingredient(line, conv=self.rg.conv)
         if d:
             if 'rangeamount' in d:
                 d['amount'] = self.rg.rd.format_amount_string_from_amount(
@@ -1182,21 +1196,25 @@ class IngredientEditorModule (RecEditorModule):
             elif 'amount' in d:
                 d['amount'] = convert.float_to_frac(d['amount'])
         else:
-            d = {}
-            d['item'] = line
-            d['amount'] = None
-            d['unit'] = None
-        itr = self.ingtree_ui.ingController.add_new_ingredient(prev_iter=prev_iter,group_iter=group_iter,**d)
+            d = {'item': line,
+                 'amount': None,
+                 'unit': None}
+        itr = self.ingtree_ui.ingController.add_new_ingredient(
+            prev_iter=prev_iter,
+            group_iter=group_iter,
+            **d
+        )
         # If there is just one row selected...
         sel = self.ingtree_ui.ingTree.get_selection()
-        if sel.count_selected_rows()==1:
+        if sel.count_selected_rows() == 1:
             # Then we move our selection down to our current ingredient...
             sel.unselect_all()
             sel.select_iter(itr)
         # Make sure our newly added ingredient is visible...
         self.ingtree_ui.ingTree.scroll_to_cell(
             self.ingtree_ui.ingController.imodel.get_path(itr)
-            )
+        )
+
         return itr
 
     def paste_ingredients_cb(self):
