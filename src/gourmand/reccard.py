@@ -515,7 +515,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self.yields_orig=self.current_rec.yields
         try:
             self.yields_orig = float(self.yields_orig)
-        except ValueError:
+        except (TypeError, ValueError):
             self.yields_orig = None
         if self.yields_orig:
             # in this case, display yields spinbutton and update multiplier label as necessary
