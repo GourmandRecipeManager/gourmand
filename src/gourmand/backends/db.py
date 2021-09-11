@@ -1224,7 +1224,7 @@ class RecData (Pluggable):
         """
         cats = []
         if 'category' in dic:
-            cats = dic['category'].split(',')
+            cats = [v.strip() for v in dic['category'].split(',') if v]
             del dic['category']
         if 'servings' in dic:
             if 'yields' in dic:

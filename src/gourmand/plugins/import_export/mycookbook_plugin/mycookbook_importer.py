@@ -15,6 +15,7 @@ class RecHandler(xml_importer.RecHandler):
     RECTAGS = {'title': ('title', IS),
                'url': ('link', ADD),
                'category': ('category', ADD),
+               'cuisine': ('cuisine', ADD),
                'serving': ('servings', IS),
                'cooktime': ('cooktime', IS),
                'preptime': ('preptime', IS),
