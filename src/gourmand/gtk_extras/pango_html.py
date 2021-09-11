@@ -1,3 +1,4 @@
+from html import escape
 from html.parser import HTMLParser
 from typing import Dict, List, Optional, Tuple
 
@@ -184,7 +185,7 @@ class PangoToHtml(HTMLParser):
             self.current_closing_tags.pop()  # FILO
             self.current_opening_tags.pop()
         else:
-            data = ''.join(self.current_opening_tags) + data
+            data = ''.join(self.current_opening_tags) + escape(data)
             self.current_opening_tags.clear()
 
         self.markup_text += data

@@ -1,4 +1,3 @@
-import tempfile
 from fnmatch import fnmatch
 from typing import Any, List, Optional, Tuple
 from urllib.parse import urlparse
@@ -8,11 +7,10 @@ from gi.repository import Gtk
 import gourmand.gtk_extras.dialog_extras as de
 import gourmand.plugin_loader as plugin_loader
 from gourmand.i18n import _
+from gourmand.importers.web_importer import import_urls, supported_sites
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
 from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
                                     get_thread_manager_gui)
-
-from .webextras import URLReader
 
 
 class ImportFileList (Exception):
@@ -24,7 +22,8 @@ class ImportFileList (Exception):
     def __init__ (self, filelist):
         self.filelist = filelist
 
-class ImportManager (plugin_loader.Pluggable):
+
+class ImportManager(plugin_loader.Pluggable):
 
     '''A class to
     manage importers.
@@ -51,85 +50,33 @@ class ImportManager (plugin_loader.Pluggable):
                                          )
         self.get_app_and_prefs()
 
-    def get_app_and_prefs (self):
+    def get_app_and_prefs(self):
+        # FIXME: this function and self.app exist to work around circular imports
         from gourmand.main import get_application
         self.app = get_application()
-        self.prefs = self.app.prefs
-
-    def offer_web_import(self, parent: Gtk.Window = None):
-        """Offer to import a URL.
-
-        Once the file is downloaded, it can be treated by any of our
-        normal plugins for acting on files, or by special web-aware
-        plugins.
-        """
-        sublabel = _('Enter the URL of a recipe archive or recipe website.')
-        url = de.getEntry(label=_('Enter website address'),
-                          sublabel=sublabel,
-                          entryLabel=_('Enter URL:'),
-                          entryTip=_('Enter the address of a website or recipe archive.'),
-                          default_character_width=60,
-                          )
-        if url:
-            return self.import_url(url)
-
-    def import_url(self, url):
-        parsed_url = urlparse(url)
-        if parsed_url.scheme:
-            # there is an `http[s]` prefix
-            url = "{}://{}{}".format(parsed_url.scheme, parsed_url.netloc, parsed_url.path)
-        else:
-            # no `https` prefix, we add one
-            url = 'https://' + parsed_url.path
-        reader = URLReader(url)
-        reader.connect('completed',
-                       self.finish_web_import)
-        self.setup_thread(reader,'Downloading %s'%url, connect_follow_up=False)
-
-    def finish_web_import (self, reader):
-        # Filter by mimetype...
-        if reader.content_type:
-            base_content_type=reader.content_type.split(';')[0]
-            possible_plugins = [p for p in self.importer_plugins if base_content_type in p.mimetypes]
-        else:
-            possible_plugins = self.importer_plugins
-        fallback = None; plugin = None
-        for p in possible_plugins:
-            result = p.test_url(reader.url,reader.data,reader.content_type)
-            if result == -1:
-                fallback = p
-            elif result:
-                plugin = p
-                break
-        if not plugin:
-            plugin = fallback
-        if not plugin:
-            de.show_message(
-                title=_('Unable to import URL'),
-                label=_('Gourmet does not have a plugin capable of importing URL'),
-                sublabel=_('Unable to import URL %(url)s of mimetype %(type)s. File saved to temporary location %(fn)s')%{
-                'url':reader.url,
-                'type':reader.content_type or 'Unknown',
-                'fn':self.get_tempfilename(reader.url,reader.data,reader.content_type)
-                },
-                )
-        else:
-            print('Doing import of',reader.url,plugin)
-            self.do_import(plugin, 'get_web_importer', reader.url,
-                           reader.data.decode(), reader.content_type)
 
     def offer_import(self, parent: Optional[Gtk.Window] = None):
-        """Offer to import a file or group of files.
+        """Offer to import url or files."""
 
-        Begin the import if we can in a separate dialog.
-        """
-        filenames = de.select_file(_('Open recipe...'),
-                                   filters=self.get_filters(),
-                                   parent=parent,
-                                   select_multiple=True)
-        if filenames is None:
+        uris = de.get_uri(label=_('Open recipe...'),
+                          sublabel=_('Enter a recipe file path or website address.'),
+                          entryLabel=_('Location:'),
+                          entryTip=_('Enter the address of a website or recipe archive.'),
+                          default_character_width=60,
+                          filters=self.get_filters(),
+                          supported_urls=supported_sites,
+                          select_multiple=True
+                          )
+        if uris is None:
             return
-        self.import_filenames(filenames)
+
+        # There should be only a single url
+        if urlparse(uris[-1]).netloc:
+            import_urls(uris)
+        else:
+            self.import_filenames(uris)
+
+        self.app.redo_search()  # Trigger a refresh of the recipe tree
 
     def import_filenames(self, filenames: List[str]) -> List[Any]:
         """Import list of filenames, filenames, based on our currently
@@ -198,8 +145,6 @@ class ImportManager (plugin_loader.Pluggable):
     def follow_up (self, threadmanager, importer):
         if hasattr(importer,'post_run'):
             importer.post_run()
-        if hasattr(self,'app'):
-            self.app.make_rec_visible()
 
     def setup_thread (self, importer, label, connect_follow_up=True):
         tm = get_thread_manager()
@@ -215,38 +160,6 @@ class ImportManager (plugin_loader.Pluggable):
 
     def get_importer (self, name):
         return self.plugins_by_name[name]
-
-    def get_tempfilename(self, url: str,
-                         data: bytes,
-                         content_type: str) -> str:
-        """Get a temporary filename for the file to parse.
-
-        The url is a page where a recipe is found, for which Gourmet should have
-        a plugin.
-        data is the retrieved html document.
-        content_type is the mime-type string representation (eg. 'text/html')
-
-        The value returned is a string containing the temporary file path.
-
-        TODO: self.tempfiles could store pathlib.Path objects, and this function
-              return these.
-        """
-        if url in self.tempfiles:
-            return self.tempfiles[url]
-        else:
-            fn = url.split('/')[-1]
-            if '.' in fn:
-                ext = fn.split('.')[-1]
-            elif content_type:
-                ext = self.guess_extension(content_type)
-        if ext:
-            _, tf = tempfile.mkstemp('.' + ext)
-        else:
-            _, tf = tempfile.mkstemp()
-        self.tempfiles[url] = tf
-        with open(tf, "wb") as fout:
-            fout.write(data)
-        return self.tempfiles[url]
 
     def guess_extension (self, content_type):
         if content_type in self.extensions_by_mimetype:
@@ -306,10 +219,6 @@ class ImportManager (plugin_loader.Pluggable):
         else:
             self.plugins.remove(plugin)
 
-def get_import_manager ():
-    return ImportManager.instance()
 
-if __name__ == '__main__':
-    im = ImportManager.instance()
-    im.offer_import()
-    Gtk.main()
+def get_import_manager():
+    return ImportManager.instance()

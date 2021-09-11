@@ -41,7 +41,7 @@ def cached(func):
 
 
 @cached
-def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Pixbuf]:
+def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Image.Image]:
     """Create an in-memory thumbnail from the given uri path.
 
     This function is used when browsing images to add to a recipe: thumbnails
@@ -121,11 +121,21 @@ def image_to_pixbuf(image: Image.Image) -> Pixbuf:
 
 
 class ImageBrowser(Gtk.Dialog):
-    def __init__(self, parent: Gtk.Window, uris: List[str]):
+    def __init__(self, parent: Optional[Gtk.Window], uris: List[str]):
         """Retrieve the images from the uris and let user select one.
 
         Image retrieval is done in another thread which is cancelled when the
         dialog is destroyed, if not completed already.
+
+        browser = ImageBrowser(parent=None, uris=['https://example.com/image.png'])
+        response = browser.run()
+        browser.destroy()
+        if response == Gtk.ResponseType.OK:
+            image = browser.image
+        else:  # response == Gtk.ResponseType.CANCEL
+            ...
+
+        If parent is set, the the ImageBrowser will be modal to that parent.
         """
         Gtk.Dialog.__init__(self, title="Choose an image",
                             transient_for=parent, flags=0)

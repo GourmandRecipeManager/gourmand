@@ -1,0 +1,58 @@
+"""Export a recipe to the system's clipboard.
+
+This plugin demonstrates how to create an export plugin.
+"""
+from typing import List, Tuple
+
+from gi.repository import Gdk, Gtk
+
+
+def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
+    """Copy recipes to the clipboard.
+
+    The expected list should contain tupes of (recipe, ingredients) that
+    belong together.
+    """
+    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    formatted_recipes = []
+
+    # Each item in self.recipes is a set of (a recipe, its ingredients).
+    for recipe, ingredients in recipes:
+
+        # The ingredients have the name, quantity, and units attached
+        formatted_ingredients = []
+        for ingredient in ingredients:
+            string = f'{ingredient.amount} ' if ingredient.amount else ''
+            string += f'{ingredient.unit} ' if ingredient.unit else ''
+            string += ingredient.item
+            formatted_ingredients.append(string)
+
+        formatted_ingredients = '\n'.join(formatted_ingredients)
+
+        # Now that the ingredients are formatted, the title, yield,
+        # description etc. can be extracted.
+        # The rating, for instance, is omitted: let the recipient make
+        # their opinion!
+        formatted_recipe = f'# {recipe.title}\n\n'
+        formatted_recipe += f'{recipe.source}\n' if recipe.source else ''
+        formatted_recipe += f'{recipe.link}\n' if recipe.link else ''
+        formatted_recipe += '\n' if recipe.source or recipe.link else ''
+        formatted_recipe += f'{recipe.yields} {recipe.yield_unit}\n\n' if recipe.yields else ''  # noqa
+
+        formatted_recipe += f'{recipe.description}\n\n' if recipe.description else ''  # noqa
+        formatted_recipe += f'{formatted_ingredients}\n\n'
+
+        formatted_recipe += f'{recipe.instructions}\n'
+
+        formatted_recipes.append(formatted_recipe)
+
+    # Join all the recipes as one text to put in the clipboard.
+    formatted_recipes = '\n\n'.join(formatted_recipes)
+    clipboard.set_text(formatted_recipes, -1)
+
+    # Although not used here, the image can also be retrieved.
+    # They are stored as jpegs in the database:
+    # if recipe.image is not None:
+    #     image_filename = self.export_path / f'{recipe.title}.jpg'
+    #     with open(image_filename, 'wb') as fout:
+    #         fout.write(recipe.image)

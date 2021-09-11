@@ -50,8 +50,6 @@ src/gourmet/plugins/import_export/epub_plugin/epub_exporter.py
 src/gourmet/plugins/import_export/epub_plugin/epub_exporter_plugin.py
 src/gourmet/plugins/import_export/plaintext_plugin/plaintext_exporter_plugin.py
 src/gourmet/plugins/import_export/plaintext_plugin/plaintext_importer_plugin.py
-src/gourmet/plugins/import_export/web_import_plugin/generic_web_importer_plugin.py
-src/gourmet/plugins/import_export/website_import_plugins/cooksillustrated_plugin.py
 src/gourmet/plugins/import_export/gxml_plugin/gxml_exporter_plugin.py
 src/gourmet/plugins/import_export/gxml_plugin/gxml_importer_plugin.py
 src/gourmet/plugins/import_export/mastercook_import_plugin/mastercook_importer_plugin.py
@@ -112,8 +110,6 @@ data/gourmet.desktop.in
 [type: gettext/ini]data/plugins/import_export/mealmaster.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/pdf.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/plaintext.gourmet-plugin.in
-[type: gettext/ini]data/plugins/import_export/webimport.gourmet-plugin.in
-[type: gettext/ini]data/plugins/import_export/website_import.gourmet-plugin.in
 [type: gettext/ini]data/plugins/key_editor.gourmet-plugin.in
 [type: gettext/ini]data/plugins/listsaver.gourmet-plugin.in
 [type: gettext/ini]data/plugins/nutritional_information.gourmet-plugin.in

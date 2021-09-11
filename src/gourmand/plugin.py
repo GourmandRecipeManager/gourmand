@@ -105,19 +105,6 @@ class ImporterPlugin (StandardPlugin):
         """
         raise NotImplementedError
 
-    def test_url (self, url, data, content_type):
-        '''Test whether data retrieved from url is importable by this plugin.
-        '''
-        tempfilename = self.importManager.get_tempfilename(url,data,content_type)
-        return self.test_file(tempfilename)
-
-    def get_web_importer (self, url, data, content_type):
-        '''Get an importer for data data retrieved from url'''
-        tempfilename = self.importManager.get_tempfilename(url,data,content_type)
-        return self.get_importer(tempfilename)
-
-
-
 
 class ExporterPlugin (StandardPlugin):
 

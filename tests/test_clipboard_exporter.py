@@ -4,13 +4,14 @@ import pytest
 gi.require_version("Gtk", "3.0")
 from collections import namedtuple  # noqa: import not at top of file
 from gi.repository import Gtk, Gdk  # noqa: import not at top of file
-from gourmand.plugins.clipboard_exporter import ClipboardExporter  # noqa
+from gourmand.exporters.clipboard_exporter import copy_to_clipboard  # noqa
 
 Recipe = namedtuple('Recipe', ['title', 'source', 'yields', 'yield_unit',
-                               'description', 'instructions'])
+                               'description', 'instructions', 'link'])
 
-recipe1 = Recipe('Title1', 'Source1', 700.0, 'g.', None, 'Make the Dough.')
-recipe2 = Recipe('Title2', 'Source2', 2, 'litres', 'test', 'Directions.')
+recipe1 = Recipe('Title1', 'Source1', 700.0, 'g.', None, 'Make the Dough.', '')
+recipe2 = Recipe('Title2', 'Source2', 2, 'litres', 'test', 'Directions.',
+                 'https://example.com')
 
 Ingredient = namedtuple('Ingredient', ['amount', 'unit', 'item'])
 
@@ -19,10 +20,10 @@ ingredients2 = (Ingredient(600, 'g.', 'flour'),
                 Ingredient(2, 'l.', 'water'))
 
 recipe_input = [(recipe1, ingredients1)]
-recipe_expected_output = """
-# Title1
+recipe_expected_output = """# Title1
 
 Source1
+
 700.0 g.
 
 600 g. flour
@@ -32,10 +33,10 @@ Make the Dough.
 
 two_recipes_input = [(recipe1, ingredients1), (recipe2, ingredients2)]
 
-two_recipes_expected_output = """
-# Title1
+two_recipes_expected_output = """# Title1
 
 Source1
+
 700.0 g.
 
 600 g. flour
@@ -46,6 +47,8 @@ Make the Dough.
 # Title2
 
 Source2
+https://example.com
+
 2 litres
 
 test
@@ -66,8 +69,7 @@ Directions.
      ],
 )
 def test_clipboard_exporter(recipes, expected):
-    ce = ClipboardExporter(recipes)
-    ce.export()
+    copy_to_clipboard(recipes)
 
     clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
     assert clipboard.wait_for_text() == expected
