@@ -866,6 +866,22 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
         self.mm.fix_conflicts_peacefully()
         self.window.show()
 
+    @property
+    def sort_by(self):
+        preferences = self.prefs.get('sort_by',
+                                     {'column': 'title',
+                                      'ascending': True})
+        column, ascending = preferences.values()
+        ascending = 1 if ascending else -1
+        return ([column, ascending],)
+
+    @sort_by.setter
+    def sort_by(self, value):
+        column, ascending = value[-1]
+        ascending = True if ascending == 1 else False  # -1
+        self.prefs['sort_by'] = {'column': column, 'ascending': ascending}
+
+
     def setup_hacks (self):
         # These are properties that we need to set to test with our
         # current recindex class. However, each of these properties
