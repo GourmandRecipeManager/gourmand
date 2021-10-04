@@ -822,7 +822,8 @@ ui_string = '''<ui>
 </ui>
 '''
 
-class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBePlugins, plugin_loader.Pluggable, BaseException):
+
+class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBePlugins, plugin_loader.Pluggable):
 
     __single = None
 
@@ -902,12 +903,12 @@ class RecGui (RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBe
         self.rectree_conf.apply_visibility()
 
 
-    def setup_index_columns (self):
-        self.rtcolsdic={}
-        self.rtwidgdic={}
-        for a,l,w in REC_ATTRS:
-            self.rtcolsdic[a]=l
-            self.rtwidgdic[a]=w
+    def setup_index_columns(self):
+        self.rtcolsdic = {}
+        self.rtwidgdic = {}
+        for a, l, w in REC_ATTRS:
+            self.rtcolsdic[a] = l
+            self.rtwidgdic[a] = w
             self.rtcols = [r[0] for r in REC_ATTRS]
 
     def setup_database_hooks (self):

@@ -205,13 +205,12 @@ class RecIndex:
         self.last_search = {}
         # self.rvw = self.rd.fetch_all(self.rd.recipe_table,deleted=False)
         self.searches = self.default_searches[0:]
-        self.sort_by = []
         # List of entries in the `recipe` database table
         self.rvw: List['RowProxy'] = self.rd.search_recipes(self.searches,
                                                             sort_by=self.sort_by)
 
     def search_entry_activate_cb (self, *args):
-        if self.rmodel._get_length_()==1:
+        if self.rmodel._get_length_() == 1:
             self.rec_tree_select_rec()
         elif self.srchentry.get_text():
             if not self.search_as_you_type:
