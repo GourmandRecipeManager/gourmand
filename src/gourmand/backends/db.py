@@ -86,7 +86,10 @@ def make_simple_select_arg (criteria,*tables):
     else:
         return []
 
-def make_order_by (sort_by, table, count_by=None, join_tables=[]):
+def make_order_by(sort_by, table, count_by=None, join_tables=None):
+    if join_tables is None:
+        join_tables = []
+
     ret = []
     for col,direction in sort_by:
         if col=='count' and not hasattr(table.c,'count'):
@@ -120,8 +123,9 @@ class DBObject:
 # categories_table: id -> recipe_id, category_entry_id -> id
 # ingredients_table: ingredient_id -> id, id -> recipe_id
 
-def db_url(filename: Optional[str]=None,
-           custom_url: Optional[str]=None) -> str:
+
+def db_url(filename: Optional[str] = None,
+           custom_url: Optional[str] = None) -> str:
     if custom_url is not None:
         return custom_url
     else:
@@ -837,13 +841,14 @@ class RecData (Pluggable):
 
             return retval
 
-    def search_recipes (self, searches, sort_by=[]):
+    def search_recipes(self, searches, sort_by=None):
         """Search recipes for columns of values.
 
         "category" and "ingredient" are handled magically
-
         sort_by is a list of tuples (column,1) [ASCENDING] or (column,-1) [DESCENDING]
         """
+        sort_by = sort_by if sort_by is not None else []
+
         if 'rating' in [t[0] for t in sort_by]:
             i = [t[0] for t in sort_by].index('rating')
             d = (sort_by[i][1]==1 and -1 or 1)
@@ -851,7 +856,7 @@ class RecData (Pluggable):
         criteria = self.get_criteria((searches,'and'))
         debug('backends.db.search_recipes - search criteria are %s'%searches,2)
         if 'category' in [s[0] for s in sort_by]:
-            return sqlalchemy.select([c for c in self.recipe_table.c],# + [self.categories_table.c.category],
+            return sqlalchemy.select([c for c in self.recipe_table.c],
                                      criteria,distinct=True,
                                      from_obj=[sqlalchemy.outerjoin(self.recipe_table,self.categories_table)],
                                      order_by=make_order_by(sort_by,self.recipe_table,
