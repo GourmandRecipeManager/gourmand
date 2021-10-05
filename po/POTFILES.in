@@ -1,109 +1,100 @@
-[type: gettext/glade]src/gourmet/ui/app.ui
-[type: gettext/glade]src/gourmet/ui/batchEditor.ui
-[type: gettext/glade]src/gourmet/ui/databaseChooser.ui
-[type: gettext/glade]src/gourmet/ui/preferenceDialog.ui
-[type: gettext/glade]src/gourmet/ui/recCardDescriptionEditor.ui
-[type: gettext/glade]src/gourmet/ui/recCardDisplay.ui
-[type: gettext/glade]src/gourmet/ui/recCardIngredientsEditor.ui
-[type: gettext/glade]src/gourmet/ui/recipe_index.ui
-[type: gettext/glade]src/gourmet/ui/shopCatEditor.ui
-[type: gettext/glade]src/gourmet/ui/timerDialog.ui
-[type: gettext/glade]src/gourmet/ui/valueEditor.ui
-[type: gettext/glade]src/gourmet/ui/nutritionDruid.ui
-src/gourmet/version.py
-src/gourmet/backends/DatabaseChooser.py
-src/gourmet/backends/db.py
-src/gourmet/shopgui.py
-src/gourmet/reccard.py
-src/gourmet/timer.py
-src/gourmet/plugin_gui.py
-src/gourmet/gglobals.py
-src/gourmet/gtk_extras/validation.py
-src/gourmet/gtk_extras/ratingWidget.py
-src/gourmet/gtk_extras/dialog_extras.py
-src/gourmet/shopping.py
-src/gourmet/check_encodings.py
-src/gourmet/GourmetRecipeManager.py
-src/gourmet/plugins/key_editor/keyEditorPlugin.py
-src/gourmet/plugins/key_editor/keyEditor.py
-src/gourmet/plugins/key_editor/recipeEditorPlugin.py
-[type: gettext/glade]src/gourmet/plugins/key_editor/keyeditor.ui
-src/gourmet/plugins/shopping_associations/shopping_key_editor_plugin.py
-src/gourmet/plugins/unit_display_prefs/unit_prefs_dialog.py
-src/gourmet/plugins/unit_display_prefs/__init__.py
-src/gourmet/plugins/browse_recipes/browser.py
-src/gourmet/plugins/duplicate_finder/recipeMerger.py
-src/gourmet/plugins/duplicate_finder/recipeMergerPlugin.py
-[type: gettext/glade]src/gourmet/plugins/duplicate_finder/recipeMerger.ui
-src/gourmet/plugins/field_editor/fieldEditor.py
-src/gourmet/plugins/field_editor/__init__.py
-src/gourmet/plugins/email_plugin/emailer_plugin.py
-src/gourmet/plugins/email_plugin/recipe_emailer.py
-src/gourmet/plugins/unit_converter/convertGui.py
-src/gourmet/plugins/unit_converter/__init__.py
-[type: gettext/glade]src/gourmet/plugins/unit_converter/converter.ui
-src/gourmet/plugins/import_export/archive_plugin/zip_importer_plugin.py
-src/gourmet/plugins/import_export/archive_plugin/zip_readers.py
-src/gourmet/plugins/import_export/html_plugin/html_exporter_plugin.py
-src/gourmet/plugins/import_export/html_plugin/html_exporter.py
-src/gourmet/plugins/import_export/epub_plugin/epub_exporter.py
-src/gourmet/plugins/import_export/epub_plugin/epub_exporter_plugin.py
-src/gourmet/plugins/import_export/plaintext_plugin/plaintext_exporter_plugin.py
-src/gourmet/plugins/import_export/plaintext_plugin/plaintext_importer_plugin.py
-src/gourmet/plugins/import_export/gxml_plugin/gxml_exporter_plugin.py
-src/gourmet/plugins/import_export/gxml_plugin/gxml_importer_plugin.py
-src/gourmet/plugins/import_export/mastercook_import_plugin/mastercook_importer_plugin.py
-src/gourmet/plugins/import_export/mastercook_import_plugin/mastercook_importer.py
-src/gourmet/plugins/import_export/krecipe_plugin/krecipe_importer_plugin.py
-src/gourmet/plugins/import_export/pdf_plugin/print_plugin.py
-src/gourmet/plugins/import_export/pdf_plugin/pdf_exporter_plugin.py
-src/gourmet/plugins/import_export/pdf_plugin/pdf_exporter.py
-src/gourmet/plugins/import_export/mealmaster_plugin/mealmaster_importer_plugin.py
-src/gourmet/plugins/import_export/mealmaster_plugin/mealmaster_exporter_plugin.py
-src/gourmet/plugins/import_export/mealmaster_plugin/mealmaster_exporter.py
-src/gourmet/plugins/import_export/mycookbook_plugin/mycookbook_importer_plugin.py
-src/gourmet/plugins/import_export/mycookbook_plugin/mycookbook_exporter_plugin.py
-src/gourmet/plugins/listsaver/shoppingSaverPlugin.py
-src/gourmet/plugins/nutritional_information/export_plugin.py
-src/gourmet/plugins/nutritional_information/nutritionDruid.py
-src/gourmet/plugins/nutritional_information/nutPrefsPlugin.py
-src/gourmet/plugins/nutritional_information/reccard_plugin.py
-src/gourmet/plugins/nutritional_information/nutritionModel.py
-src/gourmet/plugins/nutritional_information/nutritionDisplay.py
-src/gourmet/plugins/nutritional_information/nutritionLabel.py
-src/gourmet/plugins/nutritional_information/nutritionGrabberGui.py
-src/gourmet/plugins/nutritional_information/databaseGrabber.py
-src/gourmet/plugins/nutritional_information/main_plugin.py
-src/gourmet/plugins/nutritional_information/parser_data.py
-src/gourmet/plugins/nutritional_information/nutritionInfoEditor.py
-src/gourmet/plugins/nutritional_information/shopping_plugin.py
-[type: gettext/glade]src/gourmet/plugins/nutritional_information/nut_recipe_card_display.ui
-src/gourmet/exporters/exporter.py
-src/gourmet/exporters/recipe_emailer.py
-src/gourmet/exporters/exportManager.py
-src/gourmet/exporters/printer.py
-src/gourmet/exporters/rtf_exporter.py
-src/gourmet/recipeIdentifier.py
-src/gourmet/importers/webextras.py
-src/gourmet/importers/generic_recipe_parser.py
-src/gourmet/importers/importManager.py
-src/gourmet/importers/plaintext_importer.py
-src/gourmet/importers/importer.py
-src/gourmet/importers/html_importer.py
-src/gourmet/importers/interactive_importer.py
-src/gourmet/recindex.py
-src/gourmet/threadManager.py
-src/gourmet/convert.py
-data/gourmet.appdata.xml.in
-data/gourmet.desktop.in
+[type: gettext/glade]src/gourmand/ui/app.ui
+[type: gettext/glade]src/gourmand/ui/batchEditor.ui
+[type: gettext/glade]src/gourmand/ui/databaseChooser.ui
+[type: gettext/glade]src/gourmand/ui/preferenceDialog.ui
+[type: gettext/glade]src/gourmand/ui/recCardDescriptionEditor.ui
+[type: gettext/glade]src/gourmand/ui/recCardDisplay.ui
+[type: gettext/glade]src/gourmand/ui/recCardIngredientsEditor.ui
+[type: gettext/glade]src/gourmand/ui/recipe_index.ui
+[type: gettext/glade]src/gourmand/ui/shopCatEditor.ui
+[type: gettext/glade]src/gourmand/ui/timerDialog.ui
+[type: gettext/glade]src/gourmand/ui/valueEditor.ui
+[type: gettext/glade]src/gourmand/ui/nutritionDruid.ui
+src/gourmand/__version__.py
+src/gourmand/backends/DatabaseChooser.py
+src/gourmand/backends/db.py
+src/gourmand/shopgui.py
+src/gourmand/reccard.py
+src/gourmand/timer.py
+src/gourmand/plugin_gui.py
+src/gourmand/gglobals.py
+src/gourmand/gtk_extras/validation.py
+src/gourmand/gtk_extras/ratingWidget.py
+src/gourmand/gtk_extras/dialog_extras.py
+src/gourmand/shopping.py
+src/gourmand/check_encodings.py
+src/gourmand/main.py
+src/gourmand/plugins/key_editor/keyEditorPlugin.py
+src/gourmand/plugins/key_editor/keyEditor.py
+src/gourmand/plugins/key_editor/recipeEditorPlugin.py
+[type: gettext/glade]src/gourmand/plugins/key_editor/keyeditor.ui
+src/gourmand/plugins/shopping_associations/shopping_key_editor_plugin.py
+src/gourmand/plugins/unit_display_prefs/unit_prefs_dialog.py
+src/gourmand/plugins/unit_display_prefs/__init__.py
+src/gourmand/plugins/browse_recipes/browser.py
+src/gourmand/plugins/duplicate_finder/recipeMerger.py
+src/gourmand/plugins/duplicate_finder/recipeMergerPlugin.py
+[type: gettext/glade]src/gourmand/plugins/duplicate_finder/recipeMerger.ui
+src/gourmand/plugins/field_editor/fieldEditor.py
+src/gourmand/plugins/field_editor/__init__.py
+src/gourmand/plugins/email_plugin/emailer_plugin.py
+src/gourmand/plugins/email_plugin/recipe_emailer.py
+src/gourmand/plugins/unit_converter/convertGui.py
+src/gourmand/plugins/unit_converter/__init__.py
+[type: gettext/glade]src/gourmand/plugins/unit_converter/converter.ui
+src/gourmand/plugins/import_export/html_plugin/html_exporter_plugin.py
+src/gourmand/plugins/import_export/html_plugin/html_exporter.py
+src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py
+src/gourmand/plugins/import_export/epub_plugin/epub_exporter_plugin.py
+src/gourmand/plugins/import_export/plaintext_plugin/plaintext_exporter_plugin.py
+src/gourmand/plugins/import_export/plaintext_plugin/plaintext_importer_plugin.py
+src/gourmand/plugins/import_export/gxml_plugin/gxml_exporter_plugin.py
+src/gourmand/plugins/import_export/gxml_plugin/gxml_importer_plugin.py
+src/gourmand/plugins/import_export/mastercook_import_plugin/mastercook_importer_plugin.py
+src/gourmand/plugins/import_export/mastercook_import_plugin/mastercook_importer.py
+src/gourmand/plugins/import_export/krecipe_plugin/krecipe_importer_plugin.py
+src/gourmand/plugins/import_export/pdf_plugin/print_plugin.py
+src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter_plugin.py
+src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py
+src/gourmand/plugins/import_export/mealmaster_plugin/mealmaster_importer_plugin.py
+src/gourmand/plugins/import_export/mealmaster_plugin/mealmaster_exporter_plugin.py
+src/gourmand/plugins/import_export/mealmaster_plugin/mealmaster_exporter.py
+src/gourmand/plugins/import_export/mycookbook_plugin/mycookbook_importer_plugin.py
+src/gourmand/plugins/import_export/mycookbook_plugin/mycookbook_exporter_plugin.py
+src/gourmand/plugins/listsaver/shoppingSaverPlugin.py
+src/gourmand/plugins/nutritional_information/export_plugin.py
+src/gourmand/plugins/nutritional_information/nutritionDruid.py
+src/gourmand/plugins/nutritional_information/nutPrefsPlugin.py
+src/gourmand/plugins/nutritional_information/reccard_plugin.py
+src/gourmand/plugins/nutritional_information/nutritionModel.py
+src/gourmand/plugins/nutritional_information/nutritionDisplay.py
+src/gourmand/plugins/nutritional_information/nutritionLabel.py
+src/gourmand/plugins/nutritional_information/nutritionGrabberGui.py
+src/gourmand/plugins/nutritional_information/databaseGrabber.py
+src/gourmand/plugins/nutritional_information/main_plugin.py
+src/gourmand/plugins/nutritional_information/parser_data.py
+src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
+src/gourmand/plugins/nutritional_information/shopping_plugin.py
+[type: gettext/glade]src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui
+src/gourmand/exporters/exporter.py
+src/gourmand/exporters/recipe_emailer.py
+src/gourmand/exporters/exportManager.py
+src/gourmand/exporters/printer.py
+src/gourmand/exporters/rtf_exporter.py
+src/gourmand/recipeIdentifier.py
+src/gourmand/importers/generic_recipe_parser.py
+src/gourmand/importers/importManager.py
+src/gourmand/importers/plaintext_importer.py
+src/gourmand/importers/importer.py
+src/gourmand/importers/interactive_importer.py
+src/gourmand/recindex.py
+src/gourmand/threadManager.py
+src/gourmand/convert.py
 [type: gettext/ini]data/plugins/browse_plugin.gourmet-plugin.in
 [type: gettext/ini]data/plugins/duplicate_finder.gourmet-plugin.in
-[type: gettext/ini]data/plugins/email.gourmet-plugin.in
 [type: gettext/ini]data/plugins/field_editor.gourmet-plugin.in
-[type: gettext/ini]data/plugins/import_export/archive.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/epub.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/gxml.gourmet-plugin.in
-[type: gettext/ini]data/plugins/import_export/html.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/krecipe_plugin.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/mastercook_plugin.gourmet-plugin.in
 [type: gettext/ini]data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in
