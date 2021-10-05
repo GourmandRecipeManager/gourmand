@@ -100,3 +100,35 @@ When reporting an issue, please fill in the provided template.
 
 For feedback or requests of features, please explain with details, and
 screenshots if possible, what you would like.
+
+## Translations
+
+The following describes how to contribute translation.
+
+Update the translate template:
+
+```bash
+cd po/
+intltool-update -p -g gourmand
+```
+
+A file `gourmand.pot` should have been modified. Add it to git.
+
+If modifying an already existing translation, update the translation file:
+
+```bash
+msgmerge --update --no-fuzzy-matching --backup=off fr.po gourmand.pot
+```
+
+If adding translation for a new language, copy the file for your target
+language, such as `fr.po` or `de_AT.po`, if translating for a specific region,
+and add it to git.
+
+Once the translation is done, update the translations:
+
+```bash
+python setup.py build_i18n
+```
+
+Launch Gourmand and check the changes.  
+Once satisfied, open a pull request with your work.
