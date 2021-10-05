@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--*- mode: xml -*-->
-<interface domain="gourmet">
+<interface domain="gourmand">
   <requires lib="gtk+" version="2.16"/>
   <object class="GtkWindow" id="window">
     <property name="border_width">12</property>
