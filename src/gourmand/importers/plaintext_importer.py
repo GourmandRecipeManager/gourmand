@@ -20,16 +20,22 @@ class TextImporter (importer.Importer):
         self.rec = {}
         self.ing = {}
         self.compile_regexps()
+        self.lines = None
         importer.Importer.__init__(self,conv=conv)
 
-    def pre_run (self):
+    def pre_run(self):
         self.lines = check_encodings.get_file(self.fn)
+
+        if self.lines is None:
+            return  # The operation has been cancelled
+
         self.total_lines = len(self.lines)
         print('we have ',self.total_lines,'lines in file',self.fn)
 
-    def do_run (self):
-        if not hasattr(self,'lines'):
-            raise Exception("pre_run has not been run!")
+    def do_run(self):
+        if self.lines is None:
+            return
+
         for n in range(self.total_lines):
             l=self.lines[n]
             if n % 15 == 0:

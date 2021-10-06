@@ -1389,8 +1389,8 @@ class DescriptionEditorModule (TextEditor, RecEditorModule):
         except (TypeError, ValueError):
             self.yields = None
             if hasattr(self.current_rec, 'yields'):
-                msg = (f'Could not make sense of {self.current_rec.yields}'
-                        'as a number of yields')
+                msg = (f'Could not make sense of {self.current_rec.yields} '
+                       'as a number of yields')
                 debug(msg, 0)
 
         for c in self.reccom:
