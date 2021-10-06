@@ -39,6 +39,10 @@ jobs:
           convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
           convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
 
+          # Package libffi.so,7 as it is not available in Ubuntu 20.10
+          cp /lib/x86_64-linux-gnu/libffi.so.7 squashfs-root/usr/lib/libffi.so.7
+          sed -i -e 's|PYTHONHOME=|LD_PRELOAD="${APPDIR}/usr/lib/libffi.so.7" PYTHONHOME=|g' ./squashfs-root/AppRun
+
     - name: Pack AppImage
       run: |
           VERSION=${GITHUB_SHA::8} ./appimagetool-*.AppImage squashfs-root/
