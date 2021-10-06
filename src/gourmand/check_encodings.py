@@ -141,6 +141,11 @@ class EncodingDialog(de.OptionDialog):
         options = list(self.encodings.keys())
         masterlist = CheckEncoding.encodings + CheckEncoding.all_encodings
         options.sort(key=lambda x: masterlist.index(x))
+        # Make utf-8 the default value if available, as it is likely right
+        # format
+        if 'utf-8' in options:
+            options.remove('utf-8')
+            options.insert(0, 'utf-8')
         return options
 
     def create_expander(self):
