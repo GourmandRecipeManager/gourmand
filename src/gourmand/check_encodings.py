@@ -26,68 +26,74 @@ class CheckEncoding:
                      'mac_latin2', 'mac_roman', 'mac_turkish', 'utf_16',
                      'utf_16_be', 'utf_16_le', 'utf_7', 'utf_8']
 
-    def __init__(self, file, encodings=None):
+    def __init__(self, filename, encodings=None):
         if Prefs.instance().get('utf-16', False):
             self.encodings.extend(['utf_16', 'utf_16_le', 'utf_16_be'])
         if encodings is not None:
             self.encodings = encodings
-        if isinstance(file, str):
-            file = open(file, 'rb')
-        self.txt = file.read()
-        file.close()
+
+        with open(filename, 'rb') as fin:
+            self.txt = fin.read()
 
     def test_encodings(self):
         """Move through self.encodings one at a time and return the first
-        encoding that decodes our text cleanly. We return a tuple (encoding,decoded_text)"""
+        encoding that decodes our text cleanly. We return a tuple
+        (encoding, decoded_text)"""
         for e in self.encodings:
             try:
-                t=self.txt.decode(e)
-                return (e,t)
+                t = self.txt.decode(e)
+                return (e, t)
             except UnicodeDecodeError:
                 pass
 
-    def get_encodings (self):
+    def get_encodings(self):
         encs = self.test_all_encodings(self.encodings)
         if encs:
             return encs
         else:
             return self.test_all_encodings(self.all_encodings)
 
-    def test_all_encodings (self,encodings=None):
+    def test_all_encodings(self, encodings=None):
         """Test all encodings and return a dictionary of possible encodings."""
-        if not encodings:
-            encodings=self.all_encodings
-        self.possible_encodings = {}
+        if encodings is None:
+            encodings = self.all_encodings
+
+        possible_encodings = {}
+
         for e in encodings:
             try:
-                d=self.txt.decode(e)
-                if d and (d not in self.possible_encodings.values()):
+                d = self.txt.decode(e)
+                if d and (d not in possible_encodings.values()):
                     # if we don't already have this possibility, add
-                    self.possible_encodings[e] = d
+                    possible_encodings[e] = d
             except UnicodeDecodeError:
                 pass
-        return self.possible_encodings
+        return possible_encodings
+
 
 class GetFile(CheckEncoding):
     """Handed a filename, return a list of lines."""
-    def __init__(self, file: str, encodings=None):
-        super().__init__(file, encodings)
+    def __init__(self, filename: str, encodings=None):
+        super().__init__(filename, encodings)
         encs: Dict[str, str] = self.get_encodings()
+        self.lines = None
+
         if encs:
             if len(list(encs.keys())) > 1:
                 encoding = getEncoding(encodings=encs)
             else:
                 encoding = list(encs.keys())[0]
+            if encoding is None:
+                return
             self.enc = encoding
             self.lines = encs[self.enc].splitlines()
-            debug('reading file %s as encoding %s'%(file, self.enc))
+            debug(f'reading file {filename} as encoding {self.enc}')
         else:
-            raise Exception("Cannot decode file %s" % file)
+            raise Exception(f"Cannot decode file {filename}")
 
 
-def get_file(file: str, encodings=None):
-    gf = GetFile(file, encodings)
-    return gf.lines
+def get_file(filename: str, encodings=None):
+    return GetFile(filename, encodings).lines
 
 
 class EncodingDialog(de.OptionDialog):
@@ -246,9 +252,4 @@ class EncodingDialog(de.OptionDialog):
 def getEncoding(*args, **kwargs):
     dialog = EncodingDialog(*args, **kwargs)
     result = dialog.run()
-    if (not result) and dialog.encodings:
-        return dialog.options[0]
-    elif not result:
-        return 'ascii'
-    else:
-        return result
+    return result

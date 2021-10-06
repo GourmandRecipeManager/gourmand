@@ -5,14 +5,13 @@ from gi.repository import Gtk
 
 from gourmand import check_encodings
 from gourmand.i18n import _
-from gourmand.importers.importer import Tester
 from gourmand.importers.interactive_importer import InteractiveImporter
 from gourmand.plugin import ImporterPlugin
-from gourmand.threadManager import get_thread_manager
 
 MAX_PLAINTEXT_LENGTH = 100000
 
-class PlainTextImporter (InteractiveImporter):
+
+class PlainTextImporter(InteractiveImporter):
 
     name = 'Plain Text Importer'
 
@@ -29,10 +28,15 @@ class PlainTextImporter (InteractiveImporter):
                             sublabel=_('Your file exceeds the maximum length of %s characters. You probably didn\'t mean to import it anyway. If you really do want to import this file, use a text editor to split it into smaller files and try importing again.')%MAX_PLAINTEXT_LENGTH,
                             message_type=Gtk.MessageType.ERROR)
             return
-        with open(self.filename, 'rb') as ifi:
-            data = '\n'.join(check_encodings.get_file(ifi))
+
+        content = check_encodings.get_file(self.filename)
+        if content is None:
+            return
+
+        data = '\n'.join(check_encodings.get_file(content))
         self.set_text(data)
         return InteractiveImporter.do_run(self)
+
 
 class PlainTextImporterPlugin (ImporterPlugin):
 
