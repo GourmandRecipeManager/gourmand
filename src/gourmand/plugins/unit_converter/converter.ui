@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--*- mode: xml -*-->
-<interface domain="gourmet">
+<interface domain="gourmand">
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">10</property>
     <property name="lower">0</property>
