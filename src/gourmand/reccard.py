@@ -1018,7 +1018,7 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
             if hasattr(module,'enter_page'): module.enter_page()
             self._last_module = module
 
-    def save_cb(self, action: Gtk.Action):
+    def save_cb(self, action: Gtk.Action = None):
         """Save an edited recipe."""
         self.widgets_changed_since_save = {}
         self.mainRecEditActionGroup.get_action('ShowRecipeCard').set_sensitive(True)
@@ -2950,8 +2950,8 @@ class IngInfo:
 #         debug('add ing completed',3)
 #         if not self.manually: self.connect_models()
 
-# Dialog for adding a recipe as an ingredient
-class RecSelector (RecIndex):
+
+class RecSelector(RecIndex):
     """Select a recipe and add it to RecCard's ingredient list"""
     def __init__(self, recGui, ingEditor):
         self.prefs = prefs.Prefs.instance()
@@ -2969,8 +2969,20 @@ class RecSelector (RecIndex):
                           )
         self.dialog.run()
 
+    @property
+    def sort_by(self):
+        preferences = self.prefs['sort_by']
+        column, ascending = preferences.values()
+        ascending = 1 if ascending else -1
+        return ([column, ascending],)
 
-    def setup_main_window (self):
+    @sort_by.setter
+    def sort_by(self, value):
+        column, ascending = value[-1]
+        ascending = True if ascending == 1 else False  # -1
+        self.prefs['sort_by'] = {'column': column, 'ascending': ascending}
+
+    def setup_main_window(self):
         d = Gtk.Dialog(_("Choose recipe"),
                        self.re.window,
                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -2986,7 +2998,7 @@ class RecSelector (RecIndex):
         self.recipe_index_interface = self.ui.get_object('recipeIndexBox')
         self.recipe_index_interface.unparent()
         d.vbox.add(self.recipe_index_interface)
-        d.connect('response',self.response_cb)
+        d.connect('response', self.response_cb)
         self.recipe_index_interface.show()
         self.dialog = d
 
@@ -3002,9 +3014,9 @@ class RecSelector (RecIndex):
     def rec_tree_select_rec (self, *args):
         self.ok()
 
-    def ok (self,*args):
-        debug('ok',0)
-        pre_iter=self.ingEditor.ingtree_ui.get_selected_ing()
+    def ok(self, *args):
+        debug('ok', 0)
+        pre_iter = self.ingEditor.ingtree_ui.get_selected_ing()
         try:
             for rec in self.get_selected_recs_from_rec_tree():
                 if rec.id == self.re.current_rec.id:
@@ -3016,11 +3028,10 @@ class RecSelector (RecIndex):
                     amount = YieldSelector(rec, self.re.window).run()
                 else:
                     amount = 1
-                ingdic={'amount':amount,
-                        'unit':'recipe',
-                        'item':rec.title,
-                        'refid':rec.id,
-                        }
+                ingdic = {'amount': str(amount),
+                          'item': rec.title,
+                          'refid': rec.id,
+                          }
                 debug('adding ing: %s'%ingdic,5)
                 self.ingEditor.ingtree_ui.ingController.add_ingredient_from_kwargs(
                     group_iter=pre_iter,
@@ -3031,8 +3042,8 @@ class RecSelector (RecIndex):
             de.show_message(label=_("You haven't selected any recipes!"))
             raise
 
-class YieldSelector (de.ModalDialog):
 
+class YieldSelector(de.ModalDialog):
     def __init__ (self, rec, parent=None):
         self.__in_update_from_yield = False
         self.__in_update_from_rec = False
@@ -3070,7 +3081,8 @@ class YieldSelector (de.ModalDialog):
                              lower=lower,upper=upper,
                              step_incr=step_incr,page_incr=page_incr,
                              )
-        sb = Gtk.SpinButton(adj)
+        sb = Gtk.SpinButton()
+        sb.set_adjustment(adj)
         sb.set_digits(digits)
         return sb,adj
 
