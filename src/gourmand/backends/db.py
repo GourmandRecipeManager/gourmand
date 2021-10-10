@@ -3,7 +3,7 @@ import re
 import shutil
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import sqlalchemy
 import sqlalchemy.orm
@@ -881,14 +881,14 @@ class RecData (Pluggable):
                   ]
         return [x for x in retval if x is not None] # Don't return null values
 
-    def get_ingkeys_with_count(self, search: Optional[Mapping[str, Any]] = None) -> List[Tuple[int, str]]:
+    def get_ingkeys_with_count(self, search: Optional[Dict[str, Any]] = None) -> List[Tuple[int, str]]:
         """Get unique list of ingredient keys and counts for number of times they appear in the database.
         """
         if search is None:
            search = {}
 
         if search:
-            col = getattr(self.ingredients_table.c,search['column'])
+            col = getattr(self.ingredients_table.c, search['column'])
             operator = search.get('operator','LIKE')
             if operator=='LIKE':
                 criteria = col.like(search['search'])
@@ -898,16 +898,16 @@ class RecData (Pluggable):
                 criteria = col.contains(search['search'])
             else:
                 criteria = (col == search['search'])
-            result =  sqlalchemy.select(
+            result = sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 criteria,
-                **{'group_by':'ingkey',
-                   'order_by':make_order_by([],self.ingredients_table,count_by='ingkey'),
+                **{'group_by': 'ingkey',
+                   'order_by': make_order_by([],self.ingredients_table,count_by='ingkey'),
                    }
                 ).execute().fetchall()
         else:  # return all ingredient keys with counts
-            result =  sqlalchemy.select(
+            result = sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 **{'group_by':'ingkey',

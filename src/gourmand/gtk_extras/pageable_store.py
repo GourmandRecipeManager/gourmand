@@ -1,3 +1,4 @@
+from typing import List, Optional, Tuple
 from gi.repository import GObject, Gtk
 
 
@@ -351,8 +352,8 @@ class PageableViewStore (PageableListStore):
         self.update_tree()
         self.emit('view-changed')
 
-    def change_view (self, vw, length=None):
-        self.do_change_view(vw,length=length)
+    def change_view(self, vw: List[Optional[Tuple]], length=None):
+        self.do_change_view(vw, length=length)
         # Don't change the page anymore... it screws up a lot of
         # things... if we want to change the page during a search for
         # "usability", then we should do this from higher up so we can

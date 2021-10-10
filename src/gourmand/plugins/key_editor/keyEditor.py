@@ -1,6 +1,6 @@
-import os
 from gettext import ngettext
 from pathlib import Path
+from typing import Any, Dict, Optional
 
 from gi.repository import Gdk, GObject, Gtk
 
@@ -239,48 +239,48 @@ class KeyEditor:
     def resetTree (self):
         self.search_string = 'NO ONE WOULD EVER SEARCH FOR THIS HACKISH STRING'
         curpage = self.treeModel.page
-        self.doSearch()
+        self.do_search()
         self.treeModel.set_page(curpage)
 
-    def doSearch (self):
-        """Do the actual searching."""
+    def do_search(self):
         last_search = self.search_string
         self.search_string = self.searchEntry.get_text()
         last_by = self.search_by
         self.treeModel.search_by = self.search_by = cb.cb_get_active_text(self.searchByBox)
         last_regexp = self.use_regexp
         self.use_regexp = self.regexpTog.get_active()
-        if (self.search_by==last_by and
-            self.search_string==last_search and
-            self.use_regexp==last_regexp):
-            # Don't do anything...
+
+        # Do nothing if this callback was called with no changes
+        if (self.search_by == last_by and
+            self.search_string == last_search and
+            self.use_regexp == last_regexp):
             return
-        # RESET THE VIEW IF NEED BE
-        if (self.search_string.find(last_search)!=0 or
+
+        # Clear the view if searching for something different
+        if (not self.search_string.startswith(last_search) or
             self.search_by != last_by or
             self.use_regexp != last_regexp):
             self.treeModel.reset_views()
+
         if self.search_by == _('item'):
-            self.treeModel.limit_on_ingkey(self.search_string,
-                                           search_options={'use_regexp':self.use_regexp,}
-                                           )
+            column = 'item'
         elif self.search_by == _('key'):
-            self.treeModel.limit_on_item(self.search_string,
-                                         search_options={'use_regexp':self.use_regexp})
-        else: # self.search_by == _('unit'):
-            self.treeModel.limit(self.search_string,
-                                 'unit',
-                                 search_options={'use_regexp':self.use_regexp}
-                                 )
+            column = 'ingkey'
+        else:  # self.search_by == _('unit'):
+            column = 'unit'
+
+        self.treeModel.limit(self.search_string,
+                             column,
+                             search_options={'use_regexp': self.use_regexp})
 
     def isearchCB (self, *args):
         if self.searchAsYouTypeToggle.get_active():
             self.window.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-            GObject.idle_add(lambda *args: (self.doSearch() or
+            GObject.idle_add(lambda *args: (self.do_search() or
                                             self.window.get_window().set_cursor(None)))
 
     def searchCB (self, *args):
-        self.doSearch()
+        self.do_search()
 
     def search_as_you_typeCB (self, *args):
         if self.searchAsYouTypeToggle.get_active():
@@ -469,7 +469,7 @@ class KeyEditor:
         self.treeModel.reset_views()
         self.search_by = None
         self.search_string = ''
-        self.doSearch()
+        self.do_search()
 
     # Paging handlers
     def model_changed_cb (self, model):
@@ -562,23 +562,20 @@ class KeyStore (pageable_store.PageableTreeStore,pageable_store.PageableViewStor
     def _setup_parent_ (self, *args, **kwargs):
         self.reset_views()
 
-    def limit_on_ingkey (self, txt, search_options={}):
-        self.limit(txt,self.rd.ingredients_table+'.ingkey',search_options)
-
-    def limit_on_item (self, txt, search_options={}):
-        self.limit(txt,'item',search_options)
-
-    def limit (self, txt, column='ingkey', search_options={}):
+    def limit(self, txt: str, column: str, search_options: Optional[Dict[str, Any]] = None):
+        if search_options is None:
+            search_options = {}
         if txt == self.__last_limit_text:
             return
         else:
             self.__last_limit_text = txt
-        if not txt: self.reset_views()
+        if not txt:
+            self.reset_views()
         if search_options['use_regexp']:
-            s = {'search':txt,'operator':'REGEXP'}
+            s = {'search':txt, 'operator':'REGEXP'}
         else:
             s = {'search':'%'+txt.replace('%','%%')+'%','operator':'LIKE'}
-        s['column']=column
+        s['column'] = column
         self.change_view(self.rd.get_ingkeys_with_count(s))
 
     def _get_length_ (self):

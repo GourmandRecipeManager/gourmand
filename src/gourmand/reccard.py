@@ -3002,8 +3002,8 @@ class RecSelector(RecIndex):
         self.recipe_index_interface.show()
         self.dialog = d
 
-    def response_cb (self, dialog, resp):
-        if resp==Gtk.ResponseType.ACCEPT:
+    def response_cb(self, dialog, resp):
+        if resp == Gtk.ResponseType.ACCEPT:
             self.ok()
         else:
             self.quit()
