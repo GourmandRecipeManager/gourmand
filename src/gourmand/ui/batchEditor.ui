@@ -448,7 +448,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxEntry" id="categoryBox">
+                          <object class="GtkComboBoxText" id="categoryBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child internal-child="entry">
@@ -473,7 +473,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxEntry" id="cuisineBox">
+                          <object class="GtkComboBoxText" id="cuisineBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child internal-child="entry">
@@ -600,7 +600,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxEntry" id="yield_unitBox">
+                          <object class="GtkComboBoxText" id="yield_unitBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child internal-child="entry">
