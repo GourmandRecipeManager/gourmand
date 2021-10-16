@@ -4,7 +4,6 @@
   <object class="GtkDialog" id="valueDialog">
     <property name="border_width">12</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
-    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -186,9 +185,9 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBoxEntry" id="otherNewValueComboBoxEntry">
+                                  <object class="GtkComboBoxText" id="otherNewValueComboBoxEntry">
                                     <property name="visible">True</property>
-                                    <child internal-child="entry">
+                                    <child>
                                       <object class="GtkEntry" id="otherNewValueEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
@@ -252,9 +251,9 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBoxEntry" id="newValueComboBoxEntry">
+                      <object class="GtkComboBoxText" id="newValueComboBoxEntry">
                         <property name="visible">True</property>
-                        <child internal-child="entry">
+                        <child>
                           <object class="GtkEntry" id="newValueEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
