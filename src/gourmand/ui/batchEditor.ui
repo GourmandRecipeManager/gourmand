@@ -407,7 +407,7 @@
                           <object class="GtkComboBoxText" id="sourceBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <child internal-child="entry">
+                            <child>
                               <object class="GtkEntry" id="comboboxentry-entry3">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -451,7 +451,7 @@
                           <object class="GtkComboBoxText" id="categoryBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <child internal-child="entry">
+                            <child>
                               <object class="GtkEntry" id="comboboxentry-entry1">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -476,7 +476,7 @@
                           <object class="GtkComboBoxText" id="cuisineBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <child internal-child="entry">
+                            <child>
                               <object class="GtkEntry" id="comboboxentry-entry2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
@@ -501,10 +501,6 @@
                           <object class="TimeEntry" id="cooktimeBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="primary_icon_activatable">False</property>
-                            <property name="secondary_icon_activatable">False</property>
-                            <property name="primary_icon_sensitive">True</property>
-                            <property name="secondary_icon_sensitive">True</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -519,10 +515,6 @@
                           <object class="TimeEntry" id="preptimeBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="primary_icon_activatable">False</property>
-                            <property name="secondary_icon_activatable">False</property>
-                            <property name="primary_icon_sensitive">True</property>
-                            <property name="secondary_icon_sensitive">True</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -603,7 +595,7 @@
                           <object class="GtkComboBoxText" id="yield_unitBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <child internal-child="entry">
+                            <child>
                               <object class="GtkEntry" id="comboboxentry-entry8">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>

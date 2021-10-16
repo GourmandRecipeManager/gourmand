@@ -187,7 +187,7 @@
                                 <child>
                                   <object class="GtkComboBoxText" id="otherNewValueComboBoxEntry">
                                     <property name="visible">True</property>
-                                    <child internal-child="entry">
+                                    <child>
                                       <object class="GtkEntry" id="otherNewValueEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
@@ -253,7 +253,7 @@
                     <child>
                       <object class="GtkComboBoxText" id="newValueComboBoxEntry">
                         <property name="visible">True</property>
-                        <child internal-child="entry">
+                        <child>
                           <object class="GtkEntry" id="newValueEntry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
