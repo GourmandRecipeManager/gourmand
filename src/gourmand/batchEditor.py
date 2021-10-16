@@ -38,7 +38,7 @@ class BatchEditor:
                                                 getattr(self,'%sBox'%a).get_children()[0].get_text)
 
                     box.set_model(self.rg.get_attribute_model(a))
-                    box.set_text_column(0)
+                    box.set_entry_text_column(0)
                     cb_extras.setup_completion(box)
                 elif w=='Entry':
                     if hasattr(box,'get_value'):
