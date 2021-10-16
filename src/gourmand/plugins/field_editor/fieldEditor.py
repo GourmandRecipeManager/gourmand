@@ -130,21 +130,24 @@ class FieldEditor:
             self.otherValueBlurbLabel.show()
         mod = self.make_model_for_field(self.other_field)
         self.otherNewValueComboBoxEntry.set_model(mod)
-        if self.otherNewValueComboBoxEntry.get_text_column()==-1:
-            self.otherNewValueComboBoxEntry.set_text_column(0)
+
+        if self.otherNewValueComboBoxEntry.get_entry_text_column() == -1:
+            self.otherNewValueComboBoxEntry.set_entry_text_column(0)
+
         self.otherNewValueEntryCompletion.set_model(mod)
-        self.otherNewValueEntryCompletion.set_text_column(0)
+        self.otherNewValueEntryCompletion.set_entry_text_column(0)
 
-
-    def populate_treeview (self):
-        """Assume that self.field is set"""
+    def populate_treeview(self):
+        assert self.field
         mod = self.make_model_for_field(self.field)
         self.treeview.set_model(mod)
         self.newValueComboBoxEntry.set_model(mod)
-        if self.newValueComboBoxEntry.get_text_column()==-1:
-            self.newValueComboBoxEntry.set_text_column(0)
+
+        if self.newValueComboBoxEntry.get_entry_text_column() == -1:
+            self.newValueComboBoxEntry.set_entry_text_coulmn(0)
+
         self.newValueEntryCompletion.set_model(mod)
-        self.newValueEntryCompletion.set_text_column(0)
+        self.newValueEntryCompletion.set_entry_text_column(0)
 
     def make_model_for_field (self, field):
         vals = self.rd.get_unique_values(field)

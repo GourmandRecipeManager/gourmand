@@ -61,7 +61,7 @@ class KeyEditorPlugin (PluginPlugin):
             entry = cbe.get_child()
             completion = Gtk.EntryCompletion()
             completion.set_model(self.shopcat_model)
-            completion.set_text_column(0)
+            completion.set_entry_text_coulmn(0)
             entry.set_completion(completion)
 
     def key_edited_cb (self, renderer, path_string, new_text, extra_params):
@@ -119,7 +119,7 @@ class KeyEditorPlugin (PluginPlugin):
         entry = cb.get_child()
         completion = Gtk.EntryCompletion()
         completion.set_model(self.shopcat_model)
-        completion.set_text_column(0)
+        completion.set_entry_text_coulmn(0)
         entry.set_completion(completion)
         return cb
 
