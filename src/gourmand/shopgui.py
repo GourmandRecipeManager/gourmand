@@ -102,16 +102,8 @@ class IngredientAndPantryList:
     shopping and pantry list
     '''
 
-    def __init__ (self):
-        if hasattr(self,'rg'):
-            self.rd = self.rg.rd
-        else:
-            self.rd = recipeManager.get_recipe_manager()
-        # We need to keep track of including/excluding options...
-        # Here's our solution: we have a dictionary where we can lookg
-        # up ingredients by recipe by key
-        # {'recipe_id' : {'key1' : False
-        #                 'key2  : True}} ... where true and false mean include/exclude
+    def __init__(self):
+        self.rd = recipeManager.get_recipe_manager()
         self.setup_ui_manager()
         self.setup_actions()
 
@@ -227,14 +219,14 @@ class IngredientAndPantryList:
         self.pMod = self.createIngModel(self.pantry)
         self.pTree = self.create_ingTree(Gtk.TreeView(),
                                          self.pMod)
-        # self.pTree.connect('popup-menu',self.popup_pan_menu)
+        self.pTree.set_name('pantry_tree')
         self.pTree.get_selection().connect('changed',self.pTree_sel_changed_cb)
         # reset the first time...
         self.pTree_sel_changed_cb(self.pTree.get_selection())
         def pTree_popup_cb (tv, event):
             debug("pTree_popup_cb (tv, event):",5)
             if event.button==3 or event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.popup_pan_menu(tv,event)
+                self.popup_menu(tv, event)
                 return True
 
         self.pTree.connect('button-press-event',pTree_popup_cb)
@@ -244,15 +236,16 @@ class IngredientAndPantryList:
         self.slMod = self.createIngModel(self.data)
         self.slTree = self.create_ingTree(Gtk.TreeView(),
                                           self.slMod)
+        self.slTree.set_name('shopping_list_tree')
         self.slTree.show()
-        self.slTree.connect('popup-menu',self.popup_ing_menu)
-        def slTree_popup_cb (tv, event):
+        self.slTree.connect('popup-menu', self.popup_menu)
+        def slTree_popup_cb(tv, event):
             debug("slTree_popup_cb (tv, event):",5)
             if event.button==3 or event.type == Gdk.EventType._2BUTTON_PRESS:
-                self.popup_ing_menu(tv,event)
+                self.popup_menu(tv, event)
                 return True
-        self.slTree.connect('button-press-event',slTree_popup_cb)
-        self.slTree.get_selection().connect('changed',self.slTree_sel_changed_cb)
+        self.slTree.connect('button-press-event', slTree_popup_cb)
+        self.slTree.get_selection().connect('changed', self.slTree_sel_changed_cb)
         # reset the first time
         self.slTree_sel_changed_cb(self.slTree.get_selection())
 
@@ -493,28 +486,17 @@ class IngredientAndPantryList:
             pssave.restore_selections(tv=self.slTree)
 
     # Popup methods...
-    def popup_ing_menu (self, tv, event=None, *args):
-        debug("popup_ing_menu (self, tv, *args):",5)
-        self.tv = tv
-        if not event:
+    def popup_menu(self, tv, event=None, *args):
+        if event is None:
             event = Gtk.get_current_event()
-        t = (event and hasattr(event,'time') and getattr(event,'time')
-                or 0)
-        btn = (event and hasattr(event,'button') and getattr(event,'button')
-               or 0)
-        self.shoppop.popup(None,None,None,btn,t)
-        return True
 
-    def popup_pan_menu (self, tv, event=None, *args):
-        debug("popup_pan_menu (self, tv, *args):",5)
-        self.tv = tv
-        if not event:
-            event = Gtk.get_current_event()
-        t = (event and hasattr(event,'time') and getattr(event,'time')
-                or 0)
-        btn = (event and hasattr(event,'button') and getattr(event,'button')
-               or 0)
-        self.panpop.popup(None,None,None,btn,t)
+        t = getattr(event, 'time', 0)
+        btn = getattr(event, 'button', 0)
+
+        if tv.get_name() == 'shopping_list_tree':
+            self.shoppop.popup(None, None, None, None, btn, t)
+        else:  # tv.get_name == 'pantry_tree':
+            self.panpop.popup(None, None, None, None, btn, t)
         return True
 
     # Data convenience methods
