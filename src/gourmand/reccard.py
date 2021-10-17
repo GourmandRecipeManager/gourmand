@@ -368,7 +368,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self.window.set_icon(iu.load_pixbuf_from_resource('reccard.png'))
         self.window.connect('delete-event',self.hide)
         self.conf.append(WidgetSaver.WindowSaver(self.window,
-                                                 self.prefs.get('reccard_window_%s'%self.current_rec.id,
+                                                 self.prefs.get('reccard_window',
                                                                 {'window_size':(700,600)})
                                                  )
                          )
