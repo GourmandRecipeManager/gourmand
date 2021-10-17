@@ -135,7 +135,7 @@ class FieldEditor:
             self.otherNewValueComboBoxEntry.set_entry_text_column(0)
 
         self.otherNewValueEntryCompletion.set_model(mod)
-        self.otherNewValueEntryCompletion.set_entry_text_column(0)
+        self.otherNewValueEntryCompletion.set_text_column(0)
 
     def populate_treeview(self):
         assert self.field
@@ -147,7 +147,7 @@ class FieldEditor:
             self.newValueComboBoxEntry.set_entry_text_coulmn(0)
 
         self.newValueEntryCompletion.set_model(mod)
-        self.newValueEntryCompletion.set_entry_text_column(0)
+        self.newValueEntryCompletion.set_text_column(0)
 
     def make_model_for_field (self, field):
         vals = self.rd.get_unique_values(field)
@@ -197,14 +197,15 @@ class FieldEditor:
 
     def get_changes (self):
         if self.deleteValueButton.get_active():
-            value = None
+            return {self.field: None}
         elif self.changeValueButton.get_active():
             value = self.newValueEntry.get_text()
-        return {self.field:value}
+            return {self.field: value}
+        return {}  # 'Leave value as is' selected, another field is being set
 
     def get_other_changes (self):
         if self.otherChangeCheckButton.get_active():
-            return {self.other_field:self.otherNewValueEntry.get_text()}
+            return {self.other_field: self.otherNewValueEntry.get_text()}
         else:
             return {}
 
