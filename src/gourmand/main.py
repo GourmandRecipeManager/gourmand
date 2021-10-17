@@ -468,11 +468,14 @@ class RecTrash (RecIndex):
     RESPONSE_UNDELETE = 2
     RESPONSE_EMPTY_TRASH = 3
 
-    def __init__ (self, rg):
+    def __init__(self, rg):
         self.rg = rg
         self.rmodel = self.rg.rmodel
-        self.ui=Gtk.Builder()
+        self.ui = Gtk.Builder()
         self.ui.add_from_string(get_data('gourmand', 'ui/recipe_index.ui').decode())
+
+        self.sort_by = []
+
         RecIndex.__init__(self, self.ui, self.rg.rd, self.rg)
         self.setup_main_window()
 
@@ -485,12 +488,11 @@ class RecTrash (RecIndex):
                                   "_Undelete",self.RESPONSE_UNDELETE,
                                   Gtk.STOCK_CLOSE,Gtk.ResponseType.CLOSE))
         self.window.set_default_response(Gtk.ResponseType.CLOSE)
-        #a = Gtk.Alignment.new(); a.set_padding(12,12,12,12)
-        box = Gtk.VBox(); box.show()
+        box = Gtk.VBox()
+        box.show()
         box.set_border_width(12)
-        #a.add(box); a.show();
-        #self.window.vbox.add(a)
         self.window.vbox.add(box)
+
         top_label = Gtk.Label(); top_label.set_alignment(0.0,0.5)
         top_label.set_markup('<span weight="bold" size="large">'\
                 +_('Trash')+'</span>\n<i>'\
