@@ -823,7 +823,9 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
             InstructionsEditorModule,
             NotesEditorModule,
             ]
-        self.reccard= reccard; self.rg = rg; self.recipe_display = recipe_display
+        self.reccard = reccard
+        self.rg = rg
+        self.recipe_display = recipe_display
         if self.recipe_display and not recipe:
             recipe = self.recipe_display.current_rec
         self.current_rec = recipe
@@ -856,9 +858,8 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         self.show()
         self.modules[0].grab_focus()
 
-    def present (self):
+    def present(self):
         self.window.present()
-        self.modules[0].grab_focus()
 
     def setup_defaults (self):
         self.edit_title = _('Edit Recipe:')
@@ -941,14 +942,15 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
                     return
             self.set_edited(False)
 
-    def show_module(self, module_name: str) -> None:
-        """Show the part of our interface corresponding with module
-        named module_name."""
-        if module_name not in self.module_tab_by_name:
+    def show_module(self, module_name: str):
+        """Show and focus on the requested notebook."""
+        try:
+            module_index = self.module_tab_by_name[module_name]
+        except KeyError:
             raise ValueError('RecEditor has no module named %s'%module_name)
-        self.notebook.set_current_page(
-            self.module_tab_by_name[module_name]
-            )
+
+        self.notebook.set_current_page(module_index)
+        self.modules[module_index].grab_focus()
 
     def setup_main_interface (self):
         self.window = Gtk.Window()
@@ -967,7 +969,8 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         main_vb.pack_start(self.ui_manager.get_widget('/RecipeEditorMenuBar'),expand=False,fill=False, padding=0)
         main_vb.pack_start(self.ui_manager.get_widget('/RecipeEditorToolBar'),expand=False,fill=False, padding=0)
         main_vb.pack_start(self.ui_manager.get_widget('/RecipeEditorEditToolBar'),expand=False,fill=False, padding=0)
-        self.notebook = Gtk.Notebook(); self.notebook.show()
+        self.notebook = Gtk.Notebook()
+        self.notebook.show()
         main_vb.pack_start(self.notebook, True, True, 0)
         self.window.add(main_vb)
         self.window.add_accel_group(self.ui_manager.get_accel_group())
