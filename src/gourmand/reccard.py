@@ -372,7 +372,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
                                                                 {'window_size':(700,600)})
                                                  )
                          )
-        self.window.set_default_size(*self.prefs.get('reccard_window_%s'%self.current_rec.id)['window_size'])
+        self.window.set_default_size(*self.prefs.get('reccard_window')['window_size'])
         main_vb = Gtk.VBox()
         menu = self.ui_manager.get_widget('/RecipeDisplayMenuBar')
         main_vb.pack_start(menu, fill=False, expand=False, padding=0)
