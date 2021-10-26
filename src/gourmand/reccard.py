@@ -20,7 +20,7 @@ from gourmand.gtk_extras import WidgetSaver  # noqa: imports needed for glade
 from gourmand.gtk_extras import validation  # noqa: imports needed for glade
 from gourmand.gtk_extras import cb_extras as cb
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,
+from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,  # noqa: imports needed for glade
                                  ratingWidget)
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.gtk_extras.dialog_extras import (UserCancelledError,
@@ -3059,35 +3059,24 @@ class YieldSelector(de.ModalDialog):
                   )
         self.rec = rec
         table = Gtk.Table()
-        self.vbox.add(table);
-        self.recButton,self.recAdj = self.make_spinny(val=1,lower=0,
-                                                      step_incr=0.5,page_incr=5)
+        self.vbox.add(table)
+        self.recButton, self.recAdj = create_spinner(val=1,
+                                                     lower=0,
+                                                     step_incr=0.5,
+                                                     page_incr=5)
         recLabel = Gtk.Label(label=_('Recipes') + ': ')
         self.recAdj.connect('value_changed',self.update_from_rec)
         self.recAdj.connect('changed',self.update_from_rec)
         table.attach(recLabel,0,1,0,1); recLabel.show()
         table.attach(self.recButton,1,2,0,1); self.recButton.show()
         if rec.yields:
-            self.yieldsButton,self.yieldsAdj = self.make_spinny(val=self.rec.yields)
+            self.yieldsButton, self.yieldsAdj = create_spinner(self.rec.yields)
             self.yieldsAdj.connect('value_changed',self.update_from_yield)
             self.yieldsAdj.connect('changed',self.update_from_yield)
             yieldsLabel = Gtk.Label(label=rec.yield_unit.title() + ': ')
             table.attach(yieldsLabel,0,1,1,2); yieldsLabel.show()
             table.attach(self.yieldsButton,1,2,1,2);  self.yieldsButton.show()
         table.show()
-
-    def make_spinny (self, val=1, lower=0, upper=10000, step_incr=1, page_incr=10,
-                     digits=2):
-        '''return adjustment, spinner widget
-        '''
-        adj = Gtk.Adjustment(val,
-                             lower=lower,upper=upper,
-                             step_incr=step_incr,page_incr=page_incr,
-                             )
-        sb = Gtk.SpinButton()
-        sb.set_adjustment(adj)
-        sb.set_digits(digits)
-        return sb,adj
 
     def update_from_yield (self, *args):
         if self.__in_update_from_rec: return
@@ -3106,3 +3095,16 @@ class YieldSelector(de.ModalDialog):
             self.yieldsAdj.set_value(self.rec.yields * factor)
         self.ret = factor
         self.__in_update_from_rec = False
+
+
+def create_spinner(val: int = 1,
+                   lower: int = 0,
+                   upper: int = 10000,
+                   step_incr: int = 1, page_incr: int = 10,
+                   digits: int = 2):
+    adj = Gtk.Adjustment(val, lower=lower, upper=upper,
+                         step_incr=step_incr, page_incr=page_incr)
+    sb = Gtk.SpinButton()
+    sb.set_adjustment(adj)
+    sb.set_digits(digits)
+    return sb, adj
