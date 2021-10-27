@@ -174,47 +174,10 @@ class Shopper:
                 itms.append([i,self.amt_to_string(amts)])
             lst.append([c,itms])
         ## now that we have lists, we can sort them
-        from functools import cmp_to_key
-        lst.sort(key=cmp_to_key(self._cat_compare))
+        lst.sort()
         for l in lst:
-            l[1].sort(key=cmp_to_key(self._ing_compare))
+            l[1].sort(key=lambda ing_and_qty: str(ing_and_qty[0]).lower())
         return lst
-
-    def _cat_compare (self,cata,catb):
-        """Put two categories in order"""
-        cata = cata[0]
-        catb = catb[0]
-        if not cata and not catb: return 0
-        elif not cata: return 1
-        elif not catb: return -1
-        if self.catorder_dic.has_key(cata) and self.catorder_dic.has_key(catb):
-            # if both categories have known positions, we use them to compare
-            cata = self.catorder_dic[cata]
-            catb = self.catorder_dic[catb]
-        else:
-            # otherwise, we just use > to sort alphabetically
-            cata = cata.lower()
-            catb = catb.lower()
-        if cata > catb: return 1
-        if cata == catb: return 0
-        else: return -1
-
-    def _ing_compare (self,inga,ingb):
-        """Put two ingredients in order"""
-        inga = inga[0]
-        ingb = ingb[0]
-        if False and inga in self.ingorder_dic and ingb in self.ingorder_dic:
-            # if both ings have known positions, we use them to compare
-            inga = self.ingorder_dic[inga]
-            ingb = self.ingorder_dic[ingb]
-        else:
-            # otherwise, we just use > to sort alphabetically
-            inga = inga.lower()
-            ingb = ingb.lower()
-        if inga > ingb: return 1
-        if inga == ingb: return 0
-        else: return -1
-
 
     def get_porg_categories (self):
         """Return a list of categories used for sorting."""
