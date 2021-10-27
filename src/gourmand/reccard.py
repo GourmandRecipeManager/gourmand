@@ -98,16 +98,17 @@ class RecCard:
                                                 self.current_rec)
         self.__rec_display.window.present()
 
-    def show_edit(self, module: Optional[str] = None) -> None:
-        """Draw the recipe editor window.
+    def show_edit(self, button: Optional[Gtk.Button] = None):
+        """Open the recipe editor.
 
-        `module` is the string definition of one of the RecEditor's tabs, as
-        defined in RecEditor.module_tab_by_name."""
+        If button is set, as when used as a callback, then the relevant
+        notebook page will be opened.
+        """
         if self.__rec_editor is None:
             self.__rec_editor = RecEditor(self, self.__rec_gui,
                                           self.current_rec, new=self.__new)
-        if module:
-            self.__rec_editor.show_module(module)
+        if button is not None:
+            self.__rec_editor.show_module(button.get_name())
         self.__rec_editor.present()
 
     def show(self) -> None:
@@ -193,8 +194,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self._last_module = None
         self.left_notebook.connect('switch-page',
                                    lambda *args: GLib.idle_add(self.left_notebook_change_cb))
-        self.left_notebook_pages = {}
-        self.left_notebook_pages[0] = self
+        self.left_notebook_pages = {0: self}
 
         self.ingredientDisplay = IngredientDisplay(self)
         self.modules = [self.ingredientDisplay]
@@ -270,11 +270,11 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self.ui.add_from_string(get_data('gourmand', 'ui/recCardDisplay.ui').decode())  # noqa
 
         self.ui.connect_signals({
-            'shop_for_recipe':self.shop_for_recipe_cb,
-            'edit_details': lambda *args: self.reccard.show_edit(module='description'),
-            'edit_ingredients': lambda *args: self.reccard.show_edit(module='ingredients'),
-            'edit_instructions': lambda *args: self.reccard.show_edit(module='instructions'),
-            'edit_modifications': lambda *args: self.reccard.show_edit(module='notes'),
+            'shop_for_recipe': self.shop_for_recipe_cb,
+            'edit_details': self.reccard.show_edit,
+            'edit_ingredients': self.reccard.show_edit,
+            'edit_instructions': self.reccard.show_edit,
+            'edit_modifications': self.reccard.show_edit,
             })
         self.setup_widgets_from_ui()
 
