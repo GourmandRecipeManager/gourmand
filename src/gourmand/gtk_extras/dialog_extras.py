@@ -1158,6 +1158,7 @@ class URIDialog(EntryDialog):
                  filters: List[str],
                  supported_urls: List[str],
                  select_multiple: bool,
+                 default_value: Optional[str] = None,
                  **kwargs):
         super().__init__(**kwargs)
 
@@ -1216,6 +1217,10 @@ class URIDialog(EntryDialog):
 
         self.entry.find_errors_in_progress = validate
         self.entry.find_completed_errors = validate
+
+        if default_value is not None:  # trigger everything once
+            self.entry.set_text(default_value)
+            validate(default_value)
 
     def select_file(self, button: Gtk.Button):
         filenames = select_file(filters=self.filters,

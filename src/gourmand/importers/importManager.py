@@ -55,7 +55,8 @@ class ImportManager(plugin_loader.Pluggable):
         from gourmand.main import get_application
         self.app = get_application()
 
-    def offer_import(self, parent: Optional[Gtk.Window] = None):
+    def offer_import(self, parent: Optional[Gtk.Window] = None,
+                     default_value: Optional[str] = None):
         """Offer to import url or files."""
 
         uris = de.get_uri(label=_('Open recipe...'),
@@ -65,7 +66,8 @@ class ImportManager(plugin_loader.Pluggable):
                           default_character_width=60,
                           filters=self.get_filters(),
                           supported_urls=supported_sites,
-                          select_multiple=True
+                          select_multiple=True,
+                          default_value=default_value,
                           )
         if uris is None:
             return
