@@ -390,7 +390,6 @@ class RecCardDisplay (plugin_loader.Pluggable):
         self.window.show()
 
     def shop_for_recipe_cb (self, *args):
-        print(self,'shop_for_recipe_cb')
         try:
             d = self.rg.sl.getOptionalIngDic(self.rg.rd.get_ings(self.current_rec),
                                              self.mult,
@@ -438,17 +437,6 @@ class RecCardDisplay (plugin_loader.Pluggable):
             self._last_module = module
 
     def update_from_database(self):
-        # FIXME: remember to set sensitivity of remembered-optionals -
-        # below is the old code to do so.  as long as we have the list
-        # here, this is a good place to update the activity of our
-        # menuitem for forgetting remembered optionals
-        #remembered=False
-        #for i in ings:
-        #    if i.shopoptional==1 or i.shopoptional==2:
-        #        remembered=True
-        #        break
-        #self.forget_remembered_optionals_menuitem = self.ui.get_object('forget_remembered_optionals_menuitem')
-        #self.forget_remembered_optionals_menuitem.set_sensitive(remembered)
         for module in self.modules:
             # Protect ourselves from bad modules, since these could be
             # plugins
@@ -2872,7 +2860,6 @@ class IngInfo:
         self.key_connect_calls = []
         self.item_connect_calls = []
         self.manually = False
-        self.rd.add_ing_hooks.append(self.add_ing)
 
     def make_item_model(self):
         #unique_item_vw = self.rd.ingredients_table_not_deleted.counts(self.rd.ingredients_table_not_deleted.item, 'count')
@@ -2929,25 +2916,6 @@ class IngInfo:
     def reconnect_manually (self):
         self.manually=False
         self.connect_models()
-
-    def add_ing (self, ing):
-        # This is really inefficient... we're going to disable temporarily
-        pass
-        # if not self.manually: self.disconnect_models()
-#         if hasattr(ing,'item'):
-#             debug('checking for item',3)
-#             if not [ing.item] in self.item_model:
-#                 debug('adding item',3)
-#                 self.item_model.append([ing.item])
-#                 debug('appended %s to item model'%ing.item,3)
-#         if hasattr(ing,'ingkey'):
-#             debug('checking for key',3)
-#             if not [ing.ingkey] in self.key_model:
-#                 debug('adding key',3)
-#                 self.key_model.append([ing.ingkey])
-#                 debug('appended %s to key model'%ing.ingkey,3)
-#         debug('add ing completed',3)
-#         if not self.manually: self.connect_models()
 
 
 class RecSelector(RecIndex):
