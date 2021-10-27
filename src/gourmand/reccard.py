@@ -299,7 +299,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
             disp.connect('time-link-activated', timeScanner.show_timer_cb)
         # link button
         self.linkDisplayButton = self.ui.get_object('linkDisplayButton')
-        self.linkDisplayButton.connect('clicked',self.link_cb)
+        self.linkDisplayButton.connect('clicked', open_uri)
         # multiplication spinners
         self.yieldsDisplaySpin = self.ui.get_object('yieldsDisplaySpin')
         self.yieldsDisplaySpin.connect('changed',self.yields_change_cb)
@@ -402,7 +402,8 @@ class RecCardDisplay (plugin_loader.Pluggable):
 
     def add_plugin_to_left_notebook (self, klass):
         instance = klass(self)
-        tab_label = Gtk.Label(label=instance.label)
+        tab_label = Gtk.Label()
+        tab_label.set_label(instance.label)
         n = self.left_notebook.append_page(instance.main,tab_label=tab_label)
         self.left_notebook_pages[n] = instance
         instance.main.show(); tab_label.show()
@@ -549,9 +550,7 @@ class RecCardDisplay (plugin_loader.Pluggable):
             self.linkDisplay.set_markup(
                 '<span underline="single" color="blue">%s</span>'%self.current_rec.link
                 )
-            self.link = self.current_rec.link
         else:
-            self.link = ''
             self.linkDisplayButton.hide()
             self.linkDisplayLabel.hide()
 
@@ -611,9 +610,6 @@ class RecCardDisplay (plugin_loader.Pluggable):
             parent=self.window,
             change_units=self.prefs.get('readableUnits',True)
            )
-
-    def link_cb (self, *args):
-        webbrowser.open_new_tab(self.link)
 
     def yields_change_cb (self, widg):
         self.update_yields_multiplier(widg.get_value())
@@ -3108,3 +3104,9 @@ def create_spinner(val: int = 1,
     sb.set_adjustment(adj)
     sb.set_digits(digits)
     return sb, adj
+
+
+def open_uri(button: Gtk.Button):
+    uri = button.get_child().get_label()
+    if uri:
+        webbrowser.open_new_tab(uri)
