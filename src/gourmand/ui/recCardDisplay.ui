@@ -152,8 +152,9 @@
                                     <property name="yalign">1</property>
                                     <property name="left_padding">6</property>
                                     <child>
-                                      <object class="GtkButton" id="button383502">
+                                    <object class="GtkButton" id="button383502">
                                         <property name="label" translatable="yes">Edit _description</property>
+                                        <property name="name">description</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
@@ -634,6 +635,7 @@
                                 <child>
                                   <object class="GtkButton" id="editInstructionsButton">
                                     <property name="label" translatable="yes">Edit _instructions</property>
+                                    <property name="name">instructions</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -700,6 +702,7 @@
                                 <child>
                                   <object class="GtkButton" id="editModificationsButton">
                                     <property name="label" translatable="yes">Edit _notes</property>
+                                    <property name="name">notes</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -827,6 +830,7 @@
                                 <child>
                                   <object class="GtkButton" id="button383503">
                                     <property name="label" translatable="yes">Edit _ingredients</property>
+                                    <property name="name">ingredients</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
