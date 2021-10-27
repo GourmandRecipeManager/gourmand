@@ -163,9 +163,9 @@ class Shopper:
             else:
                 c = _("Unknown")
             if c in cats:
-                cats[c][i]=a
+                cats[c][i] = a
             else:
-                cats[c]={i:a}
+                cats[c] = {i: a}
         ## next we turn our nested dictionaries into nested lists
         lst = []
         for c,d in list(cats.items()):
