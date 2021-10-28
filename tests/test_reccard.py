@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.mock import Mock
 
 import gi
 from gi.repository import Gtk  # noqa: import not a top of file
@@ -82,7 +83,9 @@ def check_ings(check_dics, ings):
 def do_ingredients_editing(rc):
     """In a recipe card, test ingredient editing"""
     # Show the ingredients tab
-    rc.show_edit('ingredients')
+    mock_button = Mock()
+    mock_button.get_name = Mock(return_value='ingredients')
+    rc.show_edit(mock_button)
 
     # Create an new ingredient group
     idx = rc._RecCard__rec_editor.module_tab_by_name["ingredients"]
@@ -115,7 +118,9 @@ def do_ingredients_editing(rc):
 def do_ingredients_undo(rc):
     """In a recipe card, test adding ingredients and undoing that"""
     # Show the ingredients tab
-    rc.show_edit('ingredients')
+    mock_button = Mock()
+    mock_button.get_name = Mock(return_value='ingredients')
+    rc.show_edit(mock_button)
 
     # Create a group with a single ingredient, adding more ingredients will
     # require more reverts.
@@ -179,7 +184,9 @@ def do_ingredients_undo(rc):
 
 def do_ingredients_group_editing(rc):
     # Show the ingredients tab
-    rc.show_edit('ingredients')
+    mock_button = Mock()
+    mock_button.get_name = Mock(return_value='ingredients')
+    rc.show_edit(mock_button)
 
     idx = rc._RecCard__rec_editor.module_tab_by_name["ingredients"]
     ing_ui = rc._RecCard__rec_editor.modules[idx].ingtree_ui
@@ -210,7 +217,9 @@ def do_ingredients_group_editing(rc):
 
 def do_undo_save_sensitivity(rc):
     # Show the description tab
-    rc.show_edit('description')
+    mock_button = Mock()
+    mock_button.get_name = Mock(return_value='description')
+    rc.show_edit(mock_button)
 
 
     # Make a save via the callback, which would normally be called via the
