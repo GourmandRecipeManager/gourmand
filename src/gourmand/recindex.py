@@ -14,6 +14,7 @@ from .gtk_extras import cb_extras as cb
 from .gtk_extras import mnemonic_manager, pageable_store, ratingWidget
 from .gtk_extras import treeview_extras as te
 from .image_utils import bytes_to_pixbuf
+from .importers.clipboard_importer import import_from_drag_and_drop
 from .prefs import Prefs
 
 
@@ -267,6 +268,10 @@ class RecIndex:
         self.rectree.set_property('rules-hint',True)  # stripes!
         self.rectree.expand_all()
         self.rectree.show()
+
+        self.rectree.enable_model_drag_dest([('text/plain', 0, 0)],
+                                            Gdk.DragAction.COPY)
+        self.rectree.connect('drag-data-received', import_from_drag_and_drop)
 
     def set_reccount (self, *args):
         """Display the count of currently visible recipes."""
