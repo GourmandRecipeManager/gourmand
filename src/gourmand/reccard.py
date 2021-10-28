@@ -20,8 +20,8 @@ from gourmand.gtk_extras import WidgetSaver  # noqa: imports needed for glade
 from gourmand.gtk_extras import validation  # noqa: imports needed for glade
 from gourmand.gtk_extras import cb_extras as cb
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,  # noqa: imports needed for glade
-                                 ratingWidget)
+from gourmand.gtk_extras import (  # noqa: imports needed for glade
+    fix_action_group_importance, mnemonic_manager, ratingWidget)
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.gtk_extras.dialog_extras import (UserCancelledError,
                                                show_amount_error)
