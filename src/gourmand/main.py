@@ -23,6 +23,7 @@ from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
+from gourmand.importers.clipboard_importer import import_from_clipboard
 from gourmand.importers.importManager import ImportManager
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
@@ -1018,6 +1019,8 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
              None,None,self.new_rec_card),
             ('Import',None,_('_Import Recipe'),
              '<Control>M',_('Import recipe from file or page'),self.do_import),
+            ('PasteRecipe', Gtk.STOCK_PASTE, _('Paste recipe'),
+             '<Control>V', None, import_from_clipboard),
             ('ExportAll',None,_('Export _all recipes'),
              '<Control><Shift>T',_('Export all recipes to file'),lambda *args: self.do_export(export_all=True)),
             ('Quit', Gtk.STOCK_QUIT, _('_Quit'),

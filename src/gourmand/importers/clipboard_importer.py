@@ -39,7 +39,7 @@ def handle_import(data: str):
         app.redo_search()
 
 
-def import_from_clipboard():
+def import_from_clipboard(action: Gtk.Action):
     clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
     content = clipboard.wait_for_text().strip()
 
