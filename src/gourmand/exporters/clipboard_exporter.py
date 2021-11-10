@@ -1,4 +1,4 @@
-"""Export a recipe to the system's clipboard.
+"""Export a recipe to the system's clipboard or via drag and drop.
 
 This plugin demonstrates how to create an export plugin.
 """

@@ -20,7 +20,9 @@ This lists manual tests to do prior to tagging a new release.
 - [ ] Mealmaster
 - [ ] Mastercook
 - [ ] Gourmet
-- [ ] Ingredients from file in RecEditor ingredients tab
+- [ ] Text from file
+- [ ] Text from drag on treeview
+- [ ] Text from paste on treeview
 
 ## Exports
 
@@ -29,6 +31,8 @@ This lists manual tests to do prior to tagging a new release.
 - [ ] Gourmet
 - [ ] PDF
 - [ ] Print
+- [ ] Text: copy from treeview
+- [ ] Text: drag from treeview
 
 ## Customization
 
