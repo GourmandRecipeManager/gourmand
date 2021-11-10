@@ -11,7 +11,7 @@ from gourmand import (__version__, batchEditor, convert, plugin, plugin_gui,
                       shopgui)
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.defaults.defaults import lang as defaults
-from gourmand.exporters.clipboard_exporter import copy_to_clipboard
+from gourmand.exporters.clipboard_exporter import copy_to_clipboard, copy_to_drag
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
@@ -714,7 +714,13 @@ class StuffThatShouldBePlugins:
         recipes = self.get_selected_recs_from_rec_tree()
         ingredients = [self.rd.rd.get_ings(recipe.id)
                        for recipe in recipes]
-        copy_to_clipboard(list(zip(recipes, ingredients)))
+        copy_to_clipboard(zip(recipes, ingredients))
+
+    def drag_recipes_callback(self, widget, drag_context, data, info, time):
+        recipes = self.get_selected_recs_from_rec_tree()
+        ingredients = [self.rd.rd.get_ings(recipe.id)
+                       for recipe in recipes]
+        copy_to_drag(zip(recipes, ingredients), widget, drag_context, data, info, time)
 
     def batch_edit_recs (self, *args):
         recs = self.get_selected_recs_from_rec_tree()
@@ -969,16 +975,22 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
         self.main.add(self.main_notebook)
         self.recipe_index_interface.show()
 
-        self.main_notebook.show(); self.main_notebook.set_show_tabs(False)
+        self.main_notebook.show()
+        self.main_notebook.set_show_tabs(False)
 
+        self.rectree.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
+                                              [('text/plain', 0, 0)],
+                                              Gdk.DragAction.COPY | Gdk.DragAction.MOVE)
+        self.rectree.connect('drag-data-get', self.drag_recipes_callback)
         # Set up right-clicking again
-        self.rectree.connect('popup-menu',self.rectree_popup)
-        def popcb (tv, event):
-            if event.button==3:
-                self.rectree_popup(tv,event)
+        self.rectree.connect('popup-menu', self.rectree_popup)
+
+        def popcb(tv, event):
+            if event.button == 3:
+                self.rectree_popup(tv, event)
                 return True
-        # Set up popup menu in treeview
-        self.rectree.connect('button-press-event',popcb)
+
+        self.rectree.connect('button-press-event', popcb)
         # Set up delete key in recipe treeview
         self.rectree.connect('key-press-event',self.rec_tree_keypress_cb)
         self.srchentry.grab_focus()

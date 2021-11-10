@@ -7,13 +7,12 @@ from typing import List, Tuple
 from gi.repository import Gdk, Gtk
 
 
-def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
-    """Copy recipes to the clipboard.
+def _format(recipes: List[Tuple['RowProxy', 'RowProxy']]):
+    """Format recipes as a string.
 
     The expected list should contain tupes of (recipe, ingredients) that
     belong together.
     """
-    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
     formatted_recipes = []
 
     # Each item in self.recipes is a set of (a recipe, its ingredients).
@@ -46,9 +45,8 @@ def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
 
         formatted_recipes.append(formatted_recipe)
 
-    # Join all the recipes as one text to put in the clipboard.
+    # Join all the recipes as one string.
     formatted_recipes = '\n\n'.join(formatted_recipes)
-    clipboard.set_text(formatted_recipes, -1)
 
     # Although not used here, the image can also be retrieved.
     # They are stored as jpegs in the database:
@@ -56,3 +54,27 @@ def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
     #     image_filename = self.export_path / f'{recipe.title}.jpg'
     #     with open(image_filename, 'wb') as fout:
     #         fout.write(recipe.image)
+
+    return formatted_recipes
+
+
+def copy_to_clipboard(recipes: List[Tuple['RowProxy', 'RowProxy']]):
+    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    formatted_recipes = _format(recipes)
+    clipboard.set_text(formatted_recipes, -1)
+
+
+def copy_to_drag(recipes: List[Tuple['RowProxy', 'RowProxy']],
+                 widget: Gtk.TreeView,
+                 drag_context: Gdk.DragContext,
+                 data: Gtk.SelectionData,
+                 info: int,
+                 time: int) -> bool:
+    """Export recipes to text via drag and drop.
+
+    This function is expected to be connected to a signal.
+    If so, the signal will be done being handled here.
+    """
+    if info == 0:  # Only support text export
+        data.set_text(_format(recipes), -1)
+    return True  # Done handling signal
