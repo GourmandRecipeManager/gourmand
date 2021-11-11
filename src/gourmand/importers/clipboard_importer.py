@@ -58,9 +58,6 @@ def import_from_drag_and_drop(treeview: Gtk.Widget,
     This function is expected to be connected to a signal.
     If so, the signal will be done being handled here.
     """
-    dnd_within_app = (drag_context.get_source_window().get_parent()
-                      == drag_context.get_dest_window().get_parent())
-    if not dnd_within_app:
-        content = data.get_text().strip()
-        handle_import(content)
+    content = data.get_text().strip()
+    handle_import(content)
     return True  # Done handling signal
