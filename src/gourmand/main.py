@@ -795,6 +795,7 @@ ui_string = '''<ui>
     <menuitem action="DeleteRec"/>
     <separator/>
     <menuitem action="CopyRecipes"/>
+    <menuitem action="PasteRecipe"/>
     <menuitem action="EditRec"/>
     <menuitem action="BatchEdit"/>
   </menu>
