@@ -728,7 +728,7 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
             if retval:
                 return retval
             else:
-                raise de.UserCancelError("Option Dialog cancelled!")
+                raise de.UserCancelledError("Option Dialog cancelled!")
 
     # -- TreeView and TreeModel setup
     def create_rtree (self):
