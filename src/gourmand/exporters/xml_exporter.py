@@ -1,5 +1,5 @@
-import types
 import xml.dom
+from typing import Optional, List
 
 from .exporter import exporter_mult
 
@@ -12,9 +12,10 @@ class XmlExporter (exporter_mult):
     #dtd_path = ''
 
     def __init__ (self, rd, r, out,
-                  order=['attr','image','ings','text'],
+                  order: Optional[List[str]] = None,
                   xmlDoc=None,
                   **kwargs):
+        order = order or ['attr', 'image', 'ings', 'text']
         if xmlDoc:
             self.xmlDoc = xmlDoc
             self.i_created_this_document = False
@@ -45,20 +46,20 @@ class XmlExporter (exporter_mult):
         element.setAttributeNode(a)
         element.setAttribute(attribute,value)
 
-    def append_text (self, element, text):
+    def append_text(self, element, text):
         try:
             assert isinstance(text, str)
-        except:
+        except AssertionError:
             print('Text is not text')
             print('append_text received',element,text)
             raise TypeError('%r is not a StringType' % text)
         try:
             t = self.xmlDoc.createTextNode(text)
             element.appendChild(t)
-        except:
+        except Exception as e:
             print('FAILED WHILE WORKING ON ',element)
             print('TRYING TO APPEND',text[:100])
-            raise
+            raise e
 
     def create_text_element (self, element_name, text, attrs={}):
         element = self.create_element_with_attrs(element_name,attrs)
