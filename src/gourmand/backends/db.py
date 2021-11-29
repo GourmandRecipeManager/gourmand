@@ -765,7 +765,7 @@ class RecData (Pluggable):
             where_statement,
             distinct=True).execute().fetchall()]
 
-    def search_nutrition (self, words, group=None):
+    def search_nutrition(self, words: List[str], group=None):
         """Search nutritional information for ingredient keys."""
         where_statement = and_(
             *[self.nutrition_table.c.desc.like('%%%s%%'%w)

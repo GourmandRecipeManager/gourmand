@@ -17,7 +17,6 @@ class NutritionData:
     def __init__ (self, db, conv):
         self.db = db
         self.conv = conv
-        self.conv.density_table
         self.gramwght_regexp = re.compile("([0-9.]+)?( ?([^,]+))?(, (.*))?")
         self.wght_breaker = re.compile(r'([^ ,]+)([, ]+\(?(.*)\)?)?$')
 
