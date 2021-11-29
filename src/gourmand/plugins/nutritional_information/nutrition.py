@@ -2,6 +2,8 @@ import re
 import string
 import sys
 
+from typing import List, Tuple
+
 from .parser_data import SUMMABLE_FIELDS
 
 # Our basic module for interaction with our nutritional information DB
@@ -70,26 +72,22 @@ class NutritionData:
         else:
             self.db.do_add(self.db.nutritionconversions_table,{'ingkey':key,'unit':unit,'factor':factor})
 
-    def get_matches(self, key, max=50):
+    def get_matches(self, key: str) -> List[Tuple[str, int]]:
         """Handed a string, get a list of likely USDA database matches.
 
-        We return a list of lists:
-        [[description, nutritional-database-number],...]
-
-        If max is not none, we cut our list off at max items (and hope our
-        sorting algorithm succeeded in picking out the good matches!).
+        The values are returned in pairs of
+        [(description, nutritional-database-number]),...]
         """
-        words=re.split(r"\W",key)
-        words = [w for w in words if w and not w in ['in','or','and','with']]
-        #words += ['raw']
-        result =  self.db.search_nutrition(words)
-        while not result and len(words)>1:
-            words = words[:-1]
-            result = self.db.search_nutrition(words)
-        if result:
-            return [(r.desc,r.ndbno) for r in result]
-        else:
-            return []
+        stopwords = ['in', 'or', 'and', 'with']
+        words = [w for w in key.split() if w and w not in stopwords]
+
+        while words:
+            results = self.db.search_nutrition(words)
+            if results:
+                return [(r.desc, r.ndbno) for r in results]
+            words.pop()
+
+        return []
 
     def _get_key (self, key):
         """Handed an ingredient key, get our nutritional Database equivalent
@@ -139,17 +137,16 @@ class NutritionData:
                               unit=unit,
                               ingObject=ingObject)
 
-    def get_nutinfo_from_desc (self, desc):
+    def get_nutinfo_from_desc(self, desc):
         nvrow = self.db.fetch_one(self.db.nutrition_table,**{'desc':desc})
         if nvrow:
             return NutritionInfo(nvrow)
-        else:
+        if desc:
             matches = self.get_matches(desc)
             if len(matches) == 1:
                 ndbno = matches[0][1]
                 nvrow = self.db.fetch_one(self.db.nutrition_table,ndbno=ndbno)
                 return NutritionInfo(nvrow)
-        return None
 
     def get_nutinfo (self, key):
         """Get our nutritional information for ingredient key 'key'
@@ -629,7 +626,7 @@ def foo ():
 
         def add_key (self):
             key=input('Enter key for which we add info: ')
-            matches = self.nd.get_matches(key,10)
+            matches = self.nd.get_matches(key)
             for n,m in enumerate(matches):
                 print(n,'. ',m[0])
             choice = None
