@@ -80,7 +80,6 @@ class PreferencesGui (plugin_loader.Pluggable):
         self.connect_number_options()
         self.build_pref_dictionary()
         self.set_widgets_from_prefs()
-        self.prefs.set_hooks.append(self.update_pref)
         self.pref_tables={}
         self.ui.get_object('close_button').connect('clicked',lambda *args: self.hide_dialog())
         plugin_loader.Pluggable.__init__(self,[plugin.PrefsPlugin])

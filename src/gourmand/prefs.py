@@ -7,12 +7,7 @@ from gourmand.gglobals import gourmanddir
 
 
 class Prefs(dict):
-    """A singleton dictionary for handling preferences.
-
-    set_hooks allow us to watch our settings from elsewhere --
-    they will be called each time a preference is changed and
-    handed the key and value as arguments: hook(key,value).
-    """
+    """A singleton dictionary for handling preferences."""
 
     __single = None
 
@@ -26,7 +21,6 @@ class Prefs(dict):
     def __init__(self, filename='preferences.toml'):
         super().__init__()
         self.filename = Path(gourmanddir) / filename
-        self.set_hooks = []
         self.load()
 
     def get(self, key: str, default: Optional[Any] = None) -> Optional[Any]:
