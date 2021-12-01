@@ -7,7 +7,7 @@ The AppImage can be copied from one computer to another.
 ## AppImage
 
 The AppImage is available from the [release page](https://github.com/GourmandRecipeManager/gourmand/releases/).
-Download the it and mark it as executable:
+Download it and mark it as executable:
 
 ```sh
 chmod +x ./Gourmand-1.0.0-x86_64.AppImage
@@ -104,7 +104,7 @@ Within the MSYS2 terminal, synchronize your software sources:
     pacman -Syu
 ```
 
-Then install some of the dependencies:
+Then install parts of the dependencies:
 
 ```sh
     pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python-sqlalchemy mingw-w64-x86_64-gstreamer mingw-w64-x86_64-poppler mingw-w64-x86_64-python-reportlab

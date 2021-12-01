@@ -50,7 +50,7 @@ Ensure your system has the necessary prerequisites installed:
 Gourmand enables all plugins and features, so you probably want to install all
 prerequisites to avoid any issues.
 
-You may want to setup a [Python virtual
+You may want to set up a [Python virtual
 environment](https://docs.python.org/3/library/venv.html). This is optional but
 highly recommended:
 
@@ -105,7 +105,7 @@ screenshots if possible, what you would like.
 
 The following describes how to contribute translation.
 
-Update the translate template:
+Update the translation template:
 
 ```bash
 cd po/
