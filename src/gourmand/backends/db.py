@@ -9,7 +9,8 @@ import sqlalchemy
 import sqlalchemy.orm
 from gi.repository import Gtk
 from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer,
-                        LargeBinary, Numeric, String, Table, Text, event, func)
+                        LargeBinary, Numeric, String, Table, Text,
+                        event, func, select)
 from sqlalchemy.sql import and_, case, or_
 
 import gourmand.__version__
@@ -741,9 +742,16 @@ class RecData (Pluggable):
         """Return the number of rows in table that match criteria
         """
         if criteria:
-            return table.count(*make_simple_select_arg(criteria,table)).execute().fetchone()[0]
-        else:
-            return table.count().execute().fetchone()[0]
+            return select(
+                [func.count(list(table.primary_key.columns)[0])])\
+                    .where(*make_simple_select_arg(criteria,table))\
+                    .execute()\
+                    .fetchone()[0]
+
+        return select(
+            [func.count(list(table.primary_key.columns)[0])])\
+                .execute()\
+                .fetchone()[0]
 
     def fetch_join (self, table1, table2, col1, col2,
                     column_names=None, sort_by=None, **criteria):
