@@ -257,8 +257,8 @@ class DatabasePlugin (StandardPlugin):
         """
         pass
 
-    def update_version (self, gourmet_stored, plugin_stored,
-                        gourmet_current, plugin_current):
+    def update_version (self, gourmand_stored, plugin_stored,
+                        gourmand_current, plugin_current):
         """Given the old version number, perform any updates to the
         database as necessary.
 
