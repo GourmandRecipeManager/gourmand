@@ -161,6 +161,9 @@ class mealmaster_exporter (exporter_mult):
         itemstart = 11
         inglen = 39
         itemlines = textwrap.wrap(i, inglen-itemstart)
+        if not itemlines:
+            return
+
         self.out.write("%s %s %s\r\n"%(self.pad(a,self.amtlen),
                                        self.pad(u,self.ulen),
                                        itemlines[0]))
