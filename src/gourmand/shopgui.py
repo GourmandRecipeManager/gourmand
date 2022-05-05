@@ -8,6 +8,7 @@ import time
 from gi.repository import Gdk, GObject, Gtk
 
 from gourmand.i18n import _
+from gourmand.recipeManager import get_recipe_manager
 
 # from nutrition.nutritionLabel import NutritionLabel
 # from nutrition.nutrition import NutritionInfoList
@@ -873,7 +874,7 @@ class ShopGui (ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
 
     def item_added (self, *args):
         txt = self.add_entry.get_text()
-        dct = self.rd.parse_ingredient(txt)
+        dct = get_recipe_manager().parse_ingredient(txt)
         if not dct: dct = {'amount':None,'unit':None,'item':txt}
         self.extras.append([dct.get('amount'),dct.get('unit'),dct.get('item')])
         # Make sure it doesn't end up in the pantry...
