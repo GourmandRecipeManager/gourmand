@@ -1,6 +1,6 @@
 import sqlalchemy
 import sqlalchemy.orm
-from sqlalchemy import (Binary, Boolean, Column, Float, ForeignKey, Integer,
+from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer,
                         Numeric, String, Table, Text)
 from sqlalchemy.sql import and_, or_
 
