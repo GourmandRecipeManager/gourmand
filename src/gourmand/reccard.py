@@ -1771,25 +1771,20 @@ class IngredientController (plugin_loader.Pluggable):
             widget=self.imodel,
             ).perform()
 
-    def update_ingredient_row (self,iter,
-                               amount=None,
-                               unit=None,
-                               item=None,
-                               optional=None,
-                               ingkey=None,
-                               shop_cat=None,
-                               refid=None,
-                               undoable=False
-                               ):
-        if amount is not None: self.imodel.set_value(iter,1,amount)
-        if unit is not None: self.imodel.set_value(iter,2,unit)
-        if item is not None: self.imodel.set_value(iter,3,item)
-        if optional is not None: self.imodel.set_value(iter,4,optional)
-        #if ingkey is not None: self.imodel.set_value(iter,5,ingkey)
-        #if shop_cat:
-        #    self.imodel.set_value(iter,6,shop_cat)
-        #elif ingkey and self.re.rg.sl.orgdic.has_key(ingkey):
-        #    self.imodel.set_value(iter,6,self.re.rg.sl.orgdic[ingkey])
+    def update_ingredient_row(self,
+                              iter: Gtk.TreeIter,
+                              amount: Optional[float] = None,
+                              unit: Optional[str] = None,
+                              item: Optional[str] = None,
+                              optional: Optional[bool] = None):
+        if amount is not None:
+            self.imodel.set_value(iter, 1, str(amount))
+        if unit is not None:
+            self.imodel.set_value(iter, 2, unit)
+        if item is not None:
+            self.imodel.set_value(iter, 3, item)
+        if optional is not None:
+            self.imodel.set_value(iter, 4, optional)
 
     def add_ingredient (self, ing, prev_iter=None, group_iter=None,
                         fallback_on_append=True, shop_cat=None,
