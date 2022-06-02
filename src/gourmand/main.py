@@ -809,6 +809,7 @@ ui_string = '''<ui>
     <placeholder name="DataTool"/>
     <separator/>
     <menuitem action="ViewTrash"/>
+    <menuitem action="OpenShoppingList"/>
   </menu>
   <menu name="Settings" action="Settings">
     <menuitem action="search_regex_toggle"/>
@@ -1045,6 +1046,9 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
 
             ('ViewTrash', None, _('Open _Trash'), None, None,
              self.show_deleted_recs),
+
+            ('OpenShoppingList', None, _('Open _Shopping List'), None, None,
+             lambda action: self.sl.show()),
 
             ('Preferences', Gtk.STOCK_PREFERENCES, _('_Preferences'),
              None, None, self.show_preferences),
