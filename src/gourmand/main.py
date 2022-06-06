@@ -16,7 +16,7 @@ from gourmand.exporters.clipboard_exporter import (copy_to_clipboard,
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
-from gourmand.gglobals import DEFAULT_HIDDEN_COLUMNS, REC_ATTRS
+from gourmand.gglobals import DEFAULT_HIDDEN_COLUMNS, REC_ATTRS, gourmanddir
 from gourmand.gtk_extras import WidgetSaver
 from gourmand.gtk_extras import dialog_extras as de
 from gourmand.gtk_extras import (fix_action_group_importance, mnemonic_manager,
@@ -26,6 +26,7 @@ from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
 from gourmand.importers.clipboard_importer import import_from_clipboard
 from gourmand.importers.importManager import ImportManager
+from gourmand.prefs import copy_old_installation_or_initialize
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
                                     get_thread_manager_gui)
@@ -612,12 +613,14 @@ def set_path_for_menuitem (mi, base='<main>'):
         for c in sm.get_children():
             set_path_for_menuitem(c,path)
 
+
 def launch_webbrowser(dialog, link, user_data):
     import webbrowser
     webbrowser.open_new_tab(link)
 
 
 def launch_app():
+    copy_old_installation_or_initialize(gourmanddir)
     RecGui.instance()
     Gtk.main()
 
