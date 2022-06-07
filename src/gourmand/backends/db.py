@@ -1,4 +1,3 @@
-import os.path
 import re
 import shutil
 import time
@@ -188,19 +187,7 @@ class RecData (Pluggable):
 
         This should also set self.new_db accordingly"""
         debug('Initializing DB connection',1)
-        def instr(s,subs): return s.lower().find(subs.lower())+1
-
-        # End REGEXP workaround
-
-        # Continue setting up connection...
-        if self.filename:
-            if not os.path.exists(self.filename):
-                print("First time? We're setting you up with yummy recipes.")
-                source_file = Path(__file__).parent.absolute() / 'default.db'
-                shutil.copyfile(source_file, self.filename)
-            self.new_db = False
-        else:
-            self.new_db = True  # TODO: this bool can be refactored out.
+        self.new_db = False  # TODO: this bool can be refactored out
 
         if self.url.startswith('mysql'):
             self.db = sqlalchemy.create_engine(self.url,
