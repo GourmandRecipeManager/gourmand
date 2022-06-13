@@ -320,7 +320,7 @@ msgid ""
 "<i>What should Gourmand do with Optional Ingredients when adding recipes to "
 "the shopping list?</i>"
 msgstr ""
-"<i>Que doit faire Gourmand avec les ingrédients facultatifs lorsque vous "
+"<i>Que faire avec les ingrédients facultatifs lorsque vous "
 "ajoutez des recettes à la liste de courses ?</i>"
 
 #: ../src/gourmand/ui/preferenceDialog.ui.h:15
@@ -909,7 +909,7 @@ msgstr "Nouvelle recette"
 
 #: ../src/gourmand/backends/db.py:2132 ../src/gourmand/backends/db.py:2133
 msgid "Database Backup"
-msgstr "Sauvegarder la base de données"
+msgstr "Sauvegarde de la base de données"
 
 #: ../src/gourmand/backends/db.py:2134
 msgid "Depending on the size of your database, this may take some time."
@@ -926,8 +926,8 @@ msgid ""
 "A backup will be made as %s in case something goes wrong. If this upgrade "
 "fails, you can manually rename the backup file to recipes.db to recover it."
 msgstr ""
-"Un sauvegarde va être faite en %s dans le cas ou qq chose se passerait mal. "
-"Si la mise a niveau échoue vous pouvez renommer le fichier de sauvegarde en "
+"Une sauvegarde va être faite en %s en cas d'erreur. "
+"Si la mise à niveau échoue, vous pouvez renommer le fichier de sauvegarde en "
 "recipes.db pour retrouver vos recettes."
 
 #: ../src/gourmand/shopgui.py:119 ../src/gourmand/shopgui.py:126
@@ -1136,7 +1136,7 @@ msgstr "Sauvegarder avant de copier?"
 
 #: ../src/gourmand/reccard.py:589
 msgid "Save changes before printing?"
-msgstr "Sauvegarder avant de d'imprimer?"
+msgstr "Sauvegarder avant d'imprimer?"
 
 #: ../src/gourmand/reccard.py:701 ../src/gourmand/recipeIdentifier.py:101
 msgid "(Optional)"
@@ -1342,7 +1342,7 @@ msgstr "Modules d’extension"
 
 #: ../src/gourmand/plugin_gui.py:38
 msgid "Plugins add extra functionality to Gourmand."
-msgstr "Les modules d’extension ajoute de nouvelles fonctionnalités."
+msgstr "Les modules d’extension ajoutent de nouvelles fonctionnalités."
 
 #: ../src/gourmand/plugin_gui.py:125
 msgid "Plugin is needed for other plugins. Deactivate plugin anyway?"
@@ -1803,7 +1803,7 @@ msgstr "_Extensions"
 
 #: ../src/gourmand/main.py:1052
 msgid "Manage plugins which add extra functionality to Gourmand."
-msgstr "Gérer les modules qui ajoutent des fonctionnalités à Gourmet."
+msgstr "Gérer les modules qui ajoutent des fonctionnalités à Gourmand."
 
 #: ../src/gourmand/main.py:1054
 msgid "Setti_ngs"
@@ -2801,7 +2801,7 @@ msgid ""
 "In order to calculate nutritional information, Gourmand needs you to help it "
 "convert \"%s\" into a unit it understands."
 msgstr ""
-"Pour calculer I’information nutritionnelle : Gourmand a besoin d'aide pour "
+"Pour calculer les informations nutritionnelles, Gourmand a besoin d'aide pour "
 "convertir \"%s\" dans un format connu."
 
 #: ../src/gourmand/plugins/nutritional_information/nutritionDruid.py:769
@@ -3722,7 +3722,7 @@ msgstr[1] "Recettes importées avec succès"
 
 #: ../src/gourmand/threadManager.py:268
 msgid "Import Unsuccessful"
-msgstr "Import failed"
+msgstr "Import échoué"
 
 #: ../src/gourmand/threadManager.py:291
 msgid "Pause"

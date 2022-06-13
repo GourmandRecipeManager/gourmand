@@ -1705,7 +1705,7 @@ msgstr ""
 
 #: ../src/gourmand/main.py:1036
 msgid "Paste recipe"
-msgstr ""
+msgstr "Coller la recette"
 
 #: ../src/gourmand/main.py:1038
 msgid "Export _all recipes"
