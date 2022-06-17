@@ -54,7 +54,8 @@ def copy_old_installation_or_initialize(target_dir: Path):
     If both gourmand and gourmet directories exist, then the gourmet directory,
     presumably newer, is migrated.
     """
-    if target_dir.is_dir():
+    target_db = target_dir / 'recipes.db'
+    if target_db.is_file():
         return
 
     legacy_gourmet = Path('~/.gourmet').expanduser()
@@ -67,9 +68,10 @@ def copy_old_installation_or_initialize(target_dir: Path):
         source_dir = legacy_gourmand
 
     if source_dir is not None:
-        shutil.copytree(source_dir, target_dir)
-    else:
+        shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
+
+    if not target_db.is_file():
         print("First time? We're setting you up with yummy recipes.")
-        target_dir.mkdir()
-        default_db = Path(__file__).parent.absolute() / 'backends' / 'default.db'
+        target_dir.mkdir(exist_ok=True)
+        default_db = Path(__file__).parent.absolute() / 'backends' / 'default.db'  # noqa
         shutil.copyfile(default_db, target_dir / 'recipes.db')
