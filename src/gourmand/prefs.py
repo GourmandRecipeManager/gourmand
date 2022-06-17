@@ -69,7 +69,8 @@ def copy_old_installation_or_initialize(target_dir: Path):
 
     if source_dir is not None:
         shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
-    else:
+
+    if not target_db.is_file():
         print("First time? We're setting you up with yummy recipes.")
         target_dir.mkdir(exist_ok=True)
         default_db = Path(__file__).parent.absolute() / 'backends' / 'default.db'  # noqa
