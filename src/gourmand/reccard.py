@@ -3070,6 +3070,6 @@ def create_spinner(val: int = 1,
 
 
 def open_uri(button: Gtk.Button):
-    uri = button.get_child().get_label()
+    uri = button.get_child().get_text()
     if uri:
         webbrowser.open_new_tab(uri)
