@@ -33,7 +33,9 @@ jobs:
           sudo pip3 install --upgrade pip setuptools wheel
 
       - name: Install Gourmand
-        run: sudo pip3 install -r development.in
+        run: |
+          sudo pip3 install -r development.in
+          sudo pip install .
 
       - name: Test with pytest
         run: LANGUAGE=de_DE.utf-8 xvfb-run -a pytest -vv tests/test_*
