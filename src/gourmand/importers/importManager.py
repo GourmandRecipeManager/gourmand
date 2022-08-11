@@ -8,6 +8,7 @@ import gourmand.gtk_extras.dialog_extras as de
 import gourmand.plugin_loader as plugin_loader
 from gourmand.i18n import _
 from gourmand.importers.web_importer import import_urls, supported_sites
+from gourmand.importers.interactive_importer import import_interactivally
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
 from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
                                     get_thread_manager_gui)
@@ -74,7 +75,9 @@ class ImportManager(plugin_loader.Pluggable):
 
         # There should be only a single url
         if urlparse(uris[-1]).netloc:
-            import_urls(uris)
+            supported, unsupported = import_urls(uris)
+            if unsupported:
+                import_interactivally(unsupported)
         else:
             self.import_filenames(uris)
 

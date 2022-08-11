@@ -1193,16 +1193,15 @@ class URIDialog(EntryDialog):
         self.ok_button.set_sensitive(False)
 
         def validate(uri: str) -> Optional[str]:
-            uri_ = urlparse(uri).netloc.strip('www.')
             supported = False
 
             if not uri:  # Do nothing, but disable ok button
                 self.ok_button.set_sensitive(False)
-                return 
+                return
             try:
                 if ';' in uri:  # Match files from FileSelectorDialog
                     supported = True
-                elif uri_ in supported_urls:
+                elif urlparse(uri).netloc:
                     supported = True
                 elif Path(uri).is_file():
                     supported = True
