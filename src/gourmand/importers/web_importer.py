@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 from gi.repository import Gtk
 from recipe_scrapers import SCRAPERS, scrape_me
+from recipe_scrapers._exceptions import SchemaOrgException
 
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
 from gourmand.recipeManager import get_recipe_manager
@@ -80,6 +81,13 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
 
         # Convert the recipe into the expected namedtuple `recipe_tuple`
         # expected by the rest of the application.
+        try:
+            preptime = recipe.schema.prep_time()
+            cooktime = recipe.schema.cook_time()
+        except SchemaOrgException:
+            preptime = ""
+            cooktime = ""
+
         rec = Recipe(
                 id=None,
                 title=recipe.title(),
@@ -90,8 +98,8 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 description='',
                 source=recipe.author(),
                 totaltime=recipe.total_time(),
-                preptime=recipe.schema.prep_time(),
-                cooktime=recipe.schema.cook_time(),
+                preptime=preptime,
+                cooktime=cooktime,
                 servings=yields,
                 yields=yields,
                 yield_unit=yield_unit,
