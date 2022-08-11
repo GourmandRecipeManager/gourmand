@@ -8,11 +8,16 @@ from typing import Dict, List, Optional
 from urllib.parse import unquote, urlparse
 
 import requests
+
 from gi.repository import GdkPixbuf, Gio, GLib, Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from PIL import Image, UnidentifiedImageError
+from requests.exceptions import ConnectionError
 
 MAX_THUMBSIZE = 10000000  # The maximum size, in bytes, of thumbnails we allow
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"
+}
 
 
 class ThumbnailSize(Enum):
@@ -53,14 +58,16 @@ def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Image.Image]
     """
 
     if path.startswith('http'):
-        response = requests.get(path)
+        try:
+            response = requests.get(path, headers=HEADERS)
+        except ConnectionError:
+            return
         path = io.BytesIO(response.content)
 
     else:
         path = Path(urlparse(unquote(path)).path)
         if not path.is_file():
             return
-
     try:
         image = Image.open(path)
     except (UnidentifiedImageError, ValueError):

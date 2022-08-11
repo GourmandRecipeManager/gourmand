@@ -128,3 +128,7 @@ if sum(fg_color) > sum(bg_color):  # background is darker
 NO_STAR = Path(__file__).parent / 'data' / 'images' / 'no_star.png'
 HALF_STAR = Path(__file__).parent / 'data' / 'images' / f'half_{star_color}_star.png'  # noqa
 FULL_STAR = Path(__file__).parent / 'data' / 'images' / f'{star_color}_star.png'  # noqa
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"
+}
