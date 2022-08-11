@@ -512,12 +512,14 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
 def import_interactivally(uris: List[str]):
     """Import pages not supported by recipe-scrapers."""
     for uri in uris:
-        resp = requests.get(uri)
+        resp = requests.get(uri, headers=gglobals.HEADERS)
         if not resp.ok:
             continue
-        text = BeautifulSoup(resp.text, 'html.parser').get_text()
-        text = text.replace('  ', '\n')  # Make the text more readable
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        text = soup.get_text().replace('  ', '\n')  # Make the text more readable
         importer = InteractiveImporter()
+        importer.images = [img['src'] for img in soup.find_all('img')
+                           if img['src'].startswith('http')]
         importer.set_text(text)
         importer.do_run()
 
