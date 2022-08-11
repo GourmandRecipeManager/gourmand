@@ -1,9 +1,15 @@
 import re
 
-from gi.repository import Gtk
+import requests
 
 import gourmand.gglobals as gglobals
 import gourmand.gtk_extras.cb_extras as cb
+
+from typing import List
+
+from bs4 import BeautifulSoup
+from gi.repository import Gtk
+
 from gourmand.i18n import _
 from gourmand.image_utils import ImageBrowser, image_to_bytes
 from gourmand.importers import importer
@@ -502,6 +508,18 @@ class InteractiveImporter (ConvenientImporter, NotThreadSafe):
         else:
             self.w.connect('delete-event',lambda *args: self.w.hide())
 
+
+def import_interactivally(uris: List[str]):
+    """Import pages not supported by recipe-scrapers."""
+    for uri in uris:
+        resp = requests.get(uri)
+        if not resp.ok:
+            continue
+        text = BeautifulSoup(resp.text, 'html.parser').get_text()
+        text = text.replace('  ', '\n')  # Make the text more readable
+        importer = InteractiveImporter()
+        importer.set_text(text)
+        importer.do_run()
 
 
 if __name__ == '__main__':
