@@ -182,6 +182,7 @@ setup(
     packages=find_packages('src'),
     include_package_data=True,
     data_files = [
+        ('share/metainfo', ['data/io.github.GourmandRecipeManager.Gourmand.appdata.xml']),
         ('share/applications', ['data/io.github.GourmandRecipeManager.Gourmand.desktop']),
         ('share/icons/hicolor/scalable/apps', ['data/io.github.GourmandRecipeManager.Gourmand.svg']),
     ],
