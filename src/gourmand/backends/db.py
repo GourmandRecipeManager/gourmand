@@ -2,11 +2,10 @@ import re
 import shutil
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import sqlalchemy
 import sqlalchemy.orm
-from gi.repository import Gtk
 from sqlalchemy import (Boolean, Column, Float, ForeignKey, Integer,
                         LargeBinary, Numeric, String, Table, Text,
                         event, func, select)
@@ -18,7 +17,6 @@ import gourmand.recipeIdentifier as recipeIdentifier
 from gourmand import Undo, convert, image_utils
 from gourmand.defaults import lang as defaults
 from gourmand.gdebug import TimeAction, debug
-from gourmand.gtk_extras.dialog_extras import show_message
 from gourmand.i18n import _
 from gourmand.keymanager import KeyManager
 from gourmand.plugin import DatabasePlugin
@@ -2110,21 +2108,19 @@ def get_database (*args, **kwargs):
     return RecData.instance_for(*args, **kwargs)
 
 
-def backup_database(filename: Path) -> Path:
-    backup_name = filename.with_name(filename.name + '.backup-' + time.strftime('%d-%m-%y'))
+def backup_database(filename: Union[None, Path, str]) -> Union[None, Path]:
+    if filename is None:
+        return None
+
+    if type(filename) == str:
+        filename = Path(filename)
+
+    backup_name = filename.with_name(
+        filename.name + '.backup-' + time.strftime('%d-%m-%y')
+    )
 
     while backup_name.is_file():
         backup_name = backup_name.with_name(backup_name.name + 'I')
-
-    show_message(
-        title=_("Database Backup"),
-        label=_("Database Backup"),
-        sublabel=_("Depending on the size of your database, this may take some time."),
-        expander=(_("Details"),
-                  _("A backup will be made as %s in case something goes wrong."
-                    " If this upgrade fails, you can manually rename the "
-                    "backup file to recipes.db to recover it.") % backup_name),
-        message_type=Gtk.MessageType.INFO)
 
     shutil.copy(filename, backup_name)
 
