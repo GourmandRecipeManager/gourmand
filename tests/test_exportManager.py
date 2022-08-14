@@ -3,7 +3,6 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-import pytest
 
 import gourmand.backends.db
 import gourmand.gglobals
@@ -122,7 +121,6 @@ class TestExports (unittest.TestCase):
         self.db = gourmand.backends.db.get_database()
         print("finish setUp", file=sys.stderr)
 
-    @pytest.mark.skip("Broken as of 20220813")
     def testMultipleExporters(self):
 
         def fail_on_fail(thread, errorval, errortext, tb):
@@ -147,7 +145,6 @@ class TestExports (unittest.TestCase):
             exporter.connect('done', done)
             exporter.do_run()
 
-    @pytest.mark.skip("Broken as of 20220813")
     def testSingleExport(self):
         for format, plugin in list(self.em.plugins_by_name.items()):
             filters = plugin.saveas_single_filters
