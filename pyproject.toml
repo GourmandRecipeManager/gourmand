@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+addopts = "-vv"
+testpaths = [
+    "tests",
+]

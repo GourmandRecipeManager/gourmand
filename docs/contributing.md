@@ -132,3 +132,13 @@ python setup.py build_i18n
 
 Launch Gourmand and check the changes.  
 Once satisfied, open a pull request with your work.
+
+## Testing
+Gourmand have a test suite in the `tests` directory. Patches that expands it are welcome.
+It is run with [pytest](https://docs.pytest.org/):
+
+```bash
+pytest
+```
+
+Most modern python IDEs have support for running the tests usin pytest.

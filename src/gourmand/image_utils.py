@@ -8,7 +8,6 @@ from typing import Dict, List, Optional
 from urllib.parse import unquote, urlparse
 
 import requests
-
 from gi.repository import GdkPixbuf, Gio, GLib, Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from PIL import Image, UnidentifiedImageError
