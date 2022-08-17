@@ -181,6 +181,11 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     include_package_data=True,
+    data_files = [
+        ('share/metainfo', ['data/io.github.GourmandRecipeManager.Gourmand.appdata.xml']),
+        ('share/applications', ['data/io.github.GourmandRecipeManager.Gourmand.desktop']),
+        ('share/icons/hicolor/scalable/apps', ['data/io.github.GourmandRecipeManager.Gourmand.svg']),
+    ],
     install_requires=[
         'beautifulsoup4>=4.10.0',
         'lxml==4.6.3',
