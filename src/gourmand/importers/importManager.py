@@ -61,7 +61,7 @@ class ImportManager(plugin_loader.Pluggable):
         """Offer to import url or files."""
 
         uris = de.get_uri(label=_('Open recipe...'),
-                          sublabel=_('Enter a recipe file path or website address.'),
+                          sublabel=_('Enter a recipe file path or a supported website address.'),
                           entryLabel=_('Location:'),
                           entryTip=_('Enter the address of a website or recipe archive.'),
                           default_character_width=60,
