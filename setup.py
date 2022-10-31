@@ -1,13 +1,15 @@
 import os
 import re
-from distutils.core import Command
-from distutils.log import INFO
 from pathlib import Path
 from typing import Union
 
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
+
+from distutils.core import Command
+from distutils.log import INFO
+
 from wheel.bdist_wheel import bdist_wheel
 
 
