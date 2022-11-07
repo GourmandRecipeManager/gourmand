@@ -76,8 +76,12 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
         rating = int(rating)
 
         # recipe_scrapers keeps servings, yield, and yield units in one string
-        yields, yield_unit = recipe.yields().split()
-        yields = int(yields)
+        try:
+            yields, yield_unit = recipe.yields().split()
+            yields = int(yields)
+        except:
+            yields = 0
+            yield_unit = ""
 
         # Convert the recipe into the expected namedtuple `recipe_tuple`
         # expected by the rest of the application.
