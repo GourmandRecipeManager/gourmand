@@ -195,7 +195,7 @@ setup(
         'pygobject==3.40.1',
         'sqlalchemy==1.4.36',
         'toml==0.10.2',
-        'recipe-scrapers',
+        'recipe-scrapers>=14.27.0',
     ],
     extras_require={
         'epub-export': ['ebooklib==0.17.1'],
