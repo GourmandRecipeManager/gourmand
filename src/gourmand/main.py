@@ -888,7 +888,7 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
                                       'ascending': True})
         column, ascending = preferences.values()
         ascending = 1 if ascending else -1
-        return ([column, ascending],)
+        return [(column, ascending)]
 
     @sort_by.setter
     def sort_by(self, value):
