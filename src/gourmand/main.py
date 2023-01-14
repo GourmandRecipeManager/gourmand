@@ -884,17 +884,24 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
     @property
     def sort_by(self):
         preferences = self.prefs.get('sort_by',
-                                     {'column': 'title',
-                                      'ascending': True})
-        column, ascending = preferences.values()
-        ascending = 1 if ascending else -1
-        return [(column, ascending)]
+                                     {'title': True})
+        ret = []
+        for column, ascending in preferences.items():
+            ascending = 1 if ascending else -1
+            ret.append((column, ascending))
+        return ret
 
     @sort_by.setter
     def sort_by(self, value):
-        column, ascending = value[-1]
-        ascending = True if ascending == 1 else False  # -1
-        self.prefs['sort_by'] = {'column': column, 'ascending': ascending}
+        print(value)
+        if not value:
+            self.prefs.pop('sort_by')
+        else:
+            d = {}
+            for (column, ascending) in value:
+                ascending = True if ascending == 1 else False  # -1
+                d[column] = ascending
+            self.prefs['sort_by'] = d
 
 
     def setup_hacks (self):
