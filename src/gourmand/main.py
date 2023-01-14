@@ -2,7 +2,7 @@ import re
 import threading
 from gettext import ngettext
 from pkgutil import get_data
-from typing import Set
+from typing import List, Set, Tuple
 
 from gi.repository import Gdk, GLib, GObject, Gtk
 
@@ -26,7 +26,8 @@ from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
 from gourmand.importers.clipboard_importer import import_from_clipboard
 from gourmand.importers.importManager import ImportManager
-from gourmand.prefs import copy_old_installation_or_initialize
+from gourmand.prefs import (copy_old_installation_or_initialize,
+                            update_preferences_file_format)
 from gourmand.recindex import RecIndex
 from gourmand.threadManager import (SuspendableThread, get_thread_manager,
                                     get_thread_manager_gui)
@@ -621,6 +622,7 @@ def launch_webbrowser(dialog, link, user_data):
 
 def launch_app():
     copy_old_installation_or_initialize(gourmanddir)
+    update_preferences_file_format(gourmanddir)
     RecGui.instance()
     Gtk.main()
 
@@ -892,8 +894,7 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
         return ret
 
     @sort_by.setter
-    def sort_by(self, value):
-        print(value)
+    def sort_by(self, value: List[Tuple[str, int]]):
         if not value:
             self.prefs.pop('sort_by')
         else:

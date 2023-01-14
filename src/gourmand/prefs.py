@@ -43,6 +43,30 @@ class Prefs(dict):
         return False
 
 
+def update_preferences_file_format(target_dir: Path = gourmanddir):
+    """Update saved preferences upon updates.
+
+    This function is called upon launch to handle changes in the structure of the preference.
+    Each change applied is documented inline.
+    """
+    filename = target_dir / 'preferences.toml'
+    if not filename.is_file():
+        return
+
+    with open(filename) as fin:
+        prefs = toml.load(fin)
+
+    # Gourmand 1.2.0: several sorting parameters can be saved.
+    # The old format had `column=name` and `ascending=bool`, which are now `name=bool`
+    sort_by = prefs.get('sort_by')
+    if sort_by is not None:
+        if 'column' in sort_by.keys():  # old format
+            prefs['sort_by'] = {sort_by['column']: sort_by['ascending']}
+
+    with open(filename, 'w') as fout:
+        toml.dump(prefs, fout)
+
+
 def copy_old_installation_or_initialize(target_dir: Path):
     """Initialize or migrate earlier installations.
 
