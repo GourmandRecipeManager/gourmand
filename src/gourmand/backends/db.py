@@ -829,21 +829,33 @@ class RecData (Pluggable):
 
             return retval
 
-    def search_recipes(self, searches, sort_by=None):
+    def search_recipes(self,
+                       searches,
+                       sort_by: Optional[List[Tuple]] = None):
         """Search recipes for columns of values.
 
         "category" and "ingredient" are handled magically
         sort_by is a list of tuples (column,1) [ASCENDING] or (column,-1) [DESCENDING]
         """
-        sort_by = sort_by if sort_by is not None else []
+        # TODO: convert `sort_by` to be a dict.
+        # The reason it's not a dict is that sqlalchemy takes a list of key value pairs
+        # The rest of the application treats it like a dictionary, though.
 
-        if 'rating' in [t[0] for t in sort_by]:
-            i = [t[0] for t in sort_by].index('rating')
-            d = (sort_by[i][1]==1 and -1 or 1)
-            sort_by[i] = ('rating',d)
+        if sort_by is None:
+            sort_by = []
+
+        sort_keys = [param[0] for param in sort_by]
+
+        if 'rating' in sort_keys:
+            sort_by_rating = sort_keys.index('rating')
+            # Convert ascending flag to boolean
+            d = (sort_by[sort_by_rating][1]==1 and -1 or 1)
+            sort_by[sort_by_rating] = ('rating', d)
+
         criteria = self.get_criteria((searches,'and'))
         debug('backends.db.search_recipes - search criteria are %s'%searches,2)
-        if 'category' in [s[0] for s in sort_by]:
+
+        if 'category' in sort_keys:
             return sqlalchemy.select([c for c in self.recipe_table.c],
                                      criteria,distinct=True,
                                      from_obj=[sqlalchemy.outerjoin(self.recipe_table,self.categories_table)],
