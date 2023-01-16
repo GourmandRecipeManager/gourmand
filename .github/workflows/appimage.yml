@@ -22,7 +22,9 @@ jobs:
         python3-testresources imagemagick
 
     - name: Fix Python.h location
-      run: sudo ln -s /usr/include/python3.10/* /usr/include
+      run: |
+        locate Python.h
+        sudo ln -s /usr/include/python3.10/* /usr/include
 
     - name: Setup AppImage Environment
       run: |
