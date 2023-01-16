@@ -21,9 +21,6 @@ jobs:
         intltool enchant python3-enchant gir1.2-poppler-0.18 python3-gst-1.0
         python3-testresources imagemagick
 
-    - name: Fix Python.h location
-      run: sudo ln -s /usr/include/python3.8/Python.h /usr/include
-
     - name: Setup AppImage Environment
       run: |
         wget -c https://github.com/$(wget -q https://github.com/niess/python-appimage/releases/expanded_assets/python3.8 -O - | grep "python3.8.*x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
@@ -55,6 +52,7 @@ jobs:
 
     - name: Pack AppImage
       run: |
+          chmod 0775 squashfs-root
           VERSION=${GITHUB_SHA::8} ./appimagetool-*.AppImage squashfs-root/
 
     - name: Upload AppImage
