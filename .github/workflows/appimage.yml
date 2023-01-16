@@ -35,7 +35,7 @@ jobs:
     - name: Install Gourmand in AppImage
       run: |
           ./squashfs-root/AppRun -m pip install --upgrade pip
-          ./squashfs-root/AppRun -m pip install decorator six BeautifulSoup4 html5lib lxml pyenchant pygobject Sphinx
+          C_INCLUDE_PATH=/usr/include/python3.8 ./squashfs-root/AppRun -m pip install decorator six BeautifulSoup4 html5lib lxml pyenchant pygobject Sphinx
 
           ./squashfs-root/AppRun setup.py bdist_wheel
           ./squashfs-root/AppRun -m pip install .[epub-export,mycookbook,pdf-export,spellcheck,web-import]
