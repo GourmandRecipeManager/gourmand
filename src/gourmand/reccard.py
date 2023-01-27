@@ -1174,7 +1174,7 @@ class IngredientEditorModule (RecEditorModule):
         selected item, so that the new ingredient can be added right below it in
         the tree.
         """
-        d = self.rg.rd.parse_ingredient(line, conv=self.rg.conv)
+        d = self.rg.rd.parse_ingredient(line, conv=self.rg.conv, get_key=False)
         if d:
             if 'rangeamount' in d:
                 d['amount'] = self.rg.rd.format_amount_string_from_amount(
