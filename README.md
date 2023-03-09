@@ -13,3 +13,7 @@ Installation instruction are found in the [installation guide](docs/installation
 ## Issues and Contributions
 
 See the [contribution guide](docs/contributing.md).
+
+## Tournant for Android
+
+If you want to transfer your recipes to your Android device, give [Tournant](https://tournant.zimbelstern.eu) a try. Tournant can parse Gourmand's XML recipe files and serves your recipes wherever you need them – whether in the kitchen or in the grocery store.

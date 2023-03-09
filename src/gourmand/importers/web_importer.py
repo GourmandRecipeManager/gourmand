@@ -112,7 +112,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 link=recipe.canonical_url(),
                 last_modified=None,
                 nutrients=recipe.nutrients(),
-                category=recipe.schema.category()
+                category=recipe.category(),
                 )
 
         rec = rec._asdict()

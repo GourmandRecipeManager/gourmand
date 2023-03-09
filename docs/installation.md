@@ -37,7 +37,7 @@ In a terminal, execute the following:
 
 ```sh
 flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install gourmet-1.0.0.flatpak
+sudo flatpak install gourmand-1.0.0.flatpak
 ```
 
 You will be prompted with a message regarding the runtime:
@@ -83,13 +83,13 @@ sudo apt-get install --no-install-recommends python3-gi python3-gi-cairo gir1.2-
 Finally, install Gourmand:
 
 ```sh
-sudo pip3 install gourmet-1.0.0-py3-none-any.whl
+sudo pip3 install gourmand-1.0.0-py3-none-any.whl
 ```
 
 You can now launch Gourmand from a terminal:
 
 ```sh
-$ gourmet
+$ gourmand
 First time? Setting you up with yummy recipes.
 ```
 

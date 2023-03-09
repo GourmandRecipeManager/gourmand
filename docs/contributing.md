@@ -29,7 +29,7 @@ Fork and clone Gourmand.
 
 Ensure your system has the necessary prerequisites installed:
 
-- [Python](https://www.python.org/), which is what Gourmet is written in.
+- [Python](https://www.python.org/), which is what Gourmand is written in.
 - [PyGObject](https://pygobject.readthedocs.io/en/latest/) for GTK+ 3 and
   other GNOME libraries. You may either install your system's `pygobject`
   package(s) or install the necessary system requirements to install
@@ -66,8 +66,8 @@ Then install Gourmand itself:
 (gourmand) $ pip install -r development.in
 ```
 
-This installs the remaining Python dependencies and Gourmet itself in editable
-mode, which allows you to run Gourmet and see your changes without having to
+This installs the remaining Python dependencies and Gourmand itself in editable
+mode, which allows you to run Gourmand and see your changes without having to
 reinstall it.
 
 **Note:** If you encounter an error during the installation of

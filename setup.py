@@ -1,13 +1,15 @@
 import os
 import re
-from distutils.core import Command
-from distutils.log import INFO
 from pathlib import Path
 from typing import Union
 
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
+
+from distutils.core import Command
+from distutils.log import INFO
+
 from wheel.bdist_wheel import bdist_wheel
 
 
@@ -181,15 +183,19 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src'),
     include_package_data=True,
+    data_files = [
+        ('share/metainfo', ['data/io.github.GourmandRecipeManager.Gourmand.appdata.xml']),
+        ('share/applications', ['data/io.github.GourmandRecipeManager.Gourmand.desktop']),
+        ('share/icons/hicolor/scalable/apps', ['data/io.github.GourmandRecipeManager.Gourmand.svg']),
+    ],
     install_requires=[
         'beautifulsoup4>=4.10.0',
         'lxml==4.6.3',
         'pillow>=8.3.2',
         'pygobject==3.40.1',
-        'requests==2.25.1',
         'sqlalchemy==1.4.36',
         'toml==0.10.2',
-        'recipe-scrapers',
+        'recipe-scrapers>=14.27.0',
     ],
     extras_require={
         'epub-export': ['ebooklib==0.17.1'],
