@@ -1,4 +1,3 @@
-import tempfile
 import pytest
 
 from gourmand.backends import db
@@ -14,8 +13,7 @@ def database():
     ml.active_plugins = []
     ml.active_plugin_sets = []
     # Done knocking out plugins...
-    tmpfile = tempfile.mktemp()
-    return db.get_database(file=tmpfile)
+    return db.get_database(custom_url="sqlite:///:memory:")
 
 
 def test_recipe_basics(database):
