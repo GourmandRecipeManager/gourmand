@@ -1776,6 +1776,7 @@ class IngredientController (plugin_loader.Pluggable):
                               amount: Optional[float] = None,
                               unit: Optional[str] = None,
                               item: Optional[str] = None,
+                              refid: Optional[int] = None,
                               optional: Optional[bool] = None):
         if amount is not None:
             self.imodel.set_value(iter, 1, str(amount))
@@ -2934,7 +2935,7 @@ class RecSelector(RecIndex):
     @property
     def sort_by(self):
         preferences = self.prefs['sort_by']
-        column, ascending = preferences.values()
+        column, ascending = next(iter(preferences.items()))
         ascending = 1 if ascending else -1
         return ([column, ascending],)
 
