@@ -17,8 +17,8 @@ modules:
       - -DENABLE_CPP=OFF
       - -DENABLE_QT5=OFF
     sources:
-      - url: https://poppler.freedesktop.org/poppler-20.10.0.tar.xz
-        sha256: 434ecbbb539c1a75955030a1c9b24c7b58200b7f68d2e4269e29acf2f8f13336
+      - url: https://poppler.freedesktop.org/poppler-23.12.0.tar.xz
+        sha256: beba398c9d37a9b6d02486496635e08f1df3d437cfe61dab2593f47c4d14cdbb
         type: archive
 
   - name: cpython
