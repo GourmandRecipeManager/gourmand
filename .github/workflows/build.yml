@@ -13,10 +13,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup build environment
       run: |
@@ -31,7 +31,7 @@ jobs:
           mv dist/gourmand-*-py3-none-any.whl dist/gourmand-${GITHUB_SHA::8}-py3-none-any.whl
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
           name: gourmand
           path: ./dist/gourmand-*
