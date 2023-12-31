@@ -13,6 +13,7 @@ modules:
   - name: poppler
     buildsystem: cmake-ninja
     config-opts:
+      - -DENABLE_BOOST=OFF
       - -DENABLE_UTILS=OFF
       - -DENABLE_CPP=OFF
       - -DENABLE_QT5=OFF
