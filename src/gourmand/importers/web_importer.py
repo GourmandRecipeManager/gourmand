@@ -3,7 +3,7 @@ from typing import List, Tuple
 from urllib.parse import urlparse
 
 from gi.repository import Gtk
-from recipe_scrapers import SCRAPERS, scrape_me
+from recipe_scrapers import SCRAPERS, scrape_html
 from recipe_scrapers._exceptions import SchemaOrgException
 
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
@@ -41,7 +41,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
             urls.remove(url)
 
     for url in urls:
-        recipe = scrape_me(url)
+        recipe = scrape_html(html,org_url=url)
         # Fetch the image if available, or else open an ImageBrowser
         # to let the user select one.
         image = thumbnail = None
