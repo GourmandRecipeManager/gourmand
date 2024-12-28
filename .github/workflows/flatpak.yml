@@ -9,10 +9,10 @@ on:
 jobs:
   flatpak:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Install Flatpak
       run: |
         sudo apt install flatpak flatpak-builder
@@ -20,7 +20,7 @@ jobs:
     - name: Setup Flatpak
       run: |
         flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-        flatpak install flathub org.gnome.Platform//42 org.gnome.Sdk//42 -y
+        flatpak install flathub org.gnome.Platform//45 org.gnome.Sdk//45 -y
 
     - name: Build Flatpak
       run: |
@@ -31,7 +31,7 @@ jobs:
         flatpak build-bundle repo gourmand-${GITHUB_SHA::8}.flatpak io.github.GourmandRecipeManager.Gourmand
 
     - name: Upload Flatpak
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: gourmand.flatpak
         path: ./gourmand-*.flatpak
