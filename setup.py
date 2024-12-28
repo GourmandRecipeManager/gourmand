@@ -188,6 +188,7 @@ setup(
     ],
     install_requires=[
         'beautifulsoup4>=4.10.0',
+        'importlib-metadata; python_version<"3.10"',
         'lxml>=4.6.3',
         'pillow>=8.3.2',
         'pygobject==3.40.1',

@@ -942,14 +942,14 @@ def float_to_metric(n, approx=0.01):
              rounded = round(n)
              if rounded == 0:
                  return float_to_metric(n,approx*.01)
-             return locale.format("%i",int(rounded),True)
+             return locale.format_string("%i",int(rounded),True)
          else:
              rounded = round(n,decimals_to_preserve)
              if rounded == 0:
                  return float_to_metric(n,approx*.01)
-             return locale.format("%."+str(decimals_to_preserve)+"f",rounded,True) # format(formatstring, number, use_thousands_separator)
+             return locale.format_string("%."+str(decimals_to_preserve)+"f",rounded,True) # format(formatstring, number, use_thousands_separator)
      else:
-         return locale.format("%i",n,True)
+         return locale.format_string("%i",n,True)
     else:
          return ""
 
