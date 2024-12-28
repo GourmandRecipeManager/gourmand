@@ -27,7 +27,6 @@ modules:
 
   # Python 3.11 seems to download too old dependency versions and non-wheels of `reportlab` and `lxml`.
   # This breaks the build itself.
-  # Python 3.12 does not work due to using old SQLAlchemy and possible the `pkg_resources` API for now.
   - name: cpython
     sources:
       - type: archive
@@ -49,7 +48,7 @@ modules:
     build-commands:
       - python3 -m pip install --upgrade pip setuptools wheel
       - pip3 install pyenchant pygobject Sphinx
-      - pip3 install --prefix=/app .[epub-export,mycookbook,pdf-export,spellcheck,web-import]
+      - pip3 install --prefix=/app .[epub-export,pdf-export,spellcheck,web-import]
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
