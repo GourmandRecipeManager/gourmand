@@ -27,7 +27,7 @@ jobs:
       - name: Install Ubuntu dependencies
         run: |
           sudo apt-get update -q
-          sudo apt-get install --no-install-recommends -y xvfb gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev intltool enchant-2
+          sudo apt-get install --no-install-recommends -y xvfb gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev gir1.2-gstreamer-1.0 intltool enchant-2
 
       - name: Install build dependencies
         run: |
