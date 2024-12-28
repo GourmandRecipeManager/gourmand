@@ -12,28 +12,29 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        python: ['3.8', '3.9', '3.10', '3.11']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - name: set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
       - name: Install Ubuntu dependencies
-        run: >
-          sudo apt-get update -q && sudo apt-get install
-          --no-install-recommends -y xvfb python3-dev python3-gi
-          python3-gi-cairo gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev
-          intltool enchant python3-enchant gir1.2-poppler-0.18 python3-gst-1.0
-          python3-testresources
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install --no-install-recommends -y xvfb gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev intltool enchant-2
 
       - name: Install build dependencies
         run: |
-          sudo pip3 install --upgrade pip setuptools wheel
+          pip install --upgrade pip setuptools wheel
 
       - name: Install Gourmand
-        run: sudo pip3 install -r development.in
+        run: pip install -r development.in
 
       - name: Test with pytest
         run: LANGUAGE=de_DE.utf-8 xvfb-run -a pytest
