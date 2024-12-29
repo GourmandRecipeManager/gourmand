@@ -38,7 +38,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-            python -c "from gourmand import prefs, gglobals; prefs.copy_old_installation_or_initialize(gglobals.gourmanddir)"
+            xvfb-run -a python -c "from gourmand import prefs, gglobals; prefs.copy_old_installation_or_initialize(gglobals.gourmanddir)"
             LC_ALL=C xvfb-run -a pytest
 
       - name: Check code style
