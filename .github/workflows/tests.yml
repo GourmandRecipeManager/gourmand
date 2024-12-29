@@ -24,10 +24,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      # Reference for SVG and Pixbuf on Ubuntu 24.04: https://github.com/dino/dino/issues/1024
       - name: Install Ubuntu dependencies
         run: |
           sudo apt-get update -q
-          sudo apt-get install --no-install-recommends -y xvfb gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev gir1.2-gstreamer-1.0 intltool enchant-2
+          sudo apt-get install --no-install-recommends -y xvfb gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev gir1.2-gstreamer-1.0 intltool enchant-2 librsvg2-common librsvg2-2
+          sudo gdk-pixbuf-query-loaders --update-cache
 
       - name: Install build dependencies
         run: |
