@@ -37,7 +37,9 @@ jobs:
         run: pip install -r development.in
 
       - name: Test with pytest
-        run: LC_ALL=C xvfb-run -a pytest
+        run: |
+            python -c "from gourmand import prefs, gglobals; prefs.copy_old_installation_or_initialize(gglobals.gourmanddir)"
+            LC_ALL=C xvfb-run -a pytest
 
       - name: Check code style
         run: |
