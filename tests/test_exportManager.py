@@ -1,16 +1,12 @@
-import os
-import shutil
 import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest import mock
 
 import gourmand.backends.db
 import gourmand.gglobals
 import gourmand.main
 from gourmand.exporters.exportManager import EXTRA_PREFS_DEFAULT, ExportManager
-from gourmand.prefs import copy_old_installation_or_initialize
 
 
 class SampleRecipeSetterUpper:
