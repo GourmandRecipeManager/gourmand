@@ -35,7 +35,9 @@ jobs:
           pip install --upgrade pip setuptools wheel
 
       - name: Install Gourmand
-        run: pip install -r development.in
+        run: |
+            pip install -r development.in
+            python setup.py build_i18n
 
       - name: Test with pytest
         run: |
