@@ -113,14 +113,15 @@ class TestExportsMultiple(unittest.TestCase):
         cls.addClassCleanup(patcher.stop)
         patcher.start()
 
-        print("start setUp", file=sys.stderr)
-        cls.sample_recs = setup_sample_recs()
-        cls.recs = cls.sample_recs.recipes
-        print("in setUp 1", file=sys.stderr)
-        cls.em = ExportManager.instance()
-        print("in setUp 2", file=sys.stderr)
-        cls.db = gourmand.backends.db.get_database()
-        print("finish setUp", file=sys.stderr)
+        with mock.patch("gourmand.backends.db.backup_database"):
+            print("start setUp", file=sys.stderr)
+            cls.sample_recs = setup_sample_recs()
+            cls.recs = cls.sample_recs.recipes
+            print("in setUp 1", file=sys.stderr)
+            cls.em = ExportManager.instance()
+            print("in setUp 2", file=sys.stderr)
+            cls.db = gourmand.backends.db.get_database()
+            print("finish setUp", file=sys.stderr)
 
     def testMultipleExporters(self):
 

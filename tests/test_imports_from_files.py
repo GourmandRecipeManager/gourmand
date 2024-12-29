@@ -1,9 +1,10 @@
 import re
+import unittest
 from pathlib import Path
 
+from gourmand.backends.db import RecipeManager
 from gourmand.importers.importManager import ImportFileList, ImportManager
-from gourmand.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester  # noqa
-from gourmand.recipeManager import RecipeManager
+from gourmand.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester
 
 TEST_FILE_DIRECTORY = Path(__file__).parent / "recipe_files"
 
@@ -26,12 +27,14 @@ class ThreadlessImportManager(ImportManager):
             self.follow_up(None, importer)
 
 
-class ImportTest:
-    def __init__(self):
-        self.im = ThreadlessImportManager.instance()
-        self.db = RecipeManager.instance_for()
+class ImportTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.im = ThreadlessImportManager.instance()
+        cls.db = RecipeManager.instance_for()
 
     def run_test(self, d):
+        self.db.delete_by_criteria(self.db.recipe_table, {"title": d["test"]["title"]})
         filename = str(TEST_FILE_DIRECTORY / d["filename"])
         self.im.import_filenames([filename])
         self.do_test(d["test"])
@@ -71,64 +74,58 @@ class ImportTest:
         pass
 
 
-try:
-    it = ImportTest()
-except AttributeError:
-    it = None
+    def test_mastercook(self):
+        self.run_test(
+            {
+                "filename": "athenos1.mx2",
+                "test": {
+                    "title": "5 Layer Mediterranean Dip",
+                    "all_ings_have_amounts": True,
+                    "all_ings_have_units": True,
+                },
+            }
+        )
 
 
-def test_mastercook():
-    it.run_test(
-        {
-            "filename": "athenos1.mx2",
-            "test": {
-                "title": "5 Layer Mediterranean Dip",
-                "all_ings_have_amounts": True,
-                "all_ings_have_units": True,
-            },
-        }
-    )
+    def test_mealmaster(self):
+        self.run_test(
+            {
+                "filename": "mealmaster.mmf",
+                "test": {
+                    "title": "Almond Mushroom Pate",
+                    "categories": ["Appetizers"],
+                    "servings": 6,
+                },
+            }
+        )
 
 
-def test_mealmaster():
-    it.run_test(
-        {
-            "filename": "mealmaster.mmf",
-            "test": {
-                "title": "Almond Mushroom Pate",
-                "categories": ["Appetizers"],
-                "servings": 6,
-            },
-        }
-    )
+    def test_krecipes(self):
+        self.run_test(
+            {
+                "filename": "sample.kreml",
+                "test": {
+                    "title": "Recipe title",
+                    "source": "Unai Garro, Jason Kivlighn",
+                    "categories": ["Ethnic", "Cakes"],
+                    "servings": 5,
+                    "preptime": 90 * 60,
+                    "instructions": "Write the recipe instructions here",
+                },
+            }
+        )
 
 
-def test_krecipes():
-    it.run_test(
-        {
-            "filename": "sample.kreml",
-            "test": {
-                "title": "Recipe title",
-                "source": "Unai Garro, Jason Kivlighn",
-                "categories": ["Ethnic", "Cakes"],
-                "servings": 5,
-                "preptime": 90 * 60,
-                "instructions": "Write the recipe instructions here",
-            },
-        }
-    )
-
-
-def test_mycookbook():
-    it.run_test(
-        {
-            "filename": "mycookbook.mcb",
-            "test": {
-                "title": "Best Brownies",
-                "link": "https://www.allrecipes.com/recipe/10549/best-brownies/",  # noqa
-            },
-        }
-    )
+    def test_mycookbook(self):
+        self.run_test(
+            {
+                "filename": "mycookbook.mcb",
+                "test": {
+                    "title": "Best Brownies",
+                    "link": "https://www.allrecipes.com/recipe/10549/best-brownies/",
+                },
+            }
+        )
 
 
 def test_mastercook_file_tester():

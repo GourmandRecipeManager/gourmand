@@ -12,15 +12,23 @@ class DBTest(unittest.TestCase):
     def setUp(self):
         print("Calling setUp")
         # Remove all plugins for testing purposes
-        ml = MasterLoader.instance()
-        ml.save_active_plugins = lambda *args: True
+        self.ml = MasterLoader.instance()
+        self.save_active_plugins = self.ml.save_active_plugins
+        self.ml.save_active_plugins = lambda *args: True
         # Don't save anything we do to plugins
-        ml.active_plugins = []
-        ml.active_plugin_sets = []
+        self.active_plugins = self.ml.active_plugins
+        self.active_plugin_sets = self.ml.active_plugin_sets
+        self.ml.active_plugins = []
+        self.ml.active_plugin_sets = []
         # Done knocking out plugins...
         tmpfile = tempfile.mktemp()
         with mock.patch.object(db, "backup_database"):
             self.db = db.get_database(file=Path(tmpfile))
+
+    def tearDown(self):
+        self.ml.save_active_plugins = self.save_active_plugins
+        self.ml.active_plugins = self.active_plugins
+        self.ml.active_plugin_sets = self.active_plugin_sets
 
 
 class testRecBasics(DBTest):
