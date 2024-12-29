@@ -105,28 +105,17 @@ def setup_sample_recs():
 
 
 class TestExportManager(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        tmpdir = tempfile.mktemp()
-        os.makedirs(tmpdir)
-        cls.addClassCleanup(shutil.rmtree, tmpdir)
-        patcher = mock.patch("gourmand.gglobals.gourmanddir", Path(tmpdir))
-        cls.addClassCleanup(patcher.stop)
-        patcher.start()
-        copy_old_installation_or_initialize(Path(tmpdir))
-
-        with mock.patch("gourmand.backends.db.backup_database"):
-            print("start setUp", file=sys.stderr)
-            cls.sample_recs = setup_sample_recs()
-            cls.recs = cls.sample_recs.recipes
-            print("in setUp 1", file=sys.stderr)
-            cls.em = ExportManager()
-            print("in setUp 2", file=sys.stderr)
-            cls.db = gourmand.backends.db.get_database()
-            print("finish setUp", file=sys.stderr)
+    def setUp(self):
+        print("start setUp", file=sys.stderr)
+        self.sample_recs = setup_sample_recs()
+        self.recs = self.sample_recs.recipes
+        print("in setUp 1", file=sys.stderr)
+        self.em = ExportManager.instance()
+        print("in setUp 2", file=sys.stderr)
+        self.db = gourmand.backends.db.get_database()
+        print("finish setUp", file=sys.stderr)
 
     def testMultipleExporters(self):
-
         def fail_on_fail(thread, errorval, errortext, tb):
             self.assertTrue(False, errortext + "\n\n" + tb)
 

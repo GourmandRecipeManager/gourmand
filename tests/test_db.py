@@ -21,9 +21,7 @@ class DBTest(unittest.TestCase):
         self.ml.active_plugins = []
         self.ml.active_plugin_sets = []
         # Done knocking out plugins...
-        tmpfile = tempfile.mktemp()
-        with mock.patch.object(db, "backup_database"):
-            self.db = db.get_database(file=Path(tmpfile))
+        self.db = db.get_database()
 
     def tearDown(self):
         self.ml.save_active_plugins = self.save_active_plugins
@@ -33,7 +31,7 @@ class DBTest(unittest.TestCase):
 
 class testRecBasics(DBTest):
     def runTest(self):
-        self.assertEqual(self.db.fetch_len(self.db.recipe_table), 0)
+        old_count = self.db.fetch_len(self.db.recipe_table)
         rec = self.db.add_rec({"title": "Fooboo"})
         self.assertEqual(rec.title, "Fooboo")
         rec2 = self.db.new_rec()
@@ -42,11 +40,12 @@ class testRecBasics(DBTest):
         self.assertEqual(rec2.cuisine, "Bar")
         self.db.delete_rec(rec)
         self.db.delete_rec(rec2)
-        self.assertEqual(self.db.fetch_len(self.db.recipe_table), 0)
+        self.assertEqual(self.db.fetch_len(self.db.recipe_table), old_count)
 
 
 class testIngBasics(DBTest):
     def testAddIngs(self):
+        old_count = self.db.fetch_len(self.db.ingredients_table)
         rid = self.db.new_rec().id
         ing = self.db.add_ing({"amount": 1, "unit": "c.", "item": "Carrot juice", "ingkey": "juice, carrot", "recipe_id": rid})
         ing2 = self.db.add_ing({"amount": 2, "unit": "c.", "item": "Tomato juice", "ingkey": "juice, tomato", "recipe_id": rid})
@@ -57,7 +56,7 @@ class testIngBasics(DBTest):
         self.assertEqual(ing.unit, "cup")
         self.db.delete_ing(ing)
         self.db.delete_ing(ing2)
-        self.assertEqual(self.db.fetch_len(self.db.ingredients_table), 0)
+        self.assertEqual(self.db.fetch_len(self.db.ingredients_table), old_count)
         self.db.add_ings(
             [
                 {"rangeamount": None, "item": "water", "recipe_id": rid, "position": 1, "ingkey": "water"},
