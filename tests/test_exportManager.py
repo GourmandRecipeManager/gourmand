@@ -10,6 +10,7 @@ import gourmand.backends.db
 import gourmand.gglobals
 import gourmand.main
 from gourmand.exporters.exportManager import EXTRA_PREFS_DEFAULT, ExportManager
+from gourmand.prefs import copy_old_installation_or_initialize
 
 
 class SampleRecipeSetterUpper:
@@ -103,7 +104,7 @@ def setup_sample_recs():
     return SampleRecipeSetterUpper.instance()
 
 
-class TestExportsMultiple(unittest.TestCase):
+class TestExportManager(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         tmpdir = tempfile.mktemp()
@@ -112,13 +113,14 @@ class TestExportsMultiple(unittest.TestCase):
         patcher = mock.patch("gourmand.gglobals.gourmanddir", Path(tmpdir))
         cls.addClassCleanup(patcher.stop)
         patcher.start()
+        copy_old_installation_or_initialize(Path(tmpdir))
 
         with mock.patch("gourmand.backends.db.backup_database"):
             print("start setUp", file=sys.stderr)
             cls.sample_recs = setup_sample_recs()
             cls.recs = cls.sample_recs.recipes
             print("in setUp 1", file=sys.stderr)
-            cls.em = ExportManager.instance()
+            cls.em = ExportManager()
             print("in setUp 2", file=sys.stderr)
             cls.db = gourmand.backends.db.get_database()
             print("finish setUp", file=sys.stderr)
