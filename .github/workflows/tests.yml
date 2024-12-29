@@ -37,10 +37,9 @@ jobs:
         run: pip install -r development.in
 
       - name: Test with pytest
-        run: LANGUAGE=de_DE.utf-8 xvfb-run -a pytest
+        run: LC_ALL=C xvfb-run -a pytest
 
-      - name: Check imports ordering
-        run: >
-          isort --diff src/**/*.py &&
-          isort -c src/**/*.py
+      - name: Check code style
+        run: |
+          ruff check src/ tests/ setup.py
         if: always()

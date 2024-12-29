@@ -1,6 +1,5 @@
 --editable .[epub-export,pdf-export,spellcheck]
 dogtail
-flake8
-isort
 mypy
+ruff==0.8.4
 pytest

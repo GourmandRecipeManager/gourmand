@@ -11,10 +11,10 @@ def harvest_textviews(widget):
         return [widget]
     else:
         tvs = []
-        if hasattr(widget, 'get_children'):
+        if hasattr(widget, "get_children"):
             for child in widget.get_children():
                 tvs.extend(harvest_textviews(child))
-        elif hasattr(widget, 'get_child'):
+        elif hasattr(widget, "get_child"):
             tvs.extend(harvest_textviews(widget.get_child()))
         return tvs
 
@@ -23,7 +23,7 @@ class SpellPlugin(RecEditorPlugin, UIPlugin):
 
     main = None
 
-    ui_string = ''
+    ui_string = ""
 
     def activate(self, editor):
         UIPlugin.activate(self, editor)

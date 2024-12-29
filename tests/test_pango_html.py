@@ -52,8 +52,7 @@ def test_pango_markup_to_html():
     ret = PangoToHtml().feed(pango_markup)
     assert ret == expected
 
-    links = {'a link': 'foo', 'fancy, fancy': 'fancy_desc',
-             'recipe link': '123:foo', '¼ recipe boogoochooboo': '456:boo'}
+    links = {"a link": "foo", "fancy, fancy": "fancy_desc", "recipe link": "123:foo", "¼ recipe boogoochooboo": "456:boo"}
     pango_markup = b'GTKTEXTBUFFERCONTENTS-0001\x00\x00\x07\xfa <text_view_markup>\n <tags>\n  <tag id="13" priority="13">\n   <attr name="weight" type="gint" value="700" />\n  </tag>\n  <tag id="14" priority="14">\n  </tag>\n  <tag id="0" priority="0">\n  </tag>\n  <tag id="1" priority="1">\n   <attr name="style" type="PangoStyle" value="PANGO_STYLE_ITALIC" />\n  </tag>\n  <tag id="2" priority="2">\n  </tag>\n  <tag id="3" priority="3">\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="5" priority="5">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="9" priority="9">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="6" priority="6">\n  </tag>\n  <tag id="8" priority="8">\n  </tag>\n  <tag id="10" priority="10">\n  </tag>\n  <tag id="7" priority="7">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="4" priority="4">\n  </tag>\n  <tag id="11" priority="11">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n <tag id="12" priority="12">\n </tag>\n </tags>\n<text><apply_tag id="0">This is some text\n Some </apply_tag><apply_tag id="1">fancy</apply_tag><apply_tag id="2">, </apply_tag><apply_tag id="3">fancy</apply_tag><apply_tag id="4">, text.\n This is </apply_tag><apply_tag id="5">a link</apply_tag><apply_tag id="6">, a\n </apply_tag><apply_tag id="7">fancy, fancy</apply_tag><apply_tag id="8"> link.\n\n </apply_tag><apply_tag id="9">recipe link</apply_tag><apply_tag id="10">\n\n </apply_tag><apply_tag id="11">\xc2\xbc recipe boogoochooboo</apply_tag><apply_tag id="12">\n\n </apply_tag><apply_tag id="13">Yeah!</apply_tag><apply_tag id="14">\n </apply_tag></text>\n</text_view_markup>\n'  # noqa
     expected = 'This is some text\n Some <i>fancy</i>, <u>fancy</u>, text.\n This is <a href="foo">a link</a>, a\n <a href="fancy_desc">fancy, fancy</a> link.\n\n <a href="123:foo">recipe link</a>\n\n <a href="456:boo">¼ recipe boogoochooboo</a>\n\n <b>Yeah!</b>\n '  # noqa
 
@@ -61,15 +60,18 @@ def test_pango_markup_to_html():
     assert ret == expected
 
     pango_markup = b'GTKTEXTBUFFERCONTENTS-0001\x00\x00\x01i <text_view_markup>\n <tags>\n  <tag name="italic" priority="1">\n   <attr name="style" type="PangoStyle" value="PANGO_STYLE_ITALIC" />\n  </tag>\n  <tag name="bold" priority="0">\n   <attr name="weight" type="gint" value="700" />\n  </tag>\n </tags>\n<text>ddf<apply_tag name="bold">fd<apply_tag name="italic">df</apply_tag>fd</apply_tag>dff</text>\n</text_view_markup>\n'  # noqa
-    expected = 'ddf<b>fd<i>df</i>fd</b>dff'
+    expected = "ddf<b>fd<i>df</i>fd</b>dff"
 
     ret = PangoToHtml().feed(pango_markup)
     assert ret == expected
 
-    links = {'1/2 hour': '1/2 hour', 'three days': 'three days',
-             '20 to 30 minutes': '20 minutes',
-             'two and a half hours': 'two and a half hours',
-             '25 seconds': '25 seconds'}
+    links = {
+        "1/2 hour": "1/2 hour",
+        "three days": "three days",
+        "20 to 30 minutes": "20 minutes",
+        "two and a half hours": "two and a half hours",
+        "25 seconds": "25 seconds",
+    }
     pango_markup = b'GTKTEXTBUFFERCONTENTS-0001\x00\x00\x07\x1c <text_view_markup>\n <tags>\n  <tag id="4" priority="7">\n  </tag>\n  <tag id="5" priority="8">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="8" priority="11">\n  </tag>\n  <tag id="9" priority="12">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="10" priority="13">\n  </tag>\n  <tag id="6" priority="9">\n  </tag>\n  <tag id="7" priority="10">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="0" priority="3">\n  </tag>\n  <tag id="2" priority="5">\n  </tag>\n  <tag id="1" priority="4">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n  <tag id="3" priority="6">\n   <attr name="foreground-gdk" type="GdkColor" value="0:0:ffff" />\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n </tags>\n<text><apply_tag id="0">Cook potatoes for </apply_tag><apply_tag id="1">1/2 hour</apply_tag><apply_tag id="2">.\n\n        When you are finished, leave in the refrigerator for up to </apply_tag><apply_tag id="3">three days</apply_tag><apply_tag id="4">.\n\n        After that, boil onions for </apply_tag><apply_tag id="5">20 to 30 minutes</apply_tag><apply_tag id="6">.\n\n        When finished, bake everything for </apply_tag><apply_tag id="7">two and a half hours</apply_tag><apply_tag id="8">.\n\n        15-</apply_tag><apply_tag id="9">25 seconds</apply_tag><apply_tag id="10">.\n        </apply_tag></text>\n</text_view_markup>\n'  # noqa
     expected = """Cook potatoes for 1/2 hour.
 
@@ -85,10 +87,9 @@ def test_pango_markup_to_html():
     ret = PangoToHtml().feed(pango_markup, links, ignore_links=True)
     assert ret == expected
 
-
     pango_markup = b'GTKTEXTBUFFERCONTENTS-0001\x00\x00\x01t <text_view_markup>\n <tags>\n  <tag name="bold" priority="0">\n   <attr name="weight" type="gint" value="700" />\n  </tag>\n  <tag name="underline" priority="2">\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_SINGLE" />\n  </tag>\n </tags>\n<text><apply_tag name="underline"><apply_tag name="bold">Hello</apply_tag></apply_tag></text>\n</text_view_markup>\n'  # noqa
     ret = PangoToHtml().feed(pango_markup)
-    assert ret == '<u><b>Hello</b></u>'
+    assert ret == "<u><b>Hello</b></u>"
 
 
 def test_unsupported_pango_attributes():
@@ -97,4 +98,4 @@ def test_unsupported_pango_attributes():
     pango_markup = b'GTKTEXTBUFFERCONTENTS-0001\x00\x00\x01\x18 <text_view_markup>\n <tags>\n  <tag name="gtkspellchecker-misspelled" priority="4">\n   <attr name="underline" type="PangoUnderline" value="PANGO_UNDERLINE_ERROR" />\n  </tag>\n </tags>\n<text><apply_tag name="gtkspellchecker-misspelled">hel</apply_tag> lo </text>\n</text_view_markup>\n'  # noqa
 
     ret = PangoToHtml().feed(pango_markup)
-    assert ret == 'hel lo '
+    assert ret == "hel lo "

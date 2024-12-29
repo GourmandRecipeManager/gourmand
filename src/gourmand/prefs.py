@@ -19,7 +19,7 @@ class Prefs(dict):
 
         return Prefs.__single
 
-    def __init__(self, filename='preferences.toml'):
+    def __init__(self, filename="preferences.toml"):
         super().__init__()
         self.filename = Path(gourmanddir) / filename
         self.load()
@@ -31,7 +31,7 @@ class Prefs(dict):
 
     def save(self):
         self.filename.parent.mkdir(exist_ok=True)
-        with open(self.filename, 'w') as fout:
+        with open(self.filename, "w") as fout:
             toml.dump(self, fout)
 
     def load(self) -> bool:
@@ -49,7 +49,7 @@ def update_preferences_file_format(target_dir: Path = gourmanddir):
     This function is called upon launch to handle changes in the structure of the preference.
     Each change applied is documented inline.
     """
-    filename = target_dir / 'preferences.toml'
+    filename = target_dir / "preferences.toml"
     if not filename.is_file():
         return
 
@@ -58,12 +58,12 @@ def update_preferences_file_format(target_dir: Path = gourmanddir):
 
     # Gourmand 1.2.0: several sorting parameters can be saved.
     # The old format had `column=name` and `ascending=bool`, which are now `name=bool`
-    sort_by = prefs.get('sort_by')
+    sort_by = prefs.get("sort_by")
     if sort_by is not None:
-        if 'column' in sort_by.keys():  # old format
-            prefs['sort_by'] = {sort_by['column']: sort_by['ascending']}
+        if "column" in sort_by.keys():  # old format
+            prefs["sort_by"] = {sort_by["column"]: sort_by["ascending"]}
 
-    with open(filename, 'w') as fout:
+    with open(filename, "w") as fout:
         toml.dump(prefs, fout)
 
 
@@ -77,12 +77,12 @@ def copy_old_installation_or_initialize(target_dir: Path):
     If both gourmand and gourmet directories exist, then the gourmet directory,
     presumably newer, is migrated.
     """
-    target_db = target_dir / 'recipes.db'
+    target_db = target_dir / "recipes.db"
     if target_db.is_file():
         return
 
-    legacy_gourmet = Path('~/.gourmet').expanduser()
-    legacy_gourmand = Path('~/.gourmand').expanduser()
+    legacy_gourmet = Path("~/.gourmet").expanduser()
+    legacy_gourmand = Path("~/.gourmand").expanduser()
 
     source_dir = None
     if legacy_gourmet.is_dir():
@@ -96,5 +96,5 @@ def copy_old_installation_or_initialize(target_dir: Path):
     if not target_db.is_file():
         print("First time? We're setting you up with yummy recipes.")
         target_dir.mkdir(exist_ok=True)
-        default_db = Path(__file__).parent.absolute() / 'backends' / 'default.db'  # noqa
-        shutil.copyfile(default_db, target_dir / 'recipes.db')
+        default_db = Path(__file__).parent.absolute() / "backends" / "default.db"  # noqa
+        shutil.copyfile(default_db, target_dir / "recipes.db")

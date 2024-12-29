@@ -1,4 +1,5 @@
 """Import recipes from the web using recipe-scrapers."""
+
 from typing import List, Tuple
 from urllib.parse import urlparse
 
@@ -35,7 +36,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
 
     # Filter websites that are not supported by recipe-scrapers.
     for url in urls:
-        url_ = urlparse(url).netloc.strip('www.')
+        url_ = urlparse(url).netloc.strip("www.")
         if url_ not in supported_sites:
             unsupported.append(url)
             urls.remove(url)
@@ -55,8 +56,8 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
         else:
             uris = []
             for schema in recipe.links():
-                link = schema.get('href', '')
-                if link.endswith('jpg'):
+                link = schema.get("href", "")
+                if link.endswith("jpg"):
                     uris.append(link)
             browser = ImageBrowser(parent=None, uris=uris)
             response = browser.run()
@@ -89,43 +90,42 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
             cooktime = ""
 
         rec = Recipe(
-                id=None,
-                title=recipe.title(),
-                instructions=recipe.instructions(),
-                modifications=None,
-                cuisine='',
-                rating=rating,
-                description='',
-                source=recipe.author(),
-                totaltime=recipe.total_time(),
-                preptime=preptime,
-                cooktime=cooktime,
-                servings=yields,
-                yields=yields,
-                yield_unit=yield_unit,
-                ingredients=recipe.ingredients(),
-                image=image,
-                thumb=thumbnail,
-                deleted=False,
-                recipe_hash=None,
-                ingredient_hash=None,
-                link=recipe.canonical_url(),
-                last_modified=None,
-                nutrients=recipe.nutrients(),
-                category=recipe.category(),
-                )
+            id=None,
+            title=recipe.title(),
+            instructions=recipe.instructions(),
+            modifications=None,
+            cuisine="",
+            rating=rating,
+            description="",
+            source=recipe.author(),
+            totaltime=recipe.total_time(),
+            preptime=preptime,
+            cooktime=cooktime,
+            servings=yields,
+            yields=yields,
+            yield_unit=yield_unit,
+            ingredients=recipe.ingredients(),
+            image=image,
+            thumb=thumbnail,
+            deleted=False,
+            recipe_hash=None,
+            ingredient_hash=None,
+            link=recipe.canonical_url(),
+            last_modified=None,
+            nutrients=recipe.nutrients(),
+            category=recipe.category(),
+        )
 
         rec = rec._asdict()
-        rec.pop('id')
-        rec.pop('servings')
-        recipe_id = database.add_rec(rec)['id']
+        rec.pop("id")
+        rec.pop("servings")
+        recipe_id = database.add_rec(rec)["id"]
 
-        ingredients = [database.parse_ingredient(ingredient)
-                       for ingredient in recipe.ingredients()]
+        ingredients = [database.parse_ingredient(ingredient) for ingredient in recipe.ingredients()]
         for position, ingredient in enumerate(ingredients):
-            ingredient['recipe_id'] = recipe_id
-            ingredient['position'] = position
-            ingredient['deleted'] = False
+            ingredient["recipe_id"] = recipe_id
+            ingredient["position"] = position
+            ingredient["deleted"] = False
         database.add_ings(ingredients)
 
         imported.append(url)
