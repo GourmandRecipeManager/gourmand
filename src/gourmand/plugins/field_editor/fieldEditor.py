@@ -144,7 +144,7 @@ class FieldEditor:
         self.newValueComboBoxEntry.set_model(mod)
 
         if self.newValueComboBoxEntry.get_entry_text_column() == -1:
-            self.newValueComboBoxEntry.set_entry_text_coulmn(0)
+            self.newValueComboBoxEntry.set_entry_text_column(0)
 
         self.newValueEntryCompletion.set_model(mod)
         self.newValueEntryCompletion.set_text_column(0)

@@ -1067,7 +1067,7 @@ class FileSelectorDialog:
                 self.internal_extension_change = False
         return True
 
-    def change_file_extension(self, fsd, data: GObject.GParamSpec):
+    def change_file_extension(self, fsd, data: GObject.ParamSpec):
         if self.internal_extension_change:
             return
         filename = Path(self.fsd.get_filename())
