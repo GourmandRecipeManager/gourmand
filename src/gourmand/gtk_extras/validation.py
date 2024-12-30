@@ -16,8 +16,6 @@ class ValidatingEntry(Gtk.VBox, GObject.GObject):
     __gsignals__ = {"mnemonic-activate": "override"}
 
     def __init__(self):
-        super().__init__(self)
-
         # TODO: entry needn't be a property of self, but this requires
         # reworking all derived classes
         self.entry = Gtk.Entry()

@@ -1,9 +1,10 @@
+from collections import namedtuple  # noqa: E402
+
 import gi
 import pytest
 
 gi.require_version("Gtk", "3.0")
-from collections import namedtuple  # noqa: E402
-
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk, Gtk  # noqa: E402
 
 from gourmand.exporters.clipboard_exporter import copy_to_clipboard  # noqa: E402
