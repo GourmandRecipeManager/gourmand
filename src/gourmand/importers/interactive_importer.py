@@ -1,15 +1,12 @@
 import re
-
-import requests
-
-import gourmand.gglobals as gglobals
-import gourmand.gtk_extras.cb_extras as cb
-
 from typing import List
 
+import requests
 from bs4 import BeautifulSoup
 from gi.repository import Gtk
 
+import gourmand.gglobals as gglobals
+import gourmand.gtk_extras.cb_extras as cb
 from gourmand.i18n import _
 from gourmand.image_utils import ImageBrowser, image_to_bytes
 from gourmand.importers import importer
@@ -144,7 +141,7 @@ class InteractiveImporter(ConvenientImporter, NotThreadSafe):
         # Set up hard-coded functional buttons...
         self.new_recipe_button = Gtk.Button.new_with_mnemonic(_("_New Recipe"))
         self.new_recipe_button.connect("clicked", self.new_recipe_cb)
-        self.remove_markup_button = Gtk.Button.new_with_mnemonic(_("Clear _Tags"))  # noqa
+        self.remove_markup_button = Gtk.Button.new_with_mnemonic(_("Clear _Tags"))
         self.remove_markup_button.connect("clicked", self.clear_tags)
         # Set up ActionModel (for drop-down menu version of these commands)
         self.action_model = Gtk.ListStore(str, str)
@@ -191,7 +188,7 @@ class InteractiveImporter(ConvenientImporter, NotThreadSafe):
     def setup_tags(self):
         self.markup_tag = Gtk.TextTag.new("markup")
         self.markup_tag.set_property("editable", False)
-        # see https://developer.gnome.org/pango/stable/pango-Text-Attributes.html#PANGO-SCALE-XX-SMALL:CAPS  # noqa
+        # see https://developer.gnome.org/pango/stable/pango-Text-Attributes.html#PANGO-SCALE-XX-SMALL:CAPS
         # for magic number meaning
         self.markup_tag.set_property("scale", 0.8333333333333)
         self.markup_tag.set_property("rise", 15)

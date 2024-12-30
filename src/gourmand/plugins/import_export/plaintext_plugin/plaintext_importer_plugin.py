@@ -26,7 +26,8 @@ class PlainTextImporter(InteractiveImporter):
                 title=_("Big File"),
                 label=_("File %s is too big to import" % self.filename),
                 sublabel=_(
-                    "Your file exceeds the maximum length of %s characters. You probably didn't mean to import it anyway. If you really do want to import this file, use a text editor to split it into smaller files and try importing again."
+                    "Your file exceeds the maximum length of %s characters. You probably didn't mean to import it anyway. "
+                    "If you really do want to import this file, use a text editor to split it into smaller files and try importing again."
                 )
                 % MAX_PLAINTEXT_LENGTH,
                 message_type=Gtk.MessageType.ERROR,

@@ -27,7 +27,7 @@ class DatabaseGrabberGui(databaseGrabber.DatabaseGrabber):
         # filename=None
         # if de.getBoolean(
         #    label=_('Load nutritional database.'),
-        #    sublabel=_("It looks like you haven\'t yet initialized your nutritional database. To do so, you'll need to download the USDA nutritional database for use with your program. If you are not currently online, but have already downloaded the USDA sr17 database, you can point Gourmand to the ABBREV.txt file now. If you are online, Gourmand can download the file automatically."),
+        #    sublabel=_("It looks like you haven\'t yet initialized your nutritional database. To do so, you'll need to download the USDA nutritional database for use with your program. If you are not currently online, but have already downloaded the USDA sr17 database, you can point Gourmand to the ABBREV.txt file now. If you are online, Gourmand can download the file automatically."),  # noqa: E501
         #    custom_yes=_('Browse for ABBREV.txt file'),
         #    custom_no=_('Download file automatically')):
         #    filename=de.select_file(

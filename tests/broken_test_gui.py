@@ -17,11 +17,11 @@ GOURMET_APP_PATH = "./gourmet_in_place"
 APPNAME = "gourmet_in_place"
 
 
-class BasicTestsBase:
+class BasicTestsBase(unittest.TestCase):
 
     gdir = tempfile.mktemp()
 
-    def do_testFileImport(self, fn):
+    def do_test_file_import(self, fn):
         shortname = os.path.split(fn)[1]
         dp.focus.application(APPNAME)
         dp.focus.frame("Gourmet Recipe Manager")
@@ -39,7 +39,7 @@ class BasicTestsBase:
         dp.focus.frame("Gourmet Recipe Manager")
         screenshot("with_imported_recs-%s.png" % shortname)
 
-    def do_testWebImport(self, url):
+    def do_test_web_import(self, url):
         shortname = url.split("/")[-1]
         dp.focus.application(APPNAME)
         dp.focus.frame("Gourmet Recipe Manager")
@@ -66,7 +66,7 @@ class BasicTestsBase:
         dp.keyCombo("Return")  # Open recipe
         time.sleep(1)
 
-    def do_tearDown(self):
+    def tearDown(self):
         print("tearDown!")
         # Quit application!
         print("Quit app!")
@@ -83,19 +83,13 @@ class BasicTestsBase:
         dp.focus.frame("Gourmet Recipe Manager")
         dp.focus.table()
         dp.keyCombo("<Up>")
-        for i in range(n):
+        for _i in range(n):
             dp.keyCombo("<Down>")
 
 
-class BasicTests(
-    # unittest.TestCase,
-    BasicTestsBase
-):
+class BasicTests(BasicTestsBase):
 
-    firstRun = True
-
-    def tearDown(self):
-        self.do_tearDown()
+    first_run = True
 
     def setUp(self):
         # Start application
@@ -103,25 +97,25 @@ class BasicTests(
         print("running", GOURMET_APP_PATH, self.gdir)
         dp.run(GOURMET_APP_PATH, "--gourmet-directory=%s" % self.gdir, APPNAME)
         print("Done with run!")
-        if BasicTests.firstRun:
+        if BasicTests.first_run:
             print("first run, sleep a bit extra...")
             time.sleep(3)
-            BasicTests.firstRun = False
+            BasicTests.first_run = False
         time.sleep(2)
         print("focus frame")
         dp.focus.application(APPNAME)
         print("setUp done!")
 
-    def testZippedImport(self):
+    def test_zipped_import(self):
         raise NotImplementedError
 
-    def testRecipeEditorCustomization(self):
+    def test_recipe_editor_customization(self):
         raise NotImplementedError
 
-    def testRecipeCardImage(self):
+    def test_recipe_card_image(self):
         raise NotImplementedError
 
-    def testEditingNewCard(self):
+    def test_editing_new_card(self):
         dp.focus.application(APPNAME)
         dp.focus.frame("Gourmet Recipe Manager")
         # dp.keyCombo('<Ctrl>n')
@@ -155,46 +149,43 @@ class BasicTests(
         dp.keyCombo("<Alt>s")
         screenshot("new_rec_saved.png")
 
-    def testWebImport(self):
-        self.do_testWebImport("file:///home/tom/Projects/grecipe-manager/src/tests/recipe_files/sample_site.html")
+    def test_web_import(self):
+        self.do_test_web_import("file:///home/tom/Projects/grecipe-manager/src/tests/recipe_files/sample_site.html")
         self.search_and_open("Spaghetti")
         screenshot("web_imported_recipe_card-sample_site.png")
 
-    def testFileImport(self):
-        self.do_testFileImport("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/test_set.grmt")
+    def test_file_import(self):
+        self.do_test_file_import("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/test_set.grmt")
 
-    def testMastercookFileImport(self):
-        self.do_testFileImport("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/athenos1.mx2")
+    def test_mastercook_file_import(self):
+        self.do_test_file_import("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/athenos1.mx2")
 
-    def testMMFImport(self):
-        self.do_testFileImport("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/mealmaster.mmf")
+    def test_mmf_import(self):
+        self.do_test_file_import("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/mealmaster.mmf")
 
 
-class TestsWithBaseSet(BasicTestsBase, unittest.TestCase):
+class TestsWithBaseSet(BasicTestsBase):
 
-    firstRun = not os.path.exists("/tmp/gourmet_test_set")
+    first_run = not os.path.exists("/tmp/gourmet_test_set")
     # Note that if you want to "refresh" the test set, you need to
     # delete the directory /tmp/gourmet_test_set
     gdir = "/tmp/gourmet_test_set"
 
-    def tearDown(self):
-        self.do_tearDown()
-
     def setUp(self):
         dp.run(GOURMET_APP_PATH, "--gourmet-directory=%s" % self.gdir, APPNAME)
-        print("setUp -- first run?", self.firstRun)
-        if TestsWithBaseSet.firstRun:
+        print("setUp -- first run?", self.first_run)
+        if TestsWithBaseSet.first_run:
             print("first run, sleep a bit extra...")
             time.sleep(3)
         time.sleep(2)
         print("focus frame")
         dp.focus.application(APPNAME)
         print("setUp done!")
-        if TestsWithBaseSet.firstRun:
-            self.do_testFileImport("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/test_set.grmt")
-            TestsWithBaseSet.firstRun = False
+        if TestsWithBaseSet.first_run:
+            self.do_test_file_import("/home/tom/Projects/grecipe-manager/src/tests/recipe_files/test_set.grmt")
+            TestsWithBaseSet.first_run = False
 
-    def testShoppingListGenerationFromIndex(self):
+    def test_shopping_list_generation_from_index(self):
         self.focus_nth_recipe(0)
         dp.click("Actions")
         dp.click("Add to Shopping List")
@@ -214,7 +205,7 @@ class TestsWithBaseSet(BasicTestsBase, unittest.TestCase):
         screenshot("shopping list With two recipes+mult.png")
         dp.keyCombo("<Ctrl>w")
 
-    def testShoppingListGenerationFromCard(self):
+    def test_shopping_list_generation_from_card(self):
         # Test multiplication + no multiplication
         self.focus_nth_recipe()
         dp.keyCombo("<Ctrl>o")  # open recipe card
@@ -240,25 +231,20 @@ class TestsWithBaseSet(BasicTestsBase, unittest.TestCase):
         screenshot("add-to-shopping-list-from-card-w-keyboard-multiplied-by-2.png")
         dp.keyCombo("<Ctrl>w")
 
-    # def testShoppingListOptionalIngredients (self):
+    # def test_shopping_list_optional_ingredients(self):
     #    raise NotImplementedError
 
-    # def testLimitedSearch (self):
+    # def test_limited_search(self):
     #    raise NotImplementedError
 
-    # def testHtmlExport (self):
+    # def test_html_export(self):
     #    raise NotImplementedError
 
-    # def testGourmetExport (self):
+    # def test_gourmet_export(self):
     #    raise NotImplementedError
 
-    # def testPDFExport (self):
+    # def test_pdf_export(self):
     #    raise NotImplementedError
 
-    # def testIndexViewColumnCustomization (self):
+    # def test_index_view_column_customization(self):
     #    raise NotImplementedError
-
-
-if __name__ == "__main__":
-    print("unittest.main()")
-    unittest.main()

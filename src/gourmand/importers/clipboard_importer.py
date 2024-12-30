@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from gi.repository import Gdk, Gtk
 
 from gourmand.importers.importManager import ImportManager
-from gourmand.plugins.import_export.plaintext_plugin.plaintext_importer_plugin import PlainTextImporter  # noqa
+from gourmand.plugins.import_export.plaintext_plugin.plaintext_importer_plugin import PlainTextImporter
 
 
 def handle_import(data: str):

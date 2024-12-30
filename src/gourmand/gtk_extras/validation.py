@@ -49,7 +49,7 @@ class ValidatingEntry(Gtk.VBox, GObject.GObject):
         screen = Gdk.Screen.get_default()
         gtk_provider = Gtk.CssProvider()
         gtk_context = Gtk.StyleContext()
-        gtk_context.add_provider_for_screen(screen, gtk_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)  # noqa
+        gtk_context.add_provider_for_screen(screen, gtk_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         gtk_provider.load_from_data(
             b"""
         #entry.error { background-color: #FF8888; color: white; }

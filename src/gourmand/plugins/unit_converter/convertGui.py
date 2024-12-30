@@ -44,7 +44,7 @@ class ConvGui:
         self.resultLabel = self.amt2Label
         self.resultLabel.set_use_markup(True)
         self.resultLabel.set_line_wrap(True)
-        self.unitModel = unitModel if unitModel else gourmand.main.UnitModel(self.conv)  # noqa
+        self.unitModel = unitModel if unitModel else gourmand.main.UnitModel(self.conv)
         # self.unit2Model = self.unitModel.filter_new()
         self.unit1ComboBox.set_model(self.unitModel)
         self.unit1ComboBox.set_wrap_width(3)

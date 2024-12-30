@@ -96,5 +96,5 @@ def copy_old_installation_or_initialize(target_dir: Path):
     if not target_db.is_file():
         print("First time? We're setting you up with yummy recipes.")
         target_dir.mkdir(exist_ok=True)
-        default_db = Path(__file__).parent.absolute() / "backends" / "default.db"  # noqa
+        default_db = Path(__file__).parent.absolute() / "backends" / "default.db"
         shutil.copyfile(default_db, target_dir / "recipes.db")

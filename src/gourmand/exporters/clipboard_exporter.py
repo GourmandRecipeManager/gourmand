@@ -36,9 +36,9 @@ def _format(recipes):
         formatted_recipe += f"{recipe.source}\n" if recipe.source else ""
         formatted_recipe += f"{recipe.link}\n" if recipe.link else ""
         formatted_recipe += "\n" if recipe.source or recipe.link else ""
-        formatted_recipe += f"{recipe.yields} {recipe.yield_unit}\n\n" if recipe.yields else ""  # noqa
+        formatted_recipe += f"{recipe.yields} {recipe.yield_unit}\n\n" if recipe.yields else ""
 
-        formatted_recipe += f"{recipe.description}\n\n" if recipe.description else ""  # noqa
+        formatted_recipe += f"{recipe.description}\n\n" if recipe.description else ""
         formatted_recipe += f"{formatted_ingredients}\n\n"
 
         formatted_recipe += f"{recipe.instructions}\n"

@@ -13,9 +13,8 @@ from gourmand.recipeManager import get_recipe_manager
 from . import convert, plugin, plugin_loader, prefs, recipeManager
 from .exporters.printer import PrintManager
 from .gdebug import debug
-from .gtk_extras import WidgetSaver
+from .gtk_extras import WidgetSaver, fix_action_group_importance
 from .gtk_extras import dialog_extras as de
-from .gtk_extras import fix_action_group_importance
 from .gtk_extras import treeview_extras as te
 from .shopping import ShoppingList
 
@@ -120,7 +119,7 @@ class IngredientAndPantryList:
     def setup_actions(self):
         self.pantryActions = Gtk.ActionGroup(name="PantryActions")
         self.shoppingActions = Gtk.ActionGroup(name="ShoppingActions")
-        self.pantryOrShoppingActions = Gtk.ActionGroup(name="PantryOrShoppingActions")  # noqa
+        self.pantryOrShoppingActions = Gtk.ActionGroup(name="PantryOrShoppingActions")
         self.pantryOrShoppingActions.add_actions(
             [
                 ("ChangeCategoryPop", None, _("Change _Category")),

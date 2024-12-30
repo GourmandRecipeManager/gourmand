@@ -815,7 +815,7 @@ class NutritionInfoDruid(GObject.GObject):
     def get_density(self, amount, unit):
         self.densityLabel.set_text(
             _(
-                """In order to calculate nutritional information for "%(amount)s %(unit)s %(ingkey)s", Gourmand needs to know its density. Our nutritional database has several descriptions of this food with different densities. Please select the correct one below."""
+                """In order to calculate nutritional information for "%(amount)s %(unit)s %(ingkey)s", Gourmand needs to know its density. Our nutritional database has several descriptions of this food with different densities. Please select the correct one below."""  # noqa: E501
             )
             % ({"amount": amount, "unit": unit, "ingkey": self.ingkey})
         )

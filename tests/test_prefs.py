@@ -1,7 +1,7 @@
+from pathlib import Path
+
 import pytest
 import toml
-
-from pathlib import Path
 
 from gourmand.prefs import Prefs, update_preferences_file_format
 

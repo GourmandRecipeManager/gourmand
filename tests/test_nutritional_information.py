@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+
 import pytest
 
 from gourmand.plugins.nutritional_information.nutrition import NutritionData

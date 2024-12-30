@@ -14,9 +14,8 @@ from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
 from gourmand.gglobals import DEFAULT_HIDDEN_COLUMNS, REC_ATTRS, gourmanddir, use_threads
-from gourmand.gtk_extras import WidgetSaver
+from gourmand.gtk_extras import WidgetSaver, fix_action_group_importance, mnemonic_manager, ratingWidget
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import fix_action_group_importance, mnemonic_manager, ratingWidget
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.i18n import _
 from gourmand.image_utils import load_pixbuf_from_resource
@@ -841,7 +840,7 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
         self.setup_index_columns()
         self.setup_hacks()
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data("gourmand", "ui/recipe_index.ui").decode())  # noqa
+        self.ui.add_from_string(get_data("gourmand", "ui/recipe_index.ui").decode())
         self.setup_actions()
         RecIndex.__init__(self, ui=self.ui, rd=self.rd, rg=self, editable=False)
         self.setup_database_hooks()
@@ -983,7 +982,7 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
         return True
 
     def setup_actions(self):
-        self.onSelectedActionGroup = Gtk.ActionGroup(name="IndexOnSelectedActions")  # noqa
+        self.onSelectedActionGroup = Gtk.ActionGroup(name="IndexOnSelectedActions")
         self.onSelectedActionGroup.add_actions(
             [
                 ("OpenRec", "recipe-card", _("Open recipe"), "<Control>O", _("Open selected recipe"), self.rec_tree_select_rec),

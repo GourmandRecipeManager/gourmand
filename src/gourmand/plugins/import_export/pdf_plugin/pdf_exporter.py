@@ -11,9 +11,8 @@ from reportlab.lib.units import inch, mm
 
 import gourmand.exporters.exporter as exporter
 from gourmand import convert, gglobals
-from gourmand.gtk_extras import cb_extras
+from gourmand.gtk_extras import cb_extras, optionTable
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import optionTable
 from gourmand.i18n import _
 from gourmand.prefs import Prefs
 

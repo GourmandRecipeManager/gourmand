@@ -1,6 +1,5 @@
 import re
 import sys
-
 from typing import List, Tuple
 
 from .parser_data import SUMMABLE_FIELDS

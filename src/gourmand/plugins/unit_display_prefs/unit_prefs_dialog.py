@@ -19,7 +19,10 @@ class UnitPrefsDialog:
         old_pref = self.prefs.get("preferred_unit_groups", [])
         option = de.getRadio(
             label=_("Automatically adjust units"),
-            sublabel="Choose how you would like to adjust units for display and printing. The underlying ingredient data stored in the database will not be affected.",
+            sublabel=(
+                "Choose how you would like to adjust units for display and printing. "
+                "The underlying ingredient data stored in the database will not be affected."
+            ),
             options=self.options,
             default=old_pref,
         )

@@ -1,5 +1,5 @@
 import xml.dom
-from typing import Optional, List
+from typing import List, Optional
 
 from .exporter import exporter_mult
 

@@ -1,4 +1,5 @@
 import unittest
+
 import pytest
 
 from gourmand import convert
@@ -9,30 +10,30 @@ class ConvertTest(unittest.TestCase):
     def setUp(self):
         self.c = convert.get_converter()
 
-    def testEqual(self):
+    def test_equal(self):
         self.assertEqual(self.c.convert_simple("c", "c"), 1)
 
     @pytest.mark.skip("Broken as of 20220813")
-    def testDensity(self):
+    def test_density(self):
         self.assertEqual(self.c.convert_w_density("ml", "g", item="water"), 1)
         self.assertEqual(self.c.convert_w_density("ml", "g", density=0.5), 0.5)
 
-    def testReadability(self):
+    def test_readability(self):
         self.assertTrue(self.c.readability_score(1, "cup") > self.c.readability_score(0.8, "cups"))
         self.assertTrue(self.c.readability_score(1 / 3.0, "tsp.") > self.c.readability_score(0.123, "tsp."))
 
-    def testAdjustments(self):
+    def test_adjustments(self):
         amt, unit = self.c.adjust_unit(12, "Tbs.", "water")
         self.assertEqual(amt, 0.75)
 
-    def testIntegerRounding(self):
+    def test_integer_rounding(self):
         self.assertTrue(convert.integerp(0.99))
 
-    def testFractionGenerator(self):
+    def test_fraction_generator(self):
         for d in [2, 3, 4, 5, 6, 8, 10, 16]:
             self.assertEqual(convert.float_to_frac(1.0 / d, fractions=convert.FRACTIONS_ASCII), ("1/%s" % d))
 
-    def testFractToFloat(self):
+    def test_fraction_to_float(self):
         for s, n in [
             ("1", 1),
             ("123", 123),
@@ -57,7 +58,3 @@ class ConvertTest(unittest.TestCase):
             self.assertEqual(match.group(convert.ING_MATCHER_AMT_GROUP).strip(), a)
             self.assertEqual(match.group(convert.ING_MATCHER_UNIT_GROUP).strip(), u)
             self.assertEqual(match.group(convert.ING_MATCHER_ITEM_GROUP).strip(), i)
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -7,9 +7,7 @@ from typing import Union
 from setuptools import Command, find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
-
 from wheel.bdist_wheel import bdist_wheel
-
 
 PACKAGE = "gourmand"
 PACKAGEDIR = Path("src") / PACKAGE

@@ -5,10 +5,9 @@ from typing import Any, Dict, Optional
 from gi.repository import Gdk, GObject, Gtk
 
 from gourmand.convert import frac_to_float
-from gourmand.gtk_extras import WidgetSaver
+from gourmand.gtk_extras import WidgetSaver, mnemonic_manager, pageable_store
 from gourmand.gtk_extras import cb_extras as cb
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import mnemonic_manager, pageable_store
 from gourmand.i18n import _
 
 from . import keyEditorPluggable
@@ -167,9 +166,9 @@ class KeyEditor:
             if de.getBoolean(
                 label=_('Change all keys "%s" to "%s"?') % (key, text),
                 sublabel=_(
-                    "You won't be able to undo this action. If there are already ingredients with the key \"%s\", you won't be able to distinguish between those items and the items you are changing now."
-                    % text
-                ),
+                    "You won't be able to undo this action. If there are already ingredients with the key \"%s\", you won't be able to distinguish between those items and the items you are changing now."  # noqa: E501
+                )
+                % text,
             ):
                 self.rd.update_by_criteria(self.rd.ingredients_table, curdic, {"ingkey": text})
                 self.rd.delete_by_criteria(self.rd.keylookup_table, {"ingkey": key})
@@ -177,7 +176,7 @@ class KeyEditor:
             if de.getBoolean(
                 label=_('Change all items "%s" to "%s"?') % (curdic["item"], text),
                 sublabel=_(
-                    "You won't be able to undo this action. If there are already ingredients with the item \"%s\", you won't be able to distinguish between those items and the items you are changing now."
+                    "You won't be able to undo this action. If there are already ingredients with the item \"%s\", you won't be able to distinguish between those items and the items you are changing now."  # noqa: E501
                 )
                 % text,
             ):

@@ -26,7 +26,7 @@ class ShoppingNutritionalInfoPlugin(ShoppingListPlugin):
     name = "shopping_nutritional_info"
 
     def setup_action_groups(self):
-        self.nutritionShoppingActionGroup = Gtk.ActionGroup(name="NutritionShoppingActionGroup")  # noqa
+        self.nutritionShoppingActionGroup = Gtk.ActionGroup(name="NutritionShoppingActionGroup")
         self.nutritionShoppingActionGroup.add_actions(
             [
                 ("Tools", None, _("Tools")),

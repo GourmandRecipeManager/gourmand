@@ -138,7 +138,7 @@ class PluginChooser:
                 n = modname.lower()
                 modpossibilities = '"python-%s" ' % n + _("or") + ' "%s"' % n
                 details += (
-                    '\n\nYou may need to install additional python packages for this module to work properly. If you have a package management system on your computer, use it to search for a package containing "%s", such as %s'
+                    '\n\nYou may need to install additional python packages for this module to work properly. If you have a package management system on your computer, use it to search for a package containing "%s", such as %s'  # noqa: E501
                     % (modname, modpossibilities)
                 )
             if state:

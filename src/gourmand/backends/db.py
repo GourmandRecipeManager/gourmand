@@ -524,7 +524,7 @@ class RecData(Pluggable):
 
         # Code for updates between versions...
         if not self.new_db:
-            sv_text = f"{stored_info.version_super}.{stored_info.version_major}.{stored_info.version_minor}"  # noqa
+            sv_text = f"{stored_info.version_super}.{stored_info.version_major}.{stored_info.version_minor}"
             # Change from servings to yields! ( we use the plural to avoid a headache with keywords)
             if stored_info.version_super == 0 and stored_info.version_major < 16:
                 print("Database older than 0.16.0 -- updating", sv_text)

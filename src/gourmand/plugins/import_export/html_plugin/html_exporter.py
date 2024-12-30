@@ -143,7 +143,10 @@ class html_exporter(exporter_mult):
         elif attr == "rating":
             rating, rest = text.split("/", 1)
             self.out.write(
-                '<p class="%s" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><span class="label">%s:</span> <span itemprop="ratingValue">%s</span><span>/%s</span></p>\n'
+                (
+                    '<p class="%s" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">'
+                    '<span class="label">%s:</span> <span itemprop="ratingValue">%s</span><span>/%s</span></p>\n'
+                )
                 % (attr, label.capitalize(), rating, rest)
             )
         else:

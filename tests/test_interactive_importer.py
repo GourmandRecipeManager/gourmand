@@ -8,7 +8,7 @@ class TestConvenientImporter(unittest.TestCase):
     def setUp(self):
         self.ci = interactive_importer.ConvenientImporter()
 
-    def testImport(self):
+    def test_import(self):
         self.ci.start_rec()
         self.ci.add_attribute("title", "Test")
         self.ci.add_attribute("category", "foo")

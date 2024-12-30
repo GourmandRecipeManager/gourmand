@@ -7,19 +7,16 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk, Pango
 from PIL import Image
 
-from gourmand import Undo, convert, defaults
+from gourmand import Undo, convert, defaults, plugin_loader, prefs, timeScanner
 from gourmand import image_utils as iu
-from gourmand import plugin_loader, prefs, timeScanner
 from gourmand.exporters.clipboard_exporter import copy_to_clipboard
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
 from gourmand.gdebug import debug
 from gourmand.gglobals import FLOAT_REC_ATTRS, INT_REC_ATTRS, REC_ATTR_DIC, REC_ATTRS
-from gourmand.gtk_extras import WidgetSaver  # noqa: F401
-from gourmand.gtk_extras import validation  # noqa: F401
+from gourmand.gtk_extras import WidgetSaver, fix_action_group_importance, mnemonic_manager, ratingWidget, validation  # noqa: F401
 from gourmand.gtk_extras import cb_extras as cb
 from gourmand.gtk_extras import dialog_extras as de
-from gourmand.gtk_extras import fix_action_group_importance, mnemonic_manager, ratingWidget  # noqa: F401
 from gourmand.gtk_extras import treeview_extras as te
 from gourmand.gtk_extras.dialog_extras import UserCancelledError, show_amount_error
 from gourmand.gtk_extras.pango_buffer import PangoBuffer
@@ -243,7 +240,7 @@ class RecCardDisplay(plugin_loader.Pluggable):
                 ),
             ]
         )
-        self.recipeDisplayFuturePluginActionGroup = Gtk.ActionGroup(name="RecipeDisplayFuturePluginActions")  # noqa
+        self.recipeDisplayFuturePluginActionGroup = Gtk.ActionGroup(name="RecipeDisplayFuturePluginActions")
         self.recipeDisplayFuturePluginActionGroup.add_actions(
             [
                 ("CopyRecipe", Gtk.STOCK_COPY, _("Copy to clipboard"), "<Control>C", None, self.copy_cb),
@@ -263,7 +260,7 @@ class RecCardDisplay(plugin_loader.Pluggable):
 
     def setup_ui(self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data("gourmand", "ui/recCardDisplay.ui").decode())  # noqa
+        self.ui.add_from_string(get_data("gourmand", "ui/recCardDisplay.ui").decode())
 
         self.ui.connect_signals(
             {
@@ -1043,7 +1040,7 @@ class IngredientEditorModule(RecEditorModule):
 
     def setup_main_interface(self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data("gourmand", "ui/recCardIngredientsEditor.ui").decode())  # noqa
+        self.ui.add_from_string(get_data("gourmand", "ui/recCardIngredientsEditor.ui").decode())
         self.main = self.ui.get_object("ingredientsNotebook")
         self.main.unparent()
         self.ingtree_ui = IngredientTreeUI(self, self.ui.get_object("ingTree"))
@@ -1062,7 +1059,7 @@ class IngredientEditorModule(RecEditorModule):
         self.ingtree_ui.set_tree_for_rec(self.current_rec)
 
     def setup_action_groups(self):
-        self.ingredientEditorActionGroup = Gtk.ActionGroup(name="IngredientEditorActionGroup")  # noqa
+        self.ingredientEditorActionGroup = Gtk.ActionGroup(name="IngredientEditorActionGroup")
         self.ingredientEditorActionGroup.add_actions(
             [
                 ("AddIngredient", Gtk.STOCK_ADD, _("Add ingredient"), None, None),
@@ -1079,7 +1076,7 @@ class IngredientEditorModule(RecEditorModule):
             ]
         )
 
-        self.ingredientEditorOnRowActionGroup = Gtk.ActionGroup(name="IngredientEditorOnRowActionGroup")  # noqa
+        self.ingredientEditorOnRowActionGroup = Gtk.ActionGroup(name="IngredientEditorOnRowActionGroup")
         self.ingredientEditorOnRowActionGroup.add_actions(
             [
                 (
@@ -1193,7 +1190,7 @@ class TextEditor:
 
     def do_copy(self, action: Gtk.Action):
         # Get any widget to get a hold of the window
-        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]  # noqa
+        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]
         window = w.get_toplevel()
         widget = window.get_focus()  # Get the widget under focus
 
@@ -1204,7 +1201,7 @@ class TextEditor:
 
     def do_cut(self, action: Gtk.Action):
         # Get any widget to get a hold of the window
-        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]  # noqa
+        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]
         window = w.get_toplevel()
         widget = window.get_focus()  # Get the widget under focus
 
@@ -1215,7 +1212,7 @@ class TextEditor:
 
     def paste_cb(self, action: Gtk.Action):
         # Get any widget to get a hold of the window
-        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]  # noqa
+        w = self.edit_widgets[0] if self.edit_widgets else self.edit_textviews[0]
         window = w.get_toplevel()
 
         widget = window.get_focus()  # Get the widget under focus
@@ -1258,7 +1255,7 @@ class DescriptionEditorModule(TextEditor, RecEditorModule):
 
     def setup_main_interface(self):
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data("gourmand", "ui/recCardDescriptionEditor.ui").decode())  # noqa
+        self.ui.add_from_string(get_data("gourmand", "ui/recCardDescriptionEditor.ui").decode())
         self.imageBox = ImageBox(self)
         self.init_recipe_widgets()
         self.ui.connect_signals(
@@ -2799,7 +2796,7 @@ class RecSelector(RecIndex):
     def __init__(self, recGui, ingEditor):
         self.prefs = prefs.Prefs.instance()
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(get_data("gourmand", "ui/recipe_index.ui").decode())  # noqa
+        self.ui.add_from_string(get_data("gourmand", "ui/recipe_index.ui").decode())
         self.rg = recGui
         self.ingEditor = ingEditor
         self.re = self.ingEditor.re

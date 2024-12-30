@@ -84,7 +84,7 @@ class IngredientKeyEditor(RecEditorModule):
             apply_button.connect("clicked", lambda *args: self.tv.queue_draw())
 
     def setup_action_groups(self):
-        self.keyEditorActionGroup = Gtk.ActionGroup(name="RecKeyEditorActionGroup")  # noqa
+        self.keyEditorActionGroup = Gtk.ActionGroup(name="RecKeyEditorActionGroup")
         self.keyEditorActionGroup.add_actions(
             [
                 (

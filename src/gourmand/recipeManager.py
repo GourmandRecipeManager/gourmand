@@ -41,7 +41,7 @@ class DatabaseShopper(shopping.Shopper):
         self.catorder_dic = dbDic("shopcategory", "position", self.db.shopcatsorder_table, db=self.db)
 
     def init_pantry(self):
-        self.pantry = dbDic("ingkey", "pantry", self.db.pantry_table, db=self.db)  # noqa
+        self.pantry = dbDic("ingkey", "pantry", self.db.pantry_table, db=self.db)
         if len(self.pantry.items()) == 0:
             self.pantry.initialize(dict([(i, True) for i in self.default_pantry]))
 

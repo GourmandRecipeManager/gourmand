@@ -78,7 +78,7 @@ class MasterLoader:
         self.errors = dict()
         self.pluggables_by_class: Dict = dict()
         self.active_plugin_sets: List[str] = []
-        self.available_plugin_sets: Dict[str, LegacyPlugin] = self.load_legacy_plugins(self.plugin_directories)  # noqa
+        self.available_plugin_sets: Dict[str, LegacyPlugin] = self.load_legacy_plugins(self.plugin_directories)
         self.available_plugin_sets.update(self.load_plugins_from_namespace())
         self.load_active_plugins()
 

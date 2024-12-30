@@ -111,12 +111,12 @@ class TestExportManager(unittest.TestCase):
         self.db = gourmand.backends.db.get_database()
         print("finish setUp", file=sys.stderr)
 
-    def testMultipleExporters(self):
+    def test_multiple_exporters(self):
         def fail_on_fail(thread, errorval, errortext, tb):
             self.assertTrue(False, errortext + "\n\n" + tb)
 
-        for format, plugin in list(self.em.plugins_by_name.items()):
-            print(format, file=sys.stderr)
+        for format_name, plugin in list(self.em.plugins_by_name.items()):
+            print(format_name, file=sys.stderr)
             filters = plugin.saveas_filters
             ext = filters[-1][-1].strip("*.")
             recs = [
@@ -126,12 +126,12 @@ class TestExportManager(unittest.TestCase):
             ]
             with tempfile.TemporaryDirectory() as directory:
                 path = Path(directory, "All." + ext)
-                plugin, exporter = self.em.get_multiple_exporter(recs, str(path), format, extra_prefs=EXTRA_PREFS_DEFAULT)
+                plugin, exporter = self.em.get_multiple_exporter(recs, str(path), format_name, extra_prefs=EXTRA_PREFS_DEFAULT)
                 exporter.connect("error", fail_on_fail)
                 exporter.do_run()
 
-    def testSingleExport(self):
-        for format, plugin in list(self.em.plugins_by_name.items()):
+    def test_single_export(self):
+        for format_name, plugin in list(self.em.plugins_by_name.items()):
             filters = plugin.saveas_single_filters
             ext = filters[-1][-1].strip("*.")
             for rec, f in [
@@ -141,7 +141,7 @@ class TestExportManager(unittest.TestCase):
             ]:
                 with tempfile.TemporaryDirectory() as directory:
                     Path(directory, f + ext)
-                    self.em.do_single_export(rec, f, format, extra_prefs=EXTRA_PREFS_DEFAULT)
+                    self.em.do_single_export(rec, f, format_name, extra_prefs=EXTRA_PREFS_DEFAULT)
                     if hasattr(plugin, "check_export"):
                         print("Checking export for ", plugin, rec, f)
                         fi = open(f, "r")

@@ -35,8 +35,10 @@ def add_save_and_check(rc, lines_groups_and_dc):
     # All ingredient addition actions pass through add_with_undo
     ing_editor = ing_controller.ingredient_editor_module
     added = []
-    for line, group, desc in lines_groups_and_dc:
-        add_with_undo(ing_editor, lambda *args: added.append(ing_editor.add_ingredient_from_line(line, group_iter=group)))
+    for line, group, _desc in lines_groups_and_dc:
+        # TODO: We ignore this for now, but is this code indeed correct?
+        #       Issue of B023: `line` is a loop variable and part of the lambda body. Which `line` value is used for the actual call?
+        add_with_undo(ing_editor, lambda *args: added.append(ing_editor.add_ingredient_from_line(line, group_iter=group)))  # noqa: B023
 
     history = ing_editor.history
     print_("add_save_and_check REVERT history:", history)
@@ -67,9 +69,9 @@ def check_ings(check_dics, ings):
             try:
                 val = getattr(ings[n], k)
                 assert val == expected
-            except (AssertionError, IndexError):
+            except (AssertionError, IndexError) as error:
                 msg = f"{k} is {val}, should be {expected} in entry {ings} for index {n}"
-                raise AssertionError(msg)
+                raise AssertionError(msg) from error
         n -= 1
 
 

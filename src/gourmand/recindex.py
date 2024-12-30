@@ -9,9 +9,8 @@ from . import Undo, convert
 from .backends.db import RecipeManager
 from .gdebug import debug
 from .gglobals import DEFAULT_HIDDEN_COLUMNS, INT_REC_ATTRS, REC_ATTRS
-from .gtk_extras import WidgetSaver
+from .gtk_extras import WidgetSaver, mnemonic_manager, pageable_store, ratingWidget
 from .gtk_extras import cb_extras as cb
-from .gtk_extras import mnemonic_manager, pageable_store, ratingWidget
 from .gtk_extras import treeview_extras as te
 from .image_utils import bytes_to_pixbuf
 from .importers.clipboard_importer import import_from_drag_and_drop
@@ -95,7 +94,7 @@ class RecIndex:
                     None,
                     _("Use regular expressions in search"),
                     None,
-                    _("Use regular expressions (an advanced search language) in text search"),  # noqa
+                    _("Use regular expressions (an advanced search language) in text search"),
                     self.search_regex_toggle_callback,
                     False,
                 ),
@@ -380,7 +379,7 @@ class RecIndex:
             debug("Column %s is %s->%s" % (n, c, self.rtcolsdic[c]), 5)
             n += 1
 
-    def search_typing_toggle_callback(self, widget: Union[Gtk.ToggleAction, Gtk.CheckButton]):  # noqa
+    def search_typing_toggle_callback(self, widget: Union[Gtk.ToggleAction, Gtk.CheckButton]):
         """Toggle search-as-you-type option."""
         setting: bool = widget.get_active()
 
@@ -395,7 +394,7 @@ class RecIndex:
             self.search_as_you_type = False
             self.searchButton.show()
 
-    def search_regex_toggle_callback(self, widget: Union[Gtk.ToggleAction, Gtk.CheckButton]):  # noqa
+    def search_regex_toggle_callback(self, widget: Union[Gtk.ToggleAction, Gtk.CheckButton]):
         """Update the other widget"""
         setting: bool = widget.get_active()
 

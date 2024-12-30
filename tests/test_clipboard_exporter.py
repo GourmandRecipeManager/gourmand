@@ -3,7 +3,9 @@ import pytest
 
 gi.require_version("Gtk", "3.0")
 from collections import namedtuple  # noqa: E402
-from gi.repository import Gtk, Gdk  # noqa: E402
+
+from gi.repository import Gdk, Gtk  # noqa: E402
+
 from gourmand.exporters.clipboard_exporter import copy_to_clipboard  # noqa: E402
 
 Recipe = namedtuple("Recipe", ["title", "source", "yields", "yield_unit", "description", "instructions", "link"])

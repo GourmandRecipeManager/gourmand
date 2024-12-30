@@ -79,7 +79,7 @@ def build_rec_attr_dic():
 
 build_rec_attr_dic()
 
-DEFAULT_HIDDEN_COLUMNS = [REC_ATTR_DIC[attr] for attr in ("link", "yields", "yield_unit", "preptime", "cooktime")]  # noqa
+DEFAULT_HIDDEN_COLUMNS = [REC_ATTR_DIC[attr] for attr in ("link", "yields", "yield_unit", "preptime", "cooktime")]
 
 # Set up custom STOCK items and ICONS!
 icon_factory = Gtk.IconFactory()
@@ -119,7 +119,7 @@ if sum(fg_color) > sum(bg_color):  # background is darker
     star_color = "gold"
 
 NO_STAR = Path(__file__).parent / "data" / "images" / "no_star.png"
-HALF_STAR = Path(__file__).parent / "data" / "images" / f"half_{star_color}_star.png"  # noqa
-FULL_STAR = Path(__file__).parent / "data" / "images" / f"{star_color}_star.png"  # noqa
+HALF_STAR = Path(__file__).parent / "data" / "images" / f"half_{star_color}_star.png"
+FULL_STAR = Path(__file__).parent / "data" / "images" / f"{star_color}_star.png"
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
