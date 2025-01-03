@@ -22,6 +22,7 @@ class PangoToHtml(HTMLParser):
     This means that the HTML resulting from the conversion by this object may
     differ from the original that was fed to the caller.
     """
+
     def __init__(self):
         super().__init__()
         self.markup_text: str = ""  # the resulting content
@@ -47,7 +48,7 @@ class PangoToHtml(HTMLParser):
         str(Pango.Weight.BOLD.real): ("<b>", "</b>"),
         Pango.Underline.SINGLE.value_name: ("<u>", "</u>"),
         "foreground-gdk": (r'<span foreground="{}">', "</span>"),
-        "background-gdk": (r'<span background="{}">', "</span>")
+        "background-gdk": (r'<span background="{}">', "</span>"),
     }
 
     @staticmethod
@@ -64,10 +65,7 @@ class PangoToHtml(HTMLParser):
         blue = hex(255 * int(blue, base=16) // 65535)[2:].zfill(2)
         return f"#{red}{green}{blue}"
 
-    def feed(self,
-             data: bytes,
-             links: Optional[Dict[str, str]] = None,
-             ignore_links: Optional[bool] = False) -> str:
+    def feed(self, data: bytes, links: Optional[Dict[str, str]] = None, ignore_links: Optional[bool] = False) -> str:
         """Convert a buffer (text and and the buffer's iterators to html string.
 
         Unlike an HTMLParser, the whole string must be passed at once, chunks
@@ -115,27 +113,27 @@ class PangoToHtml(HTMLParser):
             closing_tags = ""
 
             # The tag may have a name, for named tags, or else an id
-            tag_name = tag.attrs.get('id')
-            tag_name = tag.attrs.get('name', tag_name)
+            tag_name = tag.attrs.get("id")
+            tag_name = tag.attrs.get("name", tag_name)
 
             attributes = [c for c in tag.contents if isinstance(c, Tag)]
             for attribute in attributes:
-                vtype = attribute['type']
-                value = attribute['value']
-                name = attribute['name']
+                vtype = attribute["type"]
+                value = attribute["value"]
+                name = attribute["name"]
 
                 if vtype == "GdkColor":  # Convert colours to html
-                    if name in ['foreground-gdk', 'background-gdk']:
+                    if name in ["foreground-gdk", "background-gdk"]:
                         opening, closing = self.tag2html[name]
                         hex_color = self.pango_to_html_hex(value)
                         opening = opening.format(hex_color)
                     else:
                         continue  # no idea!
                 else:
-                    opening, closing = self.tag2html.get(value, ('', ''))
+                    opening, closing = self.tag2html.get(value, ("", ""))
 
                 opening_tags += opening
-                closing_tags = closing + closing_tags   # closing tags are FILO
+                closing_tags = closing + closing_tags  # closing tags are FILO
 
             tags_list[tag_name] = opening_tags, closing_tags
 
@@ -161,8 +159,8 @@ class PangoToHtml(HTMLParser):
         # made an assert, but we let our parser quietly handle nonsense.
         if tag == "apply_tag":
             attrs = dict(attrs)
-            tag_name = attrs.get('id')  # A tag may have a name, or else an id
-            tag_name = attrs.get('name', tag_name)
+            tag_name = attrs.get("id")  # A tag may have a name, or else an id
+            tag_name = attrs.get("name", tag_name)
             tags = self.tags.get(tag_name)
 
             if tags is not None:
@@ -171,7 +169,7 @@ class PangoToHtml(HTMLParser):
                 self.current_closing_tags.append(closing_tag)
 
         if self.current_opening_tags:
-            if 'foreground' and '<u>' in self.current_opening_tags[-1]:
+            if "foreground" and "<u>" in self.current_opening_tags[-1]:
                 self.is_colored_and_underlined = True
 
     def handle_data(self, data: str) -> None:
@@ -185,7 +183,7 @@ class PangoToHtml(HTMLParser):
             self.current_closing_tags.pop()  # FILO
             self.current_opening_tags.pop()
         else:
-            data = ''.join(self.current_opening_tags) + escape(data)
+            data = "".join(self.current_opening_tags) + escape(data)
             self.current_opening_tags.clear()
 
         self.markup_text += data

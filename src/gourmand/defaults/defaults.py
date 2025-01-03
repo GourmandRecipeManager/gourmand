@@ -1,3 +1,4 @@
+import importlib
 import locale
 import os
 import sys
@@ -6,12 +7,12 @@ from typing import Optional
 
 from .abstractLang import AbstractLanguage
 
-deflang = 'en'
+deflang = "en"
 lang: AbstractLanguage
 
-if os.name == 'posix':
+if os.name == "posix":
     try:
-        locale.setlocale(locale.LC_ALL,'')
+        locale.setlocale(locale.LC_ALL, "")
     except locale.Error:
         loc, enc = locale.getdefaultlocale()
     else:
@@ -22,29 +23,30 @@ if os.name == 'posix':
 # sys.platform is the correct check per mypy convention (https://mypy.readthedocs.io/en/stable/common_issues.html?highlight=platform#python-version-and-system-platform-checks)
 elif sys.platform == "win32":
     from ctypes import windll
+
     locid = windll.kernel32.GetUserDefaultLangID()
     loc = locale.windows_locale[locid]
 
 importLang: Optional[AbstractLanguage] = None
 if loc:
     try:
-        importLang = __import__('defaults_%s'%loc,globals(),locals(), level=1).Language
+        importLang = importlib.import_module("gourmand.defaults.defaults_%s" % loc).Language
     except ImportError:
         try:
-            importLang = __import__('defaults_%s'%loc[0:2],globals(),locals(), level=1).Language
+            importLang = importlib.import_module("gourmand.defaults.defaults_%s" % loc[0:2]).Language
         except ImportError:
-            importLang = __import__('defaults_%s'%deflang,globals(),locals(), level=1).Language
+            importLang = importlib.import_module("gourmand.defaults.defaults_%s" % deflang).Language
 
 if not importLang:
-    lang = __import__('defaults_%s'%deflang,globals(),locals()).Language
+    lang = importlib.import_module("gourmand.defaults.defaults_%s" % deflang).Language
 else:
     lang = importLang
 
 # The next item is used to allow us to know some things about handling the language
 try:
-    langProperties=lang.LANG_PROPERTIES
+    langProperties = lang.LANG_PROPERTIES
 except AttributeError:
-    lang.LANG_PROPERTIES=langProperties={'hasAccents':False, 'capitalisedNouns':False, 'useFractions':True}
+    lang.LANG_PROPERTIES = langProperties = {"hasAccents": False, "capitalisedNouns": False, "useFractions": True}
     # 'hasAccents' includes accents, umlauts etc, that might not be correctly handled
     # by eg lower()
     # 'capitalisedNouns' means that you don't want to use lower() anyway, cos it's
@@ -67,16 +69,16 @@ lang.shopdic = {key: shoppingCategory for (_, key, shoppingCategory) in lang.ING
 lang.unit_group_lookup = {}
 
 unit_rounding_guide = {
-    'ml':1,
-    'l':0.001,
-    'mg':1,
-    'g':1,
-    'tsp.':0.075,
-    'Tbs.':0.02,
-    'c.':0.125,
-    }
+    "ml": 1,
+    "l": 0.001,
+    "mg": 1,
+    "g": 1,
+    "tsp.": 0.075,
+    "Tbs.": 0.02,
+    "c.": 0.125,
+}
 
-if hasattr(lang,'unit_rounding_guide') and lang.unit_rounding_guide:
+if hasattr(lang, "unit_rounding_guide") and lang.unit_rounding_guide:
     unit_rounding_guide.update(lang.unit_rounding_guide)
 
 lang.unit_rounding_guide = unit_rounding_guide
@@ -87,16 +89,18 @@ for groupname, magnitudes in lang.UNIT_GROUPS.items():
         lang.unit_group_lookup[unit] = groupname, no
 
 WORD_TO_SING_PLUR_PAIR = {}
-if hasattr(lang,'PLURALS'):
+if hasattr(lang, "PLURALS"):
     for forms in lang.PLURALS:
         for f in forms:
             WORD_TO_SING_PLUR_PAIR[f] = forms
 
-def get_pluralized_form (word, n):
+
+def get_pluralized_form(word, n):
     from gettext import ngettext
+
     if not word:
-        return ''
-    lword=word.lower()
+        return ""
+    lword = word.lower()
     if lword in WORD_TO_SING_PLUR_PAIR:
         forms = list(WORD_TO_SING_PLUR_PAIR[lword])
         forms += [n]

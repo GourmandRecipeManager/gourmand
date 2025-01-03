@@ -7,28 +7,27 @@ from gi.repository import Gtk
 import gourmand.gtk_extras.dialog_extras as de
 import gourmand.plugin_loader as plugin_loader
 from gourmand.i18n import _
-from gourmand.importers.web_importer import import_urls, supported_sites
 from gourmand.importers.interactive_importer import import_interactivally
+from gourmand.importers.web_importer import import_urls, supported_sites
 from gourmand.plugin import ImporterPlugin, ImportManagerPlugin
-from gourmand.threadManager import (NotThreadSafe, get_thread_manager,
-                                    get_thread_manager_gui)
+from gourmand.threadManager import NotThreadSafe, get_thread_manager, get_thread_manager_gui
 
 
-class ImportFileList (Exception):
+class ImportFileList(Exception):
     """A special case error -- if an importer throws this error
     instead of returning an importer, our importer will import the
     list of files returned... This is basically a thread-safe way
     around the problem of how to let an importer initiate other
     imports (for zip files etc)"""
-    def __init__ (self, filelist):
+
+    def __init__(self, filelist):
         self.filelist = filelist
 
 
 class ImportManager(plugin_loader.Pluggable):
-
-    '''A class to
+    """A class to
     manage importers.
-    '''
+    """
 
     __single = None
 
@@ -39,37 +38,35 @@ class ImportManager(plugin_loader.Pluggable):
 
         return ImportManager.__single
 
-    def __init__ (self):
+    def __init__(self):
         self.tempfiles = {}
         self.extensions_by_mimetype = {}
         self.plugins_by_name = {}
         self.plugins = []
         self.importer_plugins = []
-        plugin_loader.Pluggable.__init__(self,
-                                         [ImporterPlugin,
-                                          ImportManagerPlugin]
-                                         )
+        plugin_loader.Pluggable.__init__(self, [ImporterPlugin, ImportManagerPlugin])
         self.get_app_and_prefs()
 
     def get_app_and_prefs(self):
         # FIXME: this function and self.app exist to work around circular imports
         from gourmand.main import get_application
+
         self.app = get_application()
 
-    def offer_import(self, parent: Optional[Gtk.Window] = None,
-                     default_value: Optional[str] = None):
+    def offer_import(self, parent: Optional[Gtk.Window] = None, default_value: Optional[str] = None):
         """Offer to import url or files."""
 
-        uris = de.get_uri(label=_('Open recipe...'),
-                          sublabel=_('Enter a recipe file path or website address.'),
-                          entryLabel=_('Location:'),
-                          entryTip=_('Enter the address of a website or recipe archive.'),
-                          default_character_width=60,
-                          filters=self.get_filters(),
-                          supported_urls=supported_sites,
-                          select_multiple=True,
-                          default_value=default_value,
-                          )
+        uris = de.get_uri(
+            label=_("Open recipe..."),
+            sublabel=_("Enter a recipe file path or website address."),
+            entryLabel=_("Location:"),
+            entryTip=_("Enter the address of a website or recipe archive."),
+            default_character_width=60,
+            filters=self.get_filters(),
+            supported_urls=supported_sites,
+            select_multiple=True,
+            default_value=default_value,
+        )
         if uris is None:
             return
 
@@ -96,33 +93,31 @@ class ImportManager(plugin_loader.Pluggable):
             found_plugin = False
             for plugin in self.importer_plugins:
                 for pattern in plugin.patterns:
-                    if fnmatch(fn.upper(),pattern.upper()):
+                    if fnmatch(fn.upper(), pattern.upper()):
                         result = plugin.test_file(fn)
-                        if result==-1: # FALLBACK
+                        if result == -1:  # FALLBACK
                             fallback = plugin
                         elif result:
-                            importers.append((fn,plugin))
+                            importers.append((fn, plugin))
                             found_plugin = True
                         else:
-                            print('File ',fn,'appeared to match ',plugin,'but failed test.')
+                            print("File ", fn, "appeared to match ", plugin, "but failed test.")
                         break
-                if found_plugin: break
+                if found_plugin:
+                    break
             if not found_plugin:
                 if fallback:
-                    importers.append((fn,fallback))
+                    importers.append((fn, fallback))
                 else:
-                    print('Warning, no plugin found for file ',fn)
-        ret_importers = [] # a list of importer instances to return
-        for fn,importer_plugin in importers:
-            print('Doing import for ',fn,importer_plugin)
-            ret_importers.append(
-                self.do_import(importer_plugin,'get_importer',fn)
-                )
-        print('import_filenames returns',ret_importers)
+                    print("Warning, no plugin found for file ", fn)
+        ret_importers = []  # a list of importer instances to return
+        for fn, importer_plugin in importers:
+            print("Doing import for ", fn, importer_plugin)
+            ret_importers.append(self.do_import(importer_plugin, "get_importer", fn))
+        print("import_filenames returns", ret_importers)
         return ret_importers
 
-    def do_import(self, importer_plugin: Any,
-                  method: str, *method_args: Tuple[str]):
+    def do_import(self, importer_plugin: Any, method: str, *method_args: Tuple[str]):
         try:
             importer = getattr(importer_plugin, method)(*method_args)
             self.setup_notification_message(importer)
@@ -130,54 +125,52 @@ class ImportManager(plugin_loader.Pluggable):
             # recurse with new filelist...
             return self.import_filenames(ifl.filelist)
         else:
-            if hasattr(importer, 'pre_run'):
+            if hasattr(importer, "pre_run"):
                 importer.pre_run()
             if isinstance(importer, NotThreadSafe):
-                #print 'Running manually --- not threadsafe!'
+                # print 'Running manually --- not threadsafe!'
                 importer.run()
-                self.follow_up(None,importer)
+                self.follow_up(None, importer)
             else:
-                label = _('Import') + ' ('+importer_plugin.name+')'
+                label = _("Import") + " (" + importer_plugin.name + ")"
                 self.setup_thread(importer, label)
-            print('do_importer returns importer:',importer)
+            print("do_importer returns importer:", importer)
             return importer
 
     def setup_notification_message(self, importer):
         tmg = get_thread_manager_gui()
-        importer.connect('completed',tmg.importer_thread_done)
+        importer.connect("completed", tmg.importer_thread_done)
 
     @plugin_loader.pluggable_method
-    def follow_up (self, threadmanager, importer):
-        if hasattr(importer,'post_run'):
+    def follow_up(self, threadmanager, importer):
+        if hasattr(importer, "post_run"):
             importer.post_run()
 
-    def setup_thread (self, importer, label, connect_follow_up=True):
+    def setup_thread(self, importer, label, connect_follow_up=True):
         tm = get_thread_manager()
         tm.add_thread(importer)
         tmg = get_thread_manager_gui()
-        tmg.register_thread_with_dialog(label,
-                                        importer)
+        tmg.register_thread_with_dialog(label, importer)
         if connect_follow_up:
-            importer.connect('completed',
-                             self.follow_up,
-                             importer
-                             )
+            importer.connect("completed", self.follow_up, importer)
 
-    def get_importer (self, name):
+    def get_importer(self, name):
         return self.plugins_by_name[name]
 
-    def guess_extension (self, content_type):
+    def guess_extension(self, content_type):
         if content_type in self.extensions_by_mimetype:
             answers = list(self.extensions_by_mimetype[content_type].items())
-            return max(answers, key=lambda x: x[1])[0] # Return the most frequent by count...
+            return max(answers, key=lambda x: x[1])[0]  # Return the most frequent by count...
         else:
             import mimetypes
+
             return mimetypes.guess_extension(content_type)
 
-    def get_filters (self):
+    def get_filters(self):
         all_importable_mimetypes = []
         all_importable_patterns = []
-        filters = []; names = []
+        filters = []
+        names = []
         for plugin in self.importer_plugins:
             if plugin.name in names:
                 i = names.index(plugin.name)
@@ -185,42 +178,41 @@ class ImportManager(plugin_loader.Pluggable):
                 filters[i][2] += plugin.patterns
             else:
                 names.append(plugin.name)
-                filters.append([plugin.name,plugin.mimetypes,plugin.patterns])
+                filters.append([plugin.name, plugin.mimetypes, plugin.patterns])
             all_importable_mimetypes += plugin.mimetypes
             all_importable_patterns += plugin.patterns
-        filters = [[_('All importable files'),all_importable_mimetypes,all_importable_patterns]] + filters
+        filters = [[_("All importable files"), all_importable_mimetypes, all_importable_patterns]] + filters
         return filters
 
-    def register_plugin (self, plugin):
+    def register_plugin(self, plugin):
         self.plugins.append(plugin)
-        if isinstance(plugin,ImporterPlugin):
+        if isinstance(plugin, ImporterPlugin):
             name = plugin.name
             if name in self.plugins_by_name:
-                print('WARNING','replacing',self.plugins_by_name[name],'with',plugin)
+                print("WARNING", "replacing", self.plugins_by_name[name], "with", plugin)
             self.plugins_by_name[name] = plugin
             self.learn_mimetype_extension_mappings(plugin)
             self.importer_plugins.append(plugin)
 
-
-    def learn_mimetype_extension_mappings (self, plugin):
+    def learn_mimetype_extension_mappings(self, plugin):
         for mt in plugin.mimetypes:
             if mt not in self.extensions_by_mimetype:
                 self.extensions_by_mimetype[mt] = {}
             for ptrn in plugin.patterns:
-                if ptrn.find('*.')==0:
-                    ext = ptrn.split('.')[-1]
+                if ptrn.find("*.") == 0:
+                    ext = ptrn.split(".")[-1]
                     if ext.isalnum():
                         # Then increment our count for this...
-                        self.extensions_by_mimetype[mt][ext] = self.extensions_by_mimetype[mt].get(ext,0) + 1
+                        self.extensions_by_mimetype[mt][ext] = self.extensions_by_mimetype[mt].get(ext, 0) + 1
 
-    def unregister_plugin (self, plugin):
-        if isinstance(plugin,ImporterPlugin):
+    def unregister_plugin(self, plugin):
+        if isinstance(plugin, ImporterPlugin):
             name = plugin.name
             if name in self.plugins_by_name:
                 del self.plugins_by_name[name]
                 self.plugins.remove(plugin)
             else:
-                print('WARNING: unregistering ',plugin,'but there seems to be no plugin for ',name)
+                print("WARNING: unregistering ", plugin, "but there seems to be no plugin for ", name)
         else:
             self.plugins.remove(plugin)
 

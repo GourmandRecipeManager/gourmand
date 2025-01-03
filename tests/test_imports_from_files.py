@@ -1,12 +1,12 @@
 import re
+import unittest
 from pathlib import Path
-import pytest
 
+from gourmand.backends.db import RecipeManager
 from gourmand.importers.importManager import ImportFileList, ImportManager
-from gourmand.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester  # noqa
-from gourmand.recipeManager import RecipeManager
+from gourmand.plugins.import_export.mastercook_import_plugin.mastercook_plaintext_importer import Tester as MCTester
 
-TEST_FILE_DIRECTORY = Path(__file__).parent / 'recipe_files'
+TEST_FILE_DIRECTORY = Path(__file__).parent / "recipe_files"
 
 
 class ThreadlessImportManager(ImportManager):
@@ -21,150 +21,114 @@ class ThreadlessImportManager(ImportManager):
             # recurse with new filelist...
             self.import_filenames(ifl.filelist)
         else:
-            if hasattr(importer, 'pre_run'):
+            if hasattr(importer, "pre_run"):
                 importer.pre_run()
             importer.run()
             self.follow_up(None, importer)
 
 
-class ImportTest:
-    def __init__(self):
-        self.im = ThreadlessImportManager.instance()
-        self.db = RecipeManager.instance_for()
+class ImportTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.im = ThreadlessImportManager.instance()
+        cls.db = RecipeManager.instance_for()
 
     def run_test(self, d):
-        filename = str(TEST_FILE_DIRECTORY / d['filename'])
+        self.db.delete_by_criteria(self.db.recipe_table, {"title": d["test"]["title"]})
+        filename = str(TEST_FILE_DIRECTORY / d["filename"])
         self.im.import_filenames([filename])
-        self.do_test(d['test'])
+        self.do_test(d["test"])
 
     def do_test(self, test):
-        recs = self.db.search_recipes([{'column': 'deleted',
-                                        'search': False,
-                                        'operator': '='},
-                                       {'column': 'title',
-                                        'search': test['title'],
-                                        'operator': '='}])
-        if not recs:
-            raise AssertionError(
-                'No recipe found with title "%s".' % test['title']
-            )
+        recs = self.db.search_recipes([{"column": "deleted", "search": False, "operator": "="}, {"column": "title", "search": test["title"], "operator": "="}])
+        assert recs, 'No recipe found with title "%s".' % test["title"]
         rec = recs[0]
         ings = self.db.get_ings(rec)
-        if test.get('all_ings_have_amounts', False):
+        if test.get("all_ings_have_amounts", False):
             for i in ings:
-                try:
-                    assert (i.amount)
-                except:
-                    print(i, i.amount, i.unit, i.item, 'has no amount!')
-                    raise
-        if test.get('all_ings_have_units', False):
+                assert i.amount, (i, i.amount, i.unit, i.item, "has no amount!")
+        if test.get("all_ings_have_units", False):
             for i in ings:
-                try:
-                    assert (i.unit)
-                except:
-                    print(i, i.amount, i.unit, i.item, 'has no unit')
-                    raise
-        for blobby_attribute in ['instructions', 'modifications']:
+                assert i.unit, (i, i.amount, i.unit, i.item, "has no unit")
+        for blobby_attribute in ["instructions", "modifications"]:
             if test.get(blobby_attribute, False):
                 match_text = test[blobby_attribute]
 
-                try:
-                    assert (
-                        re.match(match_text, getattr(rec, blobby_attribute)))
-                except:
-                    raise AssertionError('%s == %s != %s' % (blobby_attribute,
-                                                             getattr(
-                                                                 rec,
-                                                                 blobby_attribute),
-                                                             match_text)
-                                         )
-        for non_blobby_attribute in ['source', 'cuisine', 'preptime',
-                                     'cooktime']:
+                assert re.match(match_text, getattr(rec, blobby_attribute)), "%s == %s != %s" % (blobby_attribute, getattr(rec, blobby_attribute), match_text)
+        for non_blobby_attribute in ["source", "cuisine", "preptime", "cooktime"]:
             if test.get(non_blobby_attribute, None) is not None:
-                try:
-                    assert (getattr(rec, non_blobby_attribute)
-                            == test[non_blobby_attribute])
-                except:
-                    raise AssertionError(
-                        '%s == %s != %s' % (non_blobby_attribute,
-                                            getattr(
-                                                rec, non_blobby_attribute),
-                                            test[non_blobby_attribute])
-                        )
-        if test.get('categories', None):
+                assert getattr(rec, non_blobby_attribute) == test[non_blobby_attribute], "%s == %s != %s" % (
+                    non_blobby_attribute,
+                    getattr(rec, non_blobby_attribute),
+                    test[non_blobby_attribute],
+                )
+        if test.get("categories", None):
             cats = self.db.get_cats(rec)
-            for c in test.get('categories'):
-                try:
-                    assert (c in cats)
-                except:
-                    raise AssertionError(
-                        "Found no category %s, only %s" % (c, cats))
+            for c in test.get("categories"):
+                assert c in cats, "Found no category %s, only %s" % (c, cats)
                 cats.remove(c)
-            try:
-                assert (not cats)
-            except:
-                raise AssertionError(
-                    'Categories include %s not specified in %s' % (
-                    cats, test['categories']))
-        print('Passed test:', test)
-
+            assert not cats, "Categories include %s not specified in %s" % (cats, test["categories"])
+        print("Passed test:", test)
 
     def progress(self, bar, msg):
         pass
 
 
-try:
-    it = ImportTest()
-except AttributeError:
-    it = None
+    def test_mastercook(self):
+        self.run_test(
+            {
+                "filename": "athenos1.mx2",
+                "test": {
+                    "title": "5 Layer Mediterranean Dip",
+                    "all_ings_have_amounts": True,
+                    "all_ings_have_units": True,
+                },
+            }
+        )
 
 
-@pytest.mark.skip("Broken as of 20220813")
-def test_mastercook():
-    it.run_test({'filename': 'athenos1.mx2',
-                 'test': {'title': '5 Layer Mediterranean Dip',
-                          'all_ings_have_amounts': True,
-                          'all_ings_have_units': True,
-                          }
-                 })
+    def test_mealmaster(self):
+        self.run_test(
+            {
+                "filename": "mealmaster.mmf",
+                "test": {
+                    "title": "Almond Mushroom Pate",
+                    "categories": ["Appetizers"],
+                    "servings": 6,
+                },
+            }
+        )
 
 
-@pytest.mark.skip("Broken as of 20220813")
-def test_mealmaster():
-    it.run_test({'filename': 'mealmaster.mmf',
-                 'test': {'title': 'Almond Mushroom Pate',
-                          'categories': ['Appetizers'],
-                          'servings': 6,
-                          }
-                 })
+    def test_krecipes(self):
+        self.run_test(
+            {
+                "filename": "sample.kreml",
+                "test": {
+                    "title": "Recipe title",
+                    "source": "Unai Garro, Jason Kivlighn",
+                    "categories": ["Ethnic", "Cakes"],
+                    "servings": 5,
+                    "preptime": 90 * 60,
+                    "instructions": "Write the recipe instructions here",
+                },
+            }
+        )
 
 
-@pytest.mark.skip("Broken as of 20220813")
-def test_krecipes():
-    it.run_test({'filename': 'sample.kreml',
-                 'test': {
-                     'title': 'Recipe title',
-                     'source': 'Unai Garro, Jason Kivlighn',
-                     'categories': ['Ethnic', 'Cakes'],
-                     'servings': 5,
-                     'preptime': 90 * 60,
-                     'instructions': 'Write the recipe instructions here'
-                 }
-                 }
-                )
-
-
-@pytest.mark.skip("Broken as of 20220813")
-def test_mycookbook():
-    it.run_test({'filename': 'mycookbook.mcb',
-                 'test': {
-                     'title': 'Best Brownies',
-                     'link': 'https://www.allrecipes.com/recipe/10549/best-brownies/',  # noqa
-                    }
-                 })
+    def test_mycookbook(self):
+        self.run_test(
+            {
+                "filename": "mycookbook.mcb",
+                "test": {
+                    "title": "Best Brownies",
+                    "link": "https://www.allrecipes.com/recipe/10549/best-brownies/",
+                },
+            }
+        )
 
 
 def test_mastercook_file_tester():
-    filename = TEST_FILE_DIRECTORY / 'mastercook_text_export.mxp'
+    filename = TEST_FILE_DIRECTORY / "mastercook_text_export.mxp"
     tester = MCTester()
     assert tester.test(filename)

@@ -7,20 +7,18 @@ from typing import Union
 from setuptools import Command, find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
-
 from wheel.bdist_wheel import bdist_wheel
 
-
-PACKAGE = 'gourmand'
-PACKAGEDIR = Path('src') / PACKAGE
-DATADIR = Path('data')
-PODIR = Path('po')
-LANGS = sorted(f.stem for f in PODIR.glob('*.po'))
-LOCALEDIR = PACKAGEDIR / 'data' / 'locale'
+PACKAGE = "gourmand"
+PACKAGEDIR = Path("src") / PACKAGE
+DATADIR = Path("data")
+PODIR = Path("po")
+LANGS = sorted(f.stem for f in PODIR.glob("*.po"))
+LOCALEDIR = PACKAGEDIR / "data" / "locale"
 
 
 def get_info(prop: str) -> str:
-    with open(PACKAGEDIR / '__version__.py') as versfile:
+    with open(PACKAGEDIR / "__version__.py") as versfile:
         content = versfile.read()
     match = re.search(r'^{} = "(.+)"'.format(prop), content, re.M)
     if match is not None:
@@ -35,9 +33,9 @@ def refresh_metadata(cmd: Command) -> None:
     # 'python setup.py sdist bdist_wheel'). Since package data is dynamically
     # built depending on the type of build, we need to ensure that any stale
     # metadata is refreshed.
-    if cmd.distribution.have_run.get('egg_info', 0):
-        cmd.distribution.reinitialize_command('egg_info')
-        cmd.run_command('egg_info')
+    if cmd.distribution.have_run.get("egg_info", 0):
+        cmd.distribution.reinitialize_command("egg_info")
+        cmd.run_command("egg_info")
 
 
 def rmfile(filepath: Union[Path, str]) -> None:
@@ -62,41 +60,41 @@ class BuildI18n(Command):
     def run(self):
         # compile message catalogs to binary format
         for lang in LANGS:
-            pofile = PODIR / f'{lang}.po'
+            pofile = PODIR / f"{lang}.po"
 
-            mofile = LOCALEDIR / lang / 'LC_MESSAGES'
+            mofile = LOCALEDIR / lang / "LC_MESSAGES"
             mofile.mkdir(parents=True, exist_ok=True)
-            mofile /= f'{PACKAGE}.mo'
+            mofile /= f"{PACKAGE}.mo"
 
-            cmd = f'msgfmt {pofile} -o {mofile}'
+            cmd = f"msgfmt {pofile} -o {mofile}"
             os.system(cmd)
 
         # merge translated strings into various file types
-        cachefile = PODIR / '.intltool-merge-cache'
+        cachefile = PODIR / ".intltool-merge-cache"
         cmd = f"LC_ALL=C intltool-merge -u -c {cachefile} {PODIR}"
 
-        for infile in DATADIR.rglob('*.in'):
+        for infile in DATADIR.rglob("*.in"):
             # trim '.in' extension
-            outfile = infile.with_suffix('')
+            outfile = infile.with_suffix("")
 
             extension = outfile.suffix
-            if 'desktop' in extension:
-                flag = '-d'
+            if "desktop" in extension:
+                flag = "-d"
             # TODO: is '.schema' used?
-            elif 'schema' in extension:
-                flag = '-s'
-            elif 'xml' in extension:
-                flag = '-x'
-            elif 'gourmet-plugin' in extension:
-                flag = '-k'
+            elif "schema" in extension:
+                flag = "-s"
+            elif "xml" in extension:
+                flag = "-x"
+            elif "gourmet-plugin" in extension:
+                flag = "-k"
                 outfile = PACKAGEDIR / outfile.relative_to(DATADIR)
             else:
-                assert False, f'Unknown file type: {infile}'
+                assert False, f"Unknown file type: {infile}"
 
             os.system(f"{cmd} {flag} {infile} {outfile}")
 
         rmfile(cachefile)
-        rmfile(f'{cachefile}.lock')
+        rmfile(f"{cachefile}.lock")
 
 
 class BuildSource(sdist):
@@ -106,23 +104,25 @@ class BuildSource(sdist):
         # NOTE: We can't use MANIFEST.in for this because these files will then
         # also be excluded from built distributions
         for lang in LANGS:
-            mofile = LOCALEDIR / lang / 'LC_MESSAGES' / f'{PACKAGE}.mo'
+            mofile = LOCALEDIR / lang / "LC_MESSAGES" / f"{PACKAGE}.mo"
             rmfile(mofile)
 
-        for infile in DATADIR.rglob('*.in'):
+        for infile in DATADIR.rglob("*.in"):
             # trim '.in' extension
-            outfile = infile.with_suffix('')
+            outfile = infile.with_suffix("")
             extension = outfile.suffix
-            if ('desktop' in extension
-                    or 'xml' in extension
-                    # TODO: is '.schema' used?
-                    or 'schema' in extension):
+            if (
+                "desktop" in extension
+                or "xml" in extension
+                # TODO: is '.schema' used?
+                or "schema" in extension
+            ):
                 # these files aren't moved after they're built
                 pass
-            elif 'gourmet-plugin' in extension:
+            elif "gourmet-plugin" in extension:
                 outfile = PACKAGEDIR / outfile.relative_to(DATADIR)
             else:
-                assert False, f'Unknown file type: {infile}'
+                assert False, f"Unknown file type: {infile}"
 
             rmfile(outfile)
 
@@ -133,7 +133,7 @@ class BuildSource(sdist):
 class BuildWheel(bdist_wheel):
 
     def run(self):
-        self.run_command('build_i18n')
+        self.run_command("build_i18n")
         refresh_metadata(self)
         super().run()
 
@@ -141,7 +141,7 @@ class BuildWheel(bdist_wheel):
 class Develop(develop):
 
     def run(self):
-        self.run_command('build_i18n')
+        self.run_command("build_i18n")
         super().run()
 
 
@@ -164,54 +164,52 @@ class UpdateI18n(Command):
 
         for lang in LANGS:
             self.announce(f"Updating {lang}.po", INFO)
-            os.system(
-                f"cd {PODIR};"
-                f"intltool-update --dist --gettext-package={PACKAGE} {lang}")
+            os.system(f"cd {PODIR};" f"intltool-update --dist --gettext-package={PACKAGE} {lang}")
 
 
 setup(
     name=PACKAGE,
-    version=get_info('version'),
-    description=get_info('description'),
-    author=get_info('author'),
-    maintainer=get_info('maintainer'),
-    maintainer_email=get_info('maintainer_email'),
-    url=get_info('url'),
-    license=get_info('license'),
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
+    version=get_info("version"),
+    description=get_info("description"),
+    author=get_info("author"),
+    maintainer=get_info("maintainer"),
+    maintainer_email=get_info("maintainer_email"),
+    url=get_info("url"),
+    license=get_info("license"),
+    package_dir={"": "src"},
+    packages=find_packages("src"),
     include_package_data=True,
-    data_files = [
-        ('share/metainfo', ['data/io.github.GourmandRecipeManager.Gourmand.appdata.xml']),
-        ('share/applications', ['data/io.github.GourmandRecipeManager.Gourmand.desktop']),
-        ('share/icons/hicolor/scalable/apps', ['data/io.github.GourmandRecipeManager.Gourmand.svg']),
+    data_files=[
+        ("share/metainfo", ["data/io.github.GourmandRecipeManager.Gourmand.appdata.xml"]),
+        ("share/applications", ["data/io.github.GourmandRecipeManager.Gourmand.desktop"]),
+        ("share/icons/hicolor/scalable/apps", ["data/io.github.GourmandRecipeManager.Gourmand.svg"]),
     ],
     install_requires=[
-        'beautifulsoup4>=4.10.0',
+        "beautifulsoup4>=4.10.0",
         'importlib-metadata; python_version<"3.10"',
-        'lxml>=4.6.3',
-        'pillow>=8.3.2',
-        'pygobject>=3.40.1',
-        'sqlalchemy>=1.4.36,<2',
-        'tomli_w>=1.0.0',
+        "lxml>=4.6.3",
+        "pillow>=8.3.2",
+        "pygobject>=3.40.1",
+        "sqlalchemy>=1.4.36,<2",
+        "tomli_w>=1.0.0",
         'toml==0.10.2; python_version<"3.11"',
-        'recipe-scrapers>=14.27.0,<15',
+        "recipe-scrapers>=14.27.0,<15",
     ],
     extras_require={
-        'epub-export': ['ebooklib==0.17.1'],
-        'pdf-export': ['reportlab<4'],
-        'spellcheck': ['pyenchant',
-                       'pygtkspellcheck'],
+        "epub-export": ["ebooklib==0.17.1"],
+        "pdf-export": ["reportlab<4"],
+        "spellcheck": ["pyenchant", "pygtkspellcheck"],
     },
     cmdclass={
-        'bdist_wheel': BuildWheel,
-        'build_i18n': BuildI18n,
-        'develop': Develop,
-        'sdist': BuildSource,
-        'update_i18n': UpdateI18n,
+        "bdist_wheel": BuildWheel,
+        "build_i18n": BuildI18n,
+        "develop": Develop,
+        "sdist": BuildSource,
+        "update_i18n": UpdateI18n,
     },
     entry_points={
         "gui_scripts": [
             "gourmand = gourmand.main:launch_app",
-        ]}
+        ]
+    },
 )

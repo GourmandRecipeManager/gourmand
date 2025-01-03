@@ -44,7 +44,3 @@ def test_unit_converter():
     # Close them successively to quit the application
     procedural.keyCombo("<Alt><F4>")
     procedural.keyCombo("<Alt><F4>")
-
-
-if __name__ == "__main__":
-    test_unit_converter()

@@ -3,3 +3,23 @@ addopts = "-vv"
 testpaths = [
     "tests",
 ]
+
+[tool.black]
+line-length = 160
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#t-target-version
+target-version = ["py38", "py39", "py310", "py311", "py312", "py313"]
+
+[tool.ruff]
+line-length = 160
+target-version = "py38"
+
+[tool.ruff.lint]
+extend-select = [
+    "E",  # All pycodestyle errors
+    "W",  # pycodestyle warnings
+    "PGH004",  # blanket-noqa
+    "I",  # isort
+    # "N",  # pep8-naming   # TODO: 338 violations in main API as of 2024-12-30.
+    # "A",  # flake8-builtins  # TODO: 112 violations in main API as of 2024-12-30.
+    # "B",  # flake8-bugbear  # TODO: 122 violations in main API as of 2024-12-30.
+]

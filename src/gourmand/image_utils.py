@@ -14,9 +14,7 @@ from PIL import Image, UnidentifiedImageError
 from requests.exceptions import ConnectionError
 
 MAX_THUMBSIZE = 10000000  # The maximum size, in bytes, of thumbnails we allow
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"
-}
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
 
 
 class ThumbnailSize(Enum):
@@ -56,7 +54,7 @@ def make_thumbnail(path: str, size=ThumbnailSize.LARGE) -> Optional[Image.Image]
     it is first converted to a Path object.
     """
 
-    if path.startswith('http'):
+    if path.startswith("http"):
         try:
             response = requests.get(path, headers=HEADERS)
         except ConnectionError:
@@ -90,13 +88,13 @@ def bytes_to_image(raw: bytes) -> Image.Image:
 
 def image_to_bytes(image: Image.Image) -> bytes:
     ofi = io.BytesIO()
-    image = image.convert('RGB')
-    image.save(ofi, 'jpeg')
+    image = image.convert("RGB")
+    image.save(ofi, "jpeg")
     return ofi.getvalue()
 
 
 def load_pixbuf_from_resource(resource_name: str) -> Pixbuf:
-    data = get_data('gourmand', f'data/images/{resource_name}')
+    data = get_data("gourmand", f"data/images/{resource_name}")
     assert data
     return bytes_to_pixbuf(data)
 
@@ -114,16 +112,10 @@ def pixbuf_to_image(pixbuf: Pixbuf) -> Image.Image:
 
 
 def image_to_pixbuf(image: Image.Image) -> Pixbuf:
-    is_rgba = image.mode == 'RGBA'
+    is_rgba = image.mode == "RGBA"
     rowstride = 4 if is_rgba else 3
 
-    return GdkPixbuf.Pixbuf.new_from_data(image.tobytes(),
-                                          GdkPixbuf.Colorspace.RGB,
-                                          is_rgba,
-                                          8,
-                                          image.size[0],
-                                          image.size[1],
-                                          rowstride * image.size[0])
+    return GdkPixbuf.Pixbuf.new_from_data(image.tobytes(), GdkPixbuf.Colorspace.RGB, is_rgba, 8, image.size[0], image.size[1], rowstride * image.size[0])
 
 
 class ImageBrowser(Gtk.Dialog):
@@ -143,8 +135,7 @@ class ImageBrowser(Gtk.Dialog):
 
         If parent is set, the the ImageBrowser will be modal to that parent.
         """
-        Gtk.Dialog.__init__(self, title="Choose an image",
-                            transient_for=parent, flags=0)
+        Gtk.Dialog.__init__(self, title="Choose an image", transient_for=parent, flags=0)
         self.set_default_size(600, 600)
 
         self.image: Optional[Image.Image] = None
@@ -153,7 +144,7 @@ class ImageBrowser(Gtk.Dialog):
         iconview = Gtk.IconView.new()
         iconview.set_model(self.liststore)
         iconview.set_pixbuf_column(0)
-        iconview.connect('selection-changed', self.on_selection)
+        iconview.connect("selection-changed", self.on_selection)
 
         scrollable = Gtk.ScrolledWindow()
         scrollable.set_vexpand(True)
@@ -161,8 +152,7 @@ class ImageBrowser(Gtk.Dialog):
 
         box = self.get_content_area()
         box.pack_end(scrollable, True, True, 0)
-        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                         Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK)
         self.show_all()
 
         self._stop_retrieval = Event()

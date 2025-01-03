@@ -5,14 +5,14 @@ from typing import List, Optional, Tuple
 from .defaults.defaults import lang as defaults
 from .defaults.defaults import langProperties as langProperties
 
-note_separator_regexp = r'(;|\s+-\s+|--)'
+note_separator_regexp = r"(;|\s+-\s+|--)"
 note_separator_matcher = re.compile(note_separator_regexp)
 
 
 class KeyManager:
 
     MAX_MATCHES = 10
-    word_splitter = re.compile(r'\W+')
+    word_splitter = re.compile(r"\W+")
 
     __single = None
 
@@ -26,6 +26,7 @@ class KeyManager:
     def __init__(self, recipe_manager=None):
         if recipe_manager is None:
             from . import recipeManager  # work around cyclic dependencies
+
             recipe_manager = recipeManager.default_rec_manager()
         self.rm = recipe_manager
 
@@ -38,7 +39,7 @@ class KeyManager:
         m = note_separator_matcher.search(s)
         if not m:
             return s
-        ret = s[:m.start()].strip()
+        ret = s[: m.start()].strip()
 
         return ret if ret else s
 
@@ -46,9 +47,7 @@ class KeyManager:
         dics = []
         for key, items in defaults.keydic.items():
             for i in items:
-                dics.append({'ingkey': str(key),
-                             'item': str(i),
-                             'count': 1})
+                dics.append({"ingkey": str(key), "item": str(i), "count": 1})
         self.rm.keylookup_table.insert().execute(dics)
 
     def regexp_for_all_words(self, txt):
@@ -74,10 +73,8 @@ class KeyManager:
         will more easily be able to guess correctly that barley flour
         should be flour, barley"""
         self.cats = []
-        for k in self.rm.get_unique_values('ingkey',
-                                           self.rm.ingredients_table,
-                                           deleted=False):
-            fnd = k.find(',')
+        for k in self.rm.get_unique_values("ingkey", self.rm.ingredients_table, deleted=False):
+            fnd = k.find(",")
             if fnd != -1:
                 self.cats.append(k[0:fnd])
 
@@ -100,8 +97,7 @@ class KeyManager:
         return nwlst
 
     def get_key_fast(self, s) -> str:
-        srch = self.rm.fetch_all(self.rm.keylookup_table, item=s,
-                                 sort_by=[('count', 1)])
+        srch = self.rm.fetch_all(self.rm.keylookup_table, item=s, sort_by=[("count", 1)])
         if srch:
             return srch[-1].ingkey
         else:
@@ -113,7 +109,7 @@ class KeyManager:
         right key for an item (we can't be sure -- if we could be,
         we wouldn't need a key system in the first place!"""
         if not txt:
-            return ''
+            return ""
         txt = self._snip_notes(txt)
         result = self.look_for_key(txt)
         if result and result[0][0] and result[0][1] > certainty:
@@ -207,12 +203,12 @@ class KeyManager:
         """Generate a generic-looking key from a string."""
         ingr = ingr.strip()
 
-        if not langProperties['capitalisedNouns']:
+        if not langProperties["capitalisedNouns"]:
             # language specific here - turn off the strip().lower() for eg.
             # German nouns that always start with an uppercase Letter.
             ingr = ingr.lower()
 
-        if ingr.find(',') == -1:
+        if ingr.find(",") == -1:
             # if there are no commas, we see if it makes sense
             # to turn, e.g. whole-wheat bread into bread, whole-wheat
             words = ingr.split()

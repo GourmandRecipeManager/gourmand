@@ -33,8 +33,7 @@ class LinkedPangoBuffer(PangoBuffer):
 
     href_regexp = re.compile(r"<a href=['\"]([^'\"]+)['\"][^>]*>(.*?)</a>")
     url_markup = f'underline="single" color="{LINK_COLOR}"'
-    url_props = [('underline', Pango.Underline.SINGLE),
-                 ('foreground-gdk', LINK_COLOR)]
+    url_props = [("underline", Pango.Underline.SINGLE), ("foreground-gdk", LINK_COLOR)]
     markup_dict = {}
 
     def set_text(self, txt: str) -> None:
@@ -44,18 +43,15 @@ class LinkedPangoBuffer(PangoBuffer):
                 href = m.groups()[0]
                 body = m.groups()[1]
                 if body in self.markup_dict and self.markup_dict[body] != href:
-                    raise ValueError("Cannot handle duplicated link bodies",
-                                     body, self.markup_dict[body], href)
+                    raise ValueError("Cannot handle duplicated link bodies", body, self.markup_dict[body], href)
                 self.markup_dict[body] = href
-                m = self.href_regexp.search(txt,m.end())
-            txt = self.href_regexp.sub(r'<span %s>\2</span>'%self.url_markup,txt)
+                m = self.href_regexp.search(txt, m.end())
+            txt = self.href_regexp.sub(r"<span %s>\2</span>" % self.url_markup, txt)
         super().set_text(txt)
 
-    def get_text(self,
-                 start: Optional[Gtk.TextIter] = None,
-                 end: Optional[Gtk.TextIter] = None,
-                 include_hidden_chars: bool = False,
-                 ignore_links: bool = False) -> str:
+    def get_text(
+        self, start: Optional[Gtk.TextIter] = None, end: Optional[Gtk.TextIter] = None, include_hidden_chars: bool = False, ignore_links: bool = False
+    ) -> str:
         """Get the buffer content.
 
         If `include_hidden_chars` is set, then the html markup content is
@@ -73,12 +69,11 @@ class LinkedPangoBuffer(PangoBuffer):
         else:
             format_ = self.register_serialize_tagset()
             pango_markup = self.serialize(self, format_, start, end)
-            return PangoToHtml().feed(pango_markup, self.markup_dict,
-                                      ignore_links)
+            return PangoToHtml().feed(pango_markup, self.markup_dict, ignore_links)
 
 
 class LinkedTextView(Gtk.TextView):
-    __gtype_name__ = 'LinkedTextView'
+    __gtype_name__ = "LinkedTextView"
 
     hovering_over_link = False
 
@@ -87,59 +82,48 @@ class LinkedTextView(Gtk.TextView):
     # I-beam shaped
     text_cursor = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.XTERM)
 
-    __gsignals__ = {'link-activated': (GObject.SignalFlags.RUN_LAST,
-                                       GObject.TYPE_STRING,
-                                       [GObject.TYPE_STRING])}
+    __gsignals__ = {"link-activated": (GObject.SignalFlags.RUN_LAST, GObject.TYPE_STRING, [GObject.TYPE_STRING])}
 
     def __init__(self):
         super().__init__()
         self.set_buffer(self.make_buffer())
         buf = self.get_buffer()
         self.set_text = buf.set_text
-        self.connect('key-press-event',self.key_press_event)
-        self.connect('event-after',self.event_after)
-        self.connect('motion-notify-event',self.motion_notify_event)
-        self.connect('visibility-notify-event',self.visibility_notify_event)
+        self.connect("key-press-event", self.key_press_event)
+        self.connect("event-after", self.event_after)
+        self.connect("motion-notify-event", self.motion_notify_event)
+        self.connect("visibility-notify-event", self.visibility_notify_event)
 
     def make_buffer(self):
         return LinkedPangoBuffer()
 
-    def key_press_event(self,
-                        text_view: 'LinkedTextView',
-                        event: Gdk.Event) -> bool:
+    def key_press_event(self, text_view: "LinkedTextView", event: Gdk.Event) -> bool:
         """Handle Enter key-press on time links."""
         keyname = Gdk.keyval_name(event.keyval)
-        if keyname in ['Return', 'KP_Enter']:
+        if keyname in ["Return", "KP_Enter"]:
             buffer = text_view.get_buffer()
             itr = buffer.get_iter_at_mark(buffer.get_insert())
             return self.follow_if_link(text_view, itr)
         return False
 
-    def event_after(self, text_view: 'LinkedTextView', event: Gdk.Event) -> bool:
+    def event_after(self, text_view: "LinkedTextView", event: Gdk.Event) -> bool:
         """Handle mouse clicks on time links."""
         _, button = event.get_button()
 
         # Check for selection
         buffer = text_view.get_buffer()
         selection = buffer.get_selection_bounds()
-        selecting = not (len(selection) != 0 and
-                     (selection[0].get_offset() != selection[1].get_offset()))
+        selecting = not (len(selection) != 0 and (selection[0].get_offset() != selection[1].get_offset()))
 
         # Check for a left mouse click (as set by the system, not hardware).
-        if (event.type == Gdk.EventType.BUTTON_RELEASE
-            and button == 1
-            and not selecting):
-            x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
-                                                     int(event.x), int(event.y))
+        if event.type == Gdk.EventType.BUTTON_RELEASE and button == 1 and not selecting:
+            x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, int(event.x), int(event.y))
             _, itr = text_view.get_iter_at_location(x, y)
             self.follow_if_link(text_view, itr)
 
         return False  # Do not process the event further
 
-    def set_cursor_if_appropriate(self,
-                                  text_view: 'LinkedTextView',
-                                  x: int,
-                                  y: int) -> None:
+    def set_cursor_if_appropriate(self, text_view: "LinkedTextView", x: int, y: int) -> None:
         """Set the mouse cursor to be a hand when hovering over a time link.
 
         Check that the text at the position (x, y) within the text view, is
@@ -171,8 +155,7 @@ class LinkedTextView(Gtk.TextView):
 
     # Update the cursor image if the pointer moved.
     def motion_notify_event(self, text_view, event):
-        x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
-            int(event.x), int(event.y))
+        x, y = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, int(event.x), int(event.y))
         self.set_cursor_if_appropriate(text_view, x, y)
         return False
 
@@ -182,12 +165,10 @@ class LinkedTextView(Gtk.TextView):
         _, wx, wy, _ = text_view.get_window(Gtk.TextWindowType.WIDGET).get_pointer()
         bx, by = text_view.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, wx, wy)
 
-        self.set_cursor_if_appropriate (text_view, bx, by)
+        self.set_cursor_if_appropriate(text_view, bx, by)
         return False
 
-    def follow_if_link(self,
-                       text_view: 'LinkedTextView',
-                       itr: Gtk.TextIter) -> bool:
+    def follow_if_link(self, text_view: "LinkedTextView", itr: Gtk.TextIter) -> bool:
         """Retrieve the target of a link that was clicked.
 
         This is done by emitting the `link-activated` signal defined in
@@ -207,19 +188,22 @@ class LinkedTextView(Gtk.TextView):
 
         # Confirm that is is in the links dictionary.
         if target is not None:
-            self.emit('link-activated', target)
+            self.emit("link-activated", target)
 
         return False  # Do not process the signal further.
 
 
-if __name__ == '__main__':
-    def print_link (tv,l):
-        print(l)
+if __name__ == "__main__":
+
+    def print_link(tv, link):
+        print(link)
+
     tv = LinkedTextView()
-    tv.connect('link-activated',print_link)
+    tv.connect("link-activated", print_link)
     w = Gtk.Window()
     w.add(tv)
-    tv.get_buffer().set_text("""This is some text
+    tv.get_buffer().set_text(
+        """This is some text
     Some <i>fancy</i>, <u>fancy</u>, text.
     This is <a href="foo">a link</a>, a
     <a href="fancy_desc">fancy, fancy</a> link.
@@ -229,10 +213,11 @@ if __name__ == '__main__':
     <a href="456:boo">¼ recipe boogoochooboo</a>
 
     <b>Yeah!</b>
-    """)
+    """
+    )
 
     print(tv.get_buffer().get_text(include_hidden_chars=True))
 
     w.show_all()
-    w.connect('delete-event', lambda *args: Gtk.main_quit())
+    w.connect("delete-event", lambda *args: Gtk.main_quit())
     Gtk.main()

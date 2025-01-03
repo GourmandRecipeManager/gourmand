@@ -22,32 +22,36 @@ except nutritionGrabberGui.Terminated:
     pass
 
 c = gourmand.convert.get_converter()
-nd = NutritionData(rd,c)
-nid = NutritionInfoDruid(nd,{})
-nid.add_ingredients([(k,[(1,'')]) for k in ingredients_to_check])
-def quit (*args):
-        rd.save()
-        nid.ui.get_object('window1').hide()
-        Gtk.main_quit()
-nid.ui.get_object('window1').connect('delete-event',quit)
-nid.connect('finish',quit)
+nd = NutritionData(rd, c)
+nid = NutritionInfoDruid(nd, {})
+nid.add_ingredients([(k, [(1, "")]) for k in ingredients_to_check])
+
+
+def quit(*args):
+    rd.save()
+    nid.ui.get_object("window1").hide()
+    Gtk.main_quit()
+
+
+nid.ui.get_object("window1").connect("delete-event", quit)
+nid.connect("finish", quit)
 nid.show()
 Gtk.main()
 
-rd.changed=True
+rd.changed = True
 rd.save()
 
-ofi = '/tmp/locale_specific_nutritional_info.txt'
-print('Writing data to ',ofi)
-with open(ofi,'w') as outfi:
-    outfi.write('{')
+ofi = "/tmp/locale_specific_nutritional_info.txt"
+print("Writing data to ", ofi)
+with open(ofi, "w") as outfi:
+    outfi.write("{")
     for k in ingredients_to_check:
         ndbno = nd.get_ndbno(k)
         if ndbno:
-            outfi.write('"%s":(%s,['%(k,ndbno))
+            outfi.write('"%s":(%s,[' % (k, ndbno))
             for conv in nd.db.nutritionconversions_table.select(ingkey=k):
-                outfi.write('("%s",%s),'%(conv.unit,conv.factor))
-            outfi.write(']),\n')
+                outfi.write('("%s",%s),' % (conv.unit, conv.factor))
+            outfi.write("]),\n")
         else:
-            print('No information for ',k)
-    outfi.write('}')
+            print("No information for ", k)
+    outfi.write("}")

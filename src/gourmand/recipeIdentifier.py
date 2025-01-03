@@ -14,7 +14,6 @@ functions.
 import difflib
 import hashlib
 import re
-import types
 import xml.sax.saxutils
 
 from gi.repository import Gtk
@@ -22,184 +21,207 @@ from gi.repository import Gtk
 from gourmand import convert
 from gourmand.i18n import _
 
-from .gglobals import INT_REC_ATTRS, REC_ATTRS, TEXT_ATTR_DIC
+from .gglobals import REC_ATTRS, TEXT_ATTR_DIC
 
-IMAGE_ATTRS = ['image','thumb']
+IMAGE_ATTRS = ["image", "thumb"]
 ALL_ATTRS = [r[0] for r in REC_ATTRS] + list(TEXT_ATTR_DIC.keys()) + IMAGE_ATTRS
-REC_FIELDS = ['title',
-              'instructions',
-              ]
-ING_FIELDS = ['amount','unit']
+REC_FIELDS = [
+    "title",
+    "instructions",
+]
+ING_FIELDS = ["amount", "unit"]
 
-STANDARD_UNITS = ['g.','ml.']
+STANDARD_UNITS = ["g.", "ml."]
 
 # Hash stuff.
 
-def standardize_ingredient (ing_object, converter):
+
+def standardize_ingredient(ing_object, converter):
     if ing_object.item:
         ing = ing_object.item
     else:
         ing = ing_object.ingkey
-    unit,amount = ing_object.unit,ing_object.amount
-    gconv = converter.converter(unit,'g.')
-    vconv = converter.converter(unit,'ml.')
+    unit, amount = ing_object.unit, ing_object.amount
+    gconv = converter.converter(unit, "g.")
+    vconv = converter.converter(unit, "ml.")
     if not (gconv or vconv):
-        gconv = converter.converter(unit,'g.',ing)
-        vconv = converter.converter(unit,'ml.',ing)
+        gconv = converter.converter(unit, "g.", ing)
+        vconv = converter.converter(unit, "ml.", ing)
     if gconv:
-        unit = 'g.'
-        if amount: amount = amount*gconv
+        unit = "g."
+        if amount:
+            amount = amount * gconv
     elif vconv:
-        unit = 'ml.'
-        if amount: amount = amount*vconv
-    if unit in ['g.','ml.']:
+        unit = "ml."
+        if amount:
+            amount = amount * vconv
+    if unit in ["g.", "ml."]:
         # Round to the 10s place...
         if amount:
-            amount = round(amount,-1)
-    istring = "%s %s %s"%(amount,unit,ing)
+            amount = round(amount, -1)
+    istring = "%s %s %s" % (amount, unit, ing)
     return istring.lower()
 
-def get_ingredient_hash (ings, conv):
-    ings = [standardize_ingredient(i,conv) for i in ings]
+
+def get_ingredient_hash(ings, conv):
+    ings = [standardize_ingredient(i, conv) for i in ings]
     ings.sort()
-    ings = '\n'.join(ings)
-    m = hashlib.md5(ings.encode('utf8'))
-    #print 'Hash',ings,m.hexdigest()
+    ings = "\n".join(ings)
+    m = hashlib.md5(ings.encode("utf8"))
+    # print 'Hash',ings,m.hexdigest()
     return m.hexdigest()
 
-def get_recipe_hash (recipe_object):
+
+def get_recipe_hash(recipe_object):
     recstrings = []
     for field in REC_FIELDS:
-        if getattr(recipe_object,field): recstrings.append(getattr(recipe_object,field))
-    recstring = '\n'.join(recstrings)
+        if getattr(recipe_object, field):
+            recstrings.append(getattr(recipe_object, field))
+    recstring = "\n".join(recstrings)
     recstring = recstring.strip()
     recstring = recstring.lower()
-    #print 'hash',recstring
-    m = hashlib.md5(recstring.encode('utf8'))
+    # print 'hash',recstring
+    m = hashlib.md5(recstring.encode("utf8"))
     return m.hexdigest()
 
-def hash_recipe (rec, rd, conv=None):
-    if not conv: conv = convert.get_converter()
+
+def hash_recipe(rec, rd, conv=None):
+    if not conv:
+        conv = convert.get_converter()
     rechash = get_recipe_hash(rec)
-    inghash = get_ingredient_hash(rd.get_ings(rec),conv)
-    return rechash,inghash
+    inghash = get_ingredient_hash(rd.get_ings(rec), conv)
+    return rechash, inghash
+
 
 # Diff stuff
 
+
 # Convenience methods
-def format_ing_text (ing_alist,rd,conv=None):
+def format_ing_text(ing_alist, rd, conv=None):
     strings = []
-    for g,ings in ing_alist:
-        if g: strings.append('\n<u>'+g+'</u>')
+    for g, ings in ing_alist:
+        if g:
+            strings.append("\n<u>" + g + "</u>")
         for i in ings:
             istring = []
-            a,u = rd.get_amount_and_unit(i,conv=conv)
-            if a: istring.append(a)
-            if u: istring.append(u)
-            if i.item: istring.append(i.item)
-            if (not isinstance(i.optional, str) and i.optional) or i.optional=='yes':
-                    istring.append(_('(Optional)'))
-            if i.refid: istring.append('=>%s'%i.refid)
-            if i.ingkey: istring.append('key=%s'%i.ingkey)
-            strings.append(xml.sax.saxutils.escape(' '.join(istring)))
-    return '\n'.join(strings).strip()
+            a, u = rd.get_amount_and_unit(i, conv=conv)
+            if a:
+                istring.append(a)
+            if u:
+                istring.append(u)
+            if i.item:
+                istring.append(i.item)
+            if (not isinstance(i.optional, str) and i.optional) or i.optional == "yes":
+                istring.append(_("(Optional)"))
+            if i.refid:
+                istring.append("=>%s" % i.refid)
+            if i.ingkey:
+                istring.append("key=%s" % i.ingkey)
+            strings.append(xml.sax.saxutils.escape(" ".join(istring)))
+    return "\n".join(strings).strip()
 
 
-def format_ings (rec, rd):
+def format_ings(rec, rd):
     ings = rd.get_ings(rec)
     alist = rd.order_ings(ings)
-    return format_ing_text(alist,rd)
+    return format_ing_text(alist, rd)
 
-def apply_line_markup (line, markup):
-    out = ''
-    current_tag = ''
+
+def apply_line_markup(line, markup):
+    out = ""
+    current_tag = ""
     if len(markup) < len(line):
-        markup += ' '*(len(line)-len(markup))
+        markup += " " * (len(line) - len(markup))
     for n in range(len(line)):
-        if markup[n]==' ' or markup[n]=='\n':
+        if markup[n] == " " or markup[n] == "\n":
             tag = None
-        elif markup[n]=='+':
-            tag = 'add'
-        elif markup[n]=='-':
-            tag = 'del'
+        elif markup[n] == "+":
+            tag = "add"
+        elif markup[n] == "-":
+            tag = "del"
         else:
-            #print "WARNING: don't recognize diff tag \"%s\""%markup[n]
+            # print "WARNING: don't recognize diff tag \"%s\""%markup[n]
             tag = None
         if tag != current_tag:
             if current_tag:
-                out += '</%s>'%current_tag
+                out += "</%s>" % current_tag
             if tag:
-                out += '<%s>'%tag
+                out += "<%s>" % tag
             current_tag = tag
         out += line[n]
     if current_tag:
-        out += '</%s>'%current_tag
+        out += "</%s>" % current_tag
     return out
 
-def get_diff_markup (s1,s2):
+
+def get_diff_markup(s1, s2):
     diffs = []
-    for line in difflib.ndiff(s1,s2):
+    for line in difflib.ndiff(s1, s2):
         code = line[:2]
         line = line[2:]
-        if code!='? ':
-            diffs.append([code,line])
+        if code != "? ":
+            diffs.append([code, line])
         else:
-            diffs[-1][1] = apply_line_markup(diffs[-1][1],line)
+            diffs[-1][1] = apply_line_markup(diffs[-1][1], line)
     return diffs
 
-def get_two_columns (s1,s2):
+
+def get_two_columns(s1, s2):
     """Get two columns with diff markup on them."""
-    diffs = get_diff_markup(s1,s2)
+    diffs = get_diff_markup(s1, s2)
     left = []
     right = []
-    for code,line in diffs:
-        if code=='- ':
-            left.append('<diff>'+line+'</diff>')
-        elif code=='+ ':
-            right.append('<diff>'+line+'</diff>')
-        elif code=='  ':
+    for code, line in diffs:
+        if code == "- ":
+            left.append("<diff>" + line + "</diff>")
+        elif code == "+ ":
+            right.append("<diff>" + line + "</diff>")
+        elif code == "  ":
             while len(left) < len(right):
-                left.append('<diff/>')
+                left.append("<diff/>")
             while len(right) < len(left):
-                right.append('<diff/>')
+                right.append("<diff/>")
             left.append(line)
             right.append(line)
-    return left,right
+    return left, right
 
-def diff_ings (rd,rec1,rec2):
-    ings1 = format_ings(rec1,rd)
-    ings2 = format_ings(rec2,rd)
+
+def diff_ings(rd, rec1, rec2):
+    ings1 = format_ings(rec1, rd)
+    ings2 = format_ings(rec2, rd)
     if ings1 != ings2:
-        return get_two_columns(ings1.splitlines(),ings2.splitlines())
+        return get_two_columns(ings1.splitlines(), ings2.splitlines())
 
-def diff_recipes (rd,recs):
+
+def diff_recipes(rd, recs):
     diffs = {}
     for attr in ALL_ATTRS:
-        if attr == 'category':
-            vals = [', '.join(rd.get_cats(r)) for r in recs]
+        if attr == "category":
+            vals = [", ".join(rd.get_cats(r)) for r in recs]
         else:
-            vals = [getattr(r,attr) for r in recs]
+            vals = [getattr(r, attr) for r in recs]
         # If all our values are identical, there is no
         # difference. Also, if all of our values are bool->False, we
         # don't care (i.e. we don't care about the difference between
         # None and "" or between None and 0).
         if vals != [vals[0]] * len(vals) and True in [bool(v) for v in vals]:
-            #if TEXT_ATTR_DIC.has_key(attr):
+            # if TEXT_ATTR_DIC.has_key(attr):
             #    val1,val2 =
-            diffs[attr]=vals
+            diffs[attr] = vals
     return diffs
 
-def merge_recipes (rd, recs):
+
+def merge_recipes(rd, recs):
     """Return two dictionaries representing the differences between recs.
 
     The first dictionary contains items that are blank in one recipe
     but not the other. The second dictionary contains conflicts."""
-    diffs = diff_recipes(rd,recs)
+    diffs = diff_recipes(rd, recs)
     my_recipe = {}
     # Now we loop through the recipe and remove any attributes that
     # are blank in one recipe from diffs and put them instead into
     # my_recipe.
-    for attr,vals in list(diffs.items()):
+    for attr, vals in list(diffs.items()):
         value = None
         conflict = False
         for v in vals:
@@ -208,59 +230,60 @@ def merge_recipes (rd, recs):
             elif not value:
                 value = v
             elif v != value:
-                if ((isinstance(v, str) and isinstance(value, str))
-                    and v.lower()==value.lower()):
+                if (isinstance(v, str) and isinstance(value, str)) and v.lower() == value.lower():
                     continue
                 else:
                     conflict = True
                     break
-        if conflict: continue
+        if conflict:
+            continue
         else:
-            if value: my_recipe[attr]=value
+            if value:
+                my_recipe[attr] = value
             del diffs[attr]
-    return my_recipe,diffs
+    return my_recipe, diffs
 
-def format_ingdiff_line (s):
-    if re.search('key=(.*)(?=</diff>)',s):
-        s = re.sub('key=(.*)(?=</diff>)','<i>(\\1)</i>',s)
+
+def format_ingdiff_line(s):
+    if re.search("key=(.*)(?=</diff>)", s):
+        s = re.sub("key=(.*)(?=</diff>)", "<i>(\\1)</i>", s)
     else:
-        s = re.sub('key=(.*)','<i>(\\1)</i>',s)
-    s = s.replace('<diff>','<span background="#ffff80" foreground="#000">')
-    s = s.replace('</diff>','</span>')
-    s = s.replace('<diff/>','')
-    #s = s.replace('<del>','<span color="red" strikethrough="true">')
-    s = s.replace('<del>','<span weight="bold" color="red">')
-    s = s.replace('</del>','</span>')
-    s = s.replace('<add>','<span weight="bold" color="red">')
-    s = s.replace('</add>','</span>')
+        s = re.sub("key=(.*)", "<i>(\\1)</i>", s)
+    s = s.replace("<diff>", '<span background="#ffff80" foreground="#000">')
+    s = s.replace("</diff>", "</span>")
+    s = s.replace("<diff/>", "")
+    # s = s.replace('<del>','<span color="red" strikethrough="true">')
+    s = s.replace("<del>", '<span weight="bold" color="red">')
+    s = s.replace("</del>", "</span>")
+    s = s.replace("<add>", '<span weight="bold" color="red">')
+    s = s.replace("</add>", "</span>")
     return s
 
-def show_ing_diff (idiff):
+
+def show_ing_diff(idiff):
     left, right = idiff
-    ls = Gtk.ListStore(str,str)
+    ls = Gtk.ListStore(str, str)
     for n in range(len(left)):
-        ls.append([format_ingdiff_line(left[n]),
-                  format_ingdiff_line(right[n])]
-                  )
+        ls.append([format_ingdiff_line(left[n]), format_ingdiff_line(right[n])])
     tv = Gtk.TreeView()
     r = Gtk.CellRendererText()
-    tc = Gtk.TreeViewColumn('Left',r,markup=0)
-    tc2 = Gtk.TreeViewColumn('Right',r,markup=1)
+    tc = Gtk.TreeViewColumn("Left", r, markup=0)
+    tc2 = Gtk.TreeViewColumn("Right", r, markup=1)
     tv.append_column(tc)
     tv.append_column(tc2)
     tv.set_model(ls)
     return tv
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     import recipeManager
+
     rd = recipeManager.default_rec_manager()
     r1 = 33
     r2 = 241
 
-    #empty_hash = get_ingredient_hash([],None)
-    #rr = {}; ii = {}; ir = {}; count = 0
+    # empty_hash = get_ingredient_hash([],None)
+    # rr = {}; ii = {}; ir = {}; count = 0
 #     for rec in rd.fetch_all(rd.recipe_table,deleted=False):
 #         count += 1
 #         rh,ih = hash_recipe(rec,rd)

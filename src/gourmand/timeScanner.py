@@ -1,5 +1,6 @@
 """Scan text for time and show links that will pop up a timer if the
 user clicks on any time in the TextView."""
+
 import re
 from typing import Optional, Union
 
@@ -7,8 +8,7 @@ from gi.repository import GObject, Gtk
 
 from gourmand import timer
 from gourmand.convert import NUMBER_FINDER_REGEXP, RANGE_REGEXP, Converter
-from gourmand.gtk_extras.LinkedTextView import (LinkedPangoBuffer,
-                                                LinkedTextView)
+from gourmand.gtk_extras.LinkedTextView import LinkedPangoBuffer, LinkedTextView
 
 all_units = set()
 for base, units in Converter.time_units:
@@ -17,11 +17,18 @@ for base, units in Converter.time_units:
         all_units.add(u)
 
 time_matcher = re.compile(
-    '(?P<firstnum>'+NUMBER_FINDER_REGEXP + ')(' + RANGE_REGEXP +
-    NUMBER_FINDER_REGEXP.replace('int', 'int2').replace('frac', 'frac2') + ')?'
-    + r'\s*' + '(?P<unit>' + '|'.join(all_units) + r')(?=$|\W)',
-    re.UNICODE
-    )
+    "(?P<firstnum>"
+    + NUMBER_FINDER_REGEXP
+    + ")("
+    + RANGE_REGEXP
+    + NUMBER_FINDER_REGEXP.replace("int", "int2").replace("frac", "frac2")
+    + ")?"
+    + r"\s*"
+    + "(?P<unit>"
+    + "|".join(all_units)
+    + r")(?=$|\W)",
+    re.UNICODE,
+)
 
 
 def make_time_links(s: str) -> str:
@@ -34,35 +41,27 @@ class TimeBuffer(LinkedPangoBuffer):
             txt = txt.decode("utf-8")
         super().set_text(make_time_links(txt))
 
-    def get_text(self,
-                 start: Optional[Gtk.TextIter] = None,
-                 end: Optional[Gtk.TextIter] = None,
-                 include_hidden_chars: bool = False) -> str:
+    def get_text(self, start: Optional[Gtk.TextIter] = None, end: Optional[Gtk.TextIter] = None, include_hidden_chars: bool = False) -> str:
         """Get the buffer content.
 
         If `include_hidden_chars` is set, then the html markup content is
         returned.
         Time links are always stripped.
         """
-        return super().get_text(start, end, include_hidden_chars,
-                                ignore_links=True)
+        return super().get_text(start, end, include_hidden_chars, ignore_links=True)
 
 
 class LinkedTimeView(LinkedTextView):
-    __gtype_name__ = 'LinkedTimeView'
+    __gtype_name__ = "LinkedTimeView"
 
     __gsignals__ = {
-        'time-link-activated': (GObject.SignalFlags.RUN_LAST,
-                                GObject.TYPE_STRING,
-                                [GObject.TYPE_STRING, GObject.TYPE_STRING]),
+        "time-link-activated": (GObject.SignalFlags.RUN_LAST, GObject.TYPE_STRING, [GObject.TYPE_STRING, GObject.TYPE_STRING]),
     }
 
     def make_buffer(self):
         return TimeBuffer()
 
-    def follow_if_link(self,
-                       text_view: 'LinkedTimeView',
-                       itr: Gtk.TextIter) -> bool:
+    def follow_if_link(self, text_view: "LinkedTimeView", itr: Gtk.TextIter) -> bool:
         """Launch a timer if a link was clicked.
 
         This is done by emitting the `time-link-activated` signal defined in
@@ -77,9 +76,7 @@ class LinkedTimeView(LinkedTextView):
         if not end_sentence.ends_sentence():
             end_sentence.forward_sentence_end()
 
-        sentence = self.get_buffer().get_slice(start_sentence,
-                                               end_sentence,
-                                               False)
+        sentence = self.get_buffer().get_slice(start_sentence, end_sentence, False)
 
         # Get the time duration (target of the link).
         start_ts = itr.copy()
@@ -100,9 +97,9 @@ def show_timer_cb(tv: LinkedTimeView, line: str, note: str) -> None:
     timer.show_timer(Converter.instance().timestring_to_seconds(line), note)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     tv = LinkedTimeView()
-    tv.connect('time-link-activated', show_timer_cb)
+    tv.connect("time-link-activated", show_timer_cb)
     tv.get_buffer().set_text(
         """Cook potatoes for 1/2 hour.
 
@@ -114,10 +111,10 @@ if __name__ == '__main__':
 
         15-25 seconds.
         """
-        )
+    )
 
     w = Gtk.Window()
     w.add(tv)
-    w.connect('delete-event', lambda *args: Gtk.main_quit())
+    w.connect("delete-event", lambda *args: Gtk.main_quit())
     w.show_all()
     Gtk.main()

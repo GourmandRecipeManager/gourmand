@@ -1,15 +1,10 @@
-from pathlib import Path
+from unittest import mock
 from unittest.mock import Mock
-import pytest
 
 import gi
-from gi.repository import Gtk  # noqa: import not a top of file
 
-from gourmand import convert, gglobals  # noqa: import not at top
-from gourmand.backends.db import RecData  # noqa: import not at top
-from gourmand.main import get_application  # noqa
-from gourmand.reccard import (RecCard, RecCardDisplay, RecEditor,  # noqa
-                              add_with_undo)
+from gourmand.main import get_application
+from gourmand.reccard import RecCard, RecCardDisplay, add_with_undo
 
 gi.require_version("Gtk", "3.0")
 
@@ -24,13 +19,13 @@ def print_(*msg):
 
 def assert_with_message(callable_, description):
     try:
-        assert(callable_())
+        assert callable_()
     except AssertionError:
-        print('FAILED:', description)
+        print("FAILED:", description)
         raise
     else:
         if VERBOSE:
-            print('SUCCEEDED:', description)
+            print("SUCCEEDED:", description)
 
 
 def add_save_and_check(rc, lines_groups_and_dc):
@@ -40,11 +35,10 @@ def add_save_and_check(rc, lines_groups_and_dc):
     # All ingredient addition actions pass through add_with_undo
     ing_editor = ing_controller.ingredient_editor_module
     added = []
-    for line, group, desc in lines_groups_and_dc:
-        add_with_undo(
-            ing_editor,
-            lambda *args: added.append(ing_editor.add_ingredient_from_line(line, group_iter=group))
-        )
+    for line, group, _desc in lines_groups_and_dc:
+        # TODO: We ignore this for now, but is this code indeed correct?
+        #       Issue of B023: `line` is a loop variable and part of the lambda body. Which `line` value is used for the actual call?
+        add_with_undo(ing_editor, lambda *args: added.append(ing_editor.add_ingredient_from_line(line, group_iter=group)))  # noqa: B023
 
     history = ing_editor.history
     print_("add_save_and_check REVERT history:", history)
@@ -75,9 +69,9 @@ def check_ings(check_dics, ings):
             try:
                 val = getattr(ings[n], k)
                 assert val == expected
-            except (AssertionError, IndexError):
+            except (AssertionError, IndexError) as error:
                 msg = f"{k} is {val}, should be {expected} in entry {ings} for index {n}"
-                raise AssertionError(msg)
+                raise AssertionError(msg) from error
         n -= 1
 
 
@@ -85,34 +79,24 @@ def do_ingredients_editing(rc):
     """In a recipe card, test ingredient editing"""
     # Show the ingredients tab
     mock_button = Mock()
-    mock_button.get_name = Mock(return_value='ingredients')
+    mock_button.get_name = Mock(return_value="ingredients")
     rc.show_edit(mock_button)
 
     # Create an new ingredient group
     idx = rc._RecCard__rec_editor.module_tab_by_name["ingredients"]
     ing_controller = rc._RecCard__rec_editor.modules[idx].ingtree_ui.ingController
-    i_group = ing_controller.add_group('Foo bar')
+    i_group = ing_controller.add_group("Foo bar")
 
     print_("Testing ingredient editing - add 4 ingredients to a group.")
     add_save_and_check(
         rc,
-        [['1 c. sugar', i_group, {'amount': 1.0,
-                                  'unit': 'c.',
-                                  'item': 'sugar',
-                                  'inggroup': 'Foo bar'}],
-         ['2 c. silly; chopped and sorted', i_group, {'amount': 2.0,
-                                                      'unit': 'c.',
-                                                      'ingkey': 'silly',
-                                                      'inggroup': 'Foo bar'}],
-         ['3 lb. very silly', i_group, {'amount': 3.0,
-                                        'unit': 'lb.',
-                                        'item': 'very silly',
-                                        'inggroup': 'Foo bar'}],
-         ['4 tbs. strong silly', i_group, {'amount': 4.0,
-                                           'unit': 'tbs.',
-                                           'item': 'strong silly',
-                                           'inggroup': 'Foo bar'}],
-        ])
+        [
+            ["1 c. sugar", i_group, {"amount": 1.0, "unit": "c.", "item": "sugar", "inggroup": "Foo bar"}],
+            ["2 c. silly; chopped and sorted", i_group, {"amount": 2.0, "unit": "c.", "ingkey": "silly", "inggroup": "Foo bar"}],
+            ["3 lb. very silly", i_group, {"amount": 3.0, "unit": "lb.", "item": "very silly", "inggroup": "Foo bar"}],
+            ["4 tbs. strong silly", i_group, {"amount": 4.0, "unit": "tbs.", "item": "strong silly", "inggroup": "Foo bar"}],
+        ],
+    )
     print_("Ingredient editing successful")
 
 
@@ -120,14 +104,12 @@ def do_ingredients_undo(rc):
     """In a recipe card, test adding ingredients and undoing that"""
     # Show the ingredients tab
     mock_button = Mock()
-    mock_button.get_name = Mock(return_value='ingredients')
+    mock_button.get_name = Mock(return_value="ingredients")
     rc.show_edit(mock_button)
 
     # Create a group with a single ingredient, adding more ingredients will
     # require more reverts.
-    ings_groups_and_dcs = [  # TODO: change 1 cup of oil to 1.5
-        ['1 c. oil', None, {'amount': 1, 'unit': 'c.', 'item': 'oil'}]
-    ]
+    ings_groups_and_dcs = [["1 c. oil", None, {"amount": 1, "unit": "c.", "item": "oil"}]]  # TODO: change 1 cup of oil to 1.5
     refs = add_save_and_check(rc, ings_groups_and_dcs)
 
     idx = rc._RecCard__rec_editor.module_tab_by_name["ingredients"]
@@ -153,10 +135,10 @@ def do_ingredients_undo(rc):
         ings = rc._RecCard__rec_gui.rd.get_ings(rc.current_rec)
         check_ings([i[2] for i in ings_groups_and_dcs], ings)
     except AssertionError:
-        print_('Deletion worked!')
+        print_("Deletion worked!")
     else:
         print_([i[2] for i in ings_groups_and_dcs])
-        print_('corresponds to')
+        print_("corresponds to")
         print_([(i.amount, i.unit, i.item) for i in ings_groups_and_dcs])
         raise Exception("Ingredients Not Deleted!")
 
@@ -174,11 +156,10 @@ def do_ingredients_undo(rc):
     rc._RecCard__rec_editor.save_cb(None)
 
     # Check that our ingredients have been put back properly by the undo action
-    print_('Checking for ',[i[2] for i in ings_groups_and_dcs])
+    print_("Checking for ", [i[2] for i in ings_groups_and_dcs])
 
     print_("Checking in ", rc._RecCard__rec_gui.rd.get_ings(rc.current_rec))
-    check_ings([i[2] for i in ings_groups_and_dcs],
-                rc._RecCard__rec_gui.rd.get_ings(rc.current_rec))
+    check_ings([i[2] for i in ings_groups_and_dcs], rc._RecCard__rec_gui.rd.get_ings(rc.current_rec))
 
     print_("Deletion revert worked!")
 
@@ -186,7 +167,7 @@ def do_ingredients_undo(rc):
 def do_ingredients_group_editing(rc):
     # Show the ingredients tab
     mock_button = Mock()
-    mock_button.get_name = Mock(return_value='ingredients')
+    mock_button.get_name = Mock(return_value="ingredients")
     rc.show_edit(mock_button)
 
     idx = rc._RecCard__rec_editor.module_tab_by_name["ingredients"]
@@ -196,14 +177,16 @@ def do_ingredients_group_editing(rc):
     test_group = "TEST GROUP"
 
     # The test relies on the first item being a group
-    itr = ing_controller.imodel.get_iter(0,)
+    itr = ing_controller.imodel.get_iter(
+        0,
+    )
 
     # Test setting a group
     ing_ui.change_group(itr, test_group)
     rc._RecCard__rec_editor.save_cb(None)
 
     ings = rc._RecCard__rec_gui.rd.get_ings(rc.current_rec)
-    assert(ings[0].inggroup == test_group)
+    assert ings[0].inggroup == test_group
     print_(f'Group successfully changed to "{test_group}"')
 
     # Test undoing the group
@@ -212,43 +195,38 @@ def do_ingredients_group_editing(rc):
     rc._RecCard__rec_editor.save_cb(None)
 
     ings = rc._RecCard__rec_gui.rd.get_ings(rc.current_rec)
-    assert(ings[0].inggroup != test_group)
-    print_('Undo of group change worked.')
+    assert ings[0].inggroup != test_group
+    print_("Undo of group change worked.")
 
 
 def do_undo_save_sensitivity(rc):
     # Show the description tab
     mock_button = Mock()
-    mock_button.get_name = Mock(return_value='description')
+    mock_button.get_name = Mock(return_value="description")
     rc.show_edit(mock_button)
-
 
     # Make a save via the callback, which would normally be called via the
     # Save button in the recipe editor window.
     rc._RecCard__rec_editor.save_cb(None)
 
     # Check that the `save` and `revert` push buttons are disabled.
-    action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Save')
+    action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Save")
     is_enabled = action.get_sensitive()
     assert not is_enabled, "Save Button not de-sensitized after save"
 
-    action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Revert')
+    action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Revert")
     is_enabled = action.get_sensitive()
     assert not is_enabled, "Revert Button not de-sensitized after save"
 
     # preptime, cooktime, and rating are intentionally strings.
-    test_values = {'preptime': '½ hours', 'cooktime': '1 hour',
-                   'title': 'Foo bar', 'cuisine': 'Mexican',
-                   'category': 'Entree', 'rating': '8'}
+    test_values = {"preptime": "½ hours", "cooktime": "1 hour", "title": "Foo bar", "cuisine": "Mexican", "category": "Entree", "rating": "8"}
 
     card_display = RecCardDisplay(rc, rc._RecCard__rec_gui, rc.current_rec)
 
     idx = rc._RecCard__rec_editor.module_tab_by_name["description"]
-    undo_action = rc._RecCard__rec_editor.modules[idx].action_groups[0].get_action(
-        "Undo")
-    redo_action = rc._RecCard__rec_editor.modules[idx].action_groups[0].get_action(
-        "Redo")
-    save_action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Save')
+    undo_action = rc._RecCard__rec_editor.modules[idx].action_groups[0].get_action("Undo")
+    redo_action = rc._RecCard__rec_editor.modules[idx].action_groups[0].get_action("Redo")
+    save_action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Save")
 
     for wname, value in test_values.items():
         # Get the widget from the RecCardDisplay
@@ -263,22 +241,22 @@ def do_undo_save_sensitivity(rc):
         msg = f"{wname} not set correctly: {get_method()}, should be {value}"
         assert get_method() == value, msg
 
-        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Save')
+        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Save")
         is_enabled = action.get_sensitive()
         assert not is_enabled, "Save button not de-sensitized after save"
 
-        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Revert')
+        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Revert")
         is_enabled = action.get_sensitive()
         assert not is_enabled, "Revert button not de-sensitized after save"
 
-        print_('-- Hitting Undo')
+        print_("-- Hitting Undo")
         undo_action.activate()
 
         value = get_method()
         msg = f"Value of {wname} is {value}, should be {orig_value}"
         assert value == orig_value, msg
 
-        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action('Save')
+        action = rc._RecCard__rec_editor.mainRecEditActionGroup.get_action("Save")
         is_enabled = action.get_sensitive()
         assert not is_enabled, f"Save should be desensitized after unsetting {wname}"
 
@@ -289,16 +267,16 @@ def do_undo_save_sensitivity(rc):
             redo_action.activate()
 
         current = get_method()
-        msg = f'Value of {wname} is {current}, should be {value}'
+        msg = f"Value of {wname} is {current}, should be {value}"
         assert current == value, msg
 
-        assert not save_action.get_sensitive(), f'Save sensitized after setting {wname} via REDO'
+        assert not save_action.get_sensitive(), f"Save sensitized after setting {wname} via REDO"
 
-        print_('-- Hitting UNDO again')
+        print_("-- Hitting UNDO again")
 
         undo_action.activate()
         if orig_value and isinstance(value, int):
-            print_('(Hitting UNDO a second time for text)')
+            print_("(Hitting UNDO a second time for text)")
             undo_action.activate()
 
         assert get_method() == orig_value, "Value incorrect after UNDO->REDO->UNDO"
@@ -306,17 +284,16 @@ def do_undo_save_sensitivity(rc):
         print_("DONE TESTING", wname)
 
 
-@pytest.mark.skip("Broken as of 20220813")
 def test_reccard(tmp_path):
-    gglobals.gourmanddir = tmp_path
-    rec_gui = get_application()
-    rec_card = RecCard(rec_gui)
+    with mock.patch("gourmand.gglobals.gourmanddir", tmp_path):
+        rec_gui = get_application()
+        rec_card = RecCard(rec_gui)
 
-    do_ingredients_editing(rec_card)
-    print('Ingredient Editing test passed!')
-    do_ingredients_undo(rec_card)
-    print('Ingredient Revert test passed!')
-    # do_undo_save_sensitivity(rec_card)
-    print('Undo properly sensitizes save widget.')
-    do_ingredients_group_editing(rec_card)
-    print('Ing Group Editing works.')
+        do_ingredients_editing(rec_card)
+        print("Ingredient Editing test passed!")
+        do_ingredients_undo(rec_card)
+        print("Ingredient Revert test passed!")
+        # do_undo_save_sensitivity(rec_card)
+        print("Undo properly sensitizes save widget.")
+        do_ingredients_group_editing(rec_card)
+        print("Ing Group Editing works.")

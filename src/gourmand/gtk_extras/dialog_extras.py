@@ -25,10 +25,8 @@ class UserCancelledError(Exception):
     pass
 
 
-class ModalDialog (Gtk.Dialog):
-    def __init__(self, default=None, title="", okay=True, label=False,
-                 sublabel=False, parent=None, cancel=True,
-                 modal=True, expander=None):
+class ModalDialog(Gtk.Dialog):
+    def __init__(self, default=None, title="", okay=True, label=False, sublabel=False, parent=None, cancel=True, modal=True, expander=None):
         """Our basic class. We allow for a label. Possibly an expander
         with extra information, and a simple Okay button.  The
         expander is are only fancy option. It should be a list ['Name
@@ -37,15 +35,17 @@ class ModalDialog (Gtk.Dialog):
         list of strings and widgets to be packed in order."""
         self.widget_that_grabs_focus = None
         self.setup_dialog(title=title, parent=parent)
-        self.connect('destroy', self.cancelcb)
+        self.connect("destroy", self.cancelcb)
         self.set_border_width(15)
         self.default = default
         self.ret = default
-        self.responses = {Gtk.ResponseType.OK: self.okcb,
-                          Gtk.ResponseType.CANCEL: self.cancelcb,
-                          Gtk.ResponseType.NONE: self.cancelcb,
-                          Gtk.ResponseType.CLOSE: self.cancelcb,
-                          Gtk.ResponseType.DELETE_EVENT: self.cancelcb}
+        self.responses = {
+            Gtk.ResponseType.OK: self.okcb,
+            Gtk.ResponseType.CANCEL: self.cancelcb,
+            Gtk.ResponseType.NONE: self.cancelcb,
+            Gtk.ResponseType.CLOSE: self.cancelcb,
+            Gtk.ResponseType.DELETE_EVENT: self.cancelcb,
+        }
         if modal:
             self.set_modal(True)
         else:
@@ -94,13 +94,13 @@ class ModalDialog (Gtk.Dialog):
             self.add_button(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL)
         if okay:
             self.add_button(Gtk.STOCK_OK, Gtk.ResponseType.OK)
-        self.connect('response', self.response_cb)
+        self.connect("response", self.response_cb)
 
     def response_cb(self, dialog, response, *params):
         if response in self.responses:
             self.responses[response]()
         else:
-            print('WARNING, no response for ', response)
+            print("WARNING, no response for ", response)
 
     def setup_expander(self, content: List[str]):
         _, body = content
@@ -154,17 +154,27 @@ class ModalDialog (Gtk.Dialog):
 class MessageDialog(Gtk.MessageDialog, ModalDialog):
     """A simple class for displaying messages to our users."""
 
-    def __init__(self, title="", default=None, okay=True, cancel=True,
-                 label=False, sublabel=False, expander=None,
-                 message_type=Gtk.MessageType.INFO, parent=None, modal=True):
+    def __init__(
+        self,
+        title="",
+        default=None,
+        okay=True,
+        cancel=True,
+        label=False,
+        sublabel=False,
+        expander=None,
+        message_type=Gtk.MessageType.INFO,
+        parent=None,
+        modal=True,
+    ):
         self.message_type = message_type
-        ModalDialog.__init__(self, title=title, default=default, okay=okay,
-                             cancel=cancel, label=label, sublabel=sublabel,
-                             parent=parent, expander=expander, modal=modal)
+        ModalDialog.__init__(
+            self, title=title, default=default, okay=okay, cancel=cancel, label=label, sublabel=sublabel, parent=parent, expander=expander, modal=modal
+        )
 
     def setup_dialog(self, *args, **kwargs):
-        kwargs['type'] = self.message_type
-        title = kwargs.pop('title', None)
+        kwargs["type"] = self.message_type
+        title = kwargs.pop("title", None)
         super().__init__(self, *args, **kwargs)
         self.set_title(title)
 
@@ -177,11 +187,10 @@ class MessageDialog(Gtk.MessageDialog, ModalDialog):
         self.format_secondary_markup(sublabel)
 
 
-class NumberDialog (ModalDialog):
+class NumberDialog(ModalDialog):
     """A dialog to get a number from our user."""
 
-    def __init__(self, default=None, label=False, sublabel=False, step_incr=1,
-                 page_incr=10, digits=0, min=0, max=10000, parent=None):
+    def __init__(self, default=None, label=False, sublabel=False, step_incr=1, page_incr=10, digits=0, min=0, max=10000, parent=None):
         ModalDialog.__init__(self, default=default, parent=parent)
         self.hbox = Gtk.HBox()
         self.vbox.add(self.hbox)
@@ -192,11 +201,7 @@ class NumberDialog (ModalDialog):
         else:
             val = float(default)
 
-        self.adjustment = Gtk.Adjustment(val,
-                                         lower=min,
-                                         upper=max,
-                                         step_incr=step_incr,
-                                         page_incr=page_incr)
+        self.adjustment = Gtk.Adjustment(val, lower=min, upper=max, step_incr=step_incr, page_incr=page_incr)
         self.spinButton.set_adjustment(self.adjustment)
 
         if default:
@@ -209,11 +214,10 @@ class NumberDialog (ModalDialog):
             self.hbox.add(self.label)
             self.label.show()
         self.hbox.add(self.spinButton)
-        self.spinButton.get_adjustment().connect("value_changed",
-                                                 self.update_value)
+        self.spinButton.get_adjustment().connect("value_changed", self.update_value)
         self.spinButton.get_adjustment().connect("changed", self.update_value)
         self.spinButton.show()
-        self.spinButton.connect('activate', self.entry_activate_cb)
+        self.spinButton.connect("activate", self.entry_activate_cb)
         self.hbox.show()
 
     def update_value(self, *args):
@@ -223,21 +227,22 @@ class NumberDialog (ModalDialog):
         self.okcb()
 
 
-class EntryDialog (ModalDialog):
-
+class EntryDialog(ModalDialog):
     """A dialog to get some text from an Entry from our user."""
 
-    def __init__(self, default=None,
-                 label=None,
-                 sublabel=None,
-                 entryLabel=False,
-                 entryTip=None,
-                 parent=None,
-                 visibility=True,
-                 default_value=None,
-                 default_character_width=None):
-        ModalDialog.__init__(self, default=default,
-                             parent=parent, label=label, sublabel=sublabel)
+    def __init__(
+        self,
+        default=None,
+        label=None,
+        sublabel=None,
+        entryLabel=False,
+        entryTip=None,
+        parent=None,
+        visibility=True,
+        default_value=None,
+        default_character_width=None,
+    ):
+        ModalDialog.__init__(self, default=default, parent=parent, label=label, sublabel=sublabel)
         self.hbox = Gtk.HBox()
         self.vbox.add(self.hbox)
         if entryLabel:
@@ -250,13 +255,13 @@ class EntryDialog (ModalDialog):
             self.elabel.set_padding(H_PADDING, Y_PADDING)
         self.entry = Gtk.Entry()
         self.entry.set_visibility(visibility)
-        self.entry.connect('activate', self.entry_activate_cb)
+        self.entry.connect("activate", self.entry_activate_cb)
         if default_character_width:
-            if hasattr(self.entry, 'set_width_chars'):
+            if hasattr(self.entry, "set_width_chars"):
                 self.entry.set_width_chars(default_character_width)
-            if hasattr(self, 'label') and hasattr(self.label, 'set_width_chars'):
+            if hasattr(self, "label") and hasattr(self.label, "set_width_chars"):
                 self.label.set_width_chars(default_character_width)
-            if hasattr(self, 'sublabel') and hasattr(self.sublabel, 'set_width_chars'):
+            if hasattr(self, "sublabel") and hasattr(self.sublabel, "set_width_chars"):
                 self.sublabel.set_width_chars(default_character_width)
         self.hbox.add(self.entry)
         self.entry.set_can_default(True)
@@ -283,14 +288,11 @@ class EntryDialog (ModalDialog):
             self.okcb()
 
 
-class RadioDialog (ModalDialog):
-
+class RadioDialog(ModalDialog):
     """A dialog to offer our user a choice between a few options."""
 
-    def __init__(self, default=None, label="Select Option", sublabel=None,
-                 options=[], parent=None, expander=None, cancel=True):
-        ModalDialog.__init__(self, okay=True, label=label, sublabel=sublabel,
-                             parent=parent, expander=expander, cancel=cancel)
+    def __init__(self, default=None, label="Select Option", sublabel=None, options=[], parent=None, expander=None, cancel=True):
+        ModalDialog.__init__(self, okay=True, label=label, sublabel=sublabel, parent=parent, expander=expander, cancel=cancel)
         # defaults value is first value...
         self.default = default
         self.setup_radio_buttons(options)
@@ -301,12 +303,11 @@ class RadioDialog (ModalDialog):
         previous_radio = None
         self.buttons = []
         for label, value in options:
-            rb = Gtk.RadioButton(group=previous_radio,
-                                 label=label, use_underline=True)
-            rb.connect('activate', self.okcb)
+            rb = Gtk.RadioButton(group=previous_radio, label=label, use_underline=True)
+            rb.connect("activate", self.okcb)
             self.vbox.add(rb)
             rb.show()
-            rb.connect('toggled', self.toggle_cb, value)
+            rb.connect("toggled", self.toggle_cb, value)
             self.buttons.append(rb)
             previous_radio = rb
             if self.default == value:
@@ -324,17 +325,13 @@ class RadioDialog (ModalDialog):
 class OptionDialog(ModalDialog):
     """Offer users a choice between options using an option menu"""
 
-    def __init__(self, default=None, label="Select Option", sublabel=None,
-                 options=[], parent=None, expander=None, cancel=True):
+    def __init__(self, default=None, label="Select Option", sublabel=None, options=[], parent=None, expander=None, cancel=True):
         """Options can be a simple option or can be a tuple or a list
         where the first item is the label and the second the value"""
-        ModalDialog.__init__(self, okay=True, label=label, sublabel=sublabel,
-                             parent=parent, expander=expander, cancel=cancel)
+        ModalDialog.__init__(self, okay=True, label=label, sublabel=sublabel, parent=parent, expander=expander, cancel=cancel)
 
         self.combobox = Gtk.ComboBoxText()
-        self.vbox.pack_start(
-            self.combobox, expand=False, fill=False, padding=0
-        )
+        self.vbox.pack_start(self.combobox, expand=False, fill=False, padding=0)
         self.option_values = []
         for o in options:
             if isinstance(o, str):
@@ -346,7 +343,7 @@ class OptionDialog(ModalDialog):
 
         # set the default value to the first item
         self.ret = self.option_values[0]
-        self.combobox.connect('changed', self.get_option)
+        self.combobox.connect("changed", self.get_option)
         self.combobox.set_active(0)
         self.combobox.show()
 
@@ -358,21 +355,17 @@ class OptionDialog(ModalDialog):
         self.ret = value
 
 
-class ProgressDialog (ModalDialog):
+class ProgressDialog(ModalDialog):
     """A dialog to show a progress bar"""
 
-    def __init__(self, title="", okay=True, label="", sublabel=False,
-                 parent=None, cancel=False, stop=False, pause=False,
-                 modal=False):
+    def __init__(self, title="", okay=True, label="", sublabel=False, parent=None, cancel=False, stop=False, pause=False, modal=False):
         # stop, cancel, and pause are set as callbacks to their buttons
         self.custom_pausecb = pause
         self.custom_cancelcb = cancel
         self.custom_pause_handlers = []
         self.custom_stop_handlers = []
         self.custom_stopcb = stop
-        ModalDialog.__init__(self, title, okay=okay, label=label,
-                             sublabel=sublabel, parent=parent,
-                             cancel=cancel, modal=modal)
+        ModalDialog.__init__(self, title, okay=okay, label=label, sublabel=sublabel, parent=parent, cancel=cancel, modal=modal)
         self.set_title(label)
         self.progress_bar = Gtk.ProgressBar()
         self.vbox.add(self.progress_bar)
@@ -392,58 +385,54 @@ class ProgressDialog (ModalDialog):
 
     def reset_label(self, label):
         self.set_title(label)
-        self.label.set_text(
-            '<span weight="bold" size="larger">%s</span>' % label)
+        self.label.set_text('<span weight="bold" size="larger">%s</span>' % label)
         self.label.set_use_markup(True)
 
     def reassign_buttons(self, pausecb=None, stopcb=None):
-        debug('reassign_buttons called with pausecb=%s, stopcb=%s' %
-              (pausecb, stopcb), 1)
+        debug("reassign_buttons called with pausecb=%s, stopcb=%s" % (pausecb, stopcb), 1)
         while self.custom_pause_handlers:
             h = self.custom_pause_handlers.pop()
             if self.pause.handler_is_connected(h):
                 self.pause.disconnect(h)
         if pausecb:
-            self.pause.connect('toggled', pausecb)
-            self.pause.set_property('visible', True)
+            self.pause.connect("toggled", pausecb)
+            self.pause.set_property("visible", True)
         else:
-            self.pause.set_property('visible', False)
+            self.pause.set_property("visible", False)
         while self.custom_stop_handlers:
             h = self.custom_stop_handlers.pop()
             if self.stop.handler_is_connected(h):
                 self.stop.disconnect(h)
         if stopcb:
-            self.stop.connect('clicked', stopcb)
+            self.stop.connect("clicked", stopcb)
             # self.stop.connect('clicked',self.cancelcb)
-            self.stop.set_property('visible', True)
+            self.stop.set_property("visible", True)
         else:
-            self.stop.set_property('visible', False)
+            self.stop.set_property("visible", False)
 
     def setup_buttons(self, cancel, okay):
         # setup pause button
-        self.pause = Gtk.ToggleButton(_('_Pause'))
+        self.pause = Gtk.ToggleButton(_("_Pause"))
         self.pause.set_use_underline(True)
         self.action_area.pack_end(self.pause, True, True, 0)
         # only show it/connect it if we want to...
         if self.custom_pausecb:
             # we keep a list of handlers for possible disconnection later
-            self.custom_pause_handlers.append(
-                self.pause.connect('toggled', self.custom_pausecb))
-            self.pause.set_property('visible', True)
+            self.custom_pause_handlers.append(self.pause.connect("toggled", self.custom_pausecb))
+            self.pause.set_property("visible", True)
         else:
-            self.pause.set_property('visible', False)
+            self.pause.set_property("visible", False)
             self.pause.hide()
         # setup stop button
-        self.stop = Gtk.Button(_('_Stop'))
+        self.stop = Gtk.Button(_("_Stop"))
         self.action_area.pack_end(self.stop, True, True, 0)
         if self.custom_stopcb:
-            self.stop.set_property('visible', True)
+            self.stop.set_property("visible", True)
             # we keep a list of handlers for possible disconnection later
-            self.custom_stop_handlers.append(
-                self.stop.connect('clicked', self.custom_stopcb))
+            self.custom_stop_handlers.append(self.stop.connect("clicked", self.custom_stopcb))
             # self.custom_stop_handlers.append(self.stop.connect('clicked',self.cancelcb))
         else:
-            self.stop.set_property('visible', False)
+            self.stop.set_property("visible", False)
             self.stop.hide()
         ModalDialog.setup_buttons(self, cancel, okay)
         if self.custom_cancelcb:
@@ -464,10 +453,19 @@ class ProgressDialog (ModalDialog):
 class PreferencesDialog(ModalDialog):
     """Get user preferences as a list."""
 
-    def __init__(self, options=([None, None]), option_label="Option",
-                 value_label="Value", default=True, label=None, sublabel=False,
-                 apply_func=None, parent=None, dont_ask_cb=None,
-                 dont_ask_custom_text=None):
+    def __init__(
+        self,
+        options=([None, None]),
+        option_label="Option",
+        value_label="Value",
+        default=True,
+        label=None,
+        sublabel=False,
+        apply_func=None,
+        parent=None,
+        dont_ask_cb=None,
+        dont_ask_custom_text=None,
+    ):
         """Options is a tuple of tuples where each tuple is ('option', VALUE),
         handed to OptionTable
 
@@ -485,17 +483,13 @@ class PreferencesDialog(ModalDialog):
             modal = True
         self.apply_func = apply_func
         self.options = options
-        ModalDialog.__init__(self, okay=True, label=label,
-                             sublabel=sublabel, parent=parent, modal=modal)
-        self.table = optionTable.OptionTable(options=self.options,
-                                             option_label=option_label,
-                                             value_label=value_label,
-                                             changedcb=self.changedcb)
+        ModalDialog.__init__(self, okay=True, label=label, sublabel=sublabel, parent=parent, modal=modal)
+        self.table = optionTable.OptionTable(options=self.options, option_label=option_label, value_label=value_label, changedcb=self.changedcb)
         for widget_info in self.table.widgets:
             widget = widget_info[0]
             # Activating any widget activates the dialog...
             try:
-                widget.connect('activate', self.okcb)
+                widget.connect("activate", self.okcb)
             except TypeError:
                 # not all widgets have a signal -- no biggy
                 pass
@@ -507,18 +501,18 @@ class PreferencesDialog(ModalDialog):
             if not dont_ask_custom_text:
                 dont_ask_custom_text = _("Don't ask me this again.")
             self.dont_ask = Gtk.CheckButton(dont_ask_custom_text)
-            self.dont_ask.connect('toggled', dont_ask_cb)
+            self.dont_ask.connect("toggled", dont_ask_cb)
             self.vbox.add(self.dont_ask)
         self.vbox.show_all()
 
     def setup_buttons(self, cancel, okay):
         if self.apply_func:
             self.revert = Gtk.Button(stock=Gtk.STOCK_REVERT_TO_SAVED)
-            self.revert.connect('clicked', self.revertcb)
+            self.revert.connect("clicked", self.revertcb)
             self.action_area.add(self.revert)
             self.apply = Gtk.Button(stock=Gtk.STOCK_APPLY)
             self.apply.set_sensitive(False)
-            self.apply.connect('clicked', self.applycb)
+            self.apply.connect("clicked", self.applycb)
             self.action_area.add(self.apply)
             self.apply.show()
             self.changedcb = lambda *args: self.apply.set_sensitive(True)
@@ -545,7 +539,7 @@ class PreferencesDialog(ModalDialog):
 
     def okcb(self, *args):
         if self.apply_func:
-            if self.apply.get_property('sensitive'):
+            if self.apply.get_property("sensitive"):
                 # if there are unsaved changes...
                 if getBoolean(label="Would you like to apply the changes you've made?"):
                     self.applycb()
@@ -561,13 +555,23 @@ class PreferencesDialog(ModalDialog):
         self.ret = None
 
 
-class BooleanDialog (MessageDialog):
-    def __init__(self, title="", default=True, label=_("Do you really want to do this"),
-                 sublabel=False, cancel=True,
-                 parent=None, custom_yes=None, custom_no=None, expander=None,
-                 dont_ask_cb=None, dont_ask_custom_text=None,
-                 cancel_returns=None, message_type=Gtk.MessageType.QUESTION
-                 ):
+class BooleanDialog(MessageDialog):
+    def __init__(
+        self,
+        title="",
+        default=True,
+        label=_("Do you really want to do this"),
+        sublabel=False,
+        cancel=True,
+        parent=None,
+        custom_yes=None,
+        custom_no=None,
+        expander=None,
+        dont_ask_cb=None,
+        dont_ask_custom_text=None,
+        cancel_returns=None,
+        message_type=Gtk.MessageType.QUESTION,
+    ):
         """Setup a BooleanDialog which returns True or False.
         parent is our parent window.
         custom_yes is custom text for the button that returns true or a dictionary
@@ -586,8 +590,9 @@ class BooleanDialog (MessageDialog):
             self.yes = Gtk.STOCK_YES
         if not self.no:
             self.no = Gtk.STOCK_NO
-        MessageDialog.__init__(self, title=title, okay=False, label=label, cancel=cancel,
-                               sublabel=sublabel, parent=parent, expander=expander, message_type=message_type)
+        MessageDialog.__init__(
+            self, title=title, okay=False, label=label, cancel=cancel, sublabel=sublabel, parent=parent, expander=expander, message_type=message_type
+        )
         self.responses[Gtk.ResponseType.YES] = self.yescb
         self.responses[Gtk.ResponseType.NO] = self.nocb
         if not cancel:
@@ -601,7 +606,7 @@ class BooleanDialog (MessageDialog):
             if not dont_ask_custom_text:
                 dont_ask_custom_text = _("Don't ask me this again.")
             self.dont_ask = Gtk.CheckButton(dont_ask_custom_text)
-            self.dont_ask.connect('toggled', dont_ask_cb)
+            self.dont_ask.connect("toggled", dont_ask_cb)
             self.vbox.add(self.dont_ask)
             self.dont_ask.show()
 
@@ -624,7 +629,7 @@ class BooleanDialog (MessageDialog):
         self.okcb()
 
 
-class SimpleFaqDialog (ModalDialog):
+class SimpleFaqDialog(ModalDialog):
     """A dialog to view a plain old text FAQ in an attractive way"""
 
     INDEX_MATCHER = re.compile("^[0-9]+[.][A-Za-z0-9.]* .*")
@@ -633,14 +638,9 @@ class SimpleFaqDialog (ModalDialog):
     # NESTED_MATCHER should match nested headers
     NESTED_MATCHER = re.compile("^[0-9]+[.][A-Za-z0-9.]+ .*")
 
-    def __init__(self,
-                 title="Frequently Asked Questions",
-                 jump_to=None,
-                 parent=None,
-                 modal=True):
+    def __init__(self, title="Frequently Asked Questions", jump_to=None, parent=None, modal=True):
         # print faq_file
-        ModalDialog.__init__(
-            self, title=title, parent=parent, modal=modal, cancel=False)
+        ModalDialog.__init__(self, title=title, parent=parent, modal=modal, cancel=False)
         self.set_default_size(950, 500)
         self.textview = Gtk.TextView()
         self.textview.set_editable(False)
@@ -649,10 +649,9 @@ class SimpleFaqDialog (ModalDialog):
         self.textview.set_right_margin(18)
         self.textbuf = self.textview.get_buffer()
         self.boldtag = self.textbuf.create_tag()
-        self.boldtag.set_property('weight', Pango.Weight.BOLD)
+        self.boldtag.set_property("weight", Pango.Weight.BOLD)
         self.textwin = Gtk.ScrolledWindow()
-        self.textwin.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                Gtk.PolicyType.AUTOMATIC)
+        self.textwin.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.textwin.add(self.textview)
 
         self.index_lines = []
@@ -664,8 +663,7 @@ class SimpleFaqDialog (ModalDialog):
             self.paned = Gtk.Paned()
             self.indexView = Gtk.TreeView()
             self.indexWin = Gtk.ScrolledWindow()
-            self.indexWin.set_policy(
-                Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            self.indexWin.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             self.indexWin.add(self.indexView)
             self.setup_index()
             self.paned.add1(self.indexWin)
@@ -681,8 +679,7 @@ class SimpleFaqDialog (ModalDialog):
             self.jump_to_header(jump_to)
 
     def jump_to_header(self, text):
-        """Jump to the header/index items that contains text.
-        """
+        """Jump to the header/index items that contains text."""
         text = text.lower()
         for line in self.index_lines:
             if line.lower().find(text) > 0:
@@ -703,20 +700,15 @@ class SimpleFaqDialog (ModalDialog):
         self.index_dic = {}
         self.text = ""
 
-        faq = get_data('gourmand', 'data/FAQ').decode()
+        faq = get_data("gourmand", "data/FAQ").decode()
         assert faq
-        for l in faq.split('\n'):
-            line = l.strip()
+        for line in faq.split("\n"):
+            line = line.strip()
             if self.INDEX_MATCHER.match(line):  # it is a heading
                 self.index_lines.append(line)
-                curiter = self.textbuf.get_iter_at_mark(
-                    self.textbuf.get_insert())
-                self.index_dic[line] = self.textbuf.create_mark(None,
-                                                                curiter,
-                                                                left_gravity=True)
-                self.textbuf.insert_with_tags(curiter,
-                                              line + " ",
-                                              self.boldtag)
+                curiter = self.textbuf.get_iter_at_mark(self.textbuf.get_insert())
+                self.index_dic[line] = self.textbuf.create_mark(None, curiter, left_gravity=True)
+                self.textbuf.insert_with_tags(curiter, line + " ", self.boldtag)
             elif line:  # it is body content
                 self.textbuf.insert_at_cursor(line + " ")
             else:  # an empty line is a paragraph break
@@ -735,14 +727,11 @@ class SimpleFaqDialog (ModalDialog):
                 last_parent = itr
             self.index_iter_dic[line] = itr
         # setup our lone column
-        self.indexView.append_column(
-            Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=0)
-        )
+        self.indexView.append_column(Gtk.TreeViewColumn("", Gtk.CellRendererText(), text=0))
         self.indexView.set_model(self.imodel)
         self.indexView.set_headers_visible(False)
-        self.indexView.connect('row-activated', self.index_activated_cb)
-        self.indexView.get_selection().connect('changed',
-                                               self.index_selected_cb)
+        self.indexView.connect("row-activated", self.index_activated_cb)
+        self.indexView.get_selection().connect("changed", self.index_selected_cb)
 
     def index_activated_cb(self, *args):
         """Toggle expanded state of rows."""
@@ -756,22 +745,16 @@ class SimpleFaqDialog (ModalDialog):
     def index_selected_cb(self, *args):
         mod, itr = self.indexView.get_selection().get_selected()
         val = self.indexView.get_model().get_value(itr, 0)
-        self.textview.scroll_to_mark(mark=self.index_dic[val],
-                                     within_margin=0.1,
-                                     use_align=True,
-                                     xalign=0.5,
-                                     yalign=0.0)
+        self.textview.scroll_to_mark(mark=self.index_dic[val], within_margin=0.1, use_align=True, xalign=0.5, yalign=0.0)
 
     def jump_to_text(self, txt, itr=None):
         if not itr:
             itr = self.textbuf.get_iter_at_offset(0)
-        match_start, match_end = itr.forward_search(
-            txt, Gtk.TextSearchFlags.VISIBLE_ONLY)
-        self.textview.scroll_to_iter(
-            match_start, False, use_align=True, yalign=0.1)
+        match_start, match_end = itr.forward_search(txt, Gtk.TextSearchFlags.VISIBLE_ONLY)
+        self.textview.scroll_to_iter(match_start, False, use_align=True, yalign=0.1)
 
 
-class RatingsConversionDialog (ModalDialog):
+class RatingsConversionDialog(ModalDialog):
     """A dialog to allow the user to select the number of stars
     distinct ratings should convert to.
 
@@ -780,16 +763,20 @@ class RatingsConversionDialog (ModalDialog):
     some kind ('great','groovy',etc.) to aid in conversion.
     """
 
-    def __init__(self,
-                 strings,
-                 star_generator,
-                 defaults={_("excellent"): 10,
-                           _("great"): 8,
-                           _("good"): 6,
-                           _("fair"): 4,
-                           _("poor"): 2, },
-                 parent=None,
-                 modal=True):
+    def __init__(
+        self,
+        strings,
+        star_generator,
+        defaults={
+            _("excellent"): 10,
+            _("great"): 8,
+            _("good"): 6,
+            _("fair"): 4,
+            _("poor"): 2,
+        },
+        parent=None,
+        modal=True,
+    ):
         """strings is a list of strings that are currently used for ratings.
 
         The user will be asked to give the star equivalent of each string.
@@ -801,10 +788,9 @@ class RatingsConversionDialog (ModalDialog):
             self,
             title=_("Convert ratings to 5 star scale."),
             label=_("Convert ratings."),
-            sublabel=_(
-                "Please give each of the ratings an equivalent on a scale of 1 to 5"),
+            sublabel=_("Please give each of the ratings an equivalent on a scale of 1 to 5"),
             parent=parent,
-            modal=modal
+            modal=modal,
         )
         self.set_default_size(750, 500)
         self.ret = {}
@@ -815,17 +801,18 @@ class RatingsConversionDialog (ModalDialog):
         self.setup_model()
         self.tv.set_model(self.tm)
         from .ratingWidget import TreeWithStarMaker
-        textcol = Gtk.TreeViewColumn(
-            _('Current Rating'), Gtk.CellRendererText(), text=0)
+
+        textcol = Gtk.TreeViewColumn(_("Current Rating"), Gtk.CellRendererText(), text=0)
         textcol.set_sort_column_id(0)
         self.tv.append_column(textcol)
-        TreeWithStarMaker(self.tv,
-                          self.star_generator,
-                          col_title=_("Rating out of 5 Stars"),
-                          col_position=-1,
-                          data_col=1,
-                          handlers=[self.ratings_change_cb],
-                          )
+        TreeWithStarMaker(
+            self.tv,
+            self.star_generator,
+            col_title=_("Rating out of 5 Stars"),
+            col_position=-1,
+            data_col=1,
+            handlers=[self.ratings_change_cb],
+        )
         self.sw = Gtk.ScrolledWindow()
         self.sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.sw.add(self.tv)
@@ -848,10 +835,7 @@ class RatingsConversionDialog (ModalDialog):
 def show_traceback(label: str = "Error", sublabel: Optional[str] = None):
     """Show an error dialog with a traceback viewable."""
     error_mess = traceback.format_exc()
-    show_message(label=label,
-                 sublabel=sublabel,
-                 expander=(_("_Details"), error_mess),
-                 message_type=Gtk.MessageType.ERROR)
+    show_message(label=label, sublabel=sublabel, expander=(_("_Details"), error_mess), message_type=Gtk.MessageType.ERROR)
 
 
 def show_message(*args, **kwargs):
@@ -861,59 +845,53 @@ def show_message(*args, **kwargs):
     """
     # if not kwargs.has_key(message_type):
     #    message_type=Gtk.MessageType.INFO
-    if 'cancel' not in kwargs:
-        kwargs['cancel'] = False
+    if "cancel" not in kwargs:
+        kwargs["cancel"] = False
     d = MessageDialog(*args, **kwargs)
     d.run()
     return d
 
 
-def select_file(title,
-                filename=None,
-                filters=None,
-                # filters are lists of a name, a list of mime types and a list of
-                # patterns ['Plain Text', ['text/plain'], '*txt']
-                action=Gtk.FileChooserAction.OPEN,
-                set_filter=True,
-                select_multiple=False,
-                buttons=None,
-                parent=None
-                ):
+def select_file(
+    title,
+    filename=None,
+    filters=None,
+    # filters are lists of a name, a list of mime types and a list of
+    # patterns ['Plain Text', ['text/plain'], '*txt']
+    action=Gtk.FileChooserAction.OPEN,
+    set_filter=True,
+    select_multiple=False,
+    buttons=None,
+    parent=None,
+):
     if filters is None:
         filters = []
-    sfd = FileSelectorDialog(title,
-                             filename=filename,
-                             filters=filters,
-                             select_multiple=select_multiple,
-                             action=action,
-                             set_filter=set_filter,
-                             buttons=buttons, parent=parent)
+    sfd = FileSelectorDialog(
+        title, filename=filename, filters=filters, select_multiple=select_multiple, action=action, set_filter=set_filter, buttons=buttons, parent=parent
+    )
     return sfd.run()
 
 
-def saveas_file(title: str,
-                filename: Optional[str] = None,
-                filters: Optional[List[str]] = None,
-                action: Gtk.FileChooserAction = Gtk.FileChooserAction.SAVE,
-                set_filter: bool = True,
-                buttons: List[Gtk.FileChooserButtonClass] = None,
-                parent: Gtk.Window = None,
-                show_filetype: bool = True) -> Tuple[str, str]:
+def saveas_file(
+    title: str,
+    filename: Optional[str] = None,
+    filters: Optional[List[str]] = None,
+    action: Gtk.FileChooserAction = Gtk.FileChooserAction.SAVE,
+    set_filter: bool = True,
+    buttons: List[Gtk.FileChooserButtonClass] = None,
+    parent: Gtk.Window = None,
+    show_filetype: bool = True,
+) -> Tuple[str, str]:
     """Almost identical to select_file, except that we return a tuple containing
     the filename and the export type (the string the user selected)"""
-    sfd = FileSelectorDialog(title,
-                             filename=filename,
-                             filters=filters,
-                             action=action,
-                             set_filter=set_filter,
-                             buttons=buttons,
-                             show_filetype=show_filetype,
-                             parent=parent)
+    sfd = FileSelectorDialog(
+        title, filename=filename, filters=filters, action=action, set_filter=set_filter, buttons=buttons, show_filetype=show_filetype, parent=parent
+    )
     try:
         filename, export_type = sfd.run()
         return filename, export_type
     except ValueError:
-        return '', ''
+        return "", ""
 
 
 def get_type_for_filters(fname, filters):
@@ -927,12 +905,8 @@ def get_type_for_filters(fname, filters):
     return exp_type
 
 
-def select_image(title,
-                 filename=None,
-                 action=Gtk.FileChooserAction.OPEN,
-                 buttons=None) -> Optional[Path]:
-    sfd = ImageSelectorDialog(title, filename=filename,
-                              action=action, buttons=buttons)
+def select_image(title, filename=None, action=Gtk.FileChooserAction.OPEN, buttons=None) -> Optional[Path]:
+    sfd = ImageSelectorDialog(title, filename=filename, action=action, buttons=buttons)
     filename = sfd.run()
     if not filename:
         return
@@ -949,19 +923,20 @@ class FileSelectorDialog:
     standard file dialog, including a special choose-filetype menu and including dynamic update
     of the filetype based on user input of an extension"""
 
-    def __init__(self,
-                 title: str,
-                 filename: str = None,
-                 filters: List[List[Union[str, List]]] = None,
-                 # filters are lists of a name, a list of mime types and a list of
-                 # patterns ['Plain Text', ['text/plain'], '*txt']
-                 action: Gtk.Action = Gtk.FileChooserAction.SAVE,
-                 set_filter: bool = True,
-                 buttons: Tuple[Union[str, Gtk.ResponseType]] = None,
-                 show_filetype: bool = True,
-                 parent: Gtk.Window = None,
-                 select_multiple: bool = False
-                 ):
+    def __init__(
+        self,
+        title: str,
+        filename: str = None,
+        filters: List[List[Union[str, List]]] = None,
+        # filters are lists of a name, a list of mime types and a list of
+        # patterns ['Plain Text', ['text/plain'], '*txt']
+        action: Gtk.Action = Gtk.FileChooserAction.SAVE,
+        set_filter: bool = True,
+        buttons: Tuple[Union[str, Gtk.ResponseType]] = None,
+        show_filetype: bool = True,
+        parent: Gtk.Window = None,
+        select_multiple: bool = False,
+    ):
         self.parent = parent
         self.buttons = buttons
         self.multiple = select_multiple
@@ -981,10 +956,7 @@ class FileSelectorDialog:
     def setup_dialog(self):
         """Create our dialog"""
         self.setup_buttons()
-        self.fsd = Gtk.FileChooserDialog(self.title,
-                                         action=self.action,
-                                         parent=self.parent,
-                                         buttons=self.buttons)
+        self.fsd = Gtk.FileChooserDialog(self.title, action=self.action, parent=self.parent, buttons=self.buttons)
         self.fsd.set_default_response(Gtk.ResponseType.OK)
         self.fsd.set_select_multiple(self.multiple)
         self.fsd.set_do_overwrite_confirmation(True)
@@ -1002,11 +974,9 @@ class FileSelectorDialog:
         """Set our self.buttons attribute"""
         if not self.buttons:
             if self.action == Gtk.FileChooserAction.OPEN or self.action == Gtk.FileChooserAction.SELECT_FOLDER:
-                self.buttons = (
-                    Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+                self.buttons = (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
             else:
-                self.buttons = (
-                    Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK)
+                self.buttons = (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK)
 
     def setup_filters(self):
         """Create and set filters for the dialog."""
@@ -1045,8 +1015,8 @@ class FileSelectorDialog:
             n += 1
 
         self.fn = None
-        self.fsd.connect('notify::filter', self.change_file_extension)
-        self.fsd.connect('selection-changed', self.update_filetype_widget)
+        self.fsd.connect("notify::filter", self.change_file_extension)
+        self.fsd.connect("selection-changed", self.update_filetype_widget)
         self.internal_extension_change = False
         self.update_filetype_widget()
         # and now for a hack -- since we can't connect to the Entry widget,
@@ -1099,36 +1069,33 @@ class FileSelectorDialog:
         return filenames
 
     def quit(self, *args):
-        if hasattr(self, 'timeout'):
+        if hasattr(self, "timeout"):
             GObject.source_remove(self.timeout)
         self.fsd.destroy()
 
 
-class ImageSelectorDialog (FileSelectorDialog):
+class ImageSelectorDialog(FileSelectorDialog):
     IMAGE_FILTERS = [
-        ['Image',
-         ['image/jpeg', 'image/png', 'image/tiff',
-          'image/bmp', 'image/cgf', ],
-         ['*.jpeg', '*.jpg', 'gif', 'bmp', 'png',
-          '*.JPEG', '*.JPG', 'GIF', 'BMP', 'PNG']
-         ],
-        ['Jpeg Image', ['image/jpeg'], ['*.jpeg', '*.jpg', '*.JPG', '*.JPEG']],
-        ['PNG Image', ['image/png'], ['*.png', '*.PNG']],
-        ['Bmp Image', ['image/bmp'], ['*.bmp', '*.BMP']],
-        ['CGF Image', ['image/cgf'], ['*.cgf', '*.CFG']],
-        ['Tiff Image', ['image/tiff'], ['*.tiff', '*.TIFF']]
+        [
+            "Image",
+            [
+                "image/jpeg",
+                "image/png",
+                "image/tiff",
+                "image/bmp",
+                "image/cgf",
+            ],
+            ["*.jpeg", "*.jpg", "gif", "bmp", "png", "*.JPEG", "*.JPG", "GIF", "BMP", "PNG"],
+        ],
+        ["Jpeg Image", ["image/jpeg"], ["*.jpeg", "*.jpg", "*.JPG", "*.JPEG"]],
+        ["PNG Image", ["image/png"], ["*.png", "*.PNG"]],
+        ["Bmp Image", ["image/bmp"], ["*.bmp", "*.BMP"]],
+        ["CGF Image", ["image/cgf"], ["*.cgf", "*.CFG"]],
+        ["Tiff Image", ["image/tiff"], ["*.tiff", "*.TIFF"]],
     ]
 
-    def __init__(self,
-                 title,
-                 filename=None,
-                 filters=IMAGE_FILTERS,
-                 action=Gtk.FileChooserAction.OPEN,
-                 set_filter=True,
-                 buttons=None
-                 ):
-        FileSelectorDialog.__init__(
-            self, title, filename, filters, action, set_filter, buttons)
+    def __init__(self, title, filename=None, filters=IMAGE_FILTERS, action=Gtk.FileChooserAction.OPEN, set_filter=True, buttons=None):
+        FileSelectorDialog.__init__(self, title, filename, filters, action, set_filter, buttons)
         pictures_dir = get_user_special_dir(UserDirectory.DIRECTORY_PICTURES)
         if pictures_dir is not None:
             self.fsd.set_current_folder(pictures_dir)
@@ -1136,7 +1103,7 @@ class ImageSelectorDialog (FileSelectorDialog):
     def post_dialog(self):
         self.preview = Gtk.Image()
         self.fsd.set_preview_widget(self.preview)
-        self.fsd.connect('selection-changed', self.update_preview)
+        self.fsd.connect("selection-changed", self.update_preview)
         self.preview.show()
 
     def update_preview(self, *args):
@@ -1154,12 +1121,8 @@ class ImageSelectorDialog (FileSelectorDialog):
 
 class URIDialog(EntryDialog):
     """An Entry dialog that can call a FileSelectorDialog."""
-    def __init__(self,
-                 filters: List[str],
-                 supported_urls: List[str],
-                 select_multiple: bool,
-                 default_value: Optional[str] = None,
-                 **kwargs):
+
+    def __init__(self, filters: List[str], supported_urls: List[str], select_multiple: bool, default_value: Optional[str] = None, **kwargs):
         super().__init__(**kwargs)
 
         # Override the base class Gtk.Entry
@@ -1174,12 +1137,12 @@ class URIDialog(EntryDialog):
         self.entry.entry.set_width_chars(60)
         self.entry.set_can_default(True)
         self.entry.grab_default()
-        self.entry.connect('changed', self.update_value)
+        self.entry.connect("changed", self.update_value)
         self.hbox.add(self.entry)
 
         # Add a button to call the FileSelectorDialog
-        button = Gtk.Button(label='Browse File(s)...')
-        button.connect('clicked', self.select_file)
+        button = Gtk.Button(label="Browse File(s)...")
+        button.connect("clicked", self.select_file)
         button.show()
         self.hbox.pack_end(button, True, True, 5)
 
@@ -1199,7 +1162,7 @@ class URIDialog(EntryDialog):
                 self.ok_button.set_sensitive(False)
                 return
             try:
-                if ';' in uri:  # Match files from FileSelectorDialog
+                if ";" in uri:  # Match files from FileSelectorDialog
                     supported = True
                 elif urlparse(uri).netloc:
                     supported = True
@@ -1212,7 +1175,7 @@ class URIDialog(EntryDialog):
                 self.ok_button.set_sensitive(True)
             else:
                 self.ok_button.set_sensitive(False)
-                return 'File not found or not supported'
+                return "File not found or not supported"
 
         self.entry.find_errors_in_progress = validate
         self.entry.find_completed_errors = validate
@@ -1222,10 +1185,8 @@ class URIDialog(EntryDialog):
             validate(default_value)
 
     def select_file(self, button: Gtk.Button):
-        filenames = select_file(filters=self.filters,
-                                title=_('Select File(s)'),
-                                select_multiple=self.select_multiple)
-        self.entry.set_text(';'.join(f for f in filenames))
+        filenames = select_file(filters=self.filters, title=_("Select File(s)"), select_multiple=self.select_multiple)
+        self.entry.set_text(";".join(f for f in filenames))
         self.ret = filenames
 
 
@@ -1281,12 +1242,17 @@ def get_ratings_conversion(*args, **kwargs):
 
 def show_amount_error(txt):
     """Show an error that explains how numeric amounts work."""
-    show_message(label=_("""I'm sorry, I can't understand
-the amount "%s".""") % txt,
-                 sublabel=_(
-                     "Amounts must be numbers (fractions or decimals), ranges of numbers, or blank."),
-                 expander=[_("_Details"),
-                           _("""
+    show_message(
+        label=_(
+            """I'm sorry, I can't understand
+the amount "%s"."""
+        )
+        % txt,
+        sublabel=_("Amounts must be numbers (fractions or decimals), ranges of numbers, or blank."),
+        expander=[
+            _("_Details"),
+            _(
+                """
 The "unit" must be in the "unit" field by itself.
 For example, if you want to enter one and a half cups,
 the amount field could contain "1.5" or "1 1/2". "cups"
@@ -1294,112 +1260,135 @@ should go in the separate "unit" field.
 
 To enter a range of numbers, use a "-" to separate them.
 For example, you could enter 2-4 or 1 1/2 - 3 1/2.
-""")])
-
-
-def getUsernameAndPassword(username='', pw='', label='Enter password', sublabel=False):
-    pd = PreferencesDialog(
-        label=label, sublabel=sublabel,
-        value_label=False, option_label=False,
-        options=[[_('Username'), username], [_('Password'), pw]]
+"""
+            ),
+        ],
     )
+
+
+def getUsernameAndPassword(username="", pw="", label="Enter password", sublabel=False):
+    pd = PreferencesDialog(label=label, sublabel=sublabel, value_label=False, option_label=False, options=[[_("Username"), username], [_("Password"), pw]])
     pd.table.widgets[1][0].set_visibility(False)  # Hide password :-)
     pd.run()
     return pd.options[0][1], pd.options[1][1]
 
 
-if __name__ == '__main__':
-    print('Got', saveas_file('Saveas'))
+if __name__ == "__main__":
+    print("Got", saveas_file("Saveas"))
     w = Gtk.Window()
-    w.connect('delete_event', Gtk.main_quit)
+    w.connect("delete_event", Gtk.main_quit)
     b = Gtk.Button("show dialog (modal)")
-    opts = (["Toggle Option", True],
-            ["String Option", "Hello"],
-            ["Integer Option", 1],
-            ["Float Option", float(3)],
-            ["Option Option", ("B", ["A", "B", "C"])],
-            )
+    opts = (
+        ["Toggle Option", True],
+        ["String Option", "Hello"],
+        ["Integer Option", 1],
+        ["Float Option", float(3)],
+        ["Option Option", ("B", ["A", "B", "C"])],
+    )
     pd = PreferencesDialog(options=opts)
 
     def run_prefs(*args):
         pd.run()
-    b.connect('clicked', run_prefs)
+
+    b.connect("clicked", run_prefs)
 
     def show_options(options):
         print(options)
+
     b2 = Gtk.Button("show dialog (not modal)")
     vb = Gtk.VBox()
 
     def msg(*args):
         for a in args:
             print(a)
+
     char_measure = ""
     for n in range(10):
         char_measure = "%s %s" % (char_measure, n)
     char_measure = char_measure * 50
     from .ratingWidget import StarGenerator
+
     for s, f in [
-            ['show dialog (modal)', run_prefs],
-            ['show ratings dialog', lambda *args: get_ratings_conversion(['Good', 'Great', 'So so', 'Hot shit'],
-                                                                         StarGenerator(),
-                                                                         )],
-            ['show dialog (not modal)', lambda *args: PreferencesDialog(
-                options=opts, apply_func=show_options).show()],
-            ['show FAQ', lambda *args: show_faq(parent=w, jump_to='shopping')],
-            ['show message', lambda *args: show_message('howdy', label='Hello there. This is a very long label for the top of a dialog.',
-                                                        sublabel='And this is a sub message.', message_type=Gtk.MessageType.WARNING)],
-            ['get entry', lambda *args: getEntry(
-                label='Main label', sublabel='sublabel', entryLabel='Entry Label: ')],
-            ['get number',
-                lambda *args: getNumber(label='Main label', sublabel='sublabel')],
-            ['get long entry', lambda *args: getEntry(label='Main label', sublabel=char_measure,
-                                                      entryLabel='Entry Label: ', default_character_width=75, entryTip='Enter something long here.')],
-            ['show boolean', lambda *args: getBoolean()],
-            ['get password', lambda *args: getUsernameAndPassword()],
-            ['show custom boolean', lambda *args: getBoolean(custom_yes='_Replace',
-                                                             custom_no=Gtk.STOCK_CANCEL,
-                                                             cancel=False
-                                                             )],
-            ['show radio dialog', lambda *args: getRadio(label='Main label',
-                                                         sublabel='sublabel'*10, default=2,
-                                                         options=[('First', 1),
-                                                                  ('Second', 2),
-                                                                  ('Third', 3)]), ],
-            ['get image dialog',
-                lambda *args: msg(select_image('Select Image'))],
-            ['get file dialog', lambda *args: msg(select_file('Select File',
-                                                              filters=[['Plain Text', ['text/plain'], ['*.txt', '*.TXT']],
-                                                                       ['PDF', [
-                                                                           'application/pdf'], ['*.pdf', '*.PDF']],
-                                                                       ['Postscript', [
-                                                                           'application/postscript'], ['*.ps', '*.PS']],
-                                                                       ['Web Page (HTML)', [
-                                                                           'text/html'], ['*.htm', '*.HTM', '*.html', '*.HTML']],
-                                                                       ['Mealmaster File', ['text/mmf'], ['*.mmf', '*.MMF']]],
-                                                              select_multiple=True
-                                                              )),
-             ],
-            ['save file with types',
-             lambda *args: msg(saveas_file('export', filename='/tmp/test.mmf',
-                                           filters=[['Plain Text', ['text/plain'], ['*.txt', '*.TXT']],
-                                                    ['PDF', ['application/pdf'],
-                                                     ['*.pdf', '*.PDF']],
-                                                    ['Postscript', [
-                                                        'application/postscript'], ['*.ps', '*.PS']],
-                                                    ['Web Page (HTML)', [
-                                                        'text/html'], ['*.htm', '*.HTM', '*.html', '*.HTML']],
-                                                    ['Mealmaster File', ['text/mmf'], ['*.mmf', '*.MMF']]]))],
+        ["show dialog (modal)", run_prefs],
+        [
+            "show ratings dialog",
+            lambda *args: get_ratings_conversion(
+                ["Good", "Great", "So so", "Hot shit"],
+                StarGenerator(),
+            ),
+        ],
+        ["show dialog (not modal)", lambda *args: PreferencesDialog(options=opts, apply_func=show_options).show()],
+        ["show FAQ", lambda *args: show_faq(parent=w, jump_to="shopping")],
+        [
+            "show message",
+            lambda *args: show_message(
+                "howdy",
+                label="Hello there. This is a very long label for the top of a dialog.",
+                sublabel="And this is a sub message.",
+                message_type=Gtk.MessageType.WARNING,
+            ),
+        ],
+        ["get entry", lambda *args: getEntry(label="Main label", sublabel="sublabel", entryLabel="Entry Label: ")],
+        ["get number", lambda *args: getNumber(label="Main label", sublabel="sublabel")],
+        [
+            "get long entry",
+            lambda *args: getEntry(
+                label="Main label", sublabel=char_measure, entryLabel="Entry Label: ", default_character_width=75, entryTip="Enter something long here."
+            ),
+        ],
+        ["show boolean", lambda *args: getBoolean()],
+        ["get password", lambda *args: getUsernameAndPassword()],
+        ["show custom boolean", lambda *args: getBoolean(custom_yes="_Replace", custom_no=Gtk.STOCK_CANCEL, cancel=False)],
+        [
+            "show radio dialog",
+            lambda *args: getRadio(label="Main label", sublabel="sublabel" * 10, default=2, options=[("First", 1), ("Second", 2), ("Third", 3)]),
+        ],
+        ["get image dialog", lambda *args: msg(select_image("Select Image"))],
+        [
+            "get file dialog",
+            lambda *args: msg(
+                select_file(
+                    "Select File",
+                    filters=[
+                        ["Plain Text", ["text/plain"], ["*.txt", "*.TXT"]],
+                        ["PDF", ["application/pdf"], ["*.pdf", "*.PDF"]],
+                        ["Postscript", ["application/postscript"], ["*.ps", "*.PS"]],
+                        ["Web Page (HTML)", ["text/html"], ["*.htm", "*.HTM", "*.html", "*.HTML"]],
+                        ["Mealmaster File", ["text/mmf"], ["*.mmf", "*.MMF"]],
+                    ],
+                    select_multiple=True,
+                )
+            ),
+        ],
+        [
+            "save file with types",
+            lambda *args: msg(
+                saveas_file(
+                    "export",
+                    filename="/tmp/test.mmf",
+                    filters=[
+                        ["Plain Text", ["text/plain"], ["*.txt", "*.TXT"]],
+                        ["PDF", ["application/pdf"], ["*.pdf", "*.PDF"]],
+                        ["Postscript", ["application/postscript"], ["*.ps", "*.PS"]],
+                        ["Web Page (HTML)", ["text/html"], ["*.htm", "*.HTM", "*.html", "*.HTML"]],
+                        ["Mealmaster File", ["text/mmf"], ["*.mmf", "*.MMF"]],
+                    ],
+                )
+            ),
+        ],
     ]:
         print(b, f, s)
         b = Gtk.Button(s)
 
         def wrap(f):
             def _(*args, **kwargs):
-                print('Doing ', f)
-                print('f returns:', f())
-                print('Done')
+                print("Doing ", f)
+                print("f returns:", f())
+                print("Done")
+
             return _
-        b.connect('clicked', wrap(f))
+
+        b.connect("clicked", wrap(f))
         vb.add(b)
     w.add(vb)
     vb.show_all()

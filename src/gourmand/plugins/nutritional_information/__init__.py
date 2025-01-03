@@ -1,5 +1,4 @@
-from . import (data_plugin, export_plugin, main_plugin, nutPrefsPlugin,
-               reccard_plugin, shopping_plugin)
+from . import data_plugin, export_plugin, main_plugin, nutPrefsPlugin, reccard_plugin, shopping_plugin
 
 plugins = [
     data_plugin.NutritionDataPlugin,
@@ -8,4 +7,4 @@ plugins = [
     export_plugin.NutritionBaseExporterPlugin,
     shopping_plugin.ShoppingNutritionalInfoPlugin,
     nutPrefsPlugin.NutritionPrefs,
-    ]
+]

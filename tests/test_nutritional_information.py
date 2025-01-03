@@ -1,15 +1,13 @@
 from unittest.mock import Mock
+
 import pytest
 
 from gourmand.plugins.nutritional_information.nutrition import NutritionData
 
+
 @pytest.mark.parametrize(
-    'description, mock_content, expected',
-    [
-        ('', ['', ''], []),
-        ('with', ['', ''], []),
-        ('what a str', ['str', 5], [('str', 5)])
-    ],
+    "description, mock_content, expected",
+    [("", ["", ""], []), ("with", ["", ""], []), ("what a str", ["str", 5], [("str", 5)])],
 )
 def test_get_matches(description, mock_content, expected):
     content_mock = Mock()

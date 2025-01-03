@@ -86,10 +86,14 @@ You should now be able to launch and run Gourmand:
 
 ## Style
 
-Gourmand is an old code base, consequently its style is not always consistent or
-conformant to contemporary tastes.  
-Please follow [PEP 8](http://www.python.org/dev/peps/pep-0008/) when writing new
-code, and when working on old code, please tidy up as you go.
+Gourmand uses *ruff* for checking the code style, while trying to closely follow
+[PEP 8](http://www.python.org/dev/peps/pep-0008/).
+
+Check the style:
+
+```bash
+ruff check src/ tests/ setup.py
+```
 
 ## Issues and Suggestions
 
@@ -134,11 +138,16 @@ Launch Gourmand and check the changes.
 Once satisfied, open a pull request with your work.
 
 ## Testing
+
 Gourmand have a test suite in the `tests` directory. Patches that expands it are welcome.
 It is run with [pytest](https://docs.pytest.org/):
 
 ```bash
-pytest
+LC_ALL=C pytest
 ```
 
 Most modern python IDEs have support for running the tests usin pytest.
+
+**Warning:** Running the tests will most likely mess with your local configuration and
+database file. Please make sure to backup the corresponding directory content manually
+BEFORE running the tests.
