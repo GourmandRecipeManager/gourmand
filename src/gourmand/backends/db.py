@@ -213,7 +213,8 @@ class RecData (Pluggable):
 
         self.base_connection = self.db.connect()
         self.base_connection.begin()
-        self.metadata = sqlalchemy.MetaData(self.db)
+        self.metadata = sqlalchemy.MetaData()
+        self.metadata.create_all(self.db)
         # Be noisy... (uncomment for debugging/fiddling)
         # self.metadata.bind.echo = True
         Session.configure(bind=self.db)
@@ -232,7 +233,8 @@ class RecData (Pluggable):
         self.__table_to_object__[table] = klass
         #print 'Mapping ',repr(klass),'->',repr(table)
         if True in [col.primary_key for col in table.columns]:
-            sqlalchemy.orm.mapper(klass,table)
+            mapper_reg = sqlalchemy.orm.registry()
+            mapper_reg.map_imperatively(klass,table)
         else:
             # if there's no primary key...
             raise Exception("All tables need a primary key -- specify 'rowid'/Integer/Primary Key in table spec for %s" % table)
