@@ -1,8 +1,14 @@
 import shutil
 from pathlib import Path
+from sys import version_info
 from typing import Any, Optional
 
-import toml
+if version_info >= (3, 11):
+    from tomllib import loads as toml_loads
+else:
+    from tomli import loads as toml_loads
+
+from tomli_w import dumps as toml_dumps
 
 from gourmand.gglobals import gourmanddir
 
@@ -32,12 +38,12 @@ class Prefs(dict):
     def save(self):
         self.filename.parent.mkdir(exist_ok=True)
         with open(self.filename, "w") as fout:
-            toml.dump(self, fout)
+            fout.write(toml_dumps(self))
 
     def load(self) -> bool:
         if self.filename.is_file():
             with open(self.filename) as fin:
-                for k, v in toml.load(fin).items():
+                for k, v in toml_loads(fin.read()).items():
                     self.__setitem__(k, v)
             return True
         return False
@@ -54,7 +60,7 @@ def update_preferences_file_format(target_dir: Path = gourmanddir):
         return
 
     with open(filename) as fin:
-        prefs = toml.load(fin)
+        prefs = toml_loads(fin.read())
 
     # Gourmand 1.2.0: several sorting parameters can be saved.
     # The old format had `column=name` and `ascending=bool`, which are now `name=bool`
@@ -64,7 +70,7 @@ def update_preferences_file_format(target_dir: Path = gourmanddir):
             prefs["sort_by"] = {sort_by["column"]: sort_by["ascending"]}
 
     with open(filename, "w") as fout:
-        toml.dump(prefs, fout)
+        fout.write(toml_dumps(prefs))
 
 
 def copy_old_installation_or_initialize(target_dir: Path):
