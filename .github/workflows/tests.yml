@@ -37,7 +37,7 @@ jobs:
         run: pip install -r development.in
 
       - name: Test with pytest
-        run: SQLALCHEMY_WARN_20=1 LANGUAGE=de_DE.utf-8 xvfb-run -a pytest
+        run: SQLALCHEMY_WARN_20=1 LANGUAGE=de_DE.utf-8 xvfb-run -a "python -W always::DeprecationWarning -m pytest"
 
       - name: Check imports ordering
         run: >
