@@ -175,7 +175,7 @@ class RecData (Pluggable):
         self.initialize_connection()
         Pluggable.__init__(self,[DatabasePlugin])
         self.setup_tables()
-        self.metadata.create_all()
+        self.metadata.create_all(self.db)
         self.update_version_info(gourmand.__version__.version)
         self._created = True
         timer.end()
