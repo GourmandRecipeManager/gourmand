@@ -484,14 +484,14 @@ class RecData (Pluggable):
                 # We need to unpickle Booleans that have erroneously remained
                 # pickled during previous Metakit -> SQLite -> SQLAlchemy
                 # database migrations.
-                self.pantry_table.update().where(self.pantry_table.c.pantry
+                self.db.connect().execute(self.pantry_table.update().where(self.pantry_table.c.pantry
                                                  =='I01\n.'
-                                                 ).values(pantry=True).execute()
-                self.pantry_table.update().where(self.pantry_table.c.pantry
+                                                 ).values(pantry=True))
+                self.db.connect().execute(self.pantry_table.update().where(self.pantry_table.c.pantry
                                                  =='I00\n.'
-                                                 ).values(pantry=False).execute()
+                                                 ).values(pantry=False))
                 # Unpickling strings with SQLAlchemy is clearly more complicated:
-                self.shopcats_table.update().where(
+                self.db.connect().execute(self.shopcats_table.update().where(
                     and_(self.shopcats_table.c.shopcategory.startswith("S'"),
                          self.shopcats_table.c.shopcategory.endswith("'\np0\n."))
                     ).values({self.shopcats_table.c.shopcategory:
@@ -500,7 +500,7 @@ class RecData (Pluggable):
                                           func.char_length(
                                             self.shopcats_table.c.shopcategory
                                           )-8)
-                             }).execute()
+                             }))
 
                 # The following tables had Text columns as primary keys,
                 # which, when used with MySQL, requires an extra parameter
@@ -533,12 +533,12 @@ class RecData (Pluggable):
                 self.add_column_to_table(self.recipe_table,('yields',Float(),{}))
                 self.add_column_to_table(self.recipe_table,('yield_unit',String(length=32),{}))
                 #self.db.execute('''UPDATE recipes SET yield = servings, yield_unit = "servings" WHERE EXISTS servings''')
-                self.recipe_table.update(whereclause=self.recipe_table.c.servings
+                self.db.connect().execute(self.recipe_table.update(whereclause=self.recipe_table.c.servings
                                        ).values({
                         self.recipe_table.c.yield_unit:'servings',
                         self.recipe_table.c.yields:self.recipe_table.c.servings
                         }
-                                                ).execute()
+                                                ))
             if stored_info.version_super == 0 and stored_info.version_major < 14:
                 print('Database older than 0.14.0 -- updating',sv_text)
                 backup_database(self.filename)
@@ -705,27 +705,32 @@ class RecData (Pluggable):
     def fetch_all (self, table, sort_by=None, **criteria):
         if sort_by is None:
             sort_by = []
-        return table.select(*make_simple_select_arg(criteria,table),
-                            **{'order_by':make_order_by(sort_by,table)}
-                            ).execute().fetchall()
+        with self.db.connect() as connection:
+            result = connection.execute(table.select(*make_simple_select_arg(criteria,
+                                                                             table),
+                            **{'order_by':make_order_by(sort_by,table)}))
+            return result.fetchall()
 
     def fetch_one (self, table, **criteria):
         """Fetch one item from table and arguments"""
-        return table.select(*make_simple_select_arg(criteria,table)).execute().fetchone()
+        with self.db.connect() as connection:
+            result = connection.execute(table.select(*make_simple_select_arg(criteria,
+                                                                             table)))
+            return result.fetchone()
 
     def fetch_count (self, table, column, sort_by=None, **criteria):
         """Return a counted view of the table, with the count stored in the property 'count'"""
         if sort_by is None:
             sort_by = []
-        result =  sqlalchemy.select(
-            [sqlalchemy.func.count(getattr(table.c,column)).label('count'),
-             getattr(table.c,column)],
-            *make_simple_select_arg(criteria,table),
-            **{'group_by':column,
-               'order_by':make_order_by(sort_by,table,count_by=column),
-               }
-            ).execute().fetchall()
-        return result
+        with self.db.connect() as connection:
+            result =  connection.execute(sqlalchemy.select(
+                [sqlalchemy.func.count(getattr(table.c,column)).label('count'),
+                 getattr(table.c,column)],
+                *make_simple_select_arg(criteria,table),
+                **{'group_by':column,
+                   'order_by':make_order_by(sort_by,table,count_by=column),
+                   }))
+        return result.fetchall()
 
     def fetch_len (self, table, **criteria):
         """Return the number of rows in table that match criteria
@@ -740,9 +745,11 @@ class RecData (Pluggable):
         # TODO: this function might be unused
         if column_names is not None:
             raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
-        return  table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
-            *make_simple_select_arg(criteria,table1,table2)
-            ).execute().fetchall()
+        with self.db.connect() as connection:
+            result = connection.execute(
+                table1.join(table2,getattr(table1.c,col1)==getattr(table2.c,col2)).select(
+                    *make_simple_select_arg(criteria,table1,table2)))
+        return result.fetchall()
 
     def fetch_food_groups_for_search (self, words):
         """Return food groups that match a given set of words."""
@@ -750,10 +757,10 @@ class RecData (Pluggable):
             *[self.nutrition_table.c.desc.like('%%%s%%'%w.lower())
               for w in words]
             )
-        return [r[0] for r in sqlalchemy.select(
+        return [r[0] for r in self.db.connect().execute(sqlalchemy.select(
             [self.nutrition_table.c.foodgroup],
             where_statement,
-            distinct=True).execute().fetchall()]
+            distinct=True)).fetchall()]
 
     def search_nutrition(self, words: List[str], group=None):
         """Search nutritional information for ingredient keys."""
@@ -763,7 +770,7 @@ class RecData (Pluggable):
         if group:
             where_statement = and_(self.nutrition_table.c.foodgroup==group,
                                    where_statement)
-        return self.nutrition_table.select(where_statement).execute().fetchall()
+        return self.db.connect().execute(self.nutrition_table.select(where_statement)).fetchall()
 
     def __get_joins (self, searches):
         joins = []
@@ -858,16 +865,16 @@ class RecData (Pluggable):
         debug('backends.db.search_recipes - search criteria are %s'%searches,2)
 
         if 'category' in sort_keys:
-            return sqlalchemy.select([c for c in self.recipe_table.c],
+            return self.db.connect().execute(sqlalchemy.select([c for c in self.recipe_table.c],
                                      criteria,distinct=True,
                                      from_obj=[sqlalchemy.outerjoin(self.recipe_table,self.categories_table)],
                                      order_by=make_order_by(sort_by,self.recipe_table,
                                                             join_tables=[self.categories_table])
-                                     ).execute().fetchall()
+                                     )).fetchall()
         else:
-            return sqlalchemy.select([self.recipe_table],criteria,distinct=True,
+            return self.db.connect().execute(sqlalchemy.select([self.recipe_table],criteria,distinct=True,
                                      order_by=make_order_by(sort_by,self.recipe_table,),
-                                     ).execute().fetchall()
+                                     )).fetchall()
 
     def get_unique_values (self, colname,table=None,**criteria):
         """Get list of unique values for column in table."""
@@ -879,7 +886,7 @@ class RecData (Pluggable):
             table = self.categories_table
             table = table.alias('ingrtable')
         retval = [r[0] for
-                  r in sqlalchemy.select([getattr(table.c,colname)],distinct=True,whereclause=criteria).execute().fetchall()
+                  r in self.db.connect().execute(sqlalchemy.select([getattr(table.c,colname)],distinct=True,whereclause=criteria)).fetchall()
                   ]
         return [x for x in retval if x is not None] # Don't return null values
 
@@ -900,22 +907,22 @@ class RecData (Pluggable):
                 criteria = col.contains(search['search'])
             else:
                 criteria = (col == search['search'])
-            result = sqlalchemy.select(
+            result = self.db.connect().execute(sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 criteria,
                 **{'group_by': 'ingkey',
                    'order_by': make_order_by([],self.ingredients_table,count_by='ingkey'),
                    }
-                ).execute().fetchall()
+                )).fetchall()
         else:  # return all ingredient keys with counts
-            result = sqlalchemy.select(
+            result = self.db.connect().execute(sqlalchemy.select(
                 [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label('count'),
                  self.ingredients_table.c.ingkey],
                 **{'group_by':'ingkey',
                    'order_by':make_order_by([],self.ingredients_table,count_by='ingkey'),
                    }
-                ).execute().fetchall()
+                )).fetchall()
 
         return result
 
@@ -959,7 +966,7 @@ class RecData (Pluggable):
         coltyp = coltyp.compile(dialect=self.db.dialect)
         sql = 'ALTER TABLE %(name)s ADD %(new_col)s %(coltyp)s;'%locals()
         try:
-            self.db.execute(sql)
+            self.db.connect().execute(sql)
         except:
             print('FAILED TO EXECUTE',sql)
             print('Ignoring error in add_column_to_table')
@@ -984,17 +991,17 @@ class RecData (Pluggable):
         """
         print('Attempting to alter ',table_name,setup_function,cols_to_change,cols_to_keep)
         try:
-            self.db.execute('ALTER TABLE %(t)s RENAME TO %(t)s_temp'%{'t':table_name})
+            self.db.connect().execute('ALTER TABLE %(t)s RENAME TO %(t)s_temp'%{'t':table_name})
         except:
             do_raise = True
             import traceback; traceback.print_exc()
             try:
-                self.db.execute('DROP TABLE %(t)s_temp'%{'t':table_name})
+                self.db.connect().execute('DROP TABLE %(t)s_temp'%{'t':table_name})
             except:
                 1
             else:
                 do_raise = False
-                self.db.execute('ALTER TABLE %(t)s RENAME TO %(t)s_temp'%{'t':table_name})
+                self.db.connect().execute('ALTER TABLE %(t)s RENAME TO %(t)s_temp'%{'t':table_name})
             if do_raise:
                 raise
         # SQLAlchemy >= 0.7 doesn't allow: del self.metadata.tables[table_name]
@@ -1012,8 +1019,8 @@ class RecData (Pluggable):
              'from_cols':', '.join(FROM_COLS),
              'to_cols':', '.join(TO_COLS),
              }
-        self.db.execute(stmt)
-        self.db.execute('DROP TABLE %s_temp'%table_name)
+        self.db.connect().execute(stmt)
+        self.db.connect().execute('DROP TABLE %s_temp'%table_name)
 
     # Metakit has no AUTOINCREMENT, so it has to do special magic here
     def increment_field (self, table, field):
@@ -1051,10 +1058,10 @@ class RecData (Pluggable):
         duped_hashes = sqlalchemy.select([col],
                                          *args,
                                          **kwargs)
-        query = sqlalchemy.select([self.recipe_table.c.id,col],
+        query = self.db.connect().execute(sqlalchemy.select([self.recipe_table.c.id,col],
                                   include_deleted and col.in_(duped_hashes) or and_(col.in_(duped_hashes),
                                                                                     self.recipe_table.c.deleted==False),
-                                  order_by=col).execute()
+                                  order_by=col))
         recs_by_hash = {}
         for result in query.fetchall():
             rec_id = result[0]; hsh = result[1]
@@ -1084,12 +1091,12 @@ class RecData (Pluggable):
         select_statements.append(self.recipe_table.c.ingredient_hash.in_(ing_hashes))
         select_statements.append(self.recipe_table.c.recipe_hash.in_(rec_hashes))
 
-        query = sqlalchemy.select([self.recipe_table.c.id,
+        query = self.db.connect().execute(sqlalchemy.select([self.recipe_table.c.id,
                                    self.recipe_table.c.recipe_hash,
                                    self.recipe_table.c.ingredient_hash],
                                   and_(*select_statements),
                                   order_by=[self.recipe_table.c.recipe_hash,
-                                            self.recipe_table.c.ingredient_hash]).execute()
+                                            self.recipe_table.c.ingredient_hash]))
         recs_by_hash = {}
         for result in query.fetchall():
             rec_id = result[0]; rhsh = result[1]; ihsh = result[2]
@@ -1351,7 +1358,7 @@ class RecData (Pluggable):
     def do_add_and_return_item (self, table, dic, id_prop='id'):
         result_proxy = self.do_add(table,dic)
         select = table.select(getattr(table.c,id_prop)==result_proxy.inserted_primary_key[0])
-        return select.execute().fetchone()
+        return self.db.connect().execute(select).fetchone()
 
     def do_add_ing (self,dic):
         return self.do_add_and_return_item(self.ingredients_table,dic,id_prop='id')
@@ -1378,7 +1385,7 @@ class RecData (Pluggable):
                 raise ValueError('New recipe created with preset id %s, but ID is not in our list of new_ids'%rdict['id'])
         insert_statement = self.recipe_table.insert()
         select = self.recipe_table.select(self.recipe_table.c.id==insert_statement.execute(**rdict).inserted_primary_key[0])
-        return select.execute().fetchone()
+        return self.db.connect.execute(select).fetchone()
 
     def do_modify_rec (self, rec, dic):
         """This is what other DBs should subclass."""
@@ -1408,7 +1415,7 @@ class RecData (Pluggable):
         else:  # Saving the recipe as a whole
             table.update().execute(**d)
             select = table.select()
-        return select.execute().fetchone()
+        return self.db.connect().execute(select).fetchone()
 
     def get_ings (self, rec):
         """Handed rec, return a list of ingredients.
