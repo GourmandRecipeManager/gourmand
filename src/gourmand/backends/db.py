@@ -936,7 +936,7 @@ class RecData (Pluggable):
             delete_args.append(k==v)
         if len(delete_args) > 1:
             delete_args = [and_(*delete_args)]
-        table.delete(*delete_args).execute()
+        self.db.connect().execute(table.delete(*delete_args))
 
     def update_by_criteria (self, table, update_criteria, new_values_dic):
         try:
@@ -948,7 +948,9 @@ class RecData (Pluggable):
                 v = new_values_dic[k]
                 del new_values_dic[k]
                 new_values_dic[str(k)] = v
-            table.update(*make_simple_select_arg(update_criteria,table)).execute(**new_values_dic)
+            self.db.connect().execute(table.update(*make_simple_select_arg(update_criteria,
+                                                                           table)),
+            set_=dict(**new_values_dic))
         except:
             print('update_by_criteria error...')
             print('table:',table)
@@ -1348,11 +1350,11 @@ class RecData (Pluggable):
     def do_add (self, table, dic):
         insert_statement = table.insert()
         try:
-            result_proxy = insert_statement.execute(**dic)
+            result_proxy = self.db.connect().execute(insert_statement,dic)
         except ValueError:
             print('Had to coerce types',table,dic)
             self.coerce_types(table,dic)
-            result_proxy = insert_statement.execute(**dic)
+            result_proxy = self.db.connect().execute(insert_statement,dic)
         return result_proxy
 
     def do_add_and_return_item (self, table, dic, id_prop='id'):
@@ -1380,11 +1382,12 @@ class RecData (Pluggable):
                 self.update_by_criteria(self.recipe_table,
                                         {'id':rid},
                                         rdict)
-                return self.recipe_table.select(self.recipe_table.c.id==rid).execute().fetchone()
+                return self.db.connect().execute(self.recipe_table.select(self.recipe_table.c.id==rid)).fetchone()
             else:
                 raise ValueError('New recipe created with preset id %s, but ID is not in our list of new_ids'%rdict['id'])
         insert_statement = self.recipe_table.insert()
-        select = self.recipe_table.select(self.recipe_table.c.id==insert_statement.execute(**rdict).inserted_primary_key[0])
+        select = self.recipe_table.select(self.recipe_table.c.id==
+                                          self.db.connect().execute(insert_statement.execute,rdict).inserted_primary_key[0])
         return self.db.connect.execute(select).fetchone()
 
     def do_modify_rec (self, rec, dic):
@@ -1404,7 +1407,7 @@ class RecData (Pluggable):
             try:
                 table_val = getattr(table.c, id_col)
                 row_val = getattr(row, id_col)
-                table.update(table_val == row_val).execute(**d)
+                self.db.connect().execute(table.update(table_val == row_val),d)
             except Exception as e:
                 print('do_modify failed with args')
                 print('table=',table,'row=',row)
@@ -1413,7 +1416,7 @@ class RecData (Pluggable):
                 raise
             select = table.select(getattr(table.c,id_col)==getattr(row,id_col))
         else:  # Saving the recipe as a whole
-            table.update().execute(**d)
+            self.db.connect().execute(table.update(),d)
             select = table.select()
         return self.db.connect().execute(select).fetchone()
 
@@ -1461,11 +1464,11 @@ class RecData (Pluggable):
         '''
         import sqlalchemy
         ids = [r.id for r in recs]
-        extra_ings = self.ingredients_table.select(and_(
+        extra_ings = self.db.connect().execute(self.ingredients_table.select(and_(
                 self.ingredients_table.c.refid,
                 self.ingredients_table.c.recipe_id.in_(ids)
                 )
-                                                  ).execute().fetchall()
+                                                  )).fetchall()
         for i in extra_ings:
             if i.refid not in ids:
                 recs.append(self.get_referenced_rec(i))
@@ -2092,7 +2095,7 @@ class dbDic:
         for k in d:
             store_v = d[k]
             dics.append({self.kp: k, self.vp: store_v})
-        self.vw.insert().execute(*dics)
+        self.db.connect().execute(self.vw.insert(),dics)
 
     def keys (self):
         ret = []
