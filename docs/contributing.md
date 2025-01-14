@@ -151,3 +151,13 @@ Most modern python IDEs have support for running the tests usin pytest.
 **Warning:** Running the tests will most likely mess with your local configuration and
 database file. Please make sure to backup the corresponding directory content manually
 BEFORE running the tests.
+
+## Blaming
+
+Consider using
+
+```bash
+git blame --ignore-revs-file .git-blame-ignore-revs
+```
+
+instead of plain blaming to ignore some mostly irrelevant commits.
