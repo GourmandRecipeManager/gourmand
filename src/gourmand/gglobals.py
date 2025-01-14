@@ -14,56 +14,61 @@ from .optionparser import args
 # On linux, data are kept in $XDG_DATA_HOME or defaults to "$HOME/.local/share".
 if args.gourmanddir:
     gourmanddir = Path(args.gourmanddir).absolute()
-elif os.name == 'nt':
-    gourmanddir = Path(os.environ['APPDATA']).absolute() / 'gourmand'
+elif os.name == "nt":
+    gourmanddir = Path(os.environ["APPDATA"]).absolute() / "gourmand"
 else:
-    path = os.environ.get("XDG_DATA_HOME", '~/.local/share')
-    gourmanddir = Path(path).expanduser().absolute() / 'gourmand'
+    path = os.environ.get("XDG_DATA_HOME", "~/.local/share")
+    gourmanddir = Path(path).expanduser().absolute() / "gourmand"
 
 use_threads = args.threads
 # Uncomment the below to test FauxThreads
 # use_threads = False
 
 
-REC_ATTRS = [('title', _('Title'), 'Entry'),
-             ('category', _('Category'), 'Combo'),
-             ('cuisine', _('Cuisine'), 'Combo'),
-             ('rating', _('Rating'), 'Entry'),
-             ('source', _('Source'), 'Combo'),
-             ('link', _('Website'), 'Entry'),
-             ('yields', _('Yield'), 'Entry'),
-             ('yield_unit', _('Yield Unit'), 'Combo'),
-             ('preptime', _('Preparation Time'), 'Entry'),
-             ('cooktime', _('Cooking Time'), 'Entry'),
-             ]
+REC_ATTRS = [
+    ("title", _("Title"), "Entry"),
+    ("category", _("Category"), "Combo"),
+    ("cuisine", _("Cuisine"), "Combo"),
+    ("rating", _("Rating"), "Entry"),
+    ("source", _("Source"), "Combo"),
+    ("link", _("Website"), "Entry"),
+    ("yields", _("Yield"), "Entry"),
+    ("yield_unit", _("Yield Unit"), "Combo"),
+    ("preptime", _("Preparation Time"), "Entry"),
+    ("cooktime", _("Cooking Time"), "Entry"),
+]
 
-INT_REC_ATTRS = ['rating', 'preptime', 'cooktime']
-FLOAT_REC_ATTRS = ['yields']
-TEXT_ATTR_DIC = {'instructions': _('Instructions'),
-                 'modifications': _('Notes'),
-                 }
+INT_REC_ATTRS = ["rating", "preptime", "cooktime"]
+FLOAT_REC_ATTRS = ["yields"]
+TEXT_ATTR_DIC = {
+    "instructions": _("Instructions"),
+    "modifications": _("Notes"),
+}
 
 REC_ATTR_DIC = {}
-NAME_TO_ATTR = {_('Instructions'): 'instructions',
-                _('Notes'): 'modifications',
-                _('Modifications'): 'modifications',
-                }
+NAME_TO_ATTR = {
+    _("Instructions"): "instructions",
+    _("Notes"): "modifications",
+    _("Modifications"): "modifications",
+}
 
-DEFAULT_ATTR_ORDER = ['title',
-                      # 'servings',
-                      'yields',
-                      'cooktime',
-                      'preptime',
-                      'category',
-                      'cuisine',
-                      'rating',
-                      'source',
-                      'link',
-                      ]
+DEFAULT_ATTR_ORDER = [
+    "title",
+    # 'servings',
+    "yields",
+    "cooktime",
+    "preptime",
+    "category",
+    "cuisine",
+    "rating",
+    "source",
+    "link",
+]
 
-DEFAULT_TEXT_ATTR_ORDER = ['instructions',
-                           'modifications',
-                           ]
+DEFAULT_TEXT_ATTR_ORDER = [
+    "instructions",
+    "modifications",
+]
 
 
 def build_rec_attr_dic():
@@ -74,8 +79,7 @@ def build_rec_attr_dic():
 
 build_rec_attr_dic()
 
-DEFAULT_HIDDEN_COLUMNS = [REC_ATTR_DIC[attr] for attr in
-                          ('link', 'yields', 'yield_unit', 'preptime', 'cooktime')]  # noqa
+DEFAULT_HIDDEN_COLUMNS = [REC_ATTR_DIC[attr] for attr in ("link", "yields", "yield_unit", "preptime", "cooktime")]
 
 # Set up custom STOCK items and ICONS!
 icon_factory = Gtk.IconFactory()
@@ -85,12 +89,7 @@ icon_factory = Gtk.IconFactory()
 # TODO: Update/remove potentially-deprecated code?
 # GTK 3 has deprecated the use of stock icons, so this may need to be rewritten
 # (or removed altogether) to ensure this works in the future
-def add_icon(
-        pixbuf: GdkPixbuf.Pixbuf,
-        stock_id: str,
-        label: str = None,
-        modifier: Gdk.ModifierType = 0,
-        keyval: int = 0) -> None:
+def add_icon(pixbuf: GdkPixbuf.Pixbuf, stock_id: str, label: str = None, modifier: Gdk.ModifierType = 0, keyval: int = 0) -> None:
     iconset = Gtk.IconSet.new_from_pixbuf(pixbuf)
     icon_factory.add(stock_id, iconset)
     icon_factory.add_default()
@@ -100,35 +99,27 @@ def add_icon(
 
 
 for filename, stock_id, label, modifier, keyval in [
-    ('AddToShoppingList.png',
-     'add-to-shopping-list',
-     _('Add to _Shopping List'),
-     Gdk.ModifierType.CONTROL_MASK,
-     Gdk.keyval_from_name('l')),
-
-    ('reccard.png', 'recipe-card', None, 0, 0),
-
-    ('reccard_edit.png', 'edit-recipe-card', None, 0, 0),
-     ]:
+    ("AddToShoppingList.png", "add-to-shopping-list", _("Add to _Shopping List"), Gdk.ModifierType.CONTROL_MASK, Gdk.keyval_from_name("l")),
+    ("reccard.png", "recipe-card", None, 0, 0),
+    ("reccard_edit.png", "edit-recipe-card", None, 0, 0),
+]:
     add_icon(load_pixbuf_from_resource(filename), stock_id, label, modifier, keyval)
 
 
 # Color scheme preference
-LINK_COLOR = 'blue'
-star_color = 'blue'
+LINK_COLOR = "blue"
+star_color = "blue"
 
 style = Gtk.StyleContext.new()
-_, bg_color = style.lookup_color('bg_color')
-_, fg_color = style.lookup_color('fg_color')
+_, bg_color = style.lookup_color("bg_color")
+_, fg_color = style.lookup_color("fg_color")
 
 if sum(fg_color) > sum(bg_color):  # background is darker
-    LINK_COLOR = 'deeppink'
-    star_color = 'gold'
+    LINK_COLOR = "deeppink"
+    star_color = "gold"
 
-NO_STAR = Path(__file__).parent / 'data' / 'images' / 'no_star.png'
-HALF_STAR = Path(__file__).parent / 'data' / 'images' / f'half_{star_color}_star.png'  # noqa
-FULL_STAR = Path(__file__).parent / 'data' / 'images' / f'{star_color}_star.png'  # noqa
+NO_STAR = Path(__file__).parent / "data" / "images" / "no_star.png"
+HALF_STAR = Path(__file__).parent / "data" / "images" / f"half_{star_color}_star.png"
+FULL_STAR = Path(__file__).parent / "data" / "images" / f"{star_color}_star.png"
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"
-}
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}

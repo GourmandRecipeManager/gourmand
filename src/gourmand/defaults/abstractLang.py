@@ -2,10 +2,10 @@ from typing import Any, Collection, List, Mapping, Optional, Sequence, Tuple
 
 
 class AbstractLanguage:
-
     """
     Translator credits
     """
+
     CREDITS: str
 
     """
@@ -116,6 +116,7 @@ class AbstractLanguage:
     Guess possible singulars from a plural (for ingredients?)
     TODO: we could also annotate this as Callable without providing a default
     """
+
     @staticmethod
     def guess_singulars(plural: str) -> Collection[str]:
         raise NotImplementedError()
@@ -124,8 +125,9 @@ class AbstractLanguage:
     Guess possible plurals from a singular (for ingredients?)
     TODO: we could also annotate this as Callable without providing a default
     """
+
     @staticmethod
-    def guess_plurals (singular: str) -> Collection[str]:
+    def guess_plurals(singular: str) -> Collection[str]:
         raise NotImplementedError()
 
     """

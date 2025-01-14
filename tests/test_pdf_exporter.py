@@ -1,34 +1,36 @@
 """This test may leave marks in the user preferences file."""
-import os
-os.environ['LANGUAGE'] = 'de_DE.utf-8'  # must happend before Gourmand import
 
-import pytest
-from gourmand.gglobals import gourmanddir
-from gourmand.plugins.import_export.pdf_plugin.pdf_exporter import PdfPrefGetter  # noqa: import not at top of file
+from unittest import mock
 
-@pytest.mark.skip("Broken as of 20220813")
+from gourmand.plugins.import_export.pdf_plugin.pdf_exporter import PdfPrefGetter
+
+
 def test_get_args_from_opts(tmp_path):
-    gourmetdir = tmp_path
-    pref_getter = PdfPrefGetter()
+    with mock.patch("gourmand.gglobals.gourmanddir", tmp_path):
+        pref_getter = PdfPrefGetter()
 
-    options = (['Papiergröße:', 'Letter'],
-               ['_Ausrichtung:', 'Hochformat'],
-               ['_Schriftgröße:', 10],
-               ['Seiten-Layout', 'Eben'],
-               ['Linker Rand:', 70.86614173228347],
-               ['Rechter Rand:', 70.86614173228347],
-               ['Oberer Rand:', 70.86614173228347],
-               ['Unterer Rand:', 70.86614173228347])
+        options = (
+            ["Paper _Size:", "Letter"],
+            ["_Orientation:", "Portrait"],
+            ["_Font Size:", 42],
+            ["Page _Layout", "Plain"],
+            ["Left Margin:", 70.86614173228347],
+            ["Right Margin:", 70.86614173228347],
+            ["Top Margin:", 70.86614173228347],
+            ["Bottom Margin:", 70.86614173228347],
+        )
 
-    expected = {'pagesize': 'letter',
-				'pagemode': 'portrait',
-				'base_font_size': 10,
-				'mode': ('column', 1),
-				'left_margin': 70.86614173228347,
-				'right_margin': 70.86614173228347,
-				'top_margin': 70.86614173228347,
-				'bottom_margin': 70.86614173228347}
+        expected = {
+            "pagesize": "letter",
+            "pagemode": "portrait",
+            "base_font_size": 42,
+            "mode": ("column", 1),
+            "left_margin": 70.86614173228347,
+            "right_margin": 70.86614173228347,
+            "top_margin": 70.86614173228347,
+            "bottom_margin": 70.86614173228347,
+        }
 
-    ret = pref_getter.get_args_from_opts(options)
+        ret = pref_getter.get_args_from_opts(options)
 
-    assert ret == expected
+        assert ret == expected

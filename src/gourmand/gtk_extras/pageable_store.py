@@ -1,8 +1,9 @@
 from typing import List, Optional, Tuple
+
 from gi.repository import GObject, Gtk
 
 
-class PageableListStore (Gtk.ListStore):
+class PageableListStore(Gtk.ListStore):
     """A ListStore designed to show bits of data at a time.
 
     We show chunks of data from our parent list in pages of a set size.
@@ -20,13 +21,10 @@ class PageableListStore (Gtk.ListStore):
     REVERSE = Gtk.SortType.DESCENDING
 
     __gsignals__ = {
-        'page-changed':(GObject.SignalFlags.RUN_LAST,
-                        None, #RETURN
-                        () # PARAMS
-                        ),
-        }
+        "page-changed": (GObject.SignalFlags.RUN_LAST, None, ()),  # RETURN  # PARAMS
+    }
 
-    def __init__ (self, types, parent_args=[], parent_kwargs={}, per_page=15):
+    def __init__(self, types, parent_args=[], parent_kwargs={}, per_page=15):
         """
         types is handed to ListStore.__init__ and should be a list of
         types our treestore holds
@@ -39,31 +37,31 @@ class PageableListStore (Gtk.ListStore):
 
         per_page is the default number of items we show at a time.
         """
-        #GObject.GObject.__init__(self,*types)
+        # GObject.GObject.__init__(self,*types)
         # self.__gobject_init__()
         # GObject.GObject.__init__(self, *types)
         Gtk.ListStore.__init__(self, *types)
         self.per_page = per_page
-        self._setup_parent_(*parent_args,**parent_kwargs)
+        self._setup_parent_(*parent_args, **parent_kwargs)
         # self.grab_items()
         # a dictionary for tracking our sorting
         self.sort_dict = {}
         self.update_tree()
 
-    def _setup_parent_ (self, *args, **kwargs):
+    def _setup_parent_(self, *args, **kwargs):
         """By default, all we do is take parent_args as a list of rows to add."""
         self.parent_list = list(args)
         self.unsorted_parent = self.parent_list[0:]
 
-    def _get_length_ (self):
+    def _get_length_(self):
         """Get the length of our full set of data."""
         return len(self.parent_list)
 
-    def _get_slice_ (self,bottom,top):
+    def _get_slice_(self, bottom, top):
         """Return a slice of our parent list from bottom to top"""
         return self.parent_list[bottom:top]
 
-    def _get_item_ (self,indx):
+    def _get_item_(self, indx):
         """Return an item for indx.
 
         By default, we use _get_slice_ to do this. This is somewhat
@@ -71,60 +69,63 @@ class PageableListStore (Gtk.ListStore):
         a _get_slice_ method. they can implement the _get_item_ method
         if there is a reason to.
         """
-        return self._get_slice_(indx,indx+1)[0]
+        return self._get_slice_(indx, indx + 1)[0]
 
-    def showing (self):
+    def showing(self):
         """Return information about the items we are currently showing.
 
         We return (bottom,top,total)
         """
         # Don't show an empty page -- if we find ourselves with no
         # recipes, back up a page automatically.
-        if len(self)==0 and self.page!=0:
+        if len(self) == 0 and self.page != 0:
             self.goto_last_page()
-        bottom = self.page*self.per_page + 1
-        top = self.page*self.per_page+len(self)
+        bottom = self.page * self.per_page + 1
+        top = self.page * self.per_page + len(self)
         total = self._get_length_()
-        return int(bottom),int(top),int(total)
+        return int(bottom), int(top), int(total)
 
-    def set_page (self, n):
+    def set_page(self, n):
         """Set page to n and update our view accordingly"""
         self.page = n
         self.update_tree()
-        self.emit('page-changed')
+        self.emit("page-changed")
 
-    def goto_first_page (self):
-        if self.page!=0: self.set_page(0)
+    def goto_first_page(self):
+        if self.page != 0:
+            self.set_page(0)
 
-    def goto_last_page (self):
+    def goto_last_page(self):
         last_page = self.get_last_page()
         if self.page != last_page:
             self.set_page(last_page)
 
-    def next_page (self):
-        if (self.page+1)*self.per_page < self._get_length_():
+    def next_page(self):
+        if (self.page + 1) * self.per_page < self._get_length_():
             self.set_page(self.page + 1)
 
-    def prev_page (self):
-        if self.page > 0: self.set_page(self.page - 1)
+    def prev_page(self):
+        if self.page > 0:
+            self.set_page(self.page - 1)
 
-    def get_last_page (self):
+    def get_last_page(self):
         """Return the number of our last page."""
         nrecs = int(self._get_length_())
-        self.per_page = int(self.per_page)#just in case
+        self.per_page = int(self.per_page)  # just in case
         pages = (nrecs // self.per_page) - 1
-        if nrecs % self.per_page: pages+=1
+        if nrecs % self.per_page:
+            pages += 1
         return pages
 
-    def change_items_per_page (self, n):
+    def change_items_per_page(self, n):
         current_indx = self.per_page * self.page
         self.per_page = n
         new_page = current_indx // self.per_page
         self.page = new_page
         self.update_tree()
-        self.emit('page-changed')
+        self.emit("page-changed")
 
-    def update_iter (self, itr):
+    def update_iter(self, itr):
         """Update an iter so it reflects our background.
 
         itr can be a treeiter or a path"""
@@ -133,7 +134,7 @@ class PageableListStore (Gtk.ListStore):
         # change
         if isinstance(itr, tuple):
             path = itr
-            itr=self.get_iter(path)
+            itr = self.get_iter(path)
         else:
             path = self.get_path(itr)
         indx = path[0] + (self.page * self.per_page)
@@ -141,44 +142,50 @@ class PageableListStore (Gtk.ListStore):
         args = []
         for num_and_col in enumerate(self._get_item_(indx)):
             args.extend(num_and_col)
-        self.set(itr,*args)
+        self.set(itr, *args)
 
-
-    def update_tree (self):
+    def update_tree(self):
         """Update our tree based on current page, etc."""
         # clear the existing rows...
         for n in range(len(self)):
-            self.remove(self.get_iter(0,))
+            self.remove(
+                self.get_iter(
+                    0,
+                )
+            )
         # and add the new ones...
         length = self._get_length_()
         start_at = self.page * self.per_page
-        end_at = (self.page+1) * self.per_page
-        if start_at > length: return # we're empty then...
-        if end_at > length: end_at = length
-        for row in self._get_slice_(int(start_at),int(end_at)):
+        end_at = (self.page + 1) * self.per_page
+        if start_at > length:
+            return  # we're empty then...
+        if end_at > length:
+            end_at = length
+        for row in self._get_slice_(int(start_at), int(end_at)):
             try:
                 self.append(row)
-            except (TypeError, ValueError) as e:
-                print('columns          : ',self.columns)
-                print('problem adding row ',row)
+            except (TypeError, ValueError):
+                print("columns          : ", self.columns)
+                print("problem adding row ", row)
                 raise
+
     # Sorting functions
 
-    def sort (self, column, direction=FORWARD):
+    def sort(self, column, direction=FORWARD):
         """Add new sort term in direction.
 
         Note -- to remove term we use direction=OFF
         """
-        assert(direction in (self.FORWARD, self.REVERSE, self.OFF))
+        assert direction in (self.FORWARD, self.REVERSE, self.OFF)
 
-        self.sort_dict[column]=direction
-        if direction==self.OFF:
+        self.sort_dict[column] = direction
+        if direction == self.OFF:
             self.parent_list = self.unsorted_parent
             return
         self.parent_list.sort(key=lambda x: x[column], reverse=(direction == self.REVERSE))
         self.update_tree()
 
-    def toggle_sort (self, column):
+    def toggle_sort(self, column):
         """Toggle sorting by column.
 
         We cycle through three positions: forward, backward, None,
@@ -188,17 +195,18 @@ class PageableListStore (Gtk.ListStore):
         to be able to update the UI without having to know beforehand
         which direction the sort will end up in).
         """
-        current = self.sort_dict.get(column,self.OFF)
-        if current==self.OFF:
+        current = self.sort_dict.get(column, self.OFF)
+        if current == self.OFF:
             toggle_to = self.FORWARD
-        elif current==self.FORWARD:
+        elif current == self.FORWARD:
             toggle_to = self.REVERSE
         else:
             toggle_to = self.OFF
-        self.sort(column,toggle_to)
+        self.sort(column, toggle_to)
         return toggle_to
 
-class PageableTreeStore (Gtk.TreeStore, PageableListStore):
+
+class PageableTreeStore(Gtk.TreeStore, PageableListStore):
     """A TreeStore designed to show bits of data at a time.
 
     We show chunks of data from our parent in pages of a set size.
@@ -208,11 +216,8 @@ class PageableTreeStore (Gtk.TreeStore, PageableListStore):
     """
 
     __gsignals__ = {
-        'page-changed':(GObject.SignalFlags.RUN_LAST,
-                        None, #RETURN
-                        () # PARAMS
-                        ),
-        }
+        "page-changed": (GObject.SignalFlags.RUN_LAST, None, ()),  # RETURN  # PARAMS
+    }
 
     page = 0
 
@@ -221,7 +226,7 @@ class PageableTreeStore (Gtk.TreeStore, PageableListStore):
     FORWARD = Gtk.SortType.ASCENDING
     REVERSE = Gtk.SortType.DESCENDING
 
-    def __init__ (self, types, parent_args=[], parent_kwargs={}, per_page=15):
+    def __init__(self, types, parent_args=[], parent_kwargs={}, per_page=15):
         """
         types is handed to TreeStore.__init__ and should be a list of
         types our treestore holds
@@ -240,33 +245,40 @@ class PageableTreeStore (Gtk.TreeStore, PageableListStore):
         # self.__gobject_init__()
         Gtk.TreeStore.__init__(self, *types)
         self.per_page = per_page
-        self._setup_parent_(*parent_args,**parent_kwargs)
+        self._setup_parent_(*parent_args, **parent_kwargs)
         self.update_tree()
         self.sort_dict = {}
 
-    def update_tree (self):
+    def update_tree(self):
         """Update our tree based on current page, etc."""
         # clear the existing rows...
         for n in range(len(self)):
-            self.remove(self.get_iter(0,))
+            self.remove(
+                self.get_iter(
+                    0,
+                )
+            )
         # and add the new ones...
         length = self._get_length_()
         start_at = self.page * self.per_page
-        end_at = (self.page+1) * self.per_page
-        if start_at > length: return # we're empty then...
-        if end_at > length: end_at = length
-        for row in self._get_slice_(int(start_at),int(end_at)):
-            itr=self.append(None,row)
+        end_at = (self.page + 1) * self.per_page
+        if start_at > length:
+            return  # we're empty then...
+        if end_at > length:
+            end_at = length
+        for row in self._get_slice_(int(start_at), int(end_at)):
+            itr = self.append(None, row)
             self.append_descendants(itr)
-        self.emit('page-changed')
+        self.emit("page-changed")
 
-    def append_descendants (self, itr):
+    def append_descendants(self, itr):
         for child in self._get_children_(itr):
-            child_itr=self.append(itr,child)
+            child_itr = self.append(itr, child)
             self.append_descendants(child_itr)
 
-    def _get_children_ (self, itr):
+    def _get_children_(self, itr):
         return []
+
 
 class ColumnSortSetterUpper:
     """Make tree-column setting up easy for our custom models.
@@ -281,17 +293,18 @@ class ColumnSortSetterUpper:
 
     This is necessary because sorting is a PITA with Custom models.
     """
-    def __init__ (self, treemod):
+
+    def __init__(self, treemod):
         self.mod = treemod
 
-    def set_sort_column_id (self, tree_column, model_column):
+    def set_sort_column_id(self, tree_column, model_column):
         """Replace the built-in tree_column method with magic."""
-        #tree_column.set_sort_column_id(model_column)
-        tree_column.connect('clicked',self.sort_by_column_callback,model_column)
+        # tree_column.set_sort_column_id(model_column)
+        tree_column.connect("clicked", self.sort_by_column_callback, model_column)
 
-    def sort_by_column_callback (self,tree_column,model_column):
+    def sort_by_column_callback(self, tree_column, model_column):
         toggle_to = self.mod.toggle_sort(model_column)
-        if toggle_to==None:
+        if toggle_to is None:
             tree_column.set_sort_indicator(False)
         else:
             tree_column.set_sort_indicator(True)
@@ -299,58 +312,54 @@ class ColumnSortSetterUpper:
         # stop propagation... (?)
         return True
 
-class PageableViewStore (PageableListStore):
+
+class PageableViewStore(PageableListStore):
 
     __gsignals__ = {
-        'view-changed':(GObject.SignalFlags.RUN_LAST,
-                         None,
-                         ()
-                         ),
-        'view-sort':(GObject.SignalFlags.RUN_LAST,
-                     GObject.TYPE_PYOBJECT,
-                     (GObject.TYPE_PYOBJECT,)
-                     ),
-        }
+        "view-changed": (GObject.SignalFlags.RUN_LAST, None, ()),
+        "view-sort": (GObject.SignalFlags.RUN_LAST, GObject.TYPE_PYOBJECT, (GObject.TYPE_PYOBJECT,)),
+    }
 
-    def __init__ (self, view, columns=['foo','bar'],column_types=[int,str],per_page=15,
-                  length=None
-                  ):
+    def __init__(self, view, columns=["foo", "bar"], column_types=[int, str], per_page=15, length=None):
         self.__sorts__ = []
         self.__length__ = length
-        PageableListStore.__init__(self,column_types, parent_args=[view],parent_kwargs={'columns':columns},
-                                   per_page=per_page)
+        PageableListStore.__init__(self, column_types, parent_args=[view], parent_kwargs={"columns": columns}, per_page=per_page)
 
-    def _setup_parent_ (self, view, columns=[]):
+    def _setup_parent_(self, view, columns=[]):
         self.parent_list = self.view = view
         self.unsorted_parent = self.unsorted_view = self.view
         self.columns = columns
 
-    def _get_slice_ (self,bottom,top):
-        return [[getattr(r,col) for col in self.columns] for r in self.view[bottom:top]]
+    def _get_slice_(self, bottom, top):
+        return [[getattr(r, col) for col in self.columns] for r in self.view[bottom:top]]
 
-    def _get_length_ (self):
-        if self.__length__: return self.__length__
-        else: return PageableListStore._get_length_(self)
+    def _get_length_(self):
+        if self.__length__:
+            return self.__length__
+        else:
+            return PageableListStore._get_length_(self)
 
-    def sort (self, col, direction):
+    def sort(self, col, direction):
         attr = self.columns[col]
-        self.sort_dict[col]=direction
+        self.sort_dict[col] = direction
         # Remove previous sorts by this attribute
-        if (attr,-1) in self.__sorts__: self.__sorts__.remove((attr,-1))
-        elif (attr, 1) in self.__sorts__: self.__sorts__.remove((attr,1))
-        if direction==self.FORWARD:
-            #self.__sorts__ = [(attr,1)] + self.__sorts__
-            self.__sorts__.append((attr,1))
-        elif direction==self.REVERSE:
-            #self.__sorts__ = [(attr,-1)] + self.__sorts__
-            self.__sorts__.append((attr,-1))
-        self.emit('view-sort',self.__sorts__)
+        if (attr, -1) in self.__sorts__:
+            self.__sorts__.remove((attr, -1))
+        elif (attr, 1) in self.__sorts__:
+            self.__sorts__.remove((attr, 1))
+        if direction == self.FORWARD:
+            # self.__sorts__ = [(attr,1)] + self.__sorts__
+            self.__sorts__.append((attr, 1))
+        elif direction == self.REVERSE:
+            # self.__sorts__ = [(attr,-1)] + self.__sorts__
+            self.__sorts__.append((attr, -1))
+        self.emit("view-sort", self.__sorts__)
 
-    def do_change_view (self, vw, length=None):
+    def do_change_view(self, vw, length=None):
         self.parent_list = self.view = vw
         self.__length__ = None
         self.update_tree()
-        self.emit('view-changed')
+        self.emit("view-changed")
 
     def change_view(self, vw: List[Optional[Tuple]], length=None):
         self.do_change_view(vw, length=length)
@@ -362,17 +371,18 @@ class PageableViewStore (PageableListStore):
         #     self.page = 0
         #     self.emit('page-changed')
 
-if __name__ == '__main__':
-    pts=PageableTreeStore([str,str],parent_args=[[str(n),str(30-n)] for n in range(30)])
-    #for n in range(30): pts.append(None,[str(n),str(n)])
+
+if __name__ == "__main__":
+    pts = PageableTreeStore([str, str], parent_args=[[str(n), str(30 - n)] for n in range(30)])
+    # for n in range(30): pts.append(None,[str(n),str(n)])
     cssu = ColumnSortSetterUpper(pts)
-    tv=Gtk.TreeView()
+    tv = Gtk.TreeView()
     renderer = Gtk.CellRendererText()
-    tvc=Gtk.TreeViewColumn('first',renderer,text=0)
-    cssu.set_sort_column_id(tvc,0)
+    tvc = Gtk.TreeViewColumn("first", renderer, text=0)
+    cssu.set_sort_column_id(tvc, 0)
     tv.append_column(tvc)
-    tvc2=Gtk.TreeViewColumn('first',renderer,text=1)
-    cssu.set_sort_column_id(tvc2,1)
+    tvc2 = Gtk.TreeViewColumn("first", renderer, text=1)
+    cssu.set_sort_column_id(tvc2, 1)
     tv.append_column(tvc2)
     tv.set_model(pts)
     sw = Gtk.ScrolledWindow()
@@ -383,20 +393,22 @@ if __name__ == '__main__':
     vb.add(sw)
 
     # add buttons
-    b=Gtk.Button('next page')
-    def nxt ():
-        #tv.set_model(None)
-        pts.next_page()
-        #tv.set_model(pts)
-    def prv ():
-        pts.prev_page()
-    b.connect('clicked',lambda *args: nxt())
-    vb.pack_start(b,False)
-    pb = Gtk.Button('prev')
-    pb.connect('clicked',lambda *args: prv())
-    vb.pack_start(pb,False)
+    b = Gtk.Button("next page")
 
+    def nxt():
+        # tv.set_model(None)
+        pts.next_page()
+        # tv.set_model(pts)
+
+    def prv():
+        pts.prev_page()
+
+    b.connect("clicked", lambda *args: nxt())
+    vb.pack_start(b, False)
+    pb = Gtk.Button("prev")
+    pb.connect("clicked", lambda *args: prv())
+    vb.pack_start(pb, False)
 
     w.show_all()
-    w.connect('delete-event',lambda *args: Gtk.main_quit())
+    w.connect("delete-event", lambda *args: Gtk.main_quit())
     Gtk.main()

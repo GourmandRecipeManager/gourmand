@@ -15,10 +15,7 @@ from gourmand.sound import Player
 
 class TimeSpinnerUI:
 
-    def __init__(self,
-                 hoursSpin: Gtk.SpinButton,
-                 minutesSpin: Gtk.SpinButton,
-                 secondsSpin: Gtk.SpinButton):
+    def __init__(self, hoursSpin: Gtk.SpinButton, minutesSpin: Gtk.SpinButton, secondsSpin: Gtk.SpinButton):
         self.timer_hooks: List[Callable] = []  # actions rand when timer over
         self.is_running: bool = False  # State flag
         self.previous_iter_time: Optional[float] = None  # time, used for ticks
@@ -31,7 +28,7 @@ class TimeSpinnerUI:
 
         for spinner in (self.hoursSpin, self.minutesSpin, self.secondsSpin):
             # This is set up to assure 2 digit entries... 00:00:00, etc.
-            spinner.connect('value-changed', self.val_changed_cb)
+            spinner.connect("value-changed", self.val_changed_cb)
             spinner.val_change_is_changing_entry = False
             spinner.set_width_chars(2)
 
@@ -42,7 +39,7 @@ class TimeSpinnerUI:
         minutes, and seconds, and their respective spinner are set, to show
         time going down.
         """
-        val = max(0., val)
+        val = max(0.0, val)
         self.hoursSpin.set_value(val // 3600)
         val = val % 3600
         self.minutesSpin.set_value(val // 60)
@@ -50,9 +47,7 @@ class TimeSpinnerUI:
 
     def get_time(self) -> int:
         """Get the time to run the timer for, in seconds"""
-        return (self.hoursSpin.get_value() * 3600 +
-                self.minutesSpin.get_value() * 60 +
-                self.secondsSpin.get_value())
+        return self.hoursSpin.get_value() * 3600 + self.minutesSpin.get_value() * 60 + self.secondsSpin.get_value()
 
     def val_changed_cb(self, widget: Gtk.SpinButton):
         """On input callback to set the values to be always two digits"""
@@ -124,8 +119,7 @@ class TimeSpinnerUI:
         self.remaining = None
         self.set_time(self.orig_time)
 
-    def connect_timer_hook(self, hook: Callable,
-                           prepend: Optional[bool] = False):
+    def connect_timer_hook(self, hook: Callable, prepend: Optional[bool] = False):
         if prepend:
             self.timer_hooks.insert(0, hook)
         else:
@@ -144,41 +138,41 @@ class TimerDialog:
 
     keep_annoying = False
 
-    sounds_and_files = {_('Ringing Sound'): 'phone.opus',
-                        _('Warning Sound'): 'warning.opus',
-                        _('Error Sound'): 'error.opus'}
+    sounds_and_files = {_("Ringing Sound"): "phone.opus", _("Warning Sound"): "warning.opus", _("Error Sound"): "error.opus"}
 
     def __init__(self):
         self.init_player()
         self.ui = Gtk.Builder()
-        self.ui.add_from_string(
-            get_data('gourmand', 'ui/timerDialog.ui').decode())
-        self.timer = TimeSpinnerUI(
-            self.ui.get_object('hoursSpinButton'),
-            self.ui.get_object('minutesSpinButton'),
-            self.ui.get_object('secondsSpinButton')
-        )
+        self.ui.add_from_string(get_data("gourmand", "ui/timerDialog.ui").decode())
+        self.timer = TimeSpinnerUI(self.ui.get_object("hoursSpinButton"), self.ui.get_object("minutesSpinButton"), self.ui.get_object("secondsSpinButton"))
         self.timer.connect_timer_hook(self.timer_done_cb)
-        for w in ['timerDialog', 'mainLabel',
-                  'soundComboBox', 'repeatCheckButton',
-                  'noteEntry', 'expander1', 'timerBox', 'resetTimerButton',
-                  'timerFinishedLabel', 'keepAnnoyingLabel'
-                  ]:
+        for w in [
+            "timerDialog",
+            "mainLabel",
+            "soundComboBox",
+            "repeatCheckButton",
+            "noteEntry",
+            "expander1",
+            "timerBox",
+            "resetTimerButton",
+            "timerFinishedLabel",
+            "keepAnnoyingLabel",
+        ]:
             setattr(self, w, self.ui.get_object(w))
-        cb.set_model_from_list(self.soundComboBox, list(
-            self.sounds_and_files.keys()))
-        cb.cb_set_active_text(self.soundComboBox, _('Ringing Sound'))
+        cb.set_model_from_list(self.soundComboBox, list(self.sounds_and_files.keys()))
+        cb.cb_set_active_text(self.soundComboBox, _("Ringing Sound"))
         self.ui.connect_signals(
-            {'reset_cb': self.timer.reset_cb,
-             'pause_cb': self.timer.pause_cb,
-             'start_cb': self.timer.start_cb,
-             'note_changed_cb': self.note_changed_cb,
-             }
+            {
+                "reset_cb": self.timer.reset_cb,
+                "pause_cb": self.timer.pause_cb,
+                "start_cb": self.timer.start_cb,
+                "note_changed_cb": self.note_changed_cb,
+            }
         )
-        self.timerDialog.connect('response', self.response_cb)
-        self.timerDialog.connect('close', self.close_cb)
+        self.timerDialog.connect("response", self.response_cb)
+        self.timerDialog.connect("close", self.close_cb)
         self.timerDialog.set_modal(False)
-        self.note = ''
+        self.note = ""
 
     def set_time(self, s):
         self.timer.set_time(s)
@@ -187,27 +181,23 @@ class TimerDialog:
         txt = entry.get_text()
         self.note = txt
         if txt:
-            txt = _('Timer') + ': ' + txt
+            txt = _("Timer") + ": " + txt
         else:
-            txt = _('Timer')
+            txt = _("Timer")
         self.timerDialog.set_title(txt)
-        self.mainLabel.set_markup(
-            '<span weight="bold" size="larger">' +
-            xml.sax.saxutils.escape(txt) +
-            '</span>')
+        self.mainLabel.set_markup('<span weight="bold" size="larger">' + xml.sax.saxutils.escape(txt) + "</span>")
 
     def init_player(self):
         self.player = Player()
 
     def play_tune(self):
-        sound = self.sounds_and_files[cb.cb_get_active_text(
-            self.soundComboBox)]
-        data = get_data('gourmand', f'data/sound/{sound}')
+        sound = self.sounds_and_files[cb.cb_get_active_text(self.soundComboBox)]
+        data = get_data("gourmand", f"data/sound/{sound}")
         assert data
 
         # FIXME: Delete the tempfile when we're done
         # TODO: Figure out how to make GStreamer play raw bytes
-        fd, fname = mkstemp('.opus')
+        fd, fname = mkstemp(".opus")
         os.write(fd, data)
         os.close(fd)
         self.player.play_file(fname)
@@ -218,7 +208,7 @@ class TimerDialog:
             return True
 
     def timer_done_cb(self):
-        if hasattr(self.timerDialog, 'set_urgency_hint'):
+        if hasattr(self.timerDialog, "set_urgency_hint"):
             self.timerDialog.set_urgency_hint(True)
         self.play_tune()
         if self.repeatCheckButton.get_active():
@@ -234,7 +224,7 @@ class TimerDialog:
 
     def stop_annoying(self):
         self.keep_annoying = False
-        if hasattr(self.timerDialog, 'set_urgency_hint'):
+        if hasattr(self.timerDialog, "set_urgency_hint"):
             self.timerDialog.set_urgency_hint(False)
 
     def refresh(self, *args):
@@ -262,15 +252,14 @@ class TimerDialog:
         self.stop_annoying()
         do_cancel = True
         if self.timer.is_running:
-            msg = ("You've requested to close a window with an active timer. "
-                   "You can stop the timer, or you can just close the window. "
-                   "If you close the window, it will reappear when your timer "
-                   "goes off.")
+            msg = (
+                "You've requested to close a window with an active timer. "
+                "You can stop the timer, or you can just close the window. "
+                "If you close the window, it will reappear when your timer "
+                "goes off."
+            )
             try:
-                do_cancel = getBoolean(label=_('Stop timer?'),
-                                       sublabel=_(msg),
-                                       custom_yes=_('Stop _timer'),
-                                       custom_no=_('_Keep timing'))
+                do_cancel = getBoolean(label=_("Stop timer?"), sublabel=_(msg), custom_yes=_("Stop _timer"), custom_no=_("_Keep timing"))
             except UserCancelledError:
                 return  # keep the timer window open
 
@@ -282,8 +271,11 @@ class TimerDialog:
             self.timer.connect_timer_hook(self.timerDialog.show, 1)
             self.timerDialog.hide()
 
-    def run(self): self.timerDialog.run()
-    def show(self): self.timerDialog.show()
+    def run(self):
+        self.timerDialog.run()
+
+    def show(self):
+        self.timerDialog.show()
 
 
 def show_timer(seconds: int = 600, note: Optional[str] = None):
@@ -294,12 +286,12 @@ def show_timer(seconds: int = 600, note: Optional[str] = None):
     td.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     w = Gtk.Window()
     b = Gtk.Button()
-    b.set_label('Show timer')
-    b.connect('clicked', lambda *args: show_timer())
+    b.set_label("Show timer")
+    b.connect("clicked", lambda *args: show_timer())
     w.add(b)
-    w.connect('delete-event', lambda *args: Gtk.main_quit())
+    w.connect("delete-event", lambda *args: Gtk.main_quit())
     w.show_all()
     Gtk.main()

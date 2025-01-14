@@ -1,54 +1,54 @@
-import array
 import re
 
-from gourmand import check_encodings, convert
+from gourmand import convert
 from gourmand.gdebug import TimeAction, debug
 from gourmand.importers import importer, plaintext_importer
 
 
 class mmf_constants:
-    def __init__ (self):
+    def __init__(self):
         self.committed = False
-        self.recattrs={'Title':'title',
-                       'Name':'title',
-                       'Categories':'category',
-                       'Category':'category',
-                       'Serves':'servings',
-                       'Servings':'servings',
-                       'Source':'source',
-                       'Recipe by':'source',
-                       'Yield':'yields',
-                       'Preparation Time':'preptime',
-                       }
+        self.recattrs = {
+            "Title": "title",
+            "Name": "title",
+            "Categories": "category",
+            "Category": "category",
+            "Serves": "servings",
+            "Servings": "servings",
+            "Source": "source",
+            "Recipe by": "source",
+            "Yield": "yields",
+            "Preparation Time": "preptime",
+        }
 
-        self.unit_conv = {'ts':'tsp',
-                          'tb':'Tbs',
-                          'sm':'small',
-                          'md':'medium',
-                          'ea':'',
-                          'lg':'large',
-                          'c':'c',
-                          'pn':'pinch',
-                          'ds':'dash',
-                          'T' : 'tbs',
-                          't' : 'tsp',
-                          'pk' : 'package',
-                          'x' : '',
-                          'ea' : '',
-                          't' : 'tsp',
-                          'pt' : 'pt',
-                          'qt' : 'qt',
-                          'oz' : 'oz'
-                          }
+        self.unit_conv = {
+            "ts": "tsp",
+            "tb": "Tbs",
+            "sm": "small",
+            "md": "medium",
+            "lg": "large",
+            "c": "c",
+            "pn": "pinch",
+            "ds": "dash",
+            "T": "tbs",
+            "pk": "package",
+            "x": "",
+            "ea": "",
+            "t": "tsp",
+            "pt": "pt",
+            "qt": "qt",
+            "oz": "oz",
+        }
         self.unit_convr = {}
-        for k,v in list(self.unit_conv.items()):
-            self.unit_convr[v]=k
+        for k, v in list(self.unit_conv.items()):
+            self.unit_convr[v] = k
 
-mmf=mmf_constants()
-mm_start_pattern=r"^(?i)([m-][m-][m-][m-][m-])-*.*(recipe|meal-?master).*"
 
-class mmf_importer (plaintext_importer.TextImporter):
+mmf = mmf_constants()
+mm_start_pattern = r"(?i)^([m-][m-][m-][m-][m-])-*.*(recipe|meal-?master).*"
 
+
+class mmf_importer(plaintext_importer.TextImporter):
     """Mealmaster(tm) importer class.
 
     We read in a text file a line at a time and parse
@@ -81,64 +81,58 @@ class mmf_importer (plaintext_importer.TextImporter):
 
     committed = False
 
-    def __init__ (self,filename='Data/mealmaster.mmf',
-                  prog=None, source=None,threaded=True,
-                  two_col_minimum=38,conv=None):
+    def __init__(self, filename="Data/mealmaster.mmf", prog=None, source=None, threaded=True, two_col_minimum=38, conv=None):
         """filename is the file to parse (or filename). rd is the recData instance
         to start with.  prog is a function we tell about our
         prog to (we hand it a single arg)."""
 
-        testtimer = TimeAction('mealmaster_importer.__init__',10)
-        debug("mmf_importer start  __init__ ",5)
-        self.source=source
-        self.header=False
-        self.instr=""
-        self.ingrs=[]
-        self.ing_added=False
-        self.in_variation=False
+        testtimer = TimeAction("mealmaster_importer.__init__", 10)
+        debug("mmf_importer start  __init__ ", 5)
+        self.source = source
+        self.header = False
+        self.instr = ""
+        self.ingrs = []
+        self.ing_added = False
+        self.in_variation = False
         self.fn = filename
         self.prog = prog
         self.unit_length = 2
         self.two_col_minimum = two_col_minimum
         self.last_line_was = None
-        plaintext_importer.TextImporter.__init__(self,filename)#prog=prog,
-        #threaded=threaded,conv=conv)
+        plaintext_importer.TextImporter.__init__(self, filename)  # prog=prog,
+        # threaded=threaded,conv=conv)
         testtimer.end()
 
-    def compile_regexps (self):
-        testtimer = TimeAction('mealmaster_importer.compile_regexps',10)
-        debug("start compile_regexps",5)
+    def compile_regexps(self):
+        testtimer = TimeAction("mealmaster_importer.compile_regexps", 10)
+        debug("start compile_regexps", 5)
         plaintext_importer.TextImporter.compile_regexps(self)
         self.start_matcher = re.compile(mm_start_pattern)
         self.end_matcher = re.compile(r"^[M-][M-][M-][M-][M-]\s*$")
-        self.group_matcher = re.compile(r"^\s*([M-][M-][M-][M-][M-])-*\s*([^-]+)\s*-*|^\s*---\s*([^-]+)\s*---\s*$",re.IGNORECASE)
+        self.group_matcher = re.compile(r"^\s*([M-][M-][M-][M-][M-])-*\s*([^-]+)\s*-*|^\s*---\s*([^-]+)\s*---\s*$", re.IGNORECASE)
         self.ing_cont_matcher = re.compile(r"^\s*[-;]")
-        self.ing_opt_matcher = re.compile(r"(.+?)\s*\(?\s*optional\)?\s*$",re.IGNORECASE)
-        self.ing_or_matcher = re.compile("^[- ]*[Oo][Rr][- ]*$",re.IGNORECASE)
-        self.variation_matcher = re.compile(r"^\s*(VARIATION|HINT|NOTES?)(:.*)?",re.IGNORECASE)
+        self.ing_opt_matcher = re.compile(r"(.+?)\s*\(?\s*optional\)?\s*$", re.IGNORECASE)
+        self.ing_or_matcher = re.compile("^[- ]*[Oo][Rr][- ]*$", re.IGNORECASE)
+        self.variation_matcher = re.compile(r"^\s*(VARIATION|HINT|NOTES?)(:.*)?", re.IGNORECASE)
         # a crude ingredient matcher -- we look for two numbers,
         # intermingled with spaces followed by a space or more,
         # followed by a two digit unit (or spaces)
         c = convert.get_converter()
         self.ing_num_matcher = re.compile(
-            r"^\s*%s+\s+([a-z ]{1,2}|%s)\s+.*\w+.*"%(
-                convert.NUMBER_REGEXP,
-                '('+'|'.join([x for x in list(c.unit_dict.keys()) if x])+')'
-                ),
-            re.IGNORECASE)
-        self.amt_field_matcher = re.compile(r"^(\s*%s\s*)$"%convert.NUMBER_REGEXP)
+            r"^\s*%s+\s+([a-z ]{1,2}|%s)\s+.*\w+.*" % (convert.NUMBER_REGEXP, "(" + "|".join([x for x in list(c.unit_dict.keys()) if x]) + ")"), re.IGNORECASE
+        )
+        self.amt_field_matcher = re.compile(r"^(\s*%s\s*)$" % convert.NUMBER_REGEXP)
         # we build a regexp to match anything that looks like
         # this: ^\s*ATTRIBUTE: Some entry of some kind...$
         self.mmf = mmf
-        attrmatch=r"^\s*("
+        attrmatch = r"^\s*("
         for k in list(self.mmf.recattrs.keys()):
-            attrmatch += "%s|"%re.escape(k)
-        attrmatch=r"%s):\s*(.*)\s*$"%attrmatch[0:-1]
+            attrmatch += "%s|" % re.escape(k)
+        attrmatch = r"%s):\s*(.*)\s*$" % attrmatch[0:-1]
         self.attr_matcher = re.compile(attrmatch)
         testtimer.end()
 
-    def handle_line (self,l):
-
+    def handle_line(self, line):
         """Handle an individual line of a mealmaster file.
 
         We're quite loose at handling mealmaster files. We look at
@@ -151,82 +145,82 @@ class mmf_importer (plaintext_importer.TextImporter):
         we're following, more or less, the specs laid out here
         <http://phprecipebook.sourceforge.net/docs/MM_SPEC.DOC>"""
 
-        testtimer =TimeAction('mealmaster_importer.handle_line',10)
-        debug("start handle_line",10)
-        #gt.gtk_update()
-        if self.start_matcher.match(l):
-            debug("recipe start %s"%l,4)
-            if 'Windows Gourmet' in l:
+        testtimer = TimeAction("mealmaster_importer.handle_line", 10)
+        debug("start handle_line", 10)
+        # gt.gtk_update()
+        if self.start_matcher.match(line):
+            debug("recipe start %s" % line, 4)
+            if "Windows Gourmet" in line:
                 self.unit_length = 15
             self.new_rec()
-            self.last_line_was = 'new_rec'
+            self.last_line_was = "new_rec"
             self.in_variation = False
             return
-        if self.end_matcher.match(l):
-            debug("recipe end %s"%l,4)
+        if self.end_matcher.match(line):
+            debug("recipe end %s" % line, 4)
             self.commit_rec()
-            self.last_line_was = 'end_rec'
+            self.last_line_was = "end_rec"
             return
-        groupm = self.group_matcher.match(l)
+        groupm = self.group_matcher.match(line)
         if groupm:
-            debug("new group %s"%l,4)
+            debug("new group %s" % line, 4)
             self.handle_group(groupm)
-            self.last_line_was = 'group'
+            self.last_line_was = "group"
             return
-        attrm = self.attr_matcher.match(l)
+        attrm = self.attr_matcher.match(line)
         if attrm:
-            debug('Found attribute in %s'%l,4)
-            attr,val = attrm.groups()
-            debug("Writing attribute, %s=%s"%(attr,val),4)
-            self.rec[self.mmf.recattrs[attr]]=val.strip()
-            self.last_line_was = 'attr'
+            debug("Found attribute in %s" % line, 4)
+            attr, val = attrm.groups()
+            debug("Writing attribute, %s=%s" % (attr, val), 4)
+            self.rec[self.mmf.recattrs[attr]] = val.strip()
+            self.last_line_was = "attr"
             return
-        if not self.instr and self.blank_matcher.match(l):
-            debug('ignoring blank line before instructions',4)
-            self.last_line_was = 'blank'
+        if not self.instr and self.blank_matcher.match(line):
+            debug("ignoring blank line before instructions", 4)
+            self.last_line_was = "blank"
             return
-        if self.variation_matcher.match(l):
-            debug('in variation',4)
+        if self.variation_matcher.match(line):
+            debug("in variation", 4)
             self.in_variation = True
-        if self.is_ingredient(l) and not self.in_variation:
-            debug('in ingredient',4)
-            contm = self.ing_cont_matcher.match(l)
+        if self.is_ingredient(line) and not self.in_variation:
+            debug("in ingredient", 4)
+            contm = self.ing_cont_matcher.match(line)
             if contm:
                 # only continuations after ingredients are ingredients
-                if self.ingrs and self.last_line_was == 'ingr':
-                    debug('continuing %s'%self.ingrs[-1][0],4)
-                    continuation = " %s"%l[contm.end():].strip()
+                if self.ingrs and self.last_line_was == "ingr":
+                    debug("continuing %s" % self.ingrs[-1][0], 4)
+                    continuation = " %s" % line[contm.end() :].strip()
                     self.ingrs[-1][0] += continuation
-                    self.last_line_was = 'ingr'
+                    self.last_line_was = "ingr"
                 else:
-                    self.instr += l
-                    self.last_line_was = 'instr'
+                    self.instr += line
+                    self.last_line_was = "instr"
             else:
-                self.last_line_was = 'ingr'
-                self.ingrs.append([l,self.group])
+                self.last_line_was = "ingr"
+                self.ingrs.append([line, self.group])
         else:
             ## otherwise, we assume a line of instructions
-            if self.last_line_was == 'blank': add_blank=True
-            else: add_blank = False
+            if self.last_line_was == "blank":
+                add_blank = True
+            else:
+                add_blank = False
             if self.in_variation:
-                debug('Adding to instructions: %s'%l,4)
-                self.last_line_was = 'mod'
-                add_to = 'mod'
+                debug("Adding to instructions: %s" % line, 4)
+                self.last_line_was = "mod"
+                add_to = "mod"
             else:
-                debug('Adding to modifications: %s'%l,4)
-                self.last_line_was = 'instr'
-                add_to = 'instr'
-            if getattr(self,add_to):
-                if add_blank: setattr(self,add_to,
-                                      getattr(self,add_to)+"\n")
-                setattr(self,add_to,
-                        getattr(self,add_to) + l.strip() + "\n")
+                debug("Adding to modifications: %s" % line, 4)
+                self.last_line_was = "instr"
+                add_to = "instr"
+            if getattr(self, add_to):
+                if add_blank:
+                    setattr(self, add_to, getattr(self, add_to) + "\n")
+                setattr(self, add_to, getattr(self, add_to) + line.strip() + "\n")
             else:
-                setattr(self,add_to,
-                        l.strip() + "\n")
+                setattr(self, add_to, line.strip() + "\n")
         testtimer.end()
 
-    def is_ingredient (self, l):
+    def is_ingredient(self, line):
         """Return true if the line looks like an ingredient.
 
         We're going to go with a somewhat hackish approach
@@ -234,55 +228,56 @@ class mmf_importer (plaintext_importer.TextImporter):
         columns more appropriately.  For now, we'll assume that a
         field that starts with at least 5 blanks (the specs suggest 7)
         or a field that begins with a numeric value is an ingredient"""
-        testtimer = TimeAction('mealmaster_importer.is_ingredient',10)
-        if self.ing_num_matcher.match(l):
+        testtimer = TimeAction("mealmaster_importer.is_ingredient", 10)
+        if self.ing_num_matcher.match(line):
             testtimer.end()
             return True
-        if len(l) >= 7 and self.blank_matcher.match(l[0:5]):
+        if len(line) >= 7 and self.blank_matcher.match(line[0:5]):
             testtimer.end()
             return True
 
-    def new_rec (self):
+    def new_rec(self):
         """Start a new recipe."""
-        testtimer = TimeAction('mealmaster_importer.new_rec',10)
-        debug("start new_rec",5)
+        testtimer = TimeAction("mealmaster_importer.new_rec", 10)
+        debug("start new_rec", 5)
         if self.rec:
             # this shouldn't happen if recipes are ended properly
             # but we'll be graceful if a recipe starts before another
             # has ended...
             self.commit_rec()
-        self.committed=False
+        self.committed = False
         self.start_rec()
-        debug('resetting instructions',5)
-        self.instr=""
+        debug("resetting instructions", 5)
+        self.instr = ""
         self.mod = ""
-        self.ingrs=[]
-        self.header=False
+        self.ingrs = []
+        self.header = False
         testtimer.end()
 
-    def commit_rec (self):
+    def commit_rec(self):
         """Commit our recipe to our database."""
-        testtimer = TimeAction('mealmaster_importer.commit_rec',10)
-        if self.committed: return
-        debug("start _commit_rec",5)
+        testtimer = TimeAction("mealmaster_importer.commit_rec", 10)
+        if self.committed:
+            return
+        debug("start _commit_rec", 5)
         self.instr = self.unwrap_lines(self.instr)
         self.mod = self.unwrap_lines(self.mod)
-        self.rec['instructions']=self.instr
+        self.rec["instructions"] = self.instr
         if self.mod:
-            self.rec['modifications']=self.mod
+            self.rec["modifications"] = self.mod
         self.parse_inglist()
         if self.source:
-            self.rec['source']=self.source
+            self.rec["source"] = self.source
         importer.Importer.commit_rec(self)
         # blank rec
         self.committed = True
-        self.in_variation=False
+        self.in_variation = False
         testtimer.end()
 
-    def handle_group (self, groupm):
+    def handle_group(self, groupm):
         """Start a new ingredient group."""
-        testtimer = TimeAction('mealmaster_importer.handle_group',10)
-        debug("start handle_group",10)
+        testtimer = TimeAction("mealmaster_importer.handle_group", 10)
+        debug("start handle_group", 10)
         # the only group of the match will contain
         # the name of the group. We'll put it into
         # a more sane title case (MealMaster defaults
@@ -293,34 +288,34 @@ class mmf_importer (plaintext_importer.TextImporter):
         if not name:
             return
         name = name.strip().title()
-        self.group=name
-        #if re.match('^[^A-Za-z]*$',self.group): self.group=None #WTF was this for?
+        self.group = name
+        # if re.match('^[^A-Za-z]*$',self.group): self.group=None #WTF was this for?
         testtimer.end()
         # a blank line before a group could fool us into thinking
         # we were in instructions. If we see a group heading,
         # we know that's not the case!
 
-    def find_ing_fields (self):
+    def find_ing_fields(self):
         """Find fields in an ingredient line."""
-        testtimer = TimeAction('mealmaster_importer.find_ing_fields',10)
+        testtimer = TimeAction("mealmaster_importer.find_ing_fields", 10)
         all_ings = [i[0] for i in self.ingrs]
         fields = find_fields(all_ings)
-        fields_is_numfield = fields_match(all_ings,fields,self.amt_field_matcher)
-        #fields = [[r,field_match(all_ings,r,self.amt_field_matcher)] for r in find_fields(all_ings)]
-        aindex,afield = self.find_amt_field(fields,fields_is_numfield)
-        if aindex != None:
-            fields = fields[aindex+1:]
-            fields_is_numfield = fields_is_numfield[aindex+1:]
-        ufield = fields and self.find_unit_field(fields,fields_is_numfield)
+        fields_is_numfield = fields_match(all_ings, fields, self.amt_field_matcher)
+        # fields = [[r,field_match(all_ings,r,self.amt_field_matcher)] for r in find_fields(all_ings)]
+        aindex, afield = self.find_amt_field(fields, fields_is_numfield)
+        if aindex is not None:
+            fields = fields[aindex + 1 :]
+            fields_is_numfield = fields_is_numfield[aindex + 1 :]
+        ufield = fields and self.find_unit_field(fields, fields_is_numfield)
         if ufield:
             fields = fields[1:]
             fields_is_numfield = fields_is_numfield[1:]
         if fields:
-            ifield = [fields[0][0],None]
+            ifield = [fields[0][0], None]
         else:
-            ifield = 0,None
-        retval = [[afield,ufield,ifield]]
-        sec_col_fields = [x for x in fields if x[0]>self.two_col_minimum]
+            ifield = 0, None
+        retval = [[afield, ufield, ifield]]
+        sec_col_fields = [x for x in fields if x[0] > self.two_col_minimum]
         if sec_col_fields:
             ibase = fields.index(sec_col_fields[0])
             while sec_col_fields and not fields_is_numfield[ibase]:
@@ -329,29 +324,29 @@ class mmf_importer (plaintext_importer.TextImporter):
                 # if we might have a 2nd column...
         if sec_col_fields and len(sec_col_fields) > 2:
             fields_is_numfield = fields_is_numfield[ibase:]
-            aindex2,afield2 = self.find_amt_field(sec_col_fields,fields_is_numfield)
-            if aindex2 != None and len(sec_col_fields[aindex2+1:]) >= 1:
+            aindex2, afield2 = self.find_amt_field(sec_col_fields, fields_is_numfield)
+            if aindex2 is not None and len(sec_col_fields[aindex2 + 1 :]) >= 1:
                 # then it's a go! Shift our first ifield
-                retval[0][2]=[ifield[0],fields[ibase-1][1]]
-                sec_col_fields = sec_col_fields[aindex2 + 1:]
-                fields_is_numfield = fields_is_numfield[aindex2+1:]
-                ufield2 = self.find_unit_field(sec_col_fields,fields_is_numfield)
+                retval[0][2] = [ifield[0], fields[ibase - 1][1]]
+                sec_col_fields = sec_col_fields[aindex2 + 1 :]
+                fields_is_numfield = fields_is_numfield[aindex2 + 1 :]
+                ufield2 = self.find_unit_field(sec_col_fields, fields_is_numfield)
                 if ufield2:
-                    sec_col_fields=sec_col_fields[1:]
+                    sec_col_fields = sec_col_fields[1:]
                     fields_is_numfield = fields_is_numfield[1:]
-                ifield2 = sec_col_fields[0][0],None
-                retval.append([afield2,ufield2,ifield2])
+                ifield2 = sec_col_fields[0][0], None
+                retval.append([afield2, ufield2, ifield2])
         testtimer.end()
         return retval
 
-    def find_unit_field (self, fields, fields_is_numfield):
-        testtimer = TimeAction('mealmaster_importer.find_unit_field',10)
-        if 0 < fields[0][1]-fields[0][0] <= self.unit_length and len(fields)>1:
+    def find_unit_field(self, fields, fields_is_numfield):
+        testtimer = TimeAction("mealmaster_importer.find_unit_field", 10)
+        if 0 < fields[0][1] - fields[0][0] <= self.unit_length and len(fields) > 1:
             testtimer.end()
             return fields[0]
         testtimer.end()
 
-    def find_amt_field (self, fields, fields_is_numfield):
+    def find_amt_field(self, fields, fields_is_numfield):
         """Return amount field and field index for the last amount field.
 
         In other words, if we the following fields...
@@ -365,7 +360,7 @@ class mmf_importer (plaintext_importer.TextImporter):
         """
         afield = None
         aindex = None
-        for i,f in enumerate(fields):
+        for i, f in enumerate(fields):
             # if our field is a numeric field...
             if fields_is_numfield[i]:
                 if not afield:
@@ -373,112 +368,125 @@ class mmf_importer (plaintext_importer.TextImporter):
                     aindex = i
                 # if we our contiguous
                 elif i == aindex + 1:
-                    afield = [afield[0],f[1]] # give it a new end
+                    afield = [afield[0], f[1]]  # give it a new end
                     aindex = i
                 else:
-                    return aindex,afield
+                    return aindex, afield
         return aindex, afield
 
-    def add_item (self, item):
-        testtimer = TimeAction('mealmaster_importer.add_item',10)
-        self.ing['item']=item.strip()
+    def add_item(self, item):
+        testtimer = TimeAction("mealmaster_importer.add_item", 10)
+        self.ing["item"] = item.strip()
         # fixing bug 1061363, potatoes; cut and mashed should become just potatoes
         # for keying purposes
-        key_base = self.ing['item'].split(";")[0]
-        self.ing['ingkey']=self.km.get_key_fast(key_base)
+        key_base = self.ing["item"].split(";")[0]
+        self.ing["ingkey"] = self.km.get_key_fast(key_base)
         testtimer.end()
 
     def parse_inglist(self):
-        testtimer = TimeAction('mealmaster_importer.parse_inglis',10)
-        debug("start parse_inglist",5)
+        testtimer = TimeAction("mealmaster_importer.parse_inglis", 10)
+        debug("start parse_inglist", 5)
         """We handle our ingredients after the fact."""
-        ingfields =self.find_ing_fields()
-        debug("ingredient fields are: %s"%ingfields,10)
-        for s,g in self.ingrs:
-            for afield,ufield,ifield in ingfields:
+        ingfields = self.find_ing_fields()
+        debug("ingredient fields are: %s" % ingfields, 10)
+        for s, g in self.ingrs:
+            for afield, ufield, ifield in ingfields:
                 self.group = g
-                amt,u,i = get_fields(s,(afield,ufield,ifield))
-                debug("""amt:%(amt)s
+                amt, u, i = get_fields(s, (afield, ufield, ifield))
+                debug(
+                    """amt:%(amt)s
                 u:%(u)s
-                i:%(i)s"""%locals(),0)
+                i:%(i)s"""
+                    % locals(),
+                    0,
+                )
                 # sanity check...
                 if not amt.strip() and not u.strip():
-                    if not i: continue
+                    if not i:
+                        continue
                     # if we have not amt or unit, let's do the right
                     # thing if this just looks misaligned -- in other words
                     # if the "item" column has 2 c. parsley, let's just parse
                     # the damned thing as 2 c. parsley
-                    parsed = self.rd.parse_ingredient(i,conv=self.conv,get_key=False)
-                    if parsed and parsed.get('amount','') and parsed.get('item',''):
-                        amt = "%s"%parsed['amount']
-                        u = parsed.get('unit','')
-                        i = parsed['item']
-                        debug("""After sanity check
+                    parsed = self.rd.parse_ingredient(i, conv=self.conv, get_key=False)
+                    if parsed and parsed.get("amount", "") and parsed.get("item", ""):
+                        amt = "%s" % parsed["amount"]
+                        u = parsed.get("unit", "")
+                        i = parsed["item"]
+                        debug(
+                            """After sanity check
                         amt:%(amt)s
                         u:%(u)s
-                        i:%(i)s"""%locals(),0)
+                        i:%(i)s"""
+                            % locals(),
+                            0,
+                        )
                 if amt.strip() or u.strip() or i.strip():
                     self.start_ing()
                     if amt:
                         self.add_amt(amt)
                     if u:
                         self.add_unit(u)
-                    optm=self.ing_opt_matcher.match(i)
+                    optm = self.ing_opt_matcher.match(i)
                     if optm:
-                        item=optm.groups()[0]
-                        self.ing['optional']=True
+                        item = optm.groups()[0]
+                        self.ing["optional"] = True
                     else:
                         item = i
                     self.add_item(item)
-                    debug("committing ing: %s"%self.ing,6)
+                    debug("committing ing: %s" % self.ing, 6)
                     self.commit_ing()
         testtimer.end()
 
-    def add_unit (self, unit):
-        testtimer = TimeAction('mealmaster_importer.add_unit',10)
+    def add_unit(self, unit):
+        testtimer = TimeAction("mealmaster_importer.add_unit", 10)
         unit = unit.strip()
         if unit in self.mmf.unit_conv:
             unit = self.mmf.unit_conv[unit]
-        importer.Importer.add_unit(self,unit)
+        importer.Importer.add_unit(self, unit)
         testtimer.end()
 
-def split_fields (strings, char=" "):
-    testtimer = TimeAction('mealmaster_importer.split_fields',10)
-    debug("start split_fields",10)
-    fields=find_fields(strings,char)
+
+def split_fields(strings, char=" "):
+    testtimer = TimeAction("mealmaster_importer.split_fields", 10)
+    debug("start split_fields", 10)
+    fields = find_fields(strings, char)  # noqa: F841  # TODO: Is this still relevant?
     testtimer.end()
 
-def fields_match (strings, fields, matcher):
-    testtimer = TimeAction('mealmaster_importer.fields_match',10)
+
+def fields_match(strings, fields, matcher):
+    # testtimer = TimeAction("mealmaster_importer.fields_match", 10)
     """Return an array of True or False values representing
     whether matcher is a match for each of fields in string."""
-    #retarray = array.array('H',[1]*len(fields))
+    # retarray = array.array('H',[1]*len(fields))
     ret = []
     for f in fields:
-        strs = [s[f[0]:f[1]] for s in strings]
+        strs = [s[f[0] : f[1]] for s in strings]
         matches = [matcher.match(s) and True or False for s in strs]
-        if True in matches: ret.append(1)
-        else: ret.append(0)
+        if True in matches:
+            ret.append(1)
+        else:
+            ret.append(0)
     return ret
-    #return array.array('H',[True in [matcher.match(s[f[0]:f[1]]) and 1 or 0 for s in strings] for f in fields])
+    # return array.array('H',[True in [matcher.match(s[f[0]:f[1]]) and 1 or 0 for s in strings] for f in fields])
 
     # cycle through each string broken into our fields
-    #for ff in [[s[f[0]:f[1]] for f in fields] for s in strings]:
+    # for ff in [[s[f[0]:f[1]] for f in fields] for s in strings]:
     #    for i,fld in enumerate(ff):
     #        if fld and retarray[i] and not matcher.match(fld):
     #            retarray[i]=False
     #            if not True in retarray: return retarray
-    #testtimer.end()
-    #return retarray
+    # testtimer.end()
+    # return retarray
 
 
-def field_match (strings, tup, matcher):
-    testtimer = TimeAction('mealmaster_importer.field_match',10)
-    debug("start field_match",10)
+def field_match(strings, tup, matcher):
+    testtimer = TimeAction("mealmaster_importer.field_match", 10)
+    debug("start field_match", 10)
     if isinstance(matcher, str):
-        matcher=re.compile(matcher)
-    for f in [s[tup[0]:tup[1]] for s in strings]:
-        #f=s[tup[0]:tup[1]]
+        matcher = re.compile(matcher)
+    for f in [s[tup[0] : tup[1]] for s in strings]:
+        # f=s[tup[0]:tup[1]]
         if f and not matcher.match(f):
             testtimer.end()
             return False
@@ -486,37 +494,38 @@ def field_match (strings, tup, matcher):
     return True
 
 
-def get_fields (string, tuples):
-    testtimer = TimeAction('mealmaster_importer.get_fields',10)
-    debug("start get_fields",10)
+def get_fields(string, tuples):
+    testtimer = TimeAction("mealmaster_importer.get_fields", 10)
+    debug("start get_fields", 10)
     lst = []
     for t in tuples:
         if t:
-            lst.append(string[t[0]:t[1]])
+            lst.append(string[t[0] : t[1]])
         else:
             lst.append("")
     testtimer.end()
     return lst
 
 
-def field_width (tuple):
-    testtimer = TimeAction('mealmaster_importer.field_width',10)
-    debug("start field_width",10)
+def field_width(tuple):
+    testtimer = TimeAction("mealmaster_importer.field_width", 10)
+    debug("start field_width", 10)
     if tuple[1]:
         testtimer.end()
-        return tuple[1]-tuple[0]
+        return tuple[1] - tuple[0]
     else:
         testtimer.end()
         return None
 
 
-def find_fields (strings, char=" "):
-    testtimer = TimeAction('mealmaster_importer.find_fields',10)
+def find_fields(strings, char=" "):
+    testtimer = TimeAction("mealmaster_importer.find_fields", 10)
     cols = find_columns(strings, char)
-    if not cols: return []
+    if not cols:
+        return []
     cols.reverse()
     fields = []
-    lens = list(map(len,strings))
+    lens = list(map(len, strings))
     lens.sort()
     end = lens[-1]
     last_col = end
@@ -524,31 +533,32 @@ def find_fields (strings, char=" "):
         if col == last_col - 1:
             end = col
         else:
-            fields.append([col+1,end])
+            fields.append([col + 1, end])
             end = col
         last_col = col
-    if end != 0: fields.append([0,end])
+    if end != 0:
+        fields.append([0, end])
     fields.reverse()
     testtimer.end()
     return fields
 
 
-def find_columns (strings, char=" "):
-    testtimer = TimeAction('mealmaster_importer.find_columns',10)
+def find_columns(strings, char=" "):
+    testtimer = TimeAction("mealmaster_importer.find_columns", 10)
     """Return a list of character indices that match char for each string in strings."""
-    debug("start find_columns",10)
+    debug("start find_columns", 10)
     # we start with the columns in the first string
     if not strings:
         return None
-    strings=list(strings)
+    strings = list(strings)
     strings.sort(key=len, reverse=True)
-    columns = [match.start() for match in re.finditer(re.escape(char),strings[0])]
-    if len(strings)==1:
+    columns = [match.start() for match in re.finditer(re.escape(char), strings[0])]
+    if len(strings) == 1:
         return columns
     # we eliminate all columns that aren't blank for every string
     for s in strings:
-        for c in columns[0:]: # we'll be modifying columns
-            if c < len(s) and s[c]!=char:
+        for c in columns[0:]:  # we'll be modifying columns
+            if c < len(s) and s[c] != char:
                 columns.remove(c)
     columns.sort()
     testtimer.end()

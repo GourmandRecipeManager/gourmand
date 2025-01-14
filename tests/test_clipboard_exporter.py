@@ -1,23 +1,23 @@
+from collections import namedtuple  # noqa: E402
+
 import gi
 import pytest
 
 gi.require_version("Gtk", "3.0")
-from collections import namedtuple  # noqa: import not at top of file
-from gi.repository import Gtk, Gdk  # noqa: import not at top of file
-from gourmand.exporters.clipboard_exporter import copy_to_clipboard  # noqa
+gi.require_version("Gdk", "3.0")
+from gi.repository import Gdk, Gtk  # noqa: E402
 
-Recipe = namedtuple('Recipe', ['title', 'source', 'yields', 'yield_unit',
-                               'description', 'instructions', 'link'])
+from gourmand.exporters.clipboard_exporter import copy_to_clipboard  # noqa: E402
 
-recipe1 = Recipe('Title1', 'Source1', 700.0, 'g.', None, 'Make the Dough.', '')
-recipe2 = Recipe('Title2', 'Source2', 2, 'litres', 'test', 'Directions.',
-                 'https://example.com')
+Recipe = namedtuple("Recipe", ["title", "source", "yields", "yield_unit", "description", "instructions", "link"])
 
-Ingredient = namedtuple('Ingredient', ['amount', 'unit', 'item'])
+recipe1 = Recipe("Title1", "Source1", 700.0, "g.", None, "Make the Dough.", "")
+recipe2 = Recipe("Title2", "Source2", 2, "litres", "test", "Directions.", "https://example.com")
 
-ingredients1 = (Ingredient(600, 'g.', 'flour'),)
-ingredients2 = (Ingredient(600, 'g.', 'flour'),
-                Ingredient(2, 'l.', 'water'))
+Ingredient = namedtuple("Ingredient", ["amount", "unit", "item"])
+
+ingredients1 = (Ingredient(600, "g.", "flour"),)
+ingredients2 = (Ingredient(600, "g.", "flour"), Ingredient(2, "l.", "water"))
 
 recipe_input = [(recipe1, ingredients1)]
 recipe_expected_output = """# Title1
@@ -61,12 +61,12 @@ Directions.
 
 
 @pytest.mark.parametrize(
-    'recipes, expected',
+    "recipes, expected",
     [
-        ([], ''),
+        ([], ""),
         (recipe_input, recipe_expected_output),
         (two_recipes_input, two_recipes_expected_output),
-     ],
+    ],
 )
 def test_clipboard_exporter(recipes, expected):
     copy_to_clipboard(recipes)

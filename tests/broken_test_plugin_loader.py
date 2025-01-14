@@ -6,7 +6,7 @@ import unittest
 from gourmet import gglobals
 
 
-class Test (unittest.TestCase):
+class Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # preserve the current gourmet working directory
@@ -32,13 +32,13 @@ class Test (unittest.TestCase):
         # delete temporary test directory
         shutil.rmtree(cls.tmp_dir)
 
-    def testDefaultPlugins (self):
+    def test_default_plugins(self):
         self.ml.load_active_plugins()
-        print('active:',self.ml.active_plugins)
-        print('instantiated:',self.ml.instantiated_plugins)
+        print("active:", self.ml.active_plugins)
+        print("instantiated:", self.ml.instantiated_plugins)
         self.assertEqual(len(self.ml.errors), 0)  # there should be 0 plugin errors
 
-    def testAvailablePlugins (self):
+    def test_available_plugins(self):
         # search module directories for available plugins
         for module_name, plugin_set in self.ml.available_plugin_sets.items():
             if module_name not in self.ml.active_plugin_sets:
@@ -46,6 +46,3 @@ class Test (unittest.TestCase):
         self.ml.save_active_plugins()
         assert os.path.exists(self.ml.active_plugin_filename)
         self.assertEqual(len(self.ml.errors), 0)  # there should be 0 plugin errors
-
-if __name__ == '__main__':
-    unittest.main()

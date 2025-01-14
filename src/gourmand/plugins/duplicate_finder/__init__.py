@@ -1,6 +1,3 @@
 from . import recipeMergerPlugin
 
-plugins = [
-    recipeMergerPlugin.RecipeMergerPlugin,
-    recipeMergerPlugin.RecipeMergerImportManagerPlugin
-    ]
+plugins = [recipeMergerPlugin.RecipeMergerPlugin, recipeMergerPlugin.RecipeMergerImportManagerPlugin]

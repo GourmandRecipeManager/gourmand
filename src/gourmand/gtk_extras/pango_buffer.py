@@ -30,20 +30,16 @@ class PangoBuffer(Gtk.TextBuffer):
 
         self.tag_bold = self.create_tag("bold", weight=Pango.Weight.BOLD)
         self.tag_italic = self.create_tag("italic", style=Pango.Style.ITALIC)
-        self.tag_underline = self.create_tag("underline",
-                                             underline=Pango.Underline.SINGLE)
+        self.tag_underline = self.create_tag("underline", underline=Pango.Underline.SINGLE)
 
     def set_text(self, text: Union[str, bytes]) -> None:
-        super().set_text('')  # Clear the widget
+        super().set_text("")  # Clear the widget
         if isinstance(text, bytes):
             # data loaded from the database are bytes, not str
             text = text.decode("utf-8")
         self.insert_markup(self.get_start_iter(), text, -1)
 
-    def get_text(self,
-                 start: Optional[Gtk.TextIter] = None,
-                 end: Optional[Gtk.TextIter] = None,
-                 include_hidden_chars: bool = False) -> str:
+    def get_text(self, start: Optional[Gtk.TextIter] = None, end: Optional[Gtk.TextIter] = None, include_hidden_chars: bool = False) -> str:
         """Get the buffer content.
 
         If `include_hidden_chars` is set, then the html markup content is
@@ -75,15 +71,12 @@ class PangoBuffer(Gtk.TextBuffer):
                 itr.backward_word_start()
                 word_start = itr.get_offset()
                 itr.set_offset(start_pos)
-                bounds = (self.get_iter_at_offset(word_start),
-                          self.get_iter_at_offset(word_end+1))
+                bounds = (self.get_iter_at_offset(word_start), self.get_iter_at_offset(word_end + 1))
             else:
-                bounds = (itr, self.get_iter_at_offset(itr.get_offset()+1))
+                bounds = (itr, self.get_iter_at_offset(itr.get_offset() + 1))
         return bounds
 
-    def on_markup_toggle(self,
-                         widget: Gtk.Action,
-                         tag: Gtk.TextTag) -> None:
+    def on_markup_toggle(self, widget: Gtk.Action, tag: Gtk.TextTag) -> None:
         """Apply or remove markup to selected text"""
         bounds = self.get_selection_bounds()
         if not bounds:
@@ -93,11 +86,11 @@ class PangoBuffer(Gtk.TextBuffer):
 
         prop = None
         if tag == self.tag_bold:
-            prop = 'weight-set'
+            prop = "weight-set"
         elif tag == self.tag_italic:
-            prop = 'style-set'
+            prop = "style-set"
         elif tag == self.tag_underline:
-            prop = 'underline-set'
+            prop = "underline-set"
 
         set_tag = [t for t in start.get_tags() if t.get_property(prop)]
         if set_tag:
@@ -117,6 +110,7 @@ class PangoBuffer(Gtk.TextBuffer):
 
 class SimpleEditor:
     """A demo of the TextBufferedMarkup class"""
+
     def __init__(self):
         self.w = Gtk.Window()
         vb = Gtk.VBox()
@@ -125,40 +119,36 @@ class SimpleEditor:
         sw.add(tv)
 
         self.pb = PangoBuffer()
-        self.pb.set_text("""<b>This is bold</b>. <i>This is italic</i>
+        self.pb.set_text(
+            """<b>This is bold</b>. <i>This is italic</i>
 <i><b>This is bold, italic, and <u>underlined!</u></b></i>
 <span background="blue">This is a test of bg color</span>
 <span foreground="blue">This is a test of fg color</span>
 <span foreground="white" background="blue">This is a test of fg and bg color</span>  # noqa
-""")
+"""
+        )
         tv.set_buffer(self.pb)
 
         edit_box = Gtk.HButtonBox()
 
         normal = Gtk.Button()
-        normal.set_label('Normal')
-        normal.connect('clicked', self.pb.remove_all_tags)
+        normal.set_label("Normal")
+        normal.connect("clicked", self.pb.remove_all_tags)
         edit_box.add(normal)
 
         button_italic = Gtk.ToolButton()
         button_italic.set_icon_name("format-text-italic-symbolic")
-        button_italic.connect("clicked",
-                              self.pb.on_markup_toggle,
-                              self.pb.tag_italic)
+        button_italic.connect("clicked", self.pb.on_markup_toggle, self.pb.tag_italic)
         edit_box.add(button_italic)
 
         button_bold = Gtk.ToolButton()
         button_bold.set_icon_name("format-text-bold-symbolic")
-        button_bold.connect('clicked',
-                            self.pb.on_markup_toggle,
-                            self.pb.tag_bold)
+        button_bold.connect("clicked", self.pb.on_markup_toggle, self.pb.tag_bold)
         edit_box.add(button_bold)
 
         button_underline = Gtk.ToolButton()
         button_underline.set_icon_name("format-text-underline-symbolic")
-        button_underline.connect('clicked',
-                                 self.pb.on_markup_toggle,
-                                 self.pb.tag_underline)
+        button_underline.connect("clicked", self.pb.on_markup_toggle, self.pb.tag_underline)
         edit_box.add(button_underline)
 
         button_blue = Gtk.ToggleButton()
@@ -175,19 +165,18 @@ class SimpleEditor:
         action_box = Gtk.HButtonBox()
 
         pmbut = Gtk.Button()
-        pmbut.set_label('Print Markup')
-        pmbut.connect('clicked', self.print_markup)
+        pmbut.set_label("Print Markup")
+        pmbut.connect("clicked", self.print_markup)
         action_box.add(pmbut)
 
         pselectbut = Gtk.Button()
-        pselectbut.set_label('Print Selection')
-        pselectbut.connect('clicked', self.print_selection)
+        pselectbut.set_label("Print Selection")
+        pselectbut.connect("clicked", self.print_selection)
         action_box.add(pselectbut)
 
         qb = Gtk.Button()
-        qb.set_label('Quit')
-        qb.connect('clicked',
-                   lambda *args: self.w.destroy() or Gtk.main_quit())
+        qb.set_label("Quit")
+        qb.connect("clicked", lambda *args: self.w.destroy() or Gtk.main_quit())
         action_box.add(qb)
 
         vb.add(action_box)
@@ -202,7 +191,7 @@ class SimpleEditor:
         print(self.pb.get_text(*selection))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     se = SimpleEditor()
-    se.w.connect('delete-event', lambda *args: Gtk.main_quit())
+    se.w.connect("delete-event", lambda *args: Gtk.main_quit())
     Gtk.main()

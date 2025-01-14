@@ -1,4 +1,5 @@
 """Import recipes using the system's clipboard or via drag and drop."""
+
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from urllib.parse import urlparse
@@ -6,7 +7,7 @@ from urllib.parse import urlparse
 from gi.repository import Gdk, Gtk
 
 from gourmand.importers.importManager import ImportManager
-from gourmand.plugins.import_export.plaintext_plugin.plaintext_importer_plugin import PlainTextImporter  # noqa
+from gourmand.plugins.import_export.plaintext_plugin.plaintext_importer_plugin import PlainTextImporter
 
 
 def handle_import(data: str):
@@ -20,7 +21,7 @@ def handle_import(data: str):
     uri = urlparse(data)
     if uri.netloc:
         is_supported = True
-    elif uri.scheme == 'file' and Path(uri.path).is_file():
+    elif uri.scheme == "file" and Path(uri.path).is_file():
         is_supported = True  # The import manager will do file-type validation
         data = uri.path
 
@@ -35,6 +36,7 @@ def handle_import(data: str):
         importer.do_run()
 
         from gourmand.main import get_application  # work around circular import
+
         app = get_application()
         app.redo_search()
 
@@ -46,13 +48,7 @@ def import_from_clipboard(action: Gtk.Action):
     handle_import(content)
 
 
-def import_from_drag_and_drop(treeview: Gtk.Widget,
-                              drag_context: Gdk.DragContext,
-                              x: int,
-                              y: int,
-                              data: Gtk.SelectionData,
-                              info: int,
-                              time: int) -> bool:
+def import_from_drag_and_drop(treeview: Gtk.Widget, drag_context: Gdk.DragContext, x: int, y: int, data: Gtk.SelectionData, info: int, time: int) -> bool:
     """Handle imports from drag and drop action.
 
     This function is expected to be connected to a signal.
