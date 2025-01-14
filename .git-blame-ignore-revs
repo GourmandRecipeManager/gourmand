@@ -1,0 +1,6 @@
+# This file helps us to ignore style / formatting / doc changes
+# in git blame. That is useful when we're trying to find the root cause of an
+# error.
+
+# Cleanup code (#177)
+1fd3f17bf120cb2e0456b005344466f6aa36072d
