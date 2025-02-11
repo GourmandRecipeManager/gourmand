@@ -1681,7 +1681,12 @@ class IngredientController(plugin_loader.Pluggable):
         ).perform()
 
     def update_ingredient_row(
-        self, iter: Gtk.TreeIter, amount: Optional[float] = None, unit: Optional[str] = None, item: Optional[str] = None, optional: Optional[bool] = None
+        self, iter: Gtk.TreeIter,
+        amount: Optional[float] = None,
+        unit: Optional[str] = None,
+        item: Optional[str] = None,
+        optional: Optional[bool] = None,
+        **unused
     ):
         if amount is not None:
             self.imodel.set_value(iter, 1, str(amount))
@@ -1691,6 +1696,9 @@ class IngredientController(plugin_loader.Pluggable):
             self.imodel.set_value(iter, 3, item)
         if optional is not None:
             self.imodel.set_value(iter, 4, optional)
+
+        if unused:
+            debug(f"update_ingredient_row unused args: {unused}")
 
     def add_ingredient(self, ing, prev_iter=None, group_iter=None, fallback_on_append=True, shop_cat=None, is_undo=False):
         """add an ingredient to our model based on an ingredient
