@@ -13,7 +13,6 @@ class ConvertTest(unittest.TestCase):
     def test_equal(self):
         self.assertEqual(self.c.convert_simple("c", "c"), 1)
 
-    @pytest.mark.skip("Broken as of 20220813")
     def test_density(self):
         self.assertEqual(self.c.convert_w_density("ml", "g", item="water"), 1)
         self.assertEqual(self.c.convert_w_density("ml", "g", density=0.5), 0.5)
@@ -46,7 +45,6 @@ class ConvertTest(unittest.TestCase):
         ]:
             self.assertEqual(convert.frac_to_float(s), n)
 
-    @pytest.mark.skip("Broken as of 20220813")
     def test_ingmatcher(self):
         for s, a, u, i in [
             ("1 cup sugar", "1", "cup", "sugar"),
