@@ -1,6 +1,6 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
 runtime: org.gnome.Platform
-runtime-version: '45'
+runtime-version: '47'
 sdk: org.gnome.Sdk
 command: gourmand
 
@@ -21,8 +21,8 @@ modules:
       - -DENABLE_GPGME=OFF
       - -DENABLE_BOOST=OFF
     sources:
-      - url: https://poppler.freedesktop.org/poppler-23.12.0.tar.xz
-        sha256: beba398c9d37a9b6d02486496635e08f1df3d437cfe61dab2593f47c4d14cdbb
+      - url: https://poppler.freedesktop.org/poppler-25.03.0.tar.xz
+        sha256: 97da4ff88517a6bbd729529f195f85c8d7a0c3bb4a3d57cb0c685cbb052fe837
         type: archive
 
   # Python 3.11 seems to download too old dependency versions and non-wheels of `reportlab` and `lxml`.
