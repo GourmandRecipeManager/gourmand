@@ -35,7 +35,6 @@ jobs:
           C_INCLUDE_PATH=/usr/include/python3.10
           export C_INCLUDE_PATH
           ./squashfs-root/AppRun -m pip install --upgrade pip build
-          ./squashfs-root/AppRun -m pip install decorator BeautifulSoup4 html5lib lxml pyenchant pygobject Sphinx
           ./squashfs-root/AppRun -m build .
           ./squashfs-root/AppRun -m pip install .[epub-export,mycookbook,pdf-export,spellcheck,web-import]
           ./squashfs-root/AppRun -m pip install dist/gourmand*.whl
