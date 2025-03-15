@@ -47,7 +47,6 @@ modules:
         - --share=network
     build-commands:
       - python3 -m pip install --upgrade pip setuptools wheel
-      - pip3 install pyenchant pygobject Sphinx
       - pip3 install --prefix=/app .[epub-export,pdf-export,spellcheck,web-import]
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
