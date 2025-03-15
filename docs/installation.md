@@ -37,7 +37,7 @@ In a terminal, execute the following:
 
 ```sh
 flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install gourmand-1.0.0.flatpak
+flatpak install gourmand-1.0.0.flatpak
 ```
 
 You will be prompted with a message regarding the runtime:
@@ -67,10 +67,14 @@ flatpak remove io.github.GourmandRecipeManager.Gourmand
 
 ## Python Wheel
 
-[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/)
-Dependencies must be manually installed.
+You can get the wheel from PyPI. Some dependencies must be installed manually and/or
+require more work, especially for *pygobject* when using virtual environments.
 
-### Unbutu 20.04, Linux Mint 20
+The following section is outdated and requires an overhaul for recent Ubuntu versions.
+Feel free to submit a corresponding PR if you tracked down how to install everything
+into a dedicated virtual environment.
+
+### Ubuntu 20.04, Linux Mint 20
 
 Install the following packages from `apt`:
 
@@ -101,23 +105,23 @@ Download and install [MSYS2](https://www.msys2.org/)
 Within the MSYS2 terminal, synchronize your software sources:
 
 ```sh
-    pacman -Syu
+pacman -Syu
 ```
 
 Then install parts of the dependencies:
 
 ```sh
-    pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python-sqlalchemy mingw-w64-x86_64-gstreamer mingw-w64-x86_64-poppler mingw-w64-x86_64-python-reportlab
+pacman -S mingw-w64-x86_64-gtk3 mingw-w64-x86_64-python3-gobject mingw-w64-x86_64-python-pillow mingw-w64-x86_64-python-sqlalchemy mingw-w64-x86_64-gstreamer mingw-w64-x86_64-poppler mingw-w64-x86_64-python-reportlab
 ```
 
-[Download the wheel](https://github.com/GourmandRecipeManager/gourmand/releases/) and install it:
+Install the package from PyPI:
 
 ```sh
-    python3 -m pip install gourmand-1.0.0-py3-none-any.whl
+python3 -m pip install gourmand
 ```
 
 Then launch it:
 
 ```sh
-    python3 -m gourmand
+python3 -m gourmand
 ```
