@@ -1,6 +1,6 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
 runtime: org.gnome.Platform
-runtime-version: '47'
+runtime-version: '46'
 sdk: org.gnome.Sdk
 command: gourmand
 
