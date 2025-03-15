@@ -2,7 +2,7 @@ from gourmand.i18n import _
 
 appname = _("Gourmand Recipe Manager")
 copyright = _("Copyright (c) 2004-2021 Thomas M. Hinkle and Contributors.\n" "Copyright (c) 2021 The Gourmand Team and Contributors")
-version = "1.0.0"
+version = "1.1.0"
 url = "https://github.com/GourmandRecipeManager/gourmand"
 description = "Recipe Organizer and Shopping List Generator"
 long_description = _(
@@ -21,7 +21,7 @@ Features:
 )
 author = "Gourmand Team and Contributors"
 authors = []  # FIXME: get list of contributors
-maintainer = "Cyril Danilevski"
+maintainer = "Cyril Danilevski, FriedrichFröbel"
 maintainer_email = "gourmand@cyril.wtf"
 artists = [_("Nyall Dawson (cookie icon)"), _("Kati Pregartner (splash screen image)")]
-license = "GPL v2"
+license = "GPL-2.0-only"

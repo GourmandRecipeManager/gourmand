@@ -191,7 +191,7 @@ setup(
         "pillow>=8.3.2",
         "pygobject>=3.40.1",
         "sqlalchemy>=1.4.36,<2",
-        "tomli_w>=1.0.0",
+        "tomli-w>=1.0.0",
         'toml==0.10.2; python_version<"3.11"',
         "recipe-scrapers>=14.27.0,<15",
     ],
