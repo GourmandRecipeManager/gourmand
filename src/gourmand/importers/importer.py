@@ -240,7 +240,7 @@ class Importer(SuspendableThread):
         if id_to_convert:
             if self.rec["id"] in self.id_converter:
                 self.rec["id"] = self.id_converter[self.rec["id"]]
-                r = self.rd.add_rec(self.rec, accept_ids=True)  # See doc on add_rec
+                r = self.rd.add_rec(self.rec)  # See doc on add_rec
             else:
                 del self.rec["id"]
                 r = self.rd.add_rec(self.rec)
