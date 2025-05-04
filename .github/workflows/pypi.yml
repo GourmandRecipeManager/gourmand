@@ -15,6 +15,9 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.x"
+    - name: Install OS packages
+      run: |
+        sudo apt-get install --no-install-recommends -y intltool gettext
     - name: Install pypa/build
       run: >-
         python3 -m
