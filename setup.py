@@ -1,5 +1,5 @@
+import ast
 import os
-import re
 from logging import INFO
 from pathlib import Path
 from typing import Union
@@ -20,9 +20,21 @@ LOCALEDIR = PACKAGEDIR / "data" / "locale"
 def get_info(prop: str) -> str:
     with open(PACKAGEDIR / "__version__.py") as versfile:
         content = versfile.read()
-    match = re.search(r'^{} = "(.+)"'.format(prop), content, re.M)
-    if match is not None:
-        return match.group(1)
+    parsed = ast.parse(content)
+    for node in parsed.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        for name in node.targets:
+            if not isinstance(name, ast.Name):
+                continue
+            if name.id != prop:
+                continue
+            if isinstance(node.value, ast.Constant):
+                # "String"
+                return node.value.value
+            elif isinstance(node.value, ast.Call):
+                # _("String")
+                return node.value.args[0].value
     raise RuntimeError(f"Unable to find {prop} string")
 
 
@@ -171,6 +183,8 @@ setup(
     name=PACKAGE,
     version=get_info("version"),
     description=get_info("description"),
+    long_description=get_info("long_description"),
+    long_description_content_type="text/markdown",
     author=get_info("author"),
     maintainer=get_info("maintainer"),
     maintainer_email=get_info("maintainer_email"),
