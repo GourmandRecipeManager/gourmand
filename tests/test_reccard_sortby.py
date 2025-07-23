@@ -11,11 +11,9 @@ def test_sort_by(tmp_path):
 
         # Mock UI-related calls within the RecSelector constructor to prevent
         # windows from being created during the test run.
-        with (
-                mock.patch("gourmand.reccard.RecIndex.__init__", return_value=None),
-                mock.patch("gi.repository.Gtk.Dialog") as mock_dialog,
-                mock.patch("gi.repository.Gtk.Builder.get_object")
-        ):
+        with mock.patch("gourmand.reccard.RecIndex.__init__", return_value=None), \
+                mock.patch("gi.repository.Gtk.Dialog") as mock_dialog, \
+                mock.patch("gi.repository.Gtk.Builder.get_object"):
             # The RecSelector constructor calls self.dialog.run(). We ensure the mock
             # for Gtk.Dialog doesn't block the test execution.
             mock_dialog.return_value.run.return_value = None
