@@ -125,3 +125,38 @@ Then launch it:
 ```sh
 python3 -m gourmand
 ```
+
+### Windows 11 WSL, Ubuntu (24.04.2) and Pipx
+
+These instructions work for standalone Ubuntu 24.04.2 and Windows 11 WSL running Ubuntu 24.04.2.
+
+[Pipx](https://pipx.pypa.io/stable/installation/) is a tool  to help you install and run end-user applications written in Python. Below the process for Ubuntu is shown.  Please follow the installation instructions on the pipx website for other OSes.
+
+From within WSL or Ubuntu shell install pipx:
+```sh
+sudo apt install pipx
+pipx ensurepath
+source ~/.bashrc
+```
+
+Use pipx to install gourmand:
+```sh
+pipx install gourmand
+```
+
+Activate the virtual environment associated with gourmand: 
+```sh
+source /home/<user>/.local/share/pipx/venvs/gourmand/bin/activate
+```
+
+Within the activated virtual environment install additional dependencies:
+```sh
+python3 -m pip install setuptools reportlab ebooklib pygtkspellcheck
+```
+
+Deactivate the virtual environment:
+```sh
+deactivate
+```
+
+Type ```gourmand``` and the program should start.
