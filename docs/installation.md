@@ -144,19 +144,9 @@ Use pipx to install gourmand:
 pipx install gourmand
 ```
 
-Activate the virtual environment associated with gourmand: 
+Alternatively, optional extras can be installed as well.
 ```sh
-source /home/<user>/.local/share/pipx/venvs/gourmand/bin/activate
-```
-
-Within the activated virtual environment install additional dependencies:
-```sh
-python3 -m pip install setuptools reportlab ebooklib pygtkspellcheck
-```
-
-Deactivate the virtual environment:
-```sh
-deactivate
+pipx install gourmand[epub-export,pdf-export,spellcheck]
 ```
 
 Type ```gourmand``` and the program should start.
