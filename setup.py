@@ -208,7 +208,6 @@ setup(
         "tomli-w>=1.0.0",
         'toml==0.10.2; python_version<"3.11"',
         "recipe-scrapers>=14.27.0,<15",
-        "setuptools<81",
     ],
     extras_require={
         "epub-export": ["ebooklib==0.17.1"],
