@@ -126,7 +126,7 @@ Then launch it:
 python3 -m gourmand
 ```
 
-### Windows 11 WSL, Ubuntu (24.04.2) and Pipx
+### Pipx
 
 These instructions work for standalone Ubuntu 24.04.2 and Windows 11 WSL running Ubuntu 24.04.2.
 
@@ -144,7 +144,7 @@ Use pipx to install gourmand:
 pipx install gourmand
 ```
 
-Alternatively, optional extras can be installed as well.
+Alternatively, optional extras can be installed as well:
 ```sh
 pipx install gourmand[epub-export,pdf-export,spellcheck]
 ```
