@@ -128,11 +128,11 @@ python3 -m gourmand
 
 ### Pipx
 
-These instructions work for standalone Ubuntu 24.04.2 and Windows 11 WSL running Ubuntu 24.04.2.
+These instructions have been tested for standalone Ubuntu 24.04.2 and Windows 11 WSL running Ubuntu 24.04.2 and might work on other systems.
 
 [Pipx](https://pipx.pypa.io/stable/installation/) is a tool  to help you install and run end-user applications written in Python. Below the process for Ubuntu is shown.  Please follow the installation instructions on the pipx website for other OSes.
 
-From within WSL or Ubuntu shell install pipx:
+Install pipx:
 ```sh
 sudo apt install pipx
 pipx ensurepath
