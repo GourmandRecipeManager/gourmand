@@ -26,7 +26,9 @@ jobs:
 
     - name: Build Flatpak
       run: |
-        flatpak list --runtime --columns=application,arch,branch,installation
+        flatpak info org.flatpak.Builder
+        flatpak info org.gnome.Sdk//48
+        grep -E "runtime:|sdk:|runtime-version:" .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
         flatpak --user run org.flatpak.Builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
