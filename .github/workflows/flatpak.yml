@@ -22,11 +22,11 @@ jobs:
       run: |
         flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
         flatpak install flathub org.flatpak.Builder -y
-        flatpak install flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
+        flatpak install --system flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
 
     - name: Build Flatpak
       run: |
-        flatpak run --user --filesystem=~/.local/share/flatpak org.flatpak.Builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
+        flatpak run --user org.flatpak.Builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
