@@ -29,6 +29,7 @@ jobs:
         tar -xvf flatpak-builder.tar.xz
         rm flatpak-builder.tar.xz
         cd flatpak-builder-*
+        sudo apt-get install python3 ninja-build meson
         meson setup _build
         meson install -C _build
 
