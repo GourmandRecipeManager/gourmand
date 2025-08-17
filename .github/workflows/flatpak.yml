@@ -27,7 +27,7 @@ jobs:
 
     - name: Build Flatpak
       run: |
-        sudo flatpak run org.flatpak.Builder --install-deps-from=flathub --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
+        flatpak run org.flatpak.Builder --install-deps-from=flathub --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
