@@ -26,7 +26,7 @@ jobs:
 
     - name: Build Flatpak
       run: |
-        flatpak run org.flatpak.Builder --repo=repo --force-clean --filesystem=~/.local/share/flatpak build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
+        flatpak run --user --filesystem=~/.local/share/flatpak org.flatpak.Builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
