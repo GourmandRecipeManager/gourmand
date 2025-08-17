@@ -21,22 +21,12 @@ jobs:
     - name: Setup Flatpak
       run: |
         flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-        flatpak install flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
-
-    - name: Install flatpak-builder
-      run: |
-        wget -O flatpak-builder.tar.xz https://github.com/flatpak/flatpak-builder/releases/download/1.4.4/flatpak-builder-1.4.4.tar.xz
-        tar -xvf flatpak-builder.tar.xz
-        rm flatpak-builder.tar.xz
-        cd flatpak-builder-*
-        sudo apt-get install python3 ninja-build meson
-        sudo apt install -y appstream libappstream-glib-dev
-        meson setup _build
-        meson install -C _build
+        flatpak install flathub org.flatpak.Builder -y
+        # flatpak install flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
 
     - name: Build Flatpak
       run: |
-        flatpak-builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
+        flatpak run org.flatpak.Builder --install-deps-from=flathub --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
