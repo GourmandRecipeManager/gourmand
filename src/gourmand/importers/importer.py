@@ -180,7 +180,8 @@ class Importer(SuspendableThread):
                     self._move_to_instructions(self.rec, "yields")
                 else:
                     self.rec["yields"] = yields
-                    self.rec["yield_unit"] = yield_unit
+                    if not self.rec["yield_unit"]:
+                        self.rec["yield_unit"] = yield_unit
         if "servings" in self.rec:
             servs = self.convert_str_to_num(self.rec["servings"])
             if servs is not None:
@@ -270,7 +271,8 @@ class Importer(SuspendableThread):
 
     def parse_yields(self, str):
         """Parse number and field."""
-        m = re.match(r"(?P<prefix>\w+\s+)?(?P<num>[0-9/. ]+)(?P<unit>\s*\w+)?", str)
+        # m = re.match(r"(?P<prefix>\w+\s+)?(?P<num>[0-9/. ]+)(?P<unit>\s*\w+)?", str)
+        m = re.match(r"(?P<prefix>^\D*\s?)?(?P<num>[0-9/. ]+)(?P<unit>\s*\w+)?", str)
         if m:
             num = m.group("num")
             num = convert.frac_to_float(num)
@@ -596,6 +598,16 @@ class ImporterTest(unittest.TestCase):
         assert self.importer.parse_yields("Makes 12 muffins") == (12, "muffins")
         assert self.importer.parse_yields("Makes 4 servings") == (4, "servings")
         assert self.importer.parse_yields("Serves 7") == (7, "servings")
+
+    def testParseFractionalYields(self):
+        assert self.importer.parse_yields("Makes 4 3/4 muffins") == (4.75, "muffins")
+        assert self.importer.parse_yields("Makes 4 3/4") == (4.75, "servings")
+        assert self.importer.parse_yields("19/4") == (4.75, "servings")
+        assert self.importer.parse_yields("Makes 19/4") == (4.75, "servings")
+    
+    @unittest.expectedFailure
+    def testFailedParsingFractionalYields(self):
+        assert self.importer.parse_yields("Makes 19/4") == (4.75, "muffins")
 
 
 if __name__ == "__main__":
