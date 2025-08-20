@@ -180,7 +180,7 @@ class Importer(SuspendableThread):
                     self._move_to_instructions(self.rec, "yields")
                 else:
                     self.rec["yields"] = yields
-                    if not self.rec["yield_unit"]:
+                    if not (("yield_unit" in self.rec) and self.rec["yield_unit"]):
                         self.rec["yield_unit"] = yield_unit
         if "servings" in self.rec:
             servs = self.convert_str_to_num(self.rec["servings"])
@@ -604,7 +604,7 @@ class ImporterTest(unittest.TestCase):
         assert self.importer.parse_yields("Makes 4 3/4") == (4.75, "servings")
         assert self.importer.parse_yields("19/4") == (4.75, "servings")
         assert self.importer.parse_yields("Makes 19/4") == (4.75, "servings")
-    
+
     @unittest.expectedFailure
     def testFailedParsingFractionalYields(self):
         assert self.importer.parse_yields("Makes 19/4") == (4.75, "muffins")
