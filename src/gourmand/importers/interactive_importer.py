@@ -491,7 +491,7 @@ def import_interactivally(uris: List[str]):
         soup = BeautifulSoup(resp.text, "html.parser")
         text = soup.get_text().replace("  ", "\n")  # Make the text more readable
         importer = InteractiveImporter()
-        importer.images = [img["src"] for img in soup.find_all("img") if (("src" in img) and (img["src"].startswith("http")))]
+        importer.images = [img["src"] for img in soup.find_all("img") if (("src" in img.attrs) and (img["src"].startswith("http")))]
         importer.set_text(text)
         importer.do_run()
 

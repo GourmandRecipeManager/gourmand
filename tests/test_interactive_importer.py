@@ -1,6 +1,26 @@
 import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
 
 from gourmand.importers import interactive_importer
+
+TEST_FILE_DIRECTORY = Path(__file__).parent / "recipe_files"
+
+class TestImporter_Images(unittest.TestCase):
+
+    def setUp(self):
+        filename = str(TEST_FILE_DIRECTORY / "Garbanzas.html")
+        with open(filename, 'r', encoding='utf-8') as file:
+            self.html = file.read()
+
+    @patch("gourmand.importers.interactive_importer.InteractiveImporter")
+    @patch("gourmand.importers.interactive_importer.requests.get")
+    def test_image_sources(self, mock_reqs, mock_importer):
+        mock_response = Mock()
+        mock_response.text = self.html
+
+        mock_reqs.return_value = mock_response
+        interactive_importer.import_interactivally('www.test.com')
 
 
 class TestConvenientImporter(unittest.TestCase):
