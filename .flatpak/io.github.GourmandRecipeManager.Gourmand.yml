@@ -20,6 +20,7 @@ modules:
       - -DENABLE_NSS3=OFF
       - -DENABLE_GPGME=OFF
       - -DENABLE_BOOST=OFF
+      - -DCMAKE_INSTALL_LIBDIR=lib
     sources:
       - url: https://poppler.freedesktop.org/poppler-25.06.0.tar.xz
         sha256: 8199532d38984fab46dbd0020ec9c40f20e928e33e9b4cc6043572603a821d83
