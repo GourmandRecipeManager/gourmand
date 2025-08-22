@@ -16,18 +16,16 @@ jobs:
     - name: Install Flatpak
       run: |
         sudo apt-get update
-        sudo apt install flatpak
+        sudo apt install flatpak flatpak-builder
 
     - name: Setup Flatpak
       run: |
         flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-        sudo flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
-        sudo flatpak --system install flathub org.flatpak.Builder -y
-        # flatpak install flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
+        flatpak install flathub org.gnome.Platform//48 org.gnome.Sdk//48 -y
 
     - name: Build Flatpak
       run: |
-        sudo -i flatpak run org.flatpak.Builder --install-deps-from=flathub --repo=repo --force-clean build-dir /home/runner/work/gourmand/gourmand/.flatpak/io.github.GourmandRecipeManager.Gourmand.yml
+        flatpak-builder --repo=repo --force-clean build-dir .flatpak/io.github.GourmandRecipeManager.Gourmand.yml
 
     - name: Build Bundle
       run: |
