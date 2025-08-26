@@ -481,13 +481,11 @@ class InteractiveImporter(ConvenientImporter, NotThreadSafe):
         else:
             self.w.connect("delete-event", lambda *args: self.w.hide())
 
-def get_images(soup: BeautifulSoup):
+def _get_images(soup: BeautifulSoup):
     """Extract image source url from Beautiful Soup parsed html."""
-    image_srcs = []
     for image in soup.find_all("img"):
-        if ( ("src" in image.attrs) and (image["src"].startswith("http")) ):
-            image_srcs.append(image["src"])
-    return image_srcs
+        if image.attrs.get("src", "").startswith("http"):
+            yield image["src"]
 
 
 def import_interactivally(uris: List[str]):
@@ -499,7 +497,7 @@ def import_interactivally(uris: List[str]):
         soup = BeautifulSoup(resp.text, "html.parser")
         text = soup.get_text().replace("  ", "\n")  # Make the text more readable
         importer = InteractiveImporter()
-        importer.images = get_images(soup)
+        importer.images = list(_get_images(soup))
         importer.set_text(text)
         importer.do_run()
 
