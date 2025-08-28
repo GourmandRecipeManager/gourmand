@@ -788,6 +788,7 @@ NUMBER_REGEXP = r"[\d"
 for k in list(UNICODE_FRACTIONS.keys()):
     NUMBER_REGEXP += k
 NUMBER_START_REGEXP = NUMBER_REGEXP + ",." + "]"
+# NUMBER_START_REGEXP = NUMBER_REGEXP + "]"
 NUMBER_END_NO_RANGE_REGEXP = NUMBER_START_REGEXP  # Is this right -- quick fix here.
 NUMBER_MID_REGEXP = NUMBER_REGEXP + ",." + SLASH
 NUMBER_MID_NO_RANGE_REGEXP = NUMBER_MID_REGEXP + " /]"
@@ -1034,12 +1035,8 @@ def float_string(s):
 
 def frac_to_float(s):
     """We assume fractions look like this (I )?N/D"""
-    try:
+    if isinstance(s, str):
         s = s.replace(",", ".")
-    except AttributeError:
-        # When a float goes through this it leads to an attribute error because
-        # it has no replace method.  Pass suppresses that specific exception.
-        pass
     if s in NUMBER_WORDS:
         return NUMBER_WORDS[s]
     if hasattr(s, "lower") and s.lower() in NUMBER_WORDS:

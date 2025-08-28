@@ -35,11 +35,13 @@ class ConvertTest(unittest.TestCase):
             ("1", 1),
             ("123", 123),
             ("1 1/2", 1.5),
-            # ("74 2/5", 74.4),  # TODO: Broken.
+            ("74 2/5", 74.4),
             ("1/10", 0.1),
             ("one", 1),
             ("a half", 0.5),
             ("three quarters", 0.75),
+            ("0.5", 0.5),
+            ("0,5", 0.5),
         ]:
             self.assertEqual(convert.frac_to_float(s), n)
 
@@ -48,6 +50,8 @@ class ConvertTest(unittest.TestCase):
             ("1 cup sugar", "1", "cup", "sugar"),
             ("1 1/2 cup sugar", "1 1/2", "cup", "sugar"),
             ("two cloves garlic", "two", "cloves", "garlic"),
+            ("0.5 cl gin", "0.5", "cl", "gin"),
+            ("0,5 cl gin", "0,5", "cl", "gin"),
         ]:
             match = convert.ING_MATCHER.match(s)
             self.assertTrue(match)
