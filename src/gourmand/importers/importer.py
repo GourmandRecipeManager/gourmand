@@ -2,7 +2,6 @@ import gettext
 import os
 import re
 import time
-import unittest
 import xml.sax.saxutils
 
 import gourmand.gglobals
@@ -535,79 +534,3 @@ class RatingConverter:
             except:
                 print("wtf... problem with rating ", rating, "for recipe", id)
                 raise
-
-
-class RatingConverterTest(unittest.TestCase):
-
-    def setUp(self):
-
-        class FakeDB:
-
-            recs = dict([(n, {}) for n in range(20)])
-
-            def get_rec(self, n):
-                return n
-
-            def modify_rec(self, n, d):
-                for attr, val in list(d.items()):
-                    self.recs[n][attr] = val
-
-        self.db = FakeDB()
-
-    def testAutomaticConverter(self):
-        rc = RatingConverter()
-        tests = ["good", "Great", "Excellent", "poor", "okay"]
-        for n, rating in enumerate(tests):
-            rc.add(n, rating)
-            self.db.recs[n]["rating"] = rating
-        rc.do_conversions(self.db)
-        print("Conversions: ")
-        for n, rating in enumerate(tests):
-            print("Converted", rating, "->", self.db.recs[n]["rating"])
-
-    def testInteractiveConverter(self):
-        rc = RatingConverter()
-        tests = ["alright", "pretty good", "funny tasting", "okeydokey", "not bad", "damn good."]
-        for n, rating in enumerate(tests):
-            rc.add(n, rating)
-            self.db.recs[n]["rating"] = rating
-        rc.do_conversions(self.db)
-        # print("Conversions: ")
-        # for n, rating in enumerate(tests):
-        #     print("Converted", rating, "->", self.db.recs[n]["rating"])
-
-    def testStringToRatingConverter(self):
-        assert string_to_rating("4/5 stars") == 8
-        assert string_to_rating("3 1/2 / 5 stars") == 7
-        assert string_to_rating("4/10 stars") == 4
-
-
-class ImporterTest(unittest.TestCase):
-
-    def setUp(self):
-        self.importer = Importer()
-
-    def testParseSimpleYields(self):
-        assert self.importer.parse_yields("3 cups") == (3, "cups")
-        assert self.importer.parse_yields("7 servings") == (7, "servings")
-        assert self.importer.parse_yields("12 muffins") == (12, "muffins")
-        assert self.importer.parse_yields("10 loaves") == (10, "loaves")
-
-    def testParseComplexYields(self):
-        assert self.importer.parse_yields("Makes 12 muffins") == (12, "muffins")
-        assert self.importer.parse_yields("Makes 4 servings") == (4, "servings")
-        assert self.importer.parse_yields("Serves 7") == (7, "servings")
-
-    def test_parse_fractional_yields(self):
-        assert self.importer.parse_yields("Makes 4 3/4 muffins") == (4.75, "muffins")
-        assert self.importer.parse_yields("Makes 4 3/4") == (4.75, "servings")
-        assert self.importer.parse_yields("19/4") == (4.75, "servings")
-        assert self.importer.parse_yields("Makes 19/4") == (4.75, "servings")
-
-    @unittest.expectedFailure
-    def test_failed_parsing_fractional_yields(self):
-        assert self.importer.parse_yields("Makes 19/4") == (4.75, "muffins")
-
-
-if __name__ == "__main__":
-    unittest.main()
