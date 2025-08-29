@@ -481,6 +481,7 @@ class InteractiveImporter(ConvenientImporter, NotThreadSafe):
         else:
             self.w.connect("delete-event", lambda *args: self.w.hide())
 
+
 def _get_images(soup: BeautifulSoup):
     """Extract image source url from Beautiful Soup parsed html."""
     for image in soup.find_all("img"):
