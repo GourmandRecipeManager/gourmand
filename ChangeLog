@@ -1,3 +1,9 @@
+lease note that this changelog is outdated and not updated any
+more in favor of GitHub releases.
+
+For all (documented) changes since the Gourmand fork, see
+https://github.com/GourmandRecipeManager/gourmand/releases
+
 2014-08-17  Bernhard Reiter  <ockham@raz.or.at>
 
         * Bump version to 0.17.5.
