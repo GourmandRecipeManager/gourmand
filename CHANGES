@@ -1,3 +1,12 @@
+Please note that this changelog is outdated and not updated any
+more in favor of GitHub releases.
+
+For all (documented) changes before the Gourmand fork, see
+https://github.com/thinkle/gourmet/releases
+
+For all (documented) changes since the Gourmand fork, see
+https://github.com/GourmandRecipeManager/gourmand/releases
+
 ==== Version 0.13.0 changes since 0.12.2 ====
 * Addition of hash fields to help with identification of duplicate
   recipes.
