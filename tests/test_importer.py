@@ -43,13 +43,13 @@ class ImporterTest(unittest.TestCase):
     def setUp(self):
         self.importer = importer.Importer()
 
-    def testParseSimpleYields(self):
+    def test_parse_simple_yields(self):
         assert self.importer.parse_yields("3 cups") == (3, "cups")
         assert self.importer.parse_yields("7 servings") == (7, "servings")
         assert self.importer.parse_yields("12 muffins") == (12, "muffins")
         assert self.importer.parse_yields("10 loaves") == (10, "loaves")
 
-    def testParseComplexYields(self):
+    def test_parse_complex_yields(self):
         assert self.importer.parse_yields("Makes 12 muffins") == (12, "muffins")
         assert self.importer.parse_yields("Makes 4 servings") == (4, "servings")
         assert self.importer.parse_yields("Serves 7") == (7, "servings")
@@ -82,28 +82,19 @@ class RatingConverterTest(unittest.TestCase):
 
         self.db = FakeDB()
 
-    def testAutomaticConverter(self):
+    def test_automatic_converter(self):
         rc = importer.RatingConverter()
-        tests = ["good", "Great", "Excellent", "poor", "okay"]
-        for n, rating in enumerate(tests):
+        tests = [("good", 6), ("Great", 8), ("Excellent", 10), ("poor", 2), ("okay", 4)]
+        for n, (rating, number) in enumerate(tests):
             rc.add(n, rating)
             self.db.recs[n]["rating"] = rating
         rc.do_conversions(self.db)
         print("Conversions: ")
-        for n, rating in enumerate(tests):
+        for n, (rating, number) in enumerate(tests):
             print("Converted", rating, "->", self.db.recs[n]["rating"])
+            self.assertEqual(self.db.recs[n]["rating"], number)
 
-    # This set of tests is interactive and is not suitable for automated testing.
-    # def testInteractiveConverter(self):
-    #     rc = importer.RatingConverter()
-    #     tests = ["alright", "pretty good", "funny tasting", "okeydokey", "not bad", "damn good."]
-    #     # tests = ["good", "Great", "Excellent", "poor", "okay"]
-    #     for n, rating in enumerate(tests):
-    #         rc.add(n, rating)
-    #         self.db.recs[n]["rating"] = rating
-    #     rc.do_conversions(self.db)
-
-    def testStringToRatingConverter(self):
+    def test_string_to_rating_converter(self):
         assert importer.string_to_rating("4/5 stars") == 8
         assert importer.string_to_rating("3 1/2 / 5 stars") == 7
         assert importer.string_to_rating("4/10 stars") == 4
