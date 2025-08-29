@@ -92,7 +92,7 @@ class RatingConverterTest(unittest.TestCase):
         print("Conversions: ")
         for n, (rating, number) in enumerate(tests):
             print("Converted", rating, "->", self.db.recs[n]["rating"])
-            self.assertEqual(self.db.recs[n]["rating"], number)
+            self.assertEqual(number, self.db.recs[n]["rating"])
 
     def test_string_to_rating_converter(self):
         assert importer.string_to_rating("4/5 stars") == 8
