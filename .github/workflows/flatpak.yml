@@ -15,6 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install Flatpak
       run: |
+        sudo apt-get update
         sudo apt install flatpak flatpak-builder
 
     - name: Setup Flatpak
