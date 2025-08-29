@@ -35,8 +35,6 @@ data-image-src="https://www.webtenerifefr.com/-/media/project/webtenerife/common
 
         images = list(interactive_importer._get_images(soup))
         self.assertListEqual(['https://www.webtenerifefr.com/-/media/project/webtenerife/common/logos_tenerife/tenerife_logo_degradado_fra.svg'], images)
-        self.assertNotIn('/dist/images/logo-tenerife-responsive.png', images)
-        self.assertNotIn('https://www.webtenerifefr.com/-/media/project/webtenerife/common/logos_tenerife/tenerife_logo_blanco_fra.png', images)
 
 
 class TestConvenientImporter(unittest.TestCase):
