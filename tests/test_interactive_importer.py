@@ -34,7 +34,7 @@ data-image-src="https://www.webtenerifefr.com/-/media/project/webtenerife/common
         soup = BeautifulSoup(html, "html.parser")
 
         images = list(interactive_importer._get_images(soup))
-        self.assertListEqual(['https://www.webtenerifefr.com/-/media/project/webtenerife/common/logos_tenerife/tenerife_logo_degradado_fra.svg'], images)
+        self.assertListEqual(["https://www.webtenerifefr.com/-/media/project/webtenerife/common/logos_tenerife/tenerife_logo_degradado_fra.svg"], images)
 
 
 class TestConvenientImporter(unittest.TestCase):
