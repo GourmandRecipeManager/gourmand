@@ -250,15 +250,15 @@ the base font size you would like to use.
 
 On Linux, including WSL, Gourmand stores its data by default in ~/.gourmand 
 or ~/.local/share/gourmand (i.e. a hidden subfolder of your home directory 
-named .gourmand -- mind the dot).  When using the flatpak version of
+named .gourmand -- mind the dot).  When using the Flatpak version of
 Gourmand the default directory is
 `~/.var/app/io.github.GourmandRecipeManager.Gourmand/data/gourmand`.
 
 On Windows, the gourmand directory (without the dot) is buried somewhere in 
-your user directory (normally <UserDir>\AppData\Roaming\gourmand).  If you 
+your user directory (normally <UserDir>\AppData\Roaming\gourmand). If you 
 can't find it, use Windows Explorer to search it within your user directory.
 
-You can change that location by use of the `--gourmand-directory` command
+You can change that location by using the `--gourmand-directory` command
 line option. (Try `gourmand --help` for a list of all available options.)
 
 Also note the `--database-url` option which allows specifying an
@@ -287,5 +287,5 @@ https://github.com/GourmandRecipeManager/gourmand/issues
 13.b. What if I find a bug?
 
 Please submit an issue tagged with the 'bug' label (and possibly other
-applicable labels)  at the following website:
+applicable labels) at the following website:
 https://github.com/GourmandRecipeManager/gourmand/issues
