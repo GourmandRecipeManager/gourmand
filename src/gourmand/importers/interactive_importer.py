@@ -482,6 +482,13 @@ class InteractiveImporter(ConvenientImporter, NotThreadSafe):
             self.w.connect("delete-event", lambda *args: self.w.hide())
 
 
+def _get_images(soup: BeautifulSoup):
+    """Extract image source url from Beautiful Soup parsed html."""
+    for image in soup.find_all("img"):
+        if image.attrs.get("src", "").startswith("http"):
+            yield image["src"]
+
+
 def import_interactivally(uris: List[str]):
     """Import pages not supported by recipe-scrapers."""
     for uri in uris:
@@ -491,7 +498,7 @@ def import_interactivally(uris: List[str]):
         soup = BeautifulSoup(resp.text, "html.parser")
         text = soup.get_text().replace("  ", "\n")  # Make the text more readable
         importer = InteractiveImporter()
-        importer.images = [img["src"] for img in soup.find_all("img") if img["src"].startswith("http")]
+        importer.images = list(_get_images(soup))
         importer.set_text(text)
         importer.do_run()
 
