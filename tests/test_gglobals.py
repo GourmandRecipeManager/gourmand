@@ -17,12 +17,8 @@ class TestLinkColor(unittest.TestCase):
         fgcolor = Mock()
         Gtk.TextView().get_style_context().get_background_color.return_value = dark_bgcolor
         Gtk.TextView().get_style_context().get_color.return_value = fgcolor
-        fgcolor.red = 1
-        fgcolor.green = 1
-        fgcolor.blue = 1
-        dark_bgcolor.red = 0.18
-        dark_bgcolor.green = 0.18
-        dark_bgcolor.blue = 0.19
+        fgcolor.red, fgcolor.green, fgcolor.blue = (1, 1, 1)
+        dark_bgcolor.red, dark_bgcolor.green, dark_bgcolor.blue = (0.18, 0.18, 0.19)
         link_color_actual, star_color_actual = \
             _get_link_and_star_color()
         self.assertEqual("deeppink", link_color_actual)
@@ -36,12 +32,8 @@ class TestLinkColor(unittest.TestCase):
         fgcolor = Mock()
         Gtk.TextView().get_style_context().get_background_color.return_value = light_bgcolor
         Gtk.TextView().get_style_context().get_color.return_value = fgcolor
-        fgcolor.red = 0.13
-        fgcolor.green = 0.13
-        fgcolor.blue = 0.13
-        light_bgcolor.red = 1
-        light_bgcolor.green = 1
-        light_bgcolor.blue = 1
+        fgcolor.red, fgcolor.green, fgcolor.blue = (0.13, 0.13, 0.13)
+        light_bgcolor.red, light_bgcolor.green, light_bgcolor.blue = (1, 1, 1)
         link_color_actual, star_color_actual = \
             _get_link_and_star_color()
         self.assertEqual("blue", link_color_actual)
