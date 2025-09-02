@@ -1,7 +1,7 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
-from gourmand.gglobals import get_link_and_star_color
+from gourmand.gglobals import _get_link_and_star_color
 
 
 class TestLinkColor(unittest.TestCase):
@@ -9,11 +9,14 @@ class TestLinkColor(unittest.TestCase):
     def setUp(self):
         pass
 
-    @patch("gourmand.gglobals.fgcolor")
-    @patch("gourmand.gglobals.bgcolor")
-    def test_dark_mode_link_color(self, dark_bgcolor, fgcolor):
+    @patch("gourmand.gglobals.Gtk")
+    def test_dark_mode_link_color(self, Gtk):
         # Closer to 0 is darker.  So in dark mode the background
         # will be a smaller value than the foreground color.
+        dark_bgcolor = Mock()
+        fgcolor = Mock()
+        Gtk.TextView().get_style_context().get_background_color.return_value = dark_bgcolor
+        Gtk.TextView().get_style_context().get_color.return_value = fgcolor
         fgcolor.red = 1
         fgcolor.green = 1
         fgcolor.blue = 1
@@ -21,15 +24,18 @@ class TestLinkColor(unittest.TestCase):
         dark_bgcolor.green = 0.18
         dark_bgcolor.blue = 0.19
         link_color_actual, star_color_actual = \
-            get_link_and_star_color(dark_bgcolor, fgcolor)
+            _get_link_and_star_color()
         self.assertEqual("deeppink", link_color_actual)
         self.assertEqual("gold", star_color_actual)
 
-    @patch("gourmand.gglobals.fgcolor")
-    @patch("gourmand.gglobals.bgcolor")
-    def test_light_mode_link_color(self, light_bgcolor, fgcolor):
+    @patch("gourmand.gglobals.Gtk")
+    def test_light_mode_link_color(self, Gtk):
         # Closer to 0 is darker.  So in light mode the background
         # will be a larger value than the foreground color.
+        light_bgcolor = Mock()
+        fgcolor = Mock()
+        Gtk.TextView().get_style_context().get_background_color.return_value = light_bgcolor
+        Gtk.TextView().get_style_context().get_color.return_value = fgcolor
         fgcolor.red = 0.13
         fgcolor.green = 0.13
         fgcolor.blue = 0.13
@@ -37,6 +43,6 @@ class TestLinkColor(unittest.TestCase):
         light_bgcolor.green = 1
         light_bgcolor.blue = 1
         link_color_actual, star_color_actual = \
-            get_link_and_star_color(light_bgcolor, fgcolor)
+            _get_link_and_star_color()
         self.assertEqual("blue", link_color_actual)
         self.assertEqual("blue", star_color_actual)

@@ -106,7 +106,11 @@ for filename, stock_id, label, modifier, keyval in [
     add_icon(load_pixbuf_from_resource(filename), stock_id, label, modifier, keyval)
 
 # Color scheme preference
-def get_link_and_star_color(bgcolor, fgcolor):
+def _get_link_and_star_color():
+    dummy_tv = Gtk.TextView()
+    style = dummy_tv.get_style_context()
+    bgcolor = style.get_background_color(Gtk.StateType.NORMAL)
+    fgcolor = style.get_color(Gtk.StateType.NORMAL)
     total_bg = sum([bgcolor.red, bgcolor.green, bgcolor.blue])
     total_fg = sum([fgcolor.red, fgcolor.green, fgcolor.blue])
     # Dark mode
@@ -118,11 +122,7 @@ def get_link_and_star_color(bgcolor, fgcolor):
         star_color = "blue"
     return (link_color, star_color)
 
-dummy_tv = Gtk.TextView()
-style = dummy_tv.get_style_context()
-bgcolor = style.get_background_color(Gtk.StateType.NORMAL)
-fgcolor = style.get_color(Gtk.StateType.NORMAL)
-LINK_COLOR, star_color = get_link_and_star_color(bgcolor, fgcolor)
+LINK_COLOR, star_color = _get_link_and_star_color()
 
 NO_STAR = Path(__file__).parent / "data" / "images" / "no_star.png"
 HALF_STAR = Path(__file__).parent / "data" / "images" / f"half_{star_color}_star.png"
