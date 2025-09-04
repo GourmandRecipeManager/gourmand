@@ -107,16 +107,25 @@ for filename, stock_id, label, modifier, keyval in [
 
 
 # Color scheme preference
-LINK_COLOR = "blue"
-star_color = "blue"
+def _get_link_and_star_color():
+    dummy_tv = Gtk.TextView()
+    style = dummy_tv.get_style_context()
+    bgcolor = style.get_background_color(Gtk.StateType.NORMAL)
+    fgcolor = style.get_color(Gtk.StateType.NORMAL)
+    total_bg = sum([bgcolor.red, bgcolor.green, bgcolor.blue])
+    total_fg = sum([fgcolor.red, fgcolor.green, fgcolor.blue])
+    if total_bg < total_fg:
+        # Dark mode
+        link_color = "deeppink"
+        star_color = "gold"
+    else:
+        # Light mode
+        link_color = "blue"
+        star_color = "blue"
+    return link_color, star_color
 
-style = Gtk.StyleContext.new()
-_, bg_color = style.lookup_color("bg_color")
-_, fg_color = style.lookup_color("fg_color")
 
-if sum(fg_color) > sum(bg_color):  # background is darker
-    LINK_COLOR = "deeppink"
-    star_color = "gold"
+LINK_COLOR, star_color = _get_link_and_star_color()
 
 NO_STAR = Path(__file__).parent / "data" / "images" / "no_star.png"
 HALF_STAR = Path(__file__).parent / "data" / "images" / f"half_{star_color}_star.png"
