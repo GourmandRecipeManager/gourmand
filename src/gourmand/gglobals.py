@@ -105,6 +105,7 @@ for filename, stock_id, label, modifier, keyval in [
 ]:
     add_icon(load_pixbuf_from_resource(filename), stock_id, label, modifier, keyval)
 
+
 # Color scheme preference
 def _get_link_and_star_color():
     dummy_tv = Gtk.TextView()
@@ -113,14 +114,16 @@ def _get_link_and_star_color():
     fgcolor = style.get_color(Gtk.StateType.NORMAL)
     total_bg = sum([bgcolor.red, bgcolor.green, bgcolor.blue])
     total_fg = sum([fgcolor.red, fgcolor.green, fgcolor.blue])
-    # Dark mode
     if total_bg < total_fg:
+        # Dark mode
         link_color = "deeppink"
         star_color = "gold"
-    else: # Light mode
+    else:
+        # Light mode
         link_color = "blue"
         star_color = "blue"
-    return (link_color, star_color)
+    return link_color, star_color
+
 
 LINK_COLOR, star_color = _get_link_and_star_color()
 
