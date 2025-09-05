@@ -1,10 +1,12 @@
 import ast
 import os
-from logging import INFO
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Union
 
 from setuptools import Command, find_packages, setup
+from setuptools.command.build_py import build_py
 from setuptools.command.develop import develop
 from setuptools.command.sdist import sdist
 from wheel.bdist_wheel import bdist_wheel
@@ -71,6 +73,7 @@ class BuildI18n(Command):
 
     def run(self):
         # compile message catalogs to binary format
+        msgfmt = shutil.which("msgfmt")
         for lang in LANGS:
             pofile = PODIR / f"{lang}.po"
 
@@ -78,12 +81,18 @@ class BuildI18n(Command):
             mofile.mkdir(parents=True, exist_ok=True)
             mofile /= f"{PACKAGE}.mo"
 
-            cmd = f"msgfmt {pofile} -o {mofile}"
-            os.system(cmd)
+            cmd = [msgfmt, pofile, "-o", mofile]
+            if not msgfmt:
+                self.warn(f"msgfmt not found, skipping {cmd!r} call ...")
+            else:
+                subprocess.run(cmd)
 
         # merge translated strings into various file types
         cachefile = PODIR / ".intltool-merge-cache"
-        cmd = f"LC_ALL=C intltool-merge -u -c {cachefile} {PODIR}"
+        custom_environment = os.environ.copy()
+        custom_environment["LC_ALL"] = "C"
+        intltool_merge = shutil.which("intltool-merge")
+        cmd = [intltool_merge, "-u", "-c", cachefile, PODIR]
 
         for infile in DATADIR.rglob("*.in"):
             # trim '.in' extension
@@ -103,7 +112,11 @@ class BuildI18n(Command):
             else:
                 assert False, f"Unknown file type: {infile}"
 
-            os.system(f"{cmd} {flag} {infile} {outfile}")
+            full_cmd = cmd + [flag, infile, outfile]
+            if not intltool_merge:
+                self.warn(f"intltool-merge not found, skipping {full_cmd!r} call ...")
+            else:
+                subprocess.run(full_cmd)
 
         rmfile(cachefile)
         rmfile(f"{cachefile}.lock")
@@ -157,26 +170,11 @@ class Develop(develop):
         super().run()
 
 
-class UpdateI18n(Command):
-    description = "Create/update po/pot translation files"
-    user_options = []
-
-    def initialize_options(self):
-        # Command subclasses must implement this "abstract" method
-        pass
-
-    def finalize_options(self):
-        # Command subclasses must implement this "abstract" method
-        pass
+class BuildPy(build_py):
 
     def run(self):
-        self.announce("Creating POT file", INFO)
-        cmd = f"cd {PODIR}; intltool-update --pot --gettext-package={PACKAGE}"
-        os.system(cmd)
-
-        for lang in LANGS:
-            self.announce(f"Updating {lang}.po", INFO)
-            os.system(f"cd {PODIR};" f"intltool-update --dist --gettext-package={PACKAGE} {lang}")
+        self.run_command("build_i18n")
+        super().run()
 
 
 setup(
@@ -217,9 +215,9 @@ setup(
     cmdclass={
         "bdist_wheel": BuildWheel,
         "build_i18n": BuildI18n,
-        "develop": Develop,
+        "build_py": BuildPy,
+        "develop": Develop,  # TODO: Drop later.
         "sdist": BuildSource,
-        "update_i18n": UpdateI18n,
     },
     entry_points={
         "gui_scripts": [
