@@ -5,8 +5,6 @@ import sys
 import traceback
 from typing import Dict, List
 
-import pkg_resources
-
 from gourmand import gglobals
 from gourmand.prefs import Prefs
 
@@ -14,9 +12,9 @@ from .defaults.defaults import loc
 from .gdebug import debug
 
 if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
+    from importlib_metadata import distribution, entry_points
 else:
-    from importlib.metadata import entry_points
+    from importlib.metadata import distribution, entry_points
 
 PRE = 0
 POST = 1
@@ -247,15 +245,19 @@ class Plugin:
         self.api_version = 2.0
         self.copyright = plugin_class.COPYRIGHT
         self.website = plugin_class.WEBSITE
-        attrs = pkg_resources.require(self.name)[0]
-        self.version = attrs.version
+        dist = distribution(self.name)
+        self.version = dist.version
 
+        # TODO: Evaluate if we really need this code. Ideally, the package
+        #       already takes care of it automatically without us having to
+        #       do more complex requirement parsing and marker evaluation.
         # The following is a backward compatibility hack: pip took care to
         # install the plugin and its dependencies.
         # Moreover, Gtk bindings are packaged as pygobject but installed as gi.
         # We have it anyway.
-        self.dependencies = [r.name for r in attrs.requires()]
-        self.dependencies.remove("pygobject")
+        # self.dependencies = [r.name for r in attrs.requires()]
+        # self.dependencies.remove("pygobject")
+        self.dependencies = []
 
         self.module = plugin_class.__module__
         self.plugins = [plugin_class]
