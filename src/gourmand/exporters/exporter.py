@@ -161,6 +161,7 @@ class exporter(SuspendableThread, Pluggable):
             if txt and txt.strip():
                 if self.do_markup:
                     txt = self.handle_markup(txt)
+                    txt = xml.sax.saxutils.unescape(txt)
                 # else: print 'exporter: do_markup=False'
                 if not self.use_ml:
                     txt = xml.sax.saxutils.unescape(txt)
