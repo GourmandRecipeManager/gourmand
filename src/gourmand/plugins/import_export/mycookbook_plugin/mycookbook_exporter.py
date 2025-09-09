@@ -69,8 +69,11 @@ class rec_to_mcb(XmlExporter):
 
     def write_image(self, image: bytes):
         # write image file to the temp directory
+        self.current_title = self.current_title.replace('w/', 'with')
+        self.current_title = self.current_title.replace('/', '')
         img_fname = f"{self.current_title}.png"
         pic_fullpath = os.path.join(tempfile.gettempdir(), "images", img_fname)
+
         result = gourmand.image_utils.bytes_to_image(image)
         result.save(pic_fullpath)
 
