@@ -318,6 +318,7 @@ class exporter(SuspendableThread, Pluggable):
             start, end = ai.range()
             # The range should never split up a code point in the UTF-8
             chunk = xml.sax.saxutils.escape(b[start:end].decode("utf-8"))
+            chunk = xml.sax.saxutils.escape(chunk)
             trailing_newline = ""
             fields = fd.get_set_fields()
             if fields != 0:  # if there are fields
