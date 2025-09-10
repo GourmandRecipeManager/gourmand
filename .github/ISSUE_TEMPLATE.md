@@ -1,3 +1,9 @@
+---
+name: Report issue
+about: Report an issue
+title: ''
+---
+
 <!--- Provide a general summary of the issue in the title above -->
 
 ### Steps to Reproduce
