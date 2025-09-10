@@ -10,6 +10,7 @@ from recipe_scrapers import SCRAPERS, scrape_html
 from recipe_scrapers._exceptions import SchemaOrgException
 
 from gourmand import __version__
+from gourmand.gdebug import debug
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
 from gourmand.recipeManager import get_recipe_manager
 from gourmand.structure import Recipe
@@ -50,15 +51,11 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
     for url in urls:
         req = Request(url, headers=HEADERS)
         try:
-            response = urlopen(req)
-            html = response.read()
+            with urlopen(req) as response:
+                html = response.read()
         except URLError as e:
-            if hasattr(e, 'reason'):
-                print('We failed to reach a server.')
-                print('Reason: ', e.reason)
-            elif hasattr(e, 'code'):
-                print('The server couldn\'t fulfill the request.')
-                print('Error code: ', e.code)
+            debug('The server couldn\'t fulfill the request.', 1)
+            debug(f'Reason: {e.reason}', 1)
             continue
         recipe = scrape_html(html, org_url=url)
         # Fetch the image if available, or else open an ImageBrowser
