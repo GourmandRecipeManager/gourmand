@@ -131,7 +131,7 @@ and add it to git.
 Once the translation is done, update the translations:
 
 ```bash
-python setup.py build_i18n
+python private/update_i18n.py
 ```
 
 Launch Gourmand and check the changes.  
@@ -146,11 +146,16 @@ It is run with [pytest](https://docs.pytest.org/):
 LC_ALL=C pytest
 ```
 
-Most modern python IDEs have support for running the tests usin pytest.
+Most modern python IDEs have support for running the tests using pytest.
 
 **Warning:** Running the tests will most likely mess with your local configuration and
 database file. Please make sure to backup the corresponding directory content manually
 BEFORE running the tests.
+
+**Note:** The current test suite unfortunately is rather small, thus we tend to be
+careful with changes which might break stuff. The maintainers encourage every
+contributor to add tests alongside their patches and/or utilize the principles of
+test-driven development by writing tests before fixing a bug.
 
 ## Blaming
 
