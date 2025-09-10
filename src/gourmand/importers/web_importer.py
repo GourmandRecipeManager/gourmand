@@ -68,10 +68,16 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
                 thumbnail = image_to_bytes(thumbnail)
                 image = image_to_bytes(browser.image)
 
+        # If a recipe doesn't have all the expected information a
+        # SchemaOrgException is raised.  Catch it and assign a default
+        # rating value.
+        try:
+            rating = recipe.ratings()
+        except SchemaOrgException:
+            rating = 0
         # Gourmet has a 5-stars rating, stored as int between 0 and 10.
         # We assume that if the value is a float below 5, it's scaled to 5, and
         # we rescale it to 10.
-        rating = recipe.ratings()
         if isinstance(rating, float) and rating <= 5.0:
             rating = rating * 2
         rating = int(rating)
