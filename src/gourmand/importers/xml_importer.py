@@ -14,7 +14,7 @@ class RecHandler(xml.sax.ContentHandler, importer.Importer):
     def __init__(self, total=None, conv=None, parent_thread=None):
         self.elbuf = ""
         xml.sax.ContentHandler.__init__(self)
-        importer.Importer.__init__(self, total=total, do_markup=False, conv=conv)
+        importer.Importer.__init__(self, total=total, do_markup=True, conv=conv)
         self.parent_thread = parent_thread
         self.check_for_sleep = parent_thread.check_for_sleep
         self.terminate = parent_thread.terminate

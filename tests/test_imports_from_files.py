@@ -70,6 +70,22 @@ class ImportTest(unittest.TestCase):
             assert not cats, "Categories include %s not specified in %s" % (cats, test["categories"])
         print("Passed test:", test)
 
+    def run_test_2(self, d):
+        self.db.delete_by_criteria(self.db.recipe_table, {"title": d["test"]["title"]})
+        filename = str(TEST_FILE_DIRECTORY / d["filename"])
+        self.im.import_filenames([filename])
+        self.do_test_2(d["test"])
+
+    def do_test_2(self, test):
+        recs = self.db.search_recipes([{"column": "deleted", "search": False, "operator": "="}, {"column": "title", "search": test["title"], "operator": "="}])
+        assert recs, 'No recipe found with title "%s".' % test["title"]
+        rec = recs[0]
+        for blobby_attribute in ["instructions", "modifications"]:
+            if test.get(blobby_attribute, False):
+                match_text = test[blobby_attribute]
+                assert match_text == getattr(rec, blobby_attribute)
+
+
     def progress(self, bar, msg):
         pass
 
@@ -123,6 +139,19 @@ class ImportTest(unittest.TestCase):
                 "test": {
                     "title": "Best Brownies",
                     "link": "https://www.allrecipes.com/recipe/10549/best-brownies/",
+                },
+            }
+        )
+
+
+    def test_grmt_formatting_and_special_chars(self):
+        self.run_test_2(
+            {
+                "filename": "special_chars.grmt",
+                "test": {
+                    "title": "Yes special characters - Origx2",
+                    "instructions": '<b>less than bold &lt;</b>\n<i>greater than italic &gt;</i>\n<u>ampersand underlined &amp;</u>\nAll 10 symbols above <u>nu\
+mbers </u><u><b>!@#</b></u><u><i>$%</i></u><u><b>^&amp;*()</b></u>',
                 },
             }
         )
