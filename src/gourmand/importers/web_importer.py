@@ -54,7 +54,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
             with urlopen(req) as response:
                 html = response.read()
         except URLError as e:
-            debug('The server couldn\'t fulfill the request.', 1)
+            debug('The server could not fulfill the request.', 1)
             debug(f'Reason: {e.reason}', 1)
             continue
         recipe = scrape_html(html, org_url=url)
