@@ -67,15 +67,9 @@ class rec_to_mcb(XmlExporter):
                 attr_el = self.create_text_element("li", line)
                 self.attrlist_el.appendChild(attr_el)
 
-    def sanitize_image_name(self, filename):
-        """Given an image name make sure no '/' are present"""
-        filename = filename.replace('w/', 'with')
-        filename = filename.replace('/', '')
-        return filename
-
     def write_image(self, image: bytes):
         # write image file to the temp directory
-        self.current_title = self.sanitize_image_name(self.current_title)
+        self.current_title = sanitize_image_name(self.current_title)
         img_fname = f"{self.current_title}.png"
         pic_fullpath = os.path.join(tempfile.gettempdir(), "images", img_fname)
 
@@ -212,3 +206,9 @@ class recipe_table_to_xml(exporter.ExporterMultirec, XmlExporter):
 
 def quoteattr(str):
     return xml.sax.saxutils.quoteattr(xml.sax.saxutils.escape(str))
+
+def sanitize_image_name(filename):
+    """Given an image name make sure no '/' are present before export"""
+    filename = filename.replace('w/', 'with')
+    filename = filename.replace('/', '')
+    return filename
