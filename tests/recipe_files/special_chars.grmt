@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gourmetDoc>
+<gourmetDoc>
+	<recipe id="11">
+		<title>Yes special characters - Origx2</title>
+		<instructions>&lt;b&gt;less than bold &amp;lt;&lt;/b&gt;
+&lt;i&gt;greater than italic &amp;gt;&lt;/i&gt;
+&lt;u&gt;ampersand underlined &amp;amp;&lt;/u&gt;
+All 10 symbols above &lt;u&gt;numbers &lt;/u&gt;&lt;u&gt;&lt;b&gt;!@#&lt;/b&gt;&lt;/u&gt;&lt;u&gt;&lt;i&gt;$%&lt;/i&gt;&lt;/u&gt;&lt;u&gt;&lt;b&gt;^&amp;amp;*()&lt;/b&gt;&lt;/u&gt;</instructions>
+	</recipe>
+</gourmetDoc>
