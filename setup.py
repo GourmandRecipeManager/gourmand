@@ -204,8 +204,8 @@ setup(
         "pygobject>=3.40.1,<=3.50.0",  # Issues with Ubuntu 22.04: https://github.com/beeware/toga/issues/3143
         "sqlalchemy>=1.4.36,<2",
         "tomli-w>=1.0.0",
-        'toml==0.10.2; python_version<"3.11"',
-        "recipe-scrapers>=14.27.0,<15",
+        'tomli; python_version<"3.11"',
+        "recipe-scrapers>=14.27.0",
     ],
     extras_require={
         "epub-export": ["ebooklib==0.17.1"],
