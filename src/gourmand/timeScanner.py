@@ -1,34 +1,13 @@
 """Scan text for time and show links that will pop up a timer if the
 user clicks on any time in the TextView."""
 
-import re
 from typing import Optional, Union
 
 from gi.repository import GObject, Gtk
 
 from gourmand import timer
-from gourmand.convert import NUMBER_FINDER_REGEXP, RANGE_REGEXP, Converter
+from gourmand.convert import Converter, time_matcher
 from gourmand.gtk_extras.LinkedTextView import LinkedPangoBuffer, LinkedTextView
-
-all_units = set()
-for base, units in Converter.time_units:
-    for u in units:
-        u = re.escape(str(u))
-        all_units.add(u)
-
-time_matcher = re.compile(
-    "(?P<firstnum>"
-    + NUMBER_FINDER_REGEXP
-    + ")("
-    + RANGE_REGEXP
-    + NUMBER_FINDER_REGEXP.replace("int", "int2").replace("frac", "frac2")
-    + ")?"
-    + r"\s*"
-    + "(?P<unit>"
-    + "|".join(all_units)
-    + r")(?=$|\W)",
-    re.UNICODE,
-)
 
 
 def make_time_links(s: str) -> str:
@@ -86,8 +65,9 @@ class LinkedTimeView(LinkedTextView):
         time_string = self.get_buffer().get_slice(start_ts, end_ts, False)
 
         # Confirm that is is in the links dictionary.
-        if self.get_buffer().markup_dict.get(time_string) == time_string:
-            self.emit("time-link-activated", time_string, sentence)
+        time_ = self.get_buffer().markup_dict.get(time_string)
+        if time_ is not None:
+            self.emit("time-link-activated", time_, sentence)
 
         return False  # Do not process the event further.
 
