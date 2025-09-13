@@ -58,3 +58,14 @@ class ConvertTest(unittest.TestCase):
             self.assertEqual(match.group(convert.ING_MATCHER_AMT_GROUP).strip(), a)
             self.assertEqual(match.group(convert.ING_MATCHER_UNIT_GROUP).strip(), u)
             self.assertEqual(match.group(convert.ING_MATCHER_ITEM_GROUP).strip(), i)
+
+    def test_timestring_to_seconds(self):
+        converter_1 = convert.Converter()
+        for timestring, seconds in [
+            ("15 seconds", 15),
+            ("10 minutes", 600),
+            ("3 hours", 3*60*60),
+            ("3 days", 3*24*60*60),
+        ]:
+            result = convert.Converter.timestring_to_seconds(converter_1, timestring)
+            self.assertEqual(result, seconds)
