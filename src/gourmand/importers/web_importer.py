@@ -48,7 +48,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
             unsupported.append(url)
             urls.remove(url)
 
-    for url in urls:      
+    for url in urls:
         req = Request(url, headers=HEADERS)
         try:
             with urlopen(req) as response:
