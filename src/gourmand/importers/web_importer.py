@@ -1,17 +1,24 @@
 """Import recipes from the web using recipe-scrapers."""
 
 from typing import List, Tuple
+from urllib.error import URLError
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 from gi.repository import Gtk
 from recipe_scrapers import SCRAPERS, scrape_html
 from recipe_scrapers._exceptions import SchemaOrgException
 
+from gourmand import __version__
+from gourmand.gdebug import debug
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
 from gourmand.recipeManager import get_recipe_manager
 from gourmand.structure import Recipe
 
 supported_sites = list(SCRAPERS.keys())
+HEADERS = {
+    "User-Agent": f"Mozilla/5.0 (compatible; Windows NT 10.0; Win64; x64) gourmand/{__version__}"
+}
 
 
 def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
@@ -42,7 +49,15 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
             urls.remove(url)
 
     for url in urls:
-        recipe = scrape_html(html=None, org_url=url)
+        req = Request(url, headers=HEADERS)
+        try:
+            with urlopen(req) as response:
+                html = response.read()
+        except URLError as e:
+            debug('The server could not fulfill the request.', 1)
+            debug(f'Reason: {e.reason}', 1)
+            continue
+        recipe = scrape_html(html, org_url=url)
         # Fetch the image if available, or else open an ImageBrowser
         # to let the user select one.
         image = thumbnail = None
