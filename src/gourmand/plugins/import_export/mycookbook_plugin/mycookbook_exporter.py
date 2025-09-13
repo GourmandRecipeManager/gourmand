@@ -207,6 +207,7 @@ class recipe_table_to_xml(exporter.ExporterMultirec, XmlExporter):
 def quoteattr(str):
     return xml.sax.saxutils.quoteattr(xml.sax.saxutils.escape(str))
 
+
 def sanitize_image_name(filename):
     """Given an image name make sure no '/' are present before export"""
     filename = filename.replace('w/', 'with')
