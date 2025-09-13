@@ -69,8 +69,10 @@ class rec_to_mcb(XmlExporter):
 
     def write_image(self, image: bytes):
         # write image file to the temp directory
+        self.current_title = sanitize_image_name(self.current_title)
         img_fname = f"{self.current_title}.png"
         pic_fullpath = os.path.join(tempfile.gettempdir(), "images", img_fname)
+
         result = gourmand.image_utils.bytes_to_image(image)
         result.save(pic_fullpath)
 
@@ -204,3 +206,10 @@ class recipe_table_to_xml(exporter.ExporterMultirec, XmlExporter):
 
 def quoteattr(str):
     return xml.sax.saxutils.quoteattr(xml.sax.saxutils.escape(str))
+
+
+def sanitize_image_name(filename):
+    """Given an image name make sure no '/' are present before export"""
+    filename = filename.replace('w/', 'with')
+    filename = filename.replace('/', '')
+    return filename
