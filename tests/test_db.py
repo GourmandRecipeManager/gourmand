@@ -241,6 +241,12 @@ class TestMoreDataStuff(DBTest):
             # Change back our ingredient...
             r = self.db.modify_ing(i, {attr: orig_attrs[attr]})
 
+    def test_category_none(self):
+        expected = []
+        r = self.db.add_rec({"title": "Category None Test", "category": None})
+        result = self.db.get_cats(r)
+        self.assertEqual(expected, result)
+
 
 def test_format_amount_string_from_amount():
     ret = db.RecData.format_amount_string_from_amount((0.5, 1))
