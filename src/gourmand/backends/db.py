@@ -1266,7 +1266,7 @@ class RecData(Pluggable):
         and returns the entry in the database as a RowProxy.
         """
         cats = []
-        if "category" in dic:
+        if dic.get('category') is not None:
             cats = [v.strip() for v in dic["category"].split(",") if v]
             del dic["category"]
         if "servings" in dic:
