@@ -585,7 +585,7 @@ class Converter:
             if unit in self.unit_dict:
                 conv = self.converter(unit, "seconds")
                 if conv and num:
-                    secs = (num * conv)
+                    secs += (num * conv)
         return secs
 
 
@@ -806,7 +806,7 @@ else:
 
 FRACTION_MATCHER = re.compile(NUM_AND_FRACTION_REGEXP, re.UNICODE)
 
-NUMBER_FINDER_REGEXP = r"(%(NUM_AND_FRACTION_REGEXP)s|%(NUMBER_NO_RANGE_REGEXP)s)(?=($| |[\s]))" % locals()
+NUMBER_FINDER_REGEXP = r"(%(NUM_AND_FRACTION_REGEXP)s|%(NUMBER_NO_RANGE_REGEXP)s)(?=($| |[\s]|-))" % locals()
 NUMBER_FINDER = re.compile(NUMBER_FINDER_REGEXP, re.UNICODE)
 
 # Note: the order matters on this range regular expression in order
@@ -824,8 +824,9 @@ for base, units in Converter.time_units:
 time_matcher = re.compile(
     "(?P<firstnum>"
     + NUMBER_FINDER_REGEXP
-    + ")("
+    + ")(?P<range>"
     + RANGE_REGEXP
+    + ")?(?P<secondnum>"
     + NUMBER_FINDER_REGEXP.replace("int", "int2").replace("frac", "frac2")
     + ")?"
     + r"\s*"
