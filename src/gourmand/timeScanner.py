@@ -26,7 +26,6 @@ def make_time_links(s: str) -> str:
 
     Although minutes is the only time unit shown in the above examples, other
     units such as seconds, hours and days are also recognized.
-
     """
     start = 0
     while True:
