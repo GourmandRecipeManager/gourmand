@@ -44,8 +44,10 @@ def make_time_links(s: str) -> str:
             subbed_text = time_matcher.sub(r'<a href="\g<firstnum> \g<unit>">\g<0></a>', s[start:end])
         # Occurs when there is a range (e.g. 35 to 40 minutes)
         else:
-            subbed_text = time_matcher.sub(r'<a href="\g<firstnum> \g<unit>">\g<firstnum>\g<range></a>' \
-            r'<a href="\g<secondnum> \g<unit>">\g<secondnum> \g<unit></a>', s[start:end])
+            subbed_text = time_matcher.sub(
+                r'<a href="\g<firstnum> \g<unit>">\g<firstnum>\g<range></a>'
+                r'<a href="\g<secondnum> \g<unit>">\g<secondnum> \g<unit></a>',
+                s[start:end])
 
         # Substitute the text with a link in for the text that was matched.
         s = s[:start] + subbed_text + s[end:]
