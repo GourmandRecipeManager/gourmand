@@ -2955,15 +2955,6 @@ class YieldSelector(de.ModalDialog):
 
 
 class CuisineEditorModule(RecEditorModule):
-    """
-    Todo:
-    - DONEZO !!! Clean up the following code / files:
-      - DONEZO!!! src/gourmand/backends/db.py
-      - DONEZO!!! src/gourmand/reccard.py
-      - DONEZO!!! src/gourmand/ui/recCardCuisinesEditor.ui
-    - DONEZO!!! Investigate how sorting works.
-    - Make git history look sane / clean and easier to follow.
-    """
     # This is the way to refer to this module / tab programatically.
     # Example: In RecEditor.notebook_changed_cb there is a line
     # self.last_merged_ui = self.ui_manager.add_ui_from_string(self.modules[page].ui_string)
@@ -3070,6 +3061,8 @@ class CuisineEditorModule(RecEditorModule):
 
         # Update various displays immediately
         self.UI_update_after_change(self.current_rec)
+
+        return True
 
     def update_from_database(self):
         """Get cuisine values from database and setup UI"""
