@@ -185,11 +185,7 @@ class RecData(Pluggable):
         self.setup_tables()
         self.metadata.create_all()
         self.update_version_info(gourmand.__version__.version)
-        # Test code got messed up with this migration code
-        # Test code uses a /tmp/ directory, so this check passes when the
-        # program is running in application mode vs being tested.
-        if '/tmp/' not in self.db.url.database:
-            self.migrate_cuisines_to_cuisine_table()
+        self.migrate_cuisines_to_cuisine_table()
         self._created = True
         timer.end()
 
