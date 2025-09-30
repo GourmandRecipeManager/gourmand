@@ -135,6 +135,13 @@ class GourmandApplication:
         """Initialize recipe database from the recipe manager."""
         self.rd = recipeManager.default_rec_manager()
 
+        # Migrate once if it has not occurred yet, update preference file
+        if ( (self.prefs.get('migrate_db') is None) or
+             (self.prefs.get('migrate_db')['cuisine']) ):
+            self.rd.rd.migrate_cuisines_to_cuisine_table()
+            self.prefs['migrate_db'] = {'cuisine': False}
+            self.prefs.save()
+
         # Add auto save
         def autosave():
             self.rd.save()

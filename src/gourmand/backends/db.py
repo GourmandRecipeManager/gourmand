@@ -185,7 +185,6 @@ class RecData(Pluggable):
         self.setup_tables()
         self.metadata.create_all()
         self.update_version_info(gourmand.__version__.version)
-        self.migrate_cuisines_to_cuisine_table()
         self._created = True
         timer.end()
 
