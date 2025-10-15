@@ -184,7 +184,7 @@ class Importer(SuspendableThread):
             servs = self.convert_str_to_num(self.rec["servings"])
             if servs is not None:
                 self.rec["yields"] = float(servs)
-                self.rec["yield_unit"] = gettext.ngettext("serving", "servings", servs)
+                self.rec["yield_unit"] = gettext.ngettext("serving", "servings", int(servs))
                 del self.rec["servings"]
             else:
                 self._move_to_instructions(self.rec, "servings")
