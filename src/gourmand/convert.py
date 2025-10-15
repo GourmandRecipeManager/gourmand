@@ -585,29 +585,8 @@ class Converter:
             if unit in self.unit_dict:
                 conv = self.converter(unit, "seconds")
                 if conv and num:
-                    secs += num * conv
+                    secs += (num * conv)
         return secs
-
-    def timestring_to_seconds_old(self, timestring):
-        """Take a timestring and parse it into seconds.
-
-        This logic may be a little fragile for non-English languages.
-        """
-        words = re.split(r"[ \s,;]+", str(timestring))
-        seconds = 0
-        num = []
-        for n, w in enumerate(words):
-            if NUMBER_MATCHER.match(w):
-                num.append(w)
-            elif num and w in self.unit_dict:
-                conv = self.converter(w, "seconds")
-                if conv:
-                    n = frac_to_float(" ".join(num))
-                    if n:
-                        seconds += n * conv
-                    num = []
-        if seconds:
-            return seconds
 
 
 def get_converter():
@@ -827,7 +806,7 @@ else:
 
 FRACTION_MATCHER = re.compile(NUM_AND_FRACTION_REGEXP, re.UNICODE)
 
-NUMBER_FINDER_REGEXP = r"(%(NUM_AND_FRACTION_REGEXP)s|%(NUMBER_NO_RANGE_REGEXP)s)(?=($| |[\s]))" % locals()
+NUMBER_FINDER_REGEXP = r"(%(NUM_AND_FRACTION_REGEXP)s|%(NUMBER_NO_RANGE_REGEXP)s)(?=($| |[\s]|-))" % locals()
 NUMBER_FINDER = re.compile(NUMBER_FINDER_REGEXP, re.UNICODE)
 
 # Note: the order matters on this range regular expression in order
@@ -836,6 +815,26 @@ NUMBER_FINDER = re.compile(NUMBER_FINDER_REGEXP, re.UNICODE)
 RANGE_REGEXP = r"([ -]*%s[ -]*|\s*-\s*)" % _("to")  # for 'to' used in a range, as in 3-4
 RANGE_MATCHER = re.compile(RANGE_REGEXP[1:-1])  # no parens for this one
 
+all_units = set()
+for base, units in Converter.time_units:
+    for u in units:
+        u = re.escape(str(u))
+        all_units.add(u)
+
+time_matcher = re.compile(
+    "(?P<firstnum>"
+    + NUMBER_FINDER_REGEXP
+    + ")(?P<range>"
+    + RANGE_REGEXP
+    + ")?(?P<secondnum>"
+    + NUMBER_FINDER_REGEXP.replace("int", "int2").replace("frac", "frac2")
+    + ")?"
+    + r"\s*"
+    + "(?P<unit>"
+    + "|".join(all_units)
+    + r")(?=$|\W)",
+    re.UNICODE,
+)
 
 # We need a special matcher to match known units when they are more
 # than one word. The assumption remains that units should be one word

@@ -1,38 +1,59 @@
 """Scan text for time and show links that will pop up a timer if the
 user clicks on any time in the TextView."""
 
-import re
 from typing import Optional, Union
 
 from gi.repository import GObject, Gtk
 
 from gourmand import timer
-from gourmand.convert import NUMBER_FINDER_REGEXP, RANGE_REGEXP, Converter
+from gourmand.convert import Converter, time_matcher
 from gourmand.gtk_extras.LinkedTextView import LinkedPangoBuffer, LinkedTextView
-
-all_units = set()
-for base, units in Converter.time_units:
-    for u in units:
-        u = re.escape(str(u))
-        all_units.add(u)
-
-time_matcher = re.compile(
-    "(?P<firstnum>"
-    + NUMBER_FINDER_REGEXP
-    + ")("
-    + RANGE_REGEXP
-    + NUMBER_FINDER_REGEXP.replace("int", "int2").replace("frac", "frac2")
-    + ")?"
-    + r"\s*"
-    + "(?P<unit>"
-    + "|".join(all_units)
-    + r")(?=$|\W)",
-    re.UNICODE,
-)
 
 
 def make_time_links(s: str) -> str:
-    return time_matcher.sub(r'<a href="\g<firstnum> \g<unit>">\g<0></a>', s)
+    """Given a string return the string with time links inserted.
+
+    The links are of the form <a href="## unit"> Text </a>, similar to html
+    links.  In a later step these will be changed to span tags with formatting.
+
+    The simplest time phrase is transformed as follows:
+    - "15 minutes" -> '<a href="15 minutes">15 minutes</a>'
+
+    Multiple formats of time spans are correctly parsed including:
+    - "15 - 20 minutes" -> '<a href="15 minutes">15 - </a><a href="20 minutes">20 minutes</a>'
+    - "15-20 minutes" -> '<a href="15 minutes">15-</a><a href="20 minutes">20 minutes</a>'
+    - "15 to 20 minutes" -> '<a href="15 minutes">15 to </a><a href="20 minutes">20 minutes</a>'
+
+    Although minutes is the only time unit shown in the above examples, other
+    units such as seconds, hours and days are also recognized.
+    """
+    start = 0
+    while True:
+        result = time_matcher.search(s, start)
+
+        # When there are no more matches to make time links, return string
+        if result is None:
+            return s
+
+        # Only substitute in the string where the match was found in case repeating patterns
+        # are present.  Use start and Match.end() to know bounds.
+        end = result.end()
+
+        # Occurs when there is only one number value (e.g. 15 minutes)
+        if result['secondnum'] is None:
+            subbed_text = time_matcher.sub(r'<a href="\g<firstnum> \g<unit>">\g<0></a>', s[start:end])
+        # Occurs when there is a range (e.g. 35 to 40 minutes)
+        else:
+            subbed_text = time_matcher.sub(
+                r'<a href="\g<firstnum> \g<unit>">\g<firstnum>\g<range></a>'
+                r'<a href="\g<secondnum> \g<unit>">\g<secondnum> \g<unit></a>',
+                s[start:end])
+
+        # Substitute the text with a link in for the text that was matched.
+        s = s[:start] + subbed_text + s[end:]
+
+        # Update variable for next round
+        start = start + len(subbed_text)
 
 
 class TimeBuffer(LinkedPangoBuffer):
@@ -86,8 +107,9 @@ class LinkedTimeView(LinkedTextView):
         time_string = self.get_buffer().get_slice(start_ts, end_ts, False)
 
         # Confirm that is is in the links dictionary.
-        if self.get_buffer().markup_dict.get(time_string) == time_string:
-            self.emit("time-link-activated", time_string, sentence)
+        time_ = self.get_buffer().markup_dict.get(time_string)
+        if time_ is not None:
+            self.emit("time-link-activated", time_, sentence)
 
         return False  # Do not process the event further.
 
