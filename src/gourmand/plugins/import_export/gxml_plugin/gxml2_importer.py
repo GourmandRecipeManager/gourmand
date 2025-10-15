@@ -67,7 +67,10 @@ class RecHandler(xml_importer.RecHandler):
                 self.rec["yield_unit"] = unit
                 print("Warning, recorded", txt, "as 1 ", unit)
         elif name in self.REC_ATTRS:
-            self.rec[str(name)] = xml.sax.saxutils.unescape(self.elbuf.strip())
+            if name in ['instructions', 'modifications']:
+                self.rec[str(name)] = self.elbuf.strip()
+            else:
+                self.rec[str(name)] = xml.sax.saxutils.unescape(self.elbuf.strip())
         elif name in list(self.ING_ATTRS.keys()):
             self.ing[str(self.ING_ATTRS[name])] = xml.sax.saxutils.unescape(self.elbuf.strip())
 
