@@ -2,7 +2,6 @@ import gettext
 import os
 import re
 import time
-import xml.sax.saxutils
 
 import gourmand.gglobals
 import gourmand.gtk_extras.dialog_extras as de
@@ -185,7 +184,7 @@ class Importer(SuspendableThread):
             servs = self.convert_str_to_num(self.rec["servings"])
             if servs is not None:
                 self.rec["yields"] = float(servs)
-                self.rec["yield_unit"] = gettext.ngettext("serving", "servings", servs)
+                self.rec["yield_unit"] = gettext.ngettext("serving", "servings", int(servs))
                 del self.rec["servings"]
             else:
                 self._move_to_instructions(self.rec, "servings")
@@ -197,11 +196,6 @@ class Importer(SuspendableThread):
                     self.rec[t] = secs
                 else:
                     self._move_to_instructions(self.rec, t)
-        # Markup instructions and mods as necessary
-        if self.do_markup:
-            for k in ["instructions", "modifications"]:
-                if k in self.rec:
-                    self.rec[k] = xml.sax.saxutils.escape(self.rec[k])
         # A little strange, this is, but for UI reasons, we want to
         # keep track of any ratings that are not integers so that we
         # can ask the user how to convert them when we're all done
