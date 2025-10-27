@@ -35,7 +35,7 @@ jobs:
         flatpak build-bundle repo gourmand-${GITHUB_SHA::8}.flatpak io.github.GourmandRecipeManager.Gourmand
 
     - name: Upload Flatpak
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: gourmand.flatpak
         path: ./gourmand-*.flatpak
