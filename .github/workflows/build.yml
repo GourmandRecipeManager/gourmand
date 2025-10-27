@@ -43,7 +43,7 @@ jobs:
           mv dist/gourmand-*-py3-none-any.whl dist/gourmand-${GITHUB_SHA::8}-py3-none-any.whl
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
           name: gourmand_${{ matrix.python }}
           path: ./dist/gourmand-*
