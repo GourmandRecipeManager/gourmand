@@ -2,7 +2,7 @@ from gourmand.i18n import _
 
 appname = _("Gourmand Recipe Manager")
 copyright = _("Copyright (c) 2004-2021 Thomas M. Hinkle and Contributors.\n" "Copyright (c) 2021 The Gourmand Team and Contributors")
-version = "1.1.0"
+version = "1.2.0"
 url = "https://github.com/GourmandRecipeManager/gourmand"
 description = "Recipe Organizer and Shopping List Generator"
 long_description = _(
