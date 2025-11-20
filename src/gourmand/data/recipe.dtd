@@ -11,17 +11,17 @@
 <!ELEMENT image ( #PCDATA ) >
 <!ATTLIST image format NMTOKEN #REQUIRED >
 
-
 <!ELEMENT ingredient ( amount | item | key | unit )* >
 <!ATTLIST ingredient optional NMTOKEN #IMPLIED >
 
+<!ELEMENT groupname ( #PCDATA ) >
 <!ELEMENT inggroup (groupname, (ingredient | ingref)+) >
 
-<!ELEMENT ingredient-list ( ingredient | ingref | inggroup)* >
+<!ELEMENT ingredient-list ( ingredient | ingref | inggroup )+ >
 
 <!ELEMENT ingref ( #PCDATA ) >
-<!ATTLIST ingref amount CDATA #REQUIRED
-          ingref refid NMTOKEN #REQUIRED >
+<!ATTLIST ingref amount CDATA #REQUIRED >
+<!ATTLIST ingref refid NMTOKEN #REQUIRED >
 
 <!ELEMENT instructions ( #PCDATA ) >
 
@@ -37,8 +37,13 @@
 
 <!ELEMENT servings ( #PCDATA ) >
 
-<!ELEMENT recipe ( title, category?, cuisine?, source?, rating?, preptime?, cooktime?, servings?, image?, ingredient-list, instructions?, modifications? ) >
+<!ELEMENT yields ( #PCDATA ) >
+
+<!ELEMENT recipe ( title, category?, cuisine?, source?, link?, rating?, preptime?, cooktime?, servings?, yields?, image?, ingredient-list?, instructions?, modifications? ) >
+
 <!ATTLIST recipe id NMTOKEN #REQUIRED >
+
+<!ELEMENT link ( #PCDATA ) >
 
 <!ELEMENT source ( #PCDATA ) >
 
