@@ -316,7 +316,7 @@ msgstr "Kortvisning"
 
 #: ../src/gourmand/ui/preferenceDialog.ui.h:13
 msgid "<b>Shopping List Preferences</b>"
-msgstr "<b>Instillinger for handleliste</b>"
+msgstr "<b>Innstillinger for handleliste</b>"
 
 #: ../src/gourmand/ui/preferenceDialog.ui.h:14
 #, fuzzy
