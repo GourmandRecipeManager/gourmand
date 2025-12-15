@@ -860,7 +860,7 @@ class RecGui(RecIndex, GourmandApplication, ImporterExporter, StuffThatShouldBeP
 
     @property
     def sort_by(self):
-        preferences = self.prefs.get("sort_by", {"title": True})
+        preferences = self.prefs.get("sort_by", {"id": True})
         ret = []
         for column, ascending in preferences.items():
             ascending = 1 if ascending else -1
