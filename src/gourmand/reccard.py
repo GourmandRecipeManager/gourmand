@@ -446,6 +446,9 @@ class RecCardDisplay(plugin_loader.Pluggable):
                     raise Exception("There is no widget or label for  %s=%s, %s=%s" % (attr, widg, "label", widgLab))
                 if attr == "category":
                     attval = ", ".join(self.rg.rd.get_cats(self.current_rec))
+                # Cuisine is its own table now
+                elif attr == "cuisine":
+                    attval = ", ".join(self.rg.rd.get_cuisines(self.current_rec))
                 else:
                     attval = getattr(self.current_rec, attr)
                 if attval:
@@ -750,11 +753,13 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
 
     def __init__(self, reccard, rg, recipe=None, recipe_display=None, new=False):
         self.edited = False
+        # Define the tabs present on the recEditorNotebook
         self.editor_module_classes = [
             DescriptionEditorModule,
             IngredientEditorModule,
             InstructionsEditorModule,
             NotesEditorModule,
+            CuisineEditorModule,
         ]
         self.reccard = reccard
         self.rg = rg
@@ -926,11 +931,13 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
     def notebook_change_cb(self, *args):
         """Update menus and toolbars"""
         page = self.notebook.get_current_page()
-        # self.history.switch_context(page)
         if self.last_merged_ui is not None:
             self.ui_manager.remove_ui(self.last_merged_ui)
             for ag in self.last_merged_action_groups:
                 self.ui_manager.remove_action_group(ag)
+
+        # This line is responsible for loading the menubar ui_strings for each
+        # tab in the editor view.
         self.last_merged_ui = self.ui_manager.add_ui_from_string(self.modules[page].ui_string)
         for ag in self.modules[page].action_groups:
             fix_action_group_importance(ag)
@@ -952,6 +959,12 @@ class RecEditor(WidgetSaver.WidgetPrefs, plugin_loader.Pluggable):
         newdict = {"id": self.current_rec.id}
         for m in self.modules:
             newdict = m.save(newdict)
+        # Don't delete the old cuisine
+        current_cuisine = ", ".join(self.rg.rd.get_cuisines(self.current_rec))
+        if newdict.get('cuisine') and newdict['cuisine'] not in current_cuisine:
+            newdict['cuisine'] += f", {current_cuisine}"
+        else:
+            newdict['cuisine'] = current_cuisine
         self.current_rec = self.rg.rd.modify_rec(self.current_rec, newdict)
         self.rg.rd.update_hashes(self.current_rec)
         self.rg.rmodel.update_recipe(self.current_rec)
@@ -1273,6 +1286,9 @@ class DescriptionEditorModule(TextEditor, RecEditorModule):
                 self.recent.append(attribute)
             elif widget_type == "Combo":
                 self.reccom.append(attribute)
+            # No entry or combo box, added for description cuisine label
+            elif widget_type == "Ignore":
+                pass
             else:
                 raise ValueError(f"{attribute} with {widget_type} not supported")
 
@@ -1305,13 +1321,16 @@ class DescriptionEditorModule(TextEditor, RecEditorModule):
             debug(f"Widget for {c}", 5)
 
             model = self.rg.get_attribute_model(c)
-
+            # Same as widget.set_model...
             self.rw[c].set_model(model)
             self.rw[c].set_entry_text_column(0)
 
             cb.setup_completion(self.rw[c])
             if c == "category":
                 val = ", ".join(self.rg.rd.get_cats(self.current_rec))
+            # Cuisine information is in its own table
+            elif c == "cuisine":
+                val = ", ".join(self.rg.rd.get_cuisines(self.current_rec))
             else:
                 val = getattr(self.current_rec, c)
             self.rw[c].insert_text(0, val or "")
@@ -2933,6 +2952,209 @@ class YieldSelector(de.ModalDialog):
             self.yieldsAdj.set_value(self.rec.yields * factor)
         self.ret = factor
         self.__in_update_from_rec = False
+
+
+class CuisineEditorModule(RecEditorModule):
+    # This is the way to refer to this module / tab programatically.
+    # Example: In RecEditor.notebook_changed_cb there is a line
+    # self.last_merged_ui = self.ui_manager.add_ui_from_string(self.modules[page].ui_string)
+    # that accesses the ui_string from self.modules[page].
+    # The module tab name used is from the instance.name attribute, which is defined below.
+    name = "cuisines"
+
+    # This is what name the tab is given in the RecEditorModule notebook view.
+    label = _("Cuisines")
+
+    # This xml defines the menu bar and tool bar buttons for this module.
+    ui_string = """
+      <menubar name="RecipeEditorMenuBar">
+        <menu name="Edit" action="Edit">
+          <placeholder name="EditActions">
+          <menuitem action="DeleteCuisineDropdown"/>
+          </placeholder>
+        </menu>
+      </menubar>
+      <toolbar name="RecipeEditorEditToolBar">
+        <toolitem action="DeleteCuisine"/>
+        <separator/>
+      </toolbar>
+    """
+
+    def setup(self):
+        # Copied from IngredientEditorModule, also just passes.
+        pass
+
+    def setup_main_interface(self):
+        """Responsible for building and showing the UI for the Cuisine tab."""
+
+        # Allows UI to be defined in a separate .ui file
+        self.ui = Gtk.Builder()
+        self.ui.add_from_string(get_data("gourmand", "ui/recCardCuisinesEditor.ui").decode())
+
+        # Get top level notebook object
+        self.main = self.ui.get_object("cuisinesNotebook")
+
+        # Not sure why it is necessary.
+        # Without this command the tab doesn't render correctly.
+        self.main.unparent()
+
+        # Add tab specific buttons and menu options
+        self.setup_action_groups()
+
+        # Populate the cuisine display listbox
+        self.listbox = self.ui.get_object("cuisineBox")
+        self.update_from_database()
+        # When 'delete' key is pressed delete the selected cuisine
+        self.listbox.connect("key-press-event", self.onKeyPressListbox)
+        self.listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
+
+        # Set entry attribute to the textbox
+        self.entry = self.ui.get_object("quickCuisineEntryBox")
+        self.entry.connect("key-release-event", self.onKeyReleaseCuisineBox)
+        # Set what happens when 'add' button is clicked
+        self.ui.connect_signals({"addQuickCuisine": self.quick_add})
+
+        # Save list of all cuisines to refer to when updating combo list
+        self.all_cuisines = self.rg.create_attribute_list('cuisine')
+        self.all_cuisines.insert(0, '')
+
+        # Initial state is blank with all options available
+        self.populate_dropdown(self.all_cuisines)
+        self.entry.set_active(0)
+
+
+    def populate_dropdown(self, cuisine_list):
+        # Given a list of cuisines add them as options to the combo text box
+        self.entry.remove_all()
+        for cuisine in cuisine_list:
+            self.entry.append_text(cuisine)
+
+    def quick_add(self, *args):
+        """When add is pressed add it to the recipe and update display"""
+
+        # Retrieve text from box, clear entry
+        txt = str(self.entry.get_active_text()).strip()
+        self.populate_dropdown(self.all_cuisines)
+        # Reset to blank entry box
+        self.entry.set_active(0)
+
+        # Ignore if just a bunch of white space
+        if txt == '':
+            print("Empty... returning")
+            return False
+
+        # Ignore if cuisine matches one already saved in recipe
+        for cuisine in self.rec_cuisines:
+            if txt.lower() == cuisine.strip().lower():
+                print(f"Cuisine {txt} already added to recipe...returning")
+                return False
+
+        # Add another entry to the listbox reflecting entered cuisine
+        new_row = Gtk.ListBoxRow()
+        new_label = Gtk.Label(label=f"{txt}", xalign=0)
+        new_row.add(new_label)
+        self.listbox.add(new_row)
+        new_row.show_all()
+
+        # Update database entry for given recipe
+        self.rg.rd.do_add_cuisine({"recipe_id": self.current_rec.id, "cuisine": txt})
+
+        # Update various displays immediately
+        self.UI_update_after_change(self.current_rec)
+
+        return True
+
+    def update_from_database(self):
+        """Get cuisine values from database and setup UI"""
+
+        # Retrieve cuisine entries from database for current recipe
+        self.rec_cuisines = self.rg.rd.get_cuisines(self.current_rec.id)
+        # Add a new row to display each cuisine
+        for cuisine in self.rec_cuisines:
+            new_row = Gtk.ListBoxRow()
+            new_label = Gtk.Label(label=f"{cuisine}", xalign=0)
+            new_row.add(new_label)
+            self.listbox.add(new_row)
+            new_row.show_all()
+
+    def setup_action_groups(self):
+        """Setup calls when menus and buttons are pressed."""
+        self.cuisineEditorActionGroup = Gtk.ActionGroup(name="CuisineEditorActionGroup")
+        self.cuisineEditorActionGroup.add_actions(
+            [
+                (
+                    "DeleteCuisineDropdown",
+                    Gtk.STOCK_DELETE,
+                    _("Delete cuisine"),
+                    None,
+                    None,
+                    self.delete_cb,
+                ),
+            ]
+        )
+
+        self.cuisineEditorOnRowActionGroup = Gtk.ActionGroup(name="CuisineEditorOnRowActionGroup")
+        self.cuisineEditorOnRowActionGroup.add_actions(
+            [
+                (
+                    "DeleteCuisine",
+                    Gtk.STOCK_DELETE,
+                    _("Delete cuisine"),
+                    None,
+                    None,
+                    self.delete_cb,
+                ),
+            ]
+        )
+        self.action_groups.append(self.cuisineEditorActionGroup)
+        self.action_groups.append(self.cuisineEditorOnRowActionGroup)
+
+    def filter_dropdown_entries(self):
+        # Limit which entries appear in dropdown list
+        text = str(self.entry.get_active_text()).strip().lower()
+        filtered_list = [cuisine for cuisine in self.all_cuisines if text in cuisine.lower()]
+        self.populate_dropdown(filtered_list)
+
+    def onKeyPressListbox(self, widget, event):
+        # Check if the Delete key was pressed, delete selected recipe
+        if event.keyval == Gdk.KEY_Delete:
+            self.delete_cb(event)
+            return True
+        return False
+
+    def onKeyReleaseCuisineBox(self, widget, event):
+        # Whenever a key is pressed either add cuisine or filter dropdown
+        if event.keyval == Gdk.KEY_Return:
+            self.quick_add([])
+            return True
+        else:
+            return self.filter_dropdown_entries()
+
+    def delete_cb(self, *args):
+        """Delete the currently selected row and update the recipe database"""
+        debug("delete_cb (self, *args):", 5)
+
+        # Get the name of the row selected
+        label = self.listbox.get_selected_row().get_child()
+        label_text = label.get_label().replace("_", "")
+
+        # Delete the cuisine from database for the recipe
+        self.rg.rd.rd.delete_cuisine(self.current_rec.id, label_text)
+
+        # Hide selected row from cuisine tab
+        label.get_parent().set_selectable(False)
+        label.get_parent().set_visible(False)
+
+        # Update recipe and index views with new cuisine information
+        self.UI_update_after_change(self.current_rec)
+
+    def UI_update_after_change(self, current_recipe):
+        """Updates hash, top level recipe index and recipe view itself"""
+        self.rg.rd.update_hashes(current_recipe)
+        # Trigger a refresh of the main recipe tree index
+        self.rg.redo_search()
+        # Update recipe display
+        self.rg.rc[current_recipe.id].update_recipe(current_recipe)
 
 
 def create_spinner(val: int = 1, lower: int = 0, upper: int = 10000, step_incr: int = 1, page_incr: int = 10, digits: int = 2):

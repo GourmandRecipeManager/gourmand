@@ -513,6 +513,9 @@ class RecEditorModule(UIModule, GObject.GObject, object):
             # HAVE TO HANDLE CATEGORIES
             if prop == "category":
                 orig_value = ", ".join(self.rg.rd.get_cats(self.current_rec))
+            # Cuisines have been moved to a separate table, like categories
+            elif prop == "cuisine":
+                orig_value = ", ".join(self.rg.rd.get_cuisines(self.current_rec))
             else:
                 orig_value = getattr(self.current_rec, prop)
             if isinstance(orig_value, str):
