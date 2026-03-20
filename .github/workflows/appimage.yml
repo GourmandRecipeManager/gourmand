@@ -27,21 +27,21 @@ jobs:
 
     - name: Setup AppImage Environment
       run: |
-        wget -c https://github.com/$(wget -q https://github.com/niess/python-appimage/releases/expanded_assets/python3.10 -O - | grep "python3.10.*x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        wget -c https://github.com/$(wget -q https://github.com/niess/python-appimage/releases/expanded_assets/python3.11 -O - | grep "python3.11.*x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
         chmod +x ./python3*.AppImage
         ./python3*.AppImage --appimage-extract
-        wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases/expanded_assets/655 -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases/expanded_assets/832 -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
         chmod +x appimagetool-*.AppImage
 
     - name: Install Gourmand in AppImage
       run: |
-          C_INCLUDE_PATH=/usr/include/python3.10
+          C_INCLUDE_PATH=/usr/include/python3.11
           export C_INCLUDE_PATH
           ./squashfs-root/AppRun -m pip install --upgrade pip build
           ./squashfs-root/AppRun -m build .
           ./squashfs-root/AppRun -m pip install .[epub-export,mycookbook,pdf-export,web-import]
           ./squashfs-root/AppRun -m pip install dist/gourmand*.whl
-          sed -i -e 's|/opt/python3.10/bin/python3.10|/usr/bin/gourmand|g' ./squashfs-root/AppRun
+          sed -i -e 's|/opt/python3.11/bin/python3.11|/usr/bin/gourmand|g' ./squashfs-root/AppRun
           rm squashfs-root/*.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/usr/share/applications/io.github.GourmandRecipeManager.Gourmand.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/io.github.GourmandRecipeManager.Gourmand.desktop
@@ -58,4 +58,5 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: gourmand.AppImage
+        archive: false
         path: ./Gourmand-*.AppImage
