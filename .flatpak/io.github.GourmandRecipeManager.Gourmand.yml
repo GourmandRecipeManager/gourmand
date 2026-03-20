@@ -1,7 +1,7 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
 runtime: org.gnome.Platform
 # https://release.gnome.org/calendar/
-runtime-version: '49'
+runtime-version: '50'
 sdk: org.gnome.Sdk
 command: gourmand
 
@@ -23,17 +23,15 @@ modules:
       - -DENABLE_BOOST=OFF
       - -DCMAKE_INSTALL_LIBDIR=lib
     sources:
-      - url: https://poppler.freedesktop.org/poppler-25.10.0.tar.xz
-        sha256: 6b5e9bb64dabb15787a14db1675291c7afaf9387438cc93a4fb7f6aec4ee6fe0
+      - url: https://poppler.freedesktop.org/poppler-26.03.0.tar.xz
+        sha256: 8b3c5e2a9f2ab4c3ec5029f28af1b433c6b71f0d1e7b3997aa561cf1c0ca4ebe
         type: archive
 
-  # Python 3.11 seems to download too old dependency versions and non-wheels of `reportlab` and `lxml`.
-  # This breaks the build itself.
   - name: cpython
     sources:
       - type: archive
-        url: https://www.python.org/ftp/python/3.10.19/Python-3.10.19.tar.xz
-        sha256: c8f4a596572201d81dd7df91f70e177e19a70f1d489968b54b5fbbf29a97c076
+        url: https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tar.xz
+        sha256: 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625
 
   - name: intltool
     buildsystem: autotools
