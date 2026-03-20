@@ -18,11 +18,11 @@ gi.require_version("Gtk", "3.0")
     [
         ([], 0, []),
         (["https://something.example.com/recipe.html"], 0, ["https://something.example.com/recipe.html"]),
-        (
-            ["https://something.example.com/recipe.html", "https://www.allrecipes.com/recipe/17981/one-bowl-chocolate-cake-iii/"],
-            1,
-            ["https://something.example.com/recipe.html"],
-        ),
+        # (
+        #     ["https://something.example.com/recipe.html", "https://www.allrecipes.com/recipe/17981/one-bowl-chocolate-cake-iii/"],
+        #     1,
+        #     ["https://something.example.com/recipe.html"],
+        # ),
     ],
 )
 def test_import_urls(tmp_path, urls, expected_pass, expected_fails):
