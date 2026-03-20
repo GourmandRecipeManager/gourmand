@@ -58,4 +58,5 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: gourmand.AppImage
+        archive: false
         path: ./Gourmand-*.AppImage
