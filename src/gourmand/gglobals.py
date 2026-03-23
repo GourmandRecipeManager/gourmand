@@ -28,7 +28,7 @@ use_threads = args.threads
 REC_ATTRS = [
     ("title", _("Title"), "Entry"),
     ("category", _("Category"), "Combo"),
-    ("cuisine", _("Cuisine"), "Combo"),
+    ("cuisine", _("Cuisine"), "Ignore"), # No fancy UI added
     ("rating", _("Rating"), "Entry"),
     ("source", _("Source"), "Combo"),
     ("link", _("Website"), "Entry"),
