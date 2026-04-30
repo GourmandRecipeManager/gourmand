@@ -46,8 +46,8 @@ jobs:
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/usr/share/applications/io.github.GourmandRecipeManager.Gourmand.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/io.github.GourmandRecipeManager.Gourmand.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.appdata.xml squashfs-root/usr/share/metainfo/io.github.GourmandRecipeManager.Gourmand.desktop.appdata.xml
-          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
-          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
+          convert -resize 256x256 -background none data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
+          convert -resize 256x256 -background none data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
 
     - name: Pack AppImage
       run: |
