@@ -9,13 +9,21 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
 jobs:
   AppImage:
-
     runs-on: ubuntu-22.04
+    name: AppImage
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        persist-credentials: false
     - name: Install Ubuntu dependencies
       run: >
         sudo apt-get update -q && sudo apt-get install
@@ -55,7 +63,7 @@ jobs:
           VERSION=${GITHUB_SHA::8} ./appimagetool-*.AppImage squashfs-root/
 
     - name: Upload AppImage
-      uses: actions/upload-artifact@v7
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
       with:
         name: gourmand.AppImage
         archive: false
