@@ -6,10 +6,24 @@ sdk: org.gnome.Sdk
 command: gourmand
 
 finish-args:
-  - --filesystem=host
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+  - --filesystem=xdg-config/Gourmand:create
+  - --filesystem=xdg-data/Gourmand:create
+  - --socket=wayland
   - --socket=fallback-x11
   - --socket=pulseaudio
   - --share=network
+cleanup:
+  - '*.a'
+  - '*.la'
+  - /include
+  - /lib/pkgconfig
+  - /share/aclocal
+  - /lib/cmake
+  - /share/gir-1.0
+  - /share/man
+
 modules:
   - name: poppler
     buildsystem: cmake-ninja
