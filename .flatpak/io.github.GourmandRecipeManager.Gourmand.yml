@@ -12,6 +12,7 @@ finish-args:
   - --filesystem=xdg-data/Gourmand:create
   - --socket=wayland
   - --socket=fallback-x11
+  - --share=ipc
   - --socket=pulseaudio
   - --share=network
 cleanup:
