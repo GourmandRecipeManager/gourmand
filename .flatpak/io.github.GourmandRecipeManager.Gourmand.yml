@@ -47,7 +47,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/python/cpython.git
-        tag: v3.13
+        tag: v3.13.13
 
   - name: intltool
     buildsystem: autotools
