@@ -8,6 +8,7 @@ command: gourmand
 finish-args:
   - --filesystem=xdg-documents
   - --filesystem=xdg-download
+  - --filesystem=xdg-pictures
   - --filesystem=xdg-config/Gourmand:create
   - --filesystem=xdg-data/Gourmand:create
   - --socket=wayland
@@ -75,6 +76,7 @@ modules:
         url: https://github.com/GNOME/pygobject.git
         tag: 3.50.0
 
+  - RecipeScrapersDependencies.yml
   - EnchantDependencies.yml
   - PipDependencies.yml
 
