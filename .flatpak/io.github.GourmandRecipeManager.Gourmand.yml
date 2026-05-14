@@ -15,6 +15,9 @@ finish-args:
   - --share=ipc
   - --socket=pulseaudio
   - --share=network
+build-options:
+  env:
+    PIP_PREFIX: /app
 cleanup:
   - '*.a'
   - '*.la'
@@ -64,6 +67,8 @@ modules:
       - type: file
         url: https://files.pythonhosted.org/packages/9d/76/f789f7a86709c6b087c5a2f52f911838cad707cc613162401badc665acfe/setuptools-82.0.1-py3-none-any.whl
         sha256:  a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb
+
+  - PipDependencies.yml
 
   - name: gourmand
     buildsystem: simple
