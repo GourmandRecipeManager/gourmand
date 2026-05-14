@@ -69,13 +69,8 @@ modules:
       - pip3 install --no-deps sqlalchemy-*.whl
     sources:
       - type: file
-        only-arches: [x86_64]
-        url: https://files.pythonhosted.org/packages/cd/f5/038741f5e747a5f6ea3e72487211579d8cbea5eb9827a9cbd61d0108c4bd/sqlalchemy-2.0.49-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
-        sha256: 47604cb2159f8bbd5a1ab48a714557156320f20871ee64d550d8bf2683d980d3
-      - type: file
-        only-arches: [aarch64]
-        url: https://files.pythonhosted.org/packages/a2/bc/3494270da80811d08bcfa247404292428c4fe16294932bce5593f215cad9/sqlalchemy-2.0.49-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl
-        sha256: 8e20e511dc15265fb433571391ba313e10dd8ea7e509d51686a51313b4ac01a2
+        url: https://files.pythonhosted.org/packages/00/c9/4fab29c5efaf72df0ad9b46f783197f35b66ddaad62db26c69befb504830/SQLAlchemy-2.0.0-py3-none-any.whl
+        sha256: 192210daec1062e93fcc732de0c602c4b58097257c56874baa6e491849e82ceb
 # end of sqlalchemy group
   - name: TomliW
     buildsystem: simple
