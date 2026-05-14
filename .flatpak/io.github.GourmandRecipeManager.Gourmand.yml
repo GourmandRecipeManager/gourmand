@@ -72,7 +72,6 @@ modules:
     buildsystem: meson
     config-opts:
       - --prefix=/app
-      - -Dpython_version=3.13
       - -Dintrospection=true
     sources:
       - type: archive
