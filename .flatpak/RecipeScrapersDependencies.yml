@@ -1,0 +1,158 @@
+name: RecipeScrapersDependencies
+buildsystem: simple
+build-commands: []
+modules:
+# extruct-recipe_scrapers group
+ # rdflib-extruct-recipe_scrapers group
+  - name: pyparsing
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps pyparsing-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/10/bd/c038d7cc38edc1aa5bf91ab8068b63d4308c66c4c8bb3cbba7dfbc049f9c/pyparsing-3.3.2-py3-none-any.whl
+        sha256: 850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d
+  - name: rdflib
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps rdflib-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/10/c2/6604a71269e0c1bd75656d5a001432d16f2cc5b8c057140ec797155c295e/rdflib-7.6.0-py3-none-any.whl
+        sha256: 30c0a3ebf4c0e09215f066be7246794b6492e054e782d7ac2a34c9f70a15e0dd
+ # end rdflib group
+  - name: pyrdfa3
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps pyrdfa3-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/79/9c/ce827ad1262c02cfd377dd75b73010f83010f05fa6db662af950948c0e61/pyrdfa3-3.6.5-py3-none-any.whl
+        sha256: 3c0d22e2949e7b3abd004fff7c7f110faa83a18bec06f590bdab2ef0f1ee3c02
+ # mf2py-extruct-recipe_scrapers group
+  # html5lib-mf2py-extruct-recipe_scrapers group
+  - name: WebEncodings
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps webencodings-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl
+        sha256: a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78
+  - name: HTML5Lib
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps html5lib-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/6c/dd/a834df6482147d48e225a49515aabc28974ad5a4ca3215c18a882565b028/html5lib-1.1-py2.py3-none-any.whl
+        sha256: 0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d
+  # end html5lib group
+  # requests-mf2py-extruct-recipe_scrapers group
+  - name: CharsetNormalizer
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps charset_normalizer-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/db/8f/61959034484a4a7c527811f4721e75d02d653a35afb0b6054474d8185d4c/charset_normalizer-3.4.7-py3-none-any.whl
+        sha256: 3dce51d0f5e7951f8bb4900c257dad282f49190fdbebecd4ba99bcc41fef404d
+  - name: IDNA
+    buildsystem:
+    build-commands:
+      - pip3 install --no-deps idna-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/d2/23/408243171aa9aaba178d3e2559159c24c1171a641aa83b67bdd3394ead8e/idna-3.15-py3-none-any.whl
+        sha256: 048adeaf8c2d788c40fee287673ccaa74c24ffd8dcf09ffa555a2fbb59f10ac8
+  - name: URLLib3
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps urllib3-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl
+        sha256: 9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897
+  - name: Certifi
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps certifi-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/22/30/7cd8fdcdfbc5b869528b079bfb76dcdf6056b1a2097a662e5e8c04f42965/certifi-2026.4.22-py3-none-any.whl
+        sha256: 3cb2210c8f88ba2318d29b0388d1023c8492ff72ecdde4ebdaddbb13a31b1c4a
+  - name: Requests
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps requests-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl
+        sha256: 2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0
+  # end Requests group
+  - name: mf2py
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps mf2py-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/8e/88/b1d83c9e71cbdaefcec38ea350d2bd6360a9d1e030b090ad4b0fcc421ca1/mf2py-2.0.1-py3-none-any.whl
+        sha256: 092806e17f1a93db4aafa5e8d3c4124b5e42cd89027e2db48a5248ef4eabde03
+ # end mf2py group
+  - name: LXMLHTMLClean
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps lxml_html_clean-*.html
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/d9/76/7ffc1d3005cf7749123bc47cb3ea343cd97b0ac2211bab40f57283577d0e/lxml_html_clean-0.4.4-py3-none-any.whl
+        sha256: ce2ef506614ecb85ee1c5fe0a2aa45b06a19514ec7949e9c8f34f06925cfabcb
+  - name: W3Lib
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps w3lib-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/66/c3/f8b216cbd742e5b84c40f045204c764ccb7524d2aeab021054ec69446b0a/w3lib-2.4.1-py3-none-any.whl
+        sha256: 40930132907e68de906a5b89331ab8c8ff4f01bd35b5539ef7896017d814138d
+  - name: HTMLText
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps html_text-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/01/da/694ee4570fb1d9d06a00f1493a248531d347be48a2503e9dd79c595de992/html_text-0.7.1-py3-none-any.whl
+        sha256: acf13aa1412e559f84f4617fba419720cb8732861736fe07a8dfdafcbdbb8cad
+  - name: jStyleson
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation .
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/5f/c1/3791e39d65c39b4e081010f2cf6f9443b7b6b9f6de63a5e458172c5c9376/jstyleson-0.0.2.tar.gz
+        sha256: 680003f3b15a2959e4e6a351f3b858e3c07dd3e073a0d54954e34d8ea5e1308e
+  - name: Extruct
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps extruct-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/33/00/60d3efc09d52a9e8d57b59323d7edb962daba2f1c46b89449a252f3652e7/extruct-0.18.0-py2.py3-none-any.whl
+        sha256: 1e739985da705c3348c7614dc169e7780caf20908338fa5f4c6e48576df6f000
+# end extruct group
+  - name: ISODate
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps isodate-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/15/aa/0aca39a37d3c7eb941ba736ede56d689e7be91cab5d9ca846bde3999eba6/isodate-0.7.2-py3-none-any.whl
+        sha256: 28009937d8031054830160fce6d409ed342816b543597cece116d966c6d99e15
+  - name: RecipeScrapers
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps recipe_scrapers-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/31/a1/3e187991b69216115a67e61c587f9448f84c234bcee91532226c82166ac6/recipe_scrapers-14.27.0-py3-none-any.whl
+        sha256: 31fc53d7e2a39ca36723b99ca21fd453a28a332e6a5eb97afecbabbdca162e7c
