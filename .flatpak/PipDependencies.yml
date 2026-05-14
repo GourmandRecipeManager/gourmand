@@ -66,7 +66,7 @@ modules:
   - name: sqlalchemy
     buildsystem: simple
     build-commands:
-      - pip3 install --no-deps sqlalchemy-*.whl
+      - pip3 install --no-deps SQLAlchemy-*.whl
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/00/c9/4fab29c5efaf72df0ad9b46f783197f35b66ddaad62db26c69befb504830/SQLAlchemy-2.0.0-py3-none-any.whl
