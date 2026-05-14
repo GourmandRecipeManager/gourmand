@@ -10,6 +10,8 @@ modules:
         sha256: d73162b5eff401a6397e1215e2b103bcef83f921c396c7f6b1394d2450d124e2
   - name: HunSpell
     buildsystem: autotools
+    pre-build:
+      - autoreconf -vfi
     sources:
       - type: git
         url: https://github.com/hunspell/hunspell.git
