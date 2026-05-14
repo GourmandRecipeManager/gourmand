@@ -118,4 +118,4 @@ modules:
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/01/87/e199ed6165f2e08492f6e8d44ef3d8824e473a2cf3be94cc19d5a6f8a3ae/pygtkspellcheck-5.0.4-py3-none-any.whl
-        sha256:  a693defede048360b6b61e7de84f4fc9d6a0421b6d908922ad0513cfd6280ce3
+        sha256: e578d950046ed7b15487d00ea72ad39d33bdd85f61114f75caa4bdf28cd0aa3f
