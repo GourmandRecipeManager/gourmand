@@ -58,7 +58,7 @@ modules:
         url: https://files.pythonhosted.org/packages/db/8f/61959034484a4a7c527811f4721e75d02d653a35afb0b6054474d8185d4c/charset_normalizer-3.4.7-py3-none-any.whl
         sha256: 3dce51d0f5e7951f8bb4900c257dad282f49190fdbebecd4ba99bcc41fef404d
   - name: IDNA
-    buildsystem:
+    buildsystem: simple
     build-commands:
       - pip3 install --no-deps idna-*.whl
     sources:
