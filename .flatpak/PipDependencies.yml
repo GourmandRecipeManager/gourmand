@@ -64,7 +64,9 @@ modules:
         url: https://files.pythonhosted.org/packages/4a/ba/b28ddbe6bfad6a8ac196ef0e8cff37bc65b79735995b9e410923fffeeb70/greenlet-3.5.0-cp313-cp313-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl
         sha256: 3a717fbc46d8a354fa675f7c1e813485b6ba3885f9bef0cd56e5ba27d758ff5b
   - name: sqlalchemy
-    buildsystem: autotools
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation .
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/ce/af/20290b55d469e873cba9d41c0206ab5461ff49d759989b3fe65010f9d265/sqlalchemy-1.4.54.tar.gz
