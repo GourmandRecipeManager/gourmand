@@ -70,9 +70,6 @@ modules:
 
   - name: PyGObject
     buildsystem: meson
-    config-opts:
-      - --prefix=/app
-      - -Dintrospection=true
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/a2/80/09247a2be28af2c2240132a0af6c1005a2b1d089242b13a2cd782d2de8d7/pygobject-3.56.2.tar.gz
