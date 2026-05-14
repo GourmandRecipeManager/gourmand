@@ -102,7 +102,7 @@ modules:
   - name: LXMLHTMLClean
     buildsystem: simple
     build-commands:
-      - pip3 install --no-deps lxml_html_clean-*.html
+      - pip3 install --no-deps lxml_html_clean-*.whl
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/d9/76/7ffc1d3005cf7749123bc47cb3ea343cd97b0ac2211bab40f57283577d0e/lxml_html_clean-0.4.4-py3-none-any.whl
