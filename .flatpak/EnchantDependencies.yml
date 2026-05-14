@@ -12,6 +12,8 @@ modules:
     buildsystem: autotools
     pre-build:
       - autoreconf -vfi
+    extensions:
+      - org.freedesktop.Sdk.Extension.autotools
     sources:
       - type: git
         url: https://github.com/hunspell/hunspell.git
