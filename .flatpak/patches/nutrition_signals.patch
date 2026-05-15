@@ -42,5 +42,3 @@
 +
          self.makeTreeModel()
          self.setupTreeView()
-         self.treeview.set_model(self.treeModel)
-         self.update_showing_label()
