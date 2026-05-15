@@ -2,7 +2,7 @@
 # corrected with assistance from Copilot.
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 +++ b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-@@ -59,12 +59,31 @@ class NutritionInfoIndex:
+@@ -58,12 +58,31 @@ class NutritionInfoIndex:
         self.set_limit(ingredients, in_string)
 -        self.ui.connect_signals(
 -            {
