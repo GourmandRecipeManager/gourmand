@@ -1,13 +1,9 @@
 # this patch devised by Grok while troubleshooting a string Attribute error for the nutrition plugin for a Gourmand 1.2.0 flatpak with Gnome 50 using python 3.13
 # corrected with assistance from Copilot.
-diff --git a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-index 8f0c0e1..9d2e3f4 100644
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 +++ b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-@@ -54,13 +54,37 @@ class NutritionInfoIndex:
-         self.last_button.connect("clicked", lambda *args: self.treeModel.goto_last_page())
- 
-         self.set_limit(ingredients, in_string)
+@@ -57,12 +57,37 @@ class NutritionInfoIndex:
+             self.set_limit(ingredients, in_string)
 -        self.ui.connect_signals(
 -            {
 -                "iSearch": self.isearchCB,
@@ -16,6 +12,9 @@ index 8f0c0e1..9d2e3f4 100644
 -                "filter_changed": self.filter_changed_cb,
 -            }
 -        )
++        # FIXED: Safer signal connection for Python 3.13 + Flatpak
++        # Gtk.Builder.connect_signals() can fail in constrained environments.
++        # Wrap with fallback manual connections.
 +        try:
 +            self.ui.connect_signals(
 +                {
@@ -44,4 +43,3 @@ index 8f0c0e1..9d2e3f4 100644
          self.makeTreeModel()
          self.setupTreeView()
          self.treeview.set_model(self.treeModel)
-         self.update_showing_label()
