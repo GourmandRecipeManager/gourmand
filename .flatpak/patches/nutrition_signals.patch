@@ -2,7 +2,7 @@
 # corrected with assistance from Copilot.
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 +++ b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-@@ -57,12 +57,37 @@ class NutritionInfoIndex:
+@@ -59,8 +59,27 @@ class NutritionInfoIndex:
         self.set_limit(ingredients, in_string)
 -        self.ui.connect_signals(
 -            {
@@ -39,6 +39,6 @@
 +                logging.info("Nutrition dialog: Used manual signal fallback")
 +            except (AttributeError, TypeError) as fallback_err:
 +                logging.error("Nutrition dialog: Manual fallback also failed: %s", fallback_err)
-+
         self.makeTreeModel()
         self.setupTreeView()
+        self.treeview.set_model(self.treeModel)
