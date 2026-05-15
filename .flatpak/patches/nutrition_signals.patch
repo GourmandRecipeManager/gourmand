@@ -1,4 +1,5 @@
 # this patch devised by Grok while troubleshooting a string Attribute error for the nutrition plugin for a Gourmand 1.2.0 flatpak with Gnome 50 using python 3.13
+# corrected with assistance from Copilot.
 diff --git a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 index 8f0c0e1..9d2e3f4 100644
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
@@ -15,9 +16,6 @@ index 8f0c0e1..9d2e3f4 100644
 -                "filter_changed": self.filter_changed_cb,
 -            }
 -        )
-+        # === FIXED: Safer signal connection for Python 3.13 + Flatpak ===
-+        # Gtk.Builder.connect_signals() is failing to find handlers in this environment.
-+        # We wrap it and provide manual fallbacks.
 +        try:
 +            self.ui.connect_signals(
 +                {
@@ -27,19 +25,21 @@ index 8f0c0e1..9d2e3f4 100644
 +                    "filter_changed": self.filter_changed_cb,
 +                }
 +            )
-+        except Exception as e:
-+            print("Warning [nutritionInfoEditor]: Could not connect all signals automatically:", e)
-+            # Fallback manual connections
++        except (AttributeError, TypeError) as e:
++            import logging
++            logging.warning("Could not connect signals automatically: %s", e)
 +            try:
-+                self.searchEntry.connect("changed", self.isearchCB)
-+                self.searchButton.connect("clicked", self.searchCB)
++                if hasattr(self, "searchEntry"):
++                    self.searchEntry.connect("changed", self.isearchCB)
++                if hasattr(self, "searchButton"):
++                    self.searchButton.connect("clicked", self.searchCB)
 +                if hasattr(self, "searchAsYouTypeToggle"):
 +                    self.searchAsYouTypeToggle.connect("toggled", self.search_as_you_typeCB)
 +                if hasattr(self, "nutritionFilterComboBox"):
 +                    self.nutritionFilterComboBox.connect("changed", self.filter_changed_cb)
-+                print("Nutrition dialog: Used manual signal fallback")
-+            except Exception as fallback_err:
-+                print("Nutrition dialog: Manual fallback also failed:", fallback_err)
++                logging.info("Nutrition dialog: Used manual signal fallback")
++            except (AttributeError, TypeError) as fallback_err:
++                logging.error("Nutrition dialog: Manual fallback also failed: %s", fallback_err)
 +
          self.makeTreeModel()
          self.setupTreeView()
