@@ -92,7 +92,7 @@ modules:
       - mkdir -p /app/lib/python3.13/site-packages/gourmand/ui
       - cp -r src/gourmand/ui/* /app/lib/python3.13/site-packages/gourmand/ui/ 2>/dev/null || true
 
-      - patch -p1 -d /app/lib/python3.13/site-packages/gourmand < .flatpak/patches/nutrition_signals.patch || echo "Nutrition patch applied or already present"
+ #     - patch -p1 -d /app/lib/python3.13/site-packages/gourmand < .flatpak/patches/nutrition_signals.patch || echo "Nutrition patch applied or already present"
 
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
@@ -101,4 +101,4 @@ modules:
         url: https://github.com/GourmandRecipeManager/gourmand.git
         tag: 1.2.0
       - type: patch
-        path: .flatpak/patches/nutrition_signals.patch
+        path: patches/nutrition_signals.patch
