@@ -1,38 +1,47 @@
 # this patch devised by Grok while troubleshooting a string Attribute error for the nutrition plugin for a Gourmand 1.2.0 flatpak with Gnome 50 using python 3.13
 
 diff --git a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-index 8e8e8e8..9f9f9f9 100644
+index 0f0e0e0..1a2b3c4 100644
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 +++ b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
-@@ -54,13 +54,28 @@ class NutritionInfoIndex:
+@@ -53,13 +53,32 @@ class NutritionInfoIndex:
          self.last_button = self.ui.get_object("lastButton")
          self.showing_label = self.ui.get_object("showingLabel")
  
-+        # Manual button connections (already present)
++        # Manual connections for pagination buttons
          self.prev_button.connect("clicked", lambda *args: self.treeModel.prev_page())
          self.next_button.connect("clicked", lambda *args: self.treeModel.next_page())
          self.first_button.connect("clicked", lambda *args: self.treeModel.goto_first_page())
          self.last_button.connect("clicked", lambda *args: self.treeModel.goto_last_page())
  
-+        # Safer signal connection - prevents "Handler XXX not found" crashes
-+        # GTK Builder is very strict about missing methods in newer PyGObject/Python 3.13
-         try:
-             self.ui.connect_signals({
-                 "iSearch": self.isearchCB,
-                 "search": self.searchCB,
-                 "search_as_you_type_toggle": self.search_as_you_typeCB,
-                 "filter_changed": self.filter_changed_cb,
-             })
++        # Safer signal connection to avoid "Handler XXX not found" errors
++        # (common with Python 3.13 + strict PyGObject)
+         self.set_limit(ingredients, in_string)
+-        self.ui.connect_signals({
+-            "iSearch": self.isearchCB,
+-            "search": self.searchCB,
+-            "search_as_you_type_toggle": self.search_as_you_typeCB,
+-            "filter_changed": self.filter_changed_cb,
+-        })
++        try:
++            self.ui.connect_signals({
++                "iSearch": self.isearchCB,
++                "search": self.searchCB,
++                "search_as_you_type_toggle": self.search_as_you_typeCB,
++                "filter_changed": self.filter_changed_cb,
++            })
 +        except Exception as e:
-+            print("Warning: Some nutrition dialog signal handlers could not be connected automatically:", e)
-+            # Fallback: connect the most important signals manually
++            print("Warning: Could not connect all nutrition signals automatically:", e)
++            # Fallback manual connections for critical signals
 +            try:
 +                self.searchEntry.connect("changed", self.isearchCB)
 +                self.searchButton.connect("clicked", self.searchCB)
-+                self.searchAsYouTypeToggle.connect("toggled", self.search_as_you_typeCB)
-+                self.nutritionFilterComboBox.connect("changed", self.filter_changed_cb)
++                if hasattr(self, 'searchAsYouTypeToggle'):
++                    self.searchAsYouTypeToggle.connect("toggled", self.search_as_you_typeCB)
++                if hasattr(self, 'nutritionFilterComboBox'):
++                    self.nutritionFilterComboBox.connect("changed", self.filter_changed_cb)
 +            except Exception as fallback_err:
-+                print("Fallback signal connection also failed:", fallback_err)
++                print("Fallback also failed:", fallback_err)
 +
          self.makeTreeModel()
          self.setupTreeView()
