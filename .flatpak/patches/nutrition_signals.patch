@@ -25,7 +25,7 @@
 +                    "filter_changed": self.filter_changed_cb,
 +                }
 +            )
-+        except (AttributeError, TypeError) as e:
++        except Exception as e:
 +            import logging
 +            logging.warning("Could not connect signals automatically: %s", e)
 +            try:
