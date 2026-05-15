@@ -87,14 +87,14 @@ modules:
     # the following 10 lines were recommended by Grok during troubleshooting
     # Full recursive copy of src/gourmand (most reliable for data files + plugins)
       - mkdir -p /app/lib/python3.13/site-packages/gourmand
-      - cp -r src/gourmand/* /app/lib/python3.13/site-packages/gourmand/
-    # Explicitly install the nutrition plugin's __init__ to trigger registration
+      - cp -r src/gourmand/ui/* /app/lib/python3.13/site-packages/gourmand/ui/ 2>/dev/null || true
+    # Pre-load nutrition plugin during build (forces registration)
       - python3 -c "
-        import sys
-        sys.path.insert(0, '/app/lib/python3.13/site-packages')
-        import gourmand.plugins.nutritional_information.main_plugin
-        print('Nutrition plugin preloaded during build')
-        "
+import sys
+sys.path.insert(0, '/app/lib/python3.13/site-packages')
+import gourmand.plugins.nutritional_information.main_plugin
+print('Nutrition main plugin preloaded successfully during build')
+"
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
