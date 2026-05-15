@@ -3,7 +3,7 @@
 --- a/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 +++ b/src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py
 @@ -57,12 +57,37 @@ class NutritionInfoIndex:
-         self.set_limit(ingredients, in_string)
+        self.set_limit(ingredients, in_string)
 -        self.ui.connect_signals(
 -            {
 -                "iSearch": self.isearchCB,
@@ -40,5 +40,5 @@
 +            except (AttributeError, TypeError) as fallback_err:
 +                logging.error("Nutrition dialog: Manual fallback also failed: %s", fallback_err)
 +
-         self.makeTreeModel()
-         self.setupTreeView()
+        self.makeTreeModel()
+        self.setupTreeView()
