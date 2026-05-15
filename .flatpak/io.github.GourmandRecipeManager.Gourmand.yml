@@ -102,3 +102,5 @@ modules:
         tag: 1.2.0
       - type: patch
         path: patches/nutrition_signals.patch
+      - type: patch
+        path: patches/nutrition_druid.patch
