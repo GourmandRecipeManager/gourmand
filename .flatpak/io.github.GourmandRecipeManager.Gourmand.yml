@@ -1,8 +1,7 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
-runtime: org.gnome.Platform
-# https://release.gnome.org/calendar/
-runtime-version: '50'
-sdk: org.gnome.Sdk
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
 command: gourmand
 
 finish-args:
@@ -98,9 +97,7 @@ modules:
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
       - type: git
-#        url: https://github.com/GourmandRecipeManager/gourmand.git
-#        tag: 1.2.0
-        url: https://github.com/OzarkShepherd/gourmand.git
-        commit: 62e7e79
+        url: https://github.com/GourmandRecipeManager/gourmand.git
+        tag: 1.2.0
       - type: patch
         path: patches/nutrition_signals.patch
