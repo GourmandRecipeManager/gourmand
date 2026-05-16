@@ -30,8 +30,8 @@ modules:
   - name: cpython
     sources:
       - type: archive
-        url: https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tar.xz
-        sha256: 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625
+        url: https://www.python.org/ftp/python/3.13.13/Python-3.13.13.tar.xz
+        sha256: 2ab91ff401783ccca64f75d10c882e957bdfd60e2bf5a72f8421793729b78a71
 
   - name: intltool
     buildsystem: autotools
