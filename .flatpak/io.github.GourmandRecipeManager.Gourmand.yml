@@ -95,10 +95,10 @@ modules:
       - mkdir -p /app/lib/python3.13/site-packages/gourmand
       - cp -r src/gourmand/* /app/lib/python3.13/site-packages/gourmand/
     # Ensure UI files are present
-      - mkdir -p /app/lib/python3.13/site-packages/gourmand/ui
-      - cp -r src/gourmand/ui/* /app/lib/python3.13/site-packages/gourmand/ui/ 2>/dev/null || true
+#      - mkdir -p /app/lib/python3.13/site-packages/gourmand/ui
+#      - cp -r src/gourmand/ui/* /app/lib/python3.13/site-packages/gourmand/ui/ 2>/dev/null || true
 
-      - patch -p1 -d /app/lib/python3.13/site-packages/gourmand < patches/nutrition_signals.patch || echo "Nutrition patch applied or already present"
+#      - patch -p1 -d /app/lib/python3.13/site-packages/gourmand < patches/nutrition_signals.patch || echo "Nutrition patch applied or already present"
 
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
@@ -109,5 +109,5 @@ modules:
         url: https://github.com/OzarkShepherd/gourmand.git
         branch: Issue261
 #        commit: 62e7e79
-      - type: patch
-        path: patches/nutrition_signals.patch
+#      - type: patch
+#        path: patches/nutrition_signals.patch
