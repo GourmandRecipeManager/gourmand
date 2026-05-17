@@ -89,7 +89,7 @@ modules:
   - name: gourmand
     buildsystem: simple
     build-commands:
-      - pip3 install --prefix=/app --no-build-isolation .
+      - pip3 install --prefix=/app --no-build-isolation .[epub-export,pdf-export,spellcheck,web-import]
     # the following 6 lines were recommended by Grok during troubleshooting
     # Full copy of source (most reliable for .ui files, plugins, and data)
       - mkdir -p /app/lib/python3.13/site-packages/gourmand
