@@ -101,11 +101,15 @@ modules:
   - name: ReportLab
     buildsystem: simple
     build-commands:
-      - pip3 install --no-deps reportlab-*.whl
+#      - pip3 install --no-deps reportlab-*.whl
+      - pip3 install --no-build-isolation .
     sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/a7/45/ea7fad10122440de6e845568d106bffdc456ca0e8a1d8ae10b46016087e4/reportlab-4.5.1-py3-none-any.whl
-        sha256: 06fce8cb56c83307cfa4909cdf4e6a2ddbb44e5d6ef4d2edca896d7e9769f091
+#      - type: file
+#        url: https://files.pythonhosted.org/packages/a7/45/ea7fad10122440de6e845568d106bffdc456ca0e8a1d8ae10b46016087e4/reportlab-4.5.1-py3-none-any.whl
+#        sha256: 06fce8cb56c83307cfa4909cdf4e6a2ddbb44e5d6ef4d2edca896d7e9769f091
+      - type: archive
+        url: https://files.pythonhosted.org/packages/65/82/45b443db5acaf7edb471be57335a22d9f3bb6e4e9c9133ffa926f8ecdf2a/reportlab-3.6.13.tar.gz
+        sha256: 6f75d33f7a3720cf47371ab63ced0f0ebd1aeb6db19386ae92f8977a09be9611
   - name: PyGTKSpellCheck
     buildsystem: simple
     build-commands:
