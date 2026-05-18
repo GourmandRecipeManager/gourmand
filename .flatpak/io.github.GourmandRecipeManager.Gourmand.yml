@@ -111,3 +111,5 @@ modules:
 #        commit: 62e7e79
 #      - type: patch
 #        path: patches/nutrition_signals.patch
+      - type: patch
+        path: patches/setup.patch
