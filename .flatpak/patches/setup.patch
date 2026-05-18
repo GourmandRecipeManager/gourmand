@@ -1,0 +1,9 @@
+--- setup.py
++++ setup.py
+@@ 210,5 210,5 @@
+    extras_require={
+        "epub-export": ["ebooklib==0.17.1"],
+-       "pdf-export": ["reportlab<4"],
++       "pdf-export": ['reportlab>=4.5.1"],
+        "spellcheck": ["pyenchant", "pygtkspellcheck"],
+    },
