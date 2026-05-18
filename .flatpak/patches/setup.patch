@@ -1,8 +1,8 @@
 --- a/setup.py
 +++ b/setup.py
-@@ 211,4 211,4 @@
+@@ -211,4 +211,4 @@
         "epub-export": ["ebooklib==0.17.1"],
 -       "pdf-export": ["reportlab<4"],
-+       "pdf-export": ['reportlab>=4.5.1"],
++       "pdf-export": ["reportlab>=4.5.1"],
         "spellcheck": ["pyenchant", "pygtkspellcheck"],
     },
