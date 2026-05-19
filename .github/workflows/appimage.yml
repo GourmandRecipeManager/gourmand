@@ -9,13 +9,21 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
 jobs:
   AppImage:
-
     runs-on: ubuntu-22.04
+    name: AppImage
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        persist-credentials: false
     - name: Install Ubuntu dependencies
       run: >
         sudo apt-get update -q && sudo apt-get install
@@ -27,27 +35,27 @@ jobs:
 
     - name: Setup AppImage Environment
       run: |
-        wget -c https://github.com/$(wget -q https://github.com/niess/python-appimage/releases/expanded_assets/python3.10 -O - | grep "python3.10.*x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        wget -c https://github.com/$(wget -q https://github.com/niess/python-appimage/releases/expanded_assets/python3.11 -O - | grep "python3.11.*x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
         chmod +x ./python3*.AppImage
         ./python3*.AppImage --appimage-extract
-        wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases/expanded_assets/655 -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases/expanded_assets/832 -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
         chmod +x appimagetool-*.AppImage
 
     - name: Install Gourmand in AppImage
       run: |
-          C_INCLUDE_PATH=/usr/include/python3.10
+          C_INCLUDE_PATH=/usr/include/python3.11
           export C_INCLUDE_PATH
           ./squashfs-root/AppRun -m pip install --upgrade pip build
           ./squashfs-root/AppRun -m build .
           ./squashfs-root/AppRun -m pip install .[epub-export,mycookbook,pdf-export,web-import]
           ./squashfs-root/AppRun -m pip install dist/gourmand*.whl
-          sed -i -e 's|/opt/python3.10/bin/python3.10|/usr/bin/gourmand|g' ./squashfs-root/AppRun
+          sed -i -e 's|/opt/python3.11/bin/python3.11|/usr/bin/gourmand|g' ./squashfs-root/AppRun
           rm squashfs-root/*.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/usr/share/applications/io.github.GourmandRecipeManager.Gourmand.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.desktop squashfs-root/io.github.GourmandRecipeManager.Gourmand.desktop
           cp data/io.github.GourmandRecipeManager.Gourmand.appdata.xml squashfs-root/usr/share/metainfo/io.github.GourmandRecipeManager.Gourmand.desktop.appdata.xml
-          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
-          convert data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
+          convert -resize 256x256 -background none data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/usr/share/icons/hicolor/256x256/apps/io.github.GourmandRecipeManager.Gourmand.png
+          convert -resize 256x256 -background none data/io.github.GourmandRecipeManager.Gourmand.svg squashfs-root/io.github.GourmandRecipeManager.Gourmand.png
 
     - name: Pack AppImage
       run: |
@@ -55,7 +63,8 @@ jobs:
           VERSION=${GITHUB_SHA::8} ./appimagetool-*.AppImage squashfs-root/
 
     - name: Upload AppImage
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
       with:
         name: gourmand.AppImage
+        archive: false
         path: ./Gourmand-*.AppImage
