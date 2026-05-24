@@ -8,7 +8,8 @@ runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: gourmand
-
+# for more information on flatpak policy for directories and what the finish-args do, please use the link below:
+# https://docs.flatpak.org/en/latest/sandbox-permissions.html
 finish-args:
   - --filesystem=xdg-documents
   - --filesystem=xdg-download
@@ -20,9 +21,12 @@ finish-args:
   - --share=ipc
   - --socket=pulseaudio
   - --share=network
+# default pip install location is /usr but flatpak-builder makes /usr read only. Flatpaks with python apps need to install in /app
+# by setting default --prefix=/app for all pip commands, it does not have to be repeated in every pip install command.
 build-options:
   env:
     PIP_PREFIX: /app
+# these cleanup commands make the flatpak smaller for users to download from Flathub.
 cleanup:
   - '*.a'
   - '*.la'
@@ -87,7 +91,8 @@ modules:
         url: https://github.com/GNOME/pygobject.git
         tag: 3.50.0
 
-# modules for more dependencies
+# modules for more dependencies. Flathub will not allow pip to pull undeclared dependencies when compiling the workflow.
+# Every dependency needs to be declared with source and build commands.
   - RecipeScrapersDependencies.yml
   - EnchantDependencies.yml
   - PipDependencies.yml
