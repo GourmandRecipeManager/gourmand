@@ -20,9 +20,9 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      contents: read
-      security-events: write
+      actions: read  # Allow reading action data.
+      contents: read  # Allow reading repository contents.
+      security-events: write  # Allow triggering security events.
 
     strategy:
       fail-fast: false
