@@ -1,4 +1,9 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
+# Available Runtimes: https://docs.flatpak.org/en/latest/available-runtimes.html
+# Gnome Platform 50 uses GTK4 with reduced GTK3 compatibility. 
+# Re-evaluate Gnome vs Freedesktop Platforms when Gourmand updates to GTK4
+# Freedesktop releases and support schedule https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/wikis/Releases
+# Gnome Platform and DE releases overlap. Schedules at https://release.gnome.org/calendar/ and support usually 1 year.
 runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
