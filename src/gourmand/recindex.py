@@ -530,10 +530,12 @@ class RecIndex:
         iter = store.get_iter(path)
         if not iter:
             return
-        # self.rmodel.set_value(iter, colnum, text)
         rec = self.get_rec_from_iter(iter)
         if attribute == "category":
-            val = ", ".join(self.rd.get_cats(rec))
+            val = ", ".join(self.rd.rd.get_cats(rec))
+        # Cuisine is its own table now, update info from that table
+        elif attribute == "cuisine":
+            val = ", ".join(self.rd.rd.get_cuisines(rec))
         else:
             val = "%s" % getattr(rec, attribute)
         if val != text:
@@ -677,6 +679,13 @@ class RecipeModel(pageable_store.PageableViewStore):
             cats = self.rd.get_cats(row)
             if cats:
                 return ", ".join(cats)
+            else:
+                return ""
+        # Cuisine is its own table now and can be a list, handle empty strings
+        elif attr == "cuisine":
+            cuisines = self.rd.get_cuisines(row)
+            if cuisines:
+                return ", ".join(cuisines)
             else:
                 return ""
         elif attr == "rec":

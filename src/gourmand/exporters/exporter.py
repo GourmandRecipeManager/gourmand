@@ -200,6 +200,9 @@ class exporter(SuspendableThread, Pluggable):
         # multiple categories.
         if attr == "category":
             return ", ".join(self.rd.get_cats(obj))
+        # Cuisine can be a list rather than a single item now
+        elif attr == "cuisine":
+            return ", ".join(self.rd.get_cuisines(obj))
         try:
             ret = getattr(obj, attr)
         except AttributeError:
@@ -524,6 +527,9 @@ class ExporterMultirec(SuspendableThread, Pluggable):
     def _grab_attr_(self, obj, attr):
         if attr == "category":
             return ", ".join(self.rd.get_cats(obj))
+        # Cuisine can be a list rather than a single item now
+        elif attr == "cuisine":
+            return ", ".join(self.rd.get_cuisines(obj))
         try:
             ret = getattr(obj, attr)
         except AttributeError:

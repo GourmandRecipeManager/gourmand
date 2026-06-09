@@ -329,7 +329,7 @@
                             <property name="label" translatable="yes">C_uisine:</property>
                             <property name="use_underline">True</property>
                             <property name="justify">right</property>
-                            <property name="mnemonic_widget">cuisineBox</property>
+                            <property name="mnemonic_widget">cuisineLabel2</property>
                           </object>
                           <packing>
                             <property name="top_attach">5</property>
@@ -391,15 +391,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkComboBoxText" id="cuisineBox">
+                          <object class="GtkLabel" id="cuisineLabel2">
                             <property name="visible">True</property>
-                            <property name="has_entry">True</property>
-                                <child internal-child="entry">
-                                  <object class="GtkEntry">
-                                    <property name="can_focus">True</property>
-                                    <property name="input_hints">GTK_INPUT_HINT_WORD_COMPLETION</property>
-                                  </object>
-                                </child>
+                            <property name="label" translatable="yes">See Cuisines tab to modify</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
