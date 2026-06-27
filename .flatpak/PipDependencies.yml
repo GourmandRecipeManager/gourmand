@@ -1,0 +1,116 @@
+name: PipDependencies
+buildsystem: simple
+build-commands: []
+modules:
+# beautifulsoup4 and its dependencies
+  - name: SoupSieve
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps soupsieve-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/46/2c/1462b1d0a634697ae9e55b3cecdcb64788e8b7d63f54d923fcd0bb140aed/soupsieve-2.8.3-py3-none-any.whl
+        sha256: ed64f2ba4eebeab06cc4962affce381647455978ffc1e36bb79a545b91f45a95
+  - name: TypingExtensions
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps typing_extensions-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
+        sha256: f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548
+  - name: BeautifulSoup4
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps beautifulsoup4-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/1a/39/47f9197bdd44df24d67ac8893641e16f386c984a0619ef2ee4c51fbbc019/beautifulsoup4-4.14.3-py3-none-any.whl
+        sha256: 0918bfe44902e6ad8d57732ba310582e98da931428d231a5ecb9e7c703a735bb
+# end of BeautifulSoup4 group
+  - name: lxml
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps lxml-*.whl
+    sources:
+      - type: file
+        only-arches: [x86_64]
+        url: https://files.pythonhosted.org/packages/ee/b8/ead7c10efff731738c72e59ed6eb5791854879fbed7ae98781a12006263a/lxml-6.1.0-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl
+        sha256: e69aa6805905807186eb00e66c6d97a935c928275182eb02ee40ba00da9623b2
+      - type: file
+        only-arches: [aarch64]
+        url: https://files.pythonhosted.org/packages/45/26/2cdb3d281ac1bd175603e290cbe4bad6eff127c0f8de90bafd6f8548f0fd/lxml-6.1.0-cp313-cp313-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl
+        sha256: a2853c8b2170cc6cd54a6b4d50d2c1a8a7aeca201f23804b4898525c7a152cfc
+  - name: PILLOW
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation .
+    sources:
+      - type: archive
+        url:  https://files.pythonhosted.org/packages/f3/af/c097e544e7bd278333db77933e535098c259609c4eb3b85381109602fb5b/pillow-11.1.0.tar.gz
+        sha256:  368da70808b36d73b4b390a8ffac11069f8a5c85f29eff1f1b01bcf3ef5b2a20
+# sqlalchemy and its dependency
+  - name: greenlet
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps greenlet-*.whl
+    sources:
+      - type: file
+        only-arches: [x86_64]
+        url: https://files.pythonhosted.org/packages/8a/17/a3918541fd0ddefe024a69de6d16aa7b46d36ac19562adaa63c7fa180eff/greenlet-3.5.0-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+        sha256: 2094acd54b272cb6eae8c03dd87b3fa1820a4cef18d6889c378d503500a1dc13
+      - type: file
+        only-arches: [aarch64]
+        url: https://files.pythonhosted.org/packages/4a/ba/b28ddbe6bfad6a8ac196ef0e8cff37bc65b79735995b9e410923fffeeb70/greenlet-3.5.0-cp313-cp313-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl
+        sha256: 3a717fbc46d8a354fa675f7c1e813485b6ba3885f9bef0cd56e5ba27d758ff5b
+  - name: sqlalchemy
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation .
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/ce/af/20290b55d469e873cba9d41c0206ab5461ff49d759989b3fe65010f9d265/sqlalchemy-1.4.54.tar.gz
+        sha256: 4470fbed088c35dc20b78a39aaf4ae54fe81790c783b3264872a0224f437c31a
+# end of sqlalchemy group
+  - name: TomliW
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps tomli_w-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/c7/18/c86eb8e0202e32dd3df50d43d7ff9854f8e0603945ff398974c1d91ac1ef/tomli_w-1.2.0-py3-none-any.whl
+        sha256: 188306098d013b691fcadc011abd66727d3c414c571bb01b1a174ba8c983cf90
+# ebooklib group
+  - name: Six
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps six-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl
+        sha256: 4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274
+  - name: EBookLib
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-build-isolation .
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/00/38/7d6ab2e569a9165249619d73b7bc6be0e713a899a3bc2513814b6598a84c/EbookLib-0.17.1.tar.gz
+        sha256: fe23e22c28050196c68db3e7b13b257bf39426d927cb395c6f2cc13ac11327f1
+# end ebooklib group
+  - name: ReportLab
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps reportlab-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/a7/45/ea7fad10122440de6e845568d106bffdc456ca0e8a1d8ae10b46016087e4/reportlab-4.5.1-py3-none-any.whl
+        sha256: 06fce8cb56c83307cfa4909cdf4e6a2ddbb44e5d6ef4d2edca896d7e9769f091
+  - name: PyGTKSpellCheck
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps pygtkspellcheck-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/01/87/e199ed6165f2e08492f6e8d44ef3d8824e473a2cf3be94cc19d5a6f8a3ae/pygtkspellcheck-5.0.4-py3-none-any.whl
+        sha256: e578d950046ed7b15487d00ea72ad39d33bdd85f61114f75caa4bdf28cd0aa3f

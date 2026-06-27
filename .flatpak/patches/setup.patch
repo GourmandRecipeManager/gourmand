@@ -1,0 +1,11 @@
+--- a/setup.py
++++ b/setup.py
+@@ -210,7 +210,7 @@
+     extras_require={
+         "epub-export": ["ebooklib==0.17.1"],
+-        "pdf-export": ["reportlab<4"],
++        "pdf-export": ["reportlab>=4.5.1"],
+         "spellcheck": ["pyenchant", "pygtkspellcheck"],
+     },
+     cmdclass={
+         "bdist_wheel": BuildWheel,

@@ -1,15 +1,42 @@
 app-id: io.github.GourmandRecipeManager.Gourmand
-runtime: org.gnome.Platform
-# https://release.gnome.org/calendar/
-runtime-version: '50'
-sdk: org.gnome.Sdk
+# Available Runtimes: https://docs.flatpak.org/en/latest/available-runtimes.html
+# Gnome Platform 50 uses GTK4 with reduced GTK3 compatibility. 
+# Re-evaluate Gnome vs Freedesktop Platforms when Gourmand updates to GTK4
+# Freedesktop releases and support schedule https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/wikis/Releases
+# Gnome Platform and DE releases overlap. Schedules at https://release.gnome.org/calendar/ and support usually 1 year.
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
 command: gourmand
-
+# for more information on flatpak policy for directories and what the finish-args do, please use the link below:
+# https://docs.flatpak.org/en/latest/sandbox-permissions.html
 finish-args:
-  - --filesystem=host
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+  - --filesystem=xdg-pictures
+  - --filesystem=xdg-config/Gourmand:create
+  - --filesystem=xdg-data/Gourmand:create
+  - --socket=wayland
   - --socket=fallback-x11
+  - --share=ipc
   - --socket=pulseaudio
   - --share=network
+# default pip install location is /usr but flatpak-builder makes /usr read only. Flatpaks with python apps need to install in /app
+# by setting default --prefix=/app for all pip commands, it does not have to be repeated in every pip install command.
+build-options:
+  env:
+    PIP_PREFIX: /app
+# these cleanup commands make the flatpak smaller for users to download from Flathub.
+cleanup:
+  - '*.a'
+  - '*.la'
+  - /include
+  - /lib/pkgconfig
+  - /share/aclocal
+  - /lib/cmake
+  - /share/gir-1.0
+  - /share/man
+
 modules:
   - name: poppler
     buildsystem: cmake-ninja
@@ -28,10 +55,11 @@ modules:
         type: archive
 
   - name: cpython
+    buildsystem: autotools
     sources:
-      - type: archive
-        url: https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tar.xz
-        sha256: 272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625
+      - type: git
+        url: https://github.com/python/cpython.git
+        tag: v3.13.13
 
   - name: intltool
     buildsystem: autotools
@@ -40,17 +68,44 @@ modules:
         url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
         sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
 
+  - name: setuptools
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app --no-deps setuptools-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/9d/76/f789f7a86709c6b087c5a2f52f911838cad707cc613162401badc665acfe/setuptools-82.0.1-py3-none-any.whl
+        sha256:  a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb
+
+  - name: PyCairo
+    buildsystem: meson
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/22/d9/1728840a22a4ef8a8f479b9156aa2943cd98c3907accd3849fb0d5f82bfd/pycairo-1.29.0.tar.gz
+        sha256: f3f7fde97325cae80224c09f12564ef58d0d0f655da0e3b040f5807bd5bd3142
+
+  - name: PyGObject
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/GNOME/pygobject.git
+        tag: 3.50.0
+
+# modules for more dependencies. Flathub will not allow pip to pull undeclared dependencies when compiling the workflow.
+# Every dependency needs to be declared with source and build commands.
+  - RecipeScrapersDependencies.yml
+  - EnchantDependencies.yml
+  - PipDependencies.yml
+
   - name: gourmand
     buildsystem: simple
-    build-options:
-      build-args:
-        - --share=network
     build-commands:
-      - python3 -m pip install --upgrade pip setuptools wheel
-      - pip3 install --prefix=/app .[epub-export,pdf-export,spellcheck,web-import]
+      - pip3 install --prefix=/app --no-build-isolation .[epub-export,pdf-export,spellcheck,web-import]
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.desktop -t /app/share/applications/
       - install -Dm644 data/io.github.GourmandRecipeManager.Gourmand.svg -t /app/share/icons/hicolor/scalable/apps/
     sources:
       - type: git
-        branch: main
-        url: https://github.com/GourmandRecipeManager/gourmand
+        url: https://github.com/GourmandRecipeManager/gourmand.git
+        tag: 1.2.0
+      - type: patch
+        path: patches/setup.patch
