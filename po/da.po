@@ -2,12 +2,12 @@
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the grecipe-manager package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2005.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: grecipe-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 14:04+0200\n"
+"POT-Creation-Date: 2026-08-05 14:35+0100\n"
 "PO-Revision-Date: 2013-02-19 18:18+0000\n"
 "Last-Translator: Tine Bisballe Nyeng <tine@aasimon.org>\n"
 "Language-Team: Danish <da@li.org>\n"
@@ -20,64 +20,64 @@ msgstr ""
 "X-Generator: Launchpad (build 17031)\n"
 "X-Rosetta-Version: 0.1\n"
 
-#: ../src/gourmand/ui/app.ui.h:1
+#: ../src/gourmand/ui/app.ui.h:1
 msgid "Recipe Index"
 msgstr "Opskrift Indeks"
 
 #. Set up hard-coded functional buttons...
-#: ../src/gourmand/ui/app.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:2
 #: ../src/gourmand/importers/interactive_importer.py:142
 msgid "_New Recipe"
 msgstr "_Ny Opskrift"
 
-#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
+#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
 msgid "Add to _Shopping List"
 msgstr "Tilføj til Indkøbsliste"
 
-#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
 msgid "View Re_cipe"
 msgstr "Vis Opskrift"
 
-#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
-#: ../src/gourmand/ui/nutritionDruid.ui.h:31
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:31
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
 msgid "_Search for:"
 msgstr "_Søg efter:"
 
-#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
-#: ../src/gourmand/ui/shopCatEditor.ui.h:5
-#: ../src/gourmand/ui/nutritionDruid.ui.h:32
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
+#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
+#: ../src/gourmand/ui/shopCatEditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:32
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
 msgid "Search for recipes as you type"
 msgstr "Søg efter opskrifter mens du taster"
 
-#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
 msgid "_in"
 msgstr "_i"
 
-#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
+#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
 msgid "Search by other critera within the current search results."
 msgstr "Søg med andre kriterier indenfor de nuværende søgeresultater"
 
-#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
+#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
 msgid "A_dd Search Criteria"
 msgstr "Tilføj Søgekriterier"
 
-#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
+#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
 msgid "Limiting Search to:"
 msgstr "Begræns Søgning til:"
 
-#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
+#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
 msgid "Search _Results"
 msgstr "Søge_resultater"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:1
+#: ../src/gourmand/ui/batchEditor.ui.h:1
 msgid "Set Fields for Selected Recipes"
 msgstr "Sæt Felter for Valgte Opskrifter"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:2
 msgid ""
 "<span size=\"large\" weight=\"bold\">Set Recipe Fields for selected recipes</"
 "span>"
@@ -85,132 +85,132 @@ msgstr ""
 "<span size=\"large\" weight=\"bold\">Sæt Opskrift Felter for de valgte "
 "opskrifter</span>"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:3
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
+#: ../src/gourmand/ui/batchEditor.ui.h:3
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
 msgid "_Add Image"
 msgstr "_Tilføj Billede"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:4
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
+#: ../src/gourmand/ui/batchEditor.ui.h:4
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
 msgid "_Remove Image"
 msgstr "_Fjern Billede"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:5
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:5
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
 msgid "S_ource:"
 msgstr "Kilde:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:6
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
+#: ../src/gourmand/ui/batchEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
 msgid "_Rating:"
 msgstr "_Bedømmelse:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:7
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
+#: ../src/gourmand/ui/batchEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
 msgid "C_uisine:"
 msgstr "Verdenskøkken:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:8
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:8
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
 msgid "_Category:"
 msgstr "_Kategori:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:9
 msgid "_Preparation Time:"
 msgstr "_Forberedningstid"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:10
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
+#: ../src/gourmand/ui/batchEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
 msgid "Coo_king Time:"
 msgstr "Til_beredningstid:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:11
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:11
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
 msgid "_Webpage:"
 msgstr "_Internetside:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:12
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
+#: ../src/gourmand/ui/batchEditor.ui.h:12
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
 msgid "Image:"
 msgstr "Billede:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:13
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
+#: ../src/gourmand/ui/batchEditor.ui.h:13
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
 msgid "_Yield:"
 msgstr "_Udbytte:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:14
 #, fuzzy
 msgid "Yield U_nit:"
 msgstr "Udbytte Enhed"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:15
+#: ../src/gourmand/ui/batchEditor.ui.h:15
 msgid "_Only set values where field is currently blank"
 msgstr "Sæt _kun værdier hvor feltet i forvejen er tomt"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:16
+#: ../src/gourmand/ui/batchEditor.ui.h:16
 msgid "Set all values for _all selected recipes"
 msgstr "Sæt alle værdier for _alle de valgte opskrifter"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:1
+#: ../src/gourmand/ui/databaseChooser.ui.h:1
 msgid "Metakit (default, stored in a local file)"
 msgstr ""
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:2
+#: ../src/gourmand/ui/databaseChooser.ui.h:2
 msgid "SQLite (stored in a local file)"
 msgstr "SQLite (gemt i en lokal fil)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:3
+#: ../src/gourmand/ui/databaseChooser.ui.h:3
 msgid "MySQL (requires connection to a database)"
 msgstr "MySQL (behøver forbindelse til en database)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:4
+#: ../src/gourmand/ui/databaseChooser.ui.h:4
 msgid "Choose Database"
 msgstr "Vælg Database"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:5
+#: ../src/gourmand/ui/databaseChooser.ui.h:5
 msgid "<b>Choose Database System for Gourmet to Use</b>"
 msgstr "<b>Vælg Database System som Gourmet skal bruge</b>"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:6
+#: ../src/gourmand/ui/databaseChooser.ui.h:6
 msgid "_Database System"
 msgstr "_Database System"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:7
 msgid "_Host:"
 msgstr "_Vært:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:8
+#: ../src/gourmand/ui/databaseChooser.ui.h:8
 msgid "_Username:"
 msgstr "_Brugernavn:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:9
+#: ../src/gourmand/ui/databaseChooser.ui.h:9
 msgid "_Password:"
 msgstr "_Adgangskode:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:10
+#: ../src/gourmand/ui/databaseChooser.ui.h:10
 msgid "Password for your username on the database."
 msgstr "Adgangskode for dit brugernavn til databasen."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:11
-#: ../src/gourmand/ui/shopCatEditor.ui.h:6
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:11
+#: ../src/gourmand/ui/shopCatEditor.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
 msgid "*"
 msgstr "*"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:12
+#: ../src/gourmand/ui/databaseChooser.ui.h:12
 msgid "Database _Name:"
 msgstr "Database _Navn"
 
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
-#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
+#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
 #: ../src/gourmand/main.py:1009
 msgid "_File"
 msgstr "_Fil"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:14
+#: ../src/gourmand/ui/databaseChooser.ui.h:14
 msgid ""
 "Hostname of the system where your database server is running. If your "
 "database server is running on your local system, use localhost."
@@ -218,11 +218,11 @@ msgstr ""
 "Værtsnavn af det system, hvor din databaseserver kører. Hvis din "
 "databaseserver kører på dit lokale system, brug localhost."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:15
+#: ../src/gourmand/ui/databaseChooser.ui.h:15
 msgid "localhost"
 msgstr "localhost"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:16
+#: ../src/gourmand/ui/databaseChooser.ui.h:16
 msgid ""
 "Save the password for next time. This means the password will be stored "
 "insecurely in your configuration file."
@@ -230,11 +230,11 @@ msgstr ""
 "Gem din adgangskode til næste gang. Det betyder at din adgangskode vil blive "
 "gemt usikret i din konfigurationsfil."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:17
+#: ../src/gourmand/ui/databaseChooser.ui.h:17
 msgid "_Save Password"
 msgstr "_Gem Adgangskode"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:18
+#: ../src/gourmand/ui/databaseChooser.ui.h:18
 msgid ""
 "Name of the database in which Gourmet should store its information. Gourmet "
 "will try to create this database if it does not already exist."
@@ -242,82 +242,82 @@ msgstr ""
 "Navn på databasen, hvor Gourmet skal lagre sine informationer. Gourmet vil "
 "forsøge at oprette databasen, hvis den ikke allerede eksisterer."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:19
+#: ../src/gourmand/ui/databaseChooser.ui.h:19
 #: ../src/gourmand/plugins/nutritional_information/nutritionDruid.py:277
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:22
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:72
 msgid "recipe"
 msgstr "opskrift"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:20
+#: ../src/gourmand/ui/databaseChooser.ui.h:20
 msgid "Your username on the database."
 msgstr "Dit brugernavn til databasen."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:21
+#: ../src/gourmand/ui/databaseChooser.ui.h:21
 msgid "_Browse"
 msgstr "_Gennemse"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:22
+#: ../src/gourmand/ui/databaseChooser.ui.h:22
 #: ../src/gourmand/gtk_extras/dialog_extras.py:838
 #: ../src/gourmand/gtk_extras/dialog_extras.py:1253
 msgid "_Details"
 msgstr "_Detaljer"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:1
+#: ../src/gourmand/ui/preferenceDialog.ui.h:1
 #, fuzzy
 msgid "Gourmand Recipe Manager Preferences"
 msgstr "Gourmet Recipe Manager Opsætning"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:2
+#: ../src/gourmand/ui/preferenceDialog.ui.h:2
 msgid "<b>Index View Preferences</b>"
 msgstr "<b>Opsætning for Indeks Visning</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:3
+#: ../src/gourmand/ui/preferenceDialog.ui.h:3
 #, fuzzy
 msgid "Show _toolbar"
 msgstr "Vis _Valgmuligheder"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:4
+#: ../src/gourmand/ui/preferenceDialog.ui.h:4
 msgid "_Recipes per page:"
 msgstr "_Opskrifter per side:"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:5
+#: ../src/gourmand/ui/preferenceDialog.ui.h:5
 msgid "<i>Configure which columns are included in the recipe index view.</i>"
 msgstr "<i>Opsæt hvilke søjler der inkluderes i opskriftindeks-visningen.</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:6
+#: ../src/gourmand/ui/preferenceDialog.ui.h:6
 msgid "Index View"
 msgstr "Indeks Visning"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:7
+#: ../src/gourmand/ui/preferenceDialog.ui.h:7
 msgid "<b>Card View Preferences</b>"
 msgstr "<b>Opsætning for Kort Visning</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:8
+#: ../src/gourmand/ui/preferenceDialog.ui.h:8
 msgid "_Allow units to change when multiplying"
 msgstr "_Tillad enheder at skifte når der ganges"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:9
+#: ../src/gourmand/ui/preferenceDialog.ui.h:9
 msgid "_Use fractions"
 msgstr "_Brug brøkdele"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:10
+#: ../src/gourmand/ui/preferenceDialog.ui.h:10
 msgid "Use fractions when possible for display"
 msgstr "Brug brøker til visning hvor det er muligt"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:11
+#: ../src/gourmand/ui/preferenceDialog.ui.h:11
 msgid "<i>Remove items you don't use from the Recipe Card interface.</i>"
 msgstr "<i>Fjern emner, som du ikke bruger, fra opskriftskort-interfacet.</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:12
+#: ../src/gourmand/ui/preferenceDialog.ui.h:12
 msgid "Card View"
 msgstr "Kortvisning"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:13
+#: ../src/gourmand/ui/preferenceDialog.ui.h:13
 msgid "<b>Shopping List Preferences</b>"
 msgstr "Indkøbsliste Præferencer:"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:14
+#: ../src/gourmand/ui/preferenceDialog.ui.h:14
 #, fuzzy
 msgid ""
 "<i>What should Gourmand do with Optional Ingredients when adding recipes to "
@@ -326,216 +326,216 @@ msgstr ""
 "<i>Hvad skal Gourmet gøre med Valgfrie Ingredienser når der tilføjes "
 "opskrifter til indkøbslisten?</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:15
+#: ../src/gourmand/ui/preferenceDialog.ui.h:15
 msgid "As_k whether to include optional ingredients"
 msgstr ""
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:16
+#: ../src/gourmand/ui/preferenceDialog.ui.h:16
 msgid "_Remember user selections by default"
 msgstr "_Husk brugervalg som standard"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:17
+#: ../src/gourmand/ui/preferenceDialog.ui.h:17
 msgid "_Clear remembered optional ingredients"
 msgstr "_Slet gemte valgfrie ingredienser"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:18
+#: ../src/gourmand/ui/preferenceDialog.ui.h:18
 msgid "_Always add optional ingredients"
 msgstr "_Tilføj altid valgfrie ingredienser"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:19
+#: ../src/gourmand/ui/preferenceDialog.ui.h:19
 msgid "_Never add optional ingredients"
 msgstr "_Tilføj aldrig valgfrie ingredienser"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
+#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
 #: ../src/gourmand/shopgui.py:552 ../src/gourmand/shopgui.py:858
 #: ../src/gourmand/shopgui.py:1014
 msgid "Shopping List"
 msgstr "Indkøbsliste"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
 msgid "servings"
 msgstr "portioner"
 
 #. renderer.set_property('editable',True)
 #. renderer.connect('edited',tst)
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
 #: ../src/gourmand/shopgui.py:754 ../src/gourmand/gglobals.py:29
 #: ../src/gourmand/exporters/rtf_exporter.py:93
 msgid "Title"
 msgstr "Titel"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
 msgid "_Title:"
 msgstr "_Titel:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
 msgid "Pre_paration Time:"
 msgstr "For_beredningstid:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
 #: ../src/gourmand/recindex.py:45 ../src/gourmand/recindex.py:53
 msgid "category"
 msgstr "kategori"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
 msgid "rating"
 msgstr "bedømmelse"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
 #: ../src/gourmand/gglobals.py:35
 msgid "Yield"
 msgstr "Udbytte"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
 #: ../src/gourmand/gglobals.py:36
 msgid "Yield Unit"
 msgstr "Udbytte Enhed"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:1
+#: ../src/gourmand/ui/recCardDisplay.ui.h:1
 msgid "_Shop"
 msgstr "_Butik"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:2
+#: ../src/gourmand/ui/recCardDisplay.ui.h:2
 msgid "Edit _description"
 msgstr "Rediger _beskrivelse"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:3
+#: ../src/gourmand/ui/recCardDisplay.ui.h:3
 msgid "<b>Cooking Time:</b>"
 msgstr "<b>Tilberedningstid:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:4
+#: ../src/gourmand/ui/recCardDisplay.ui.h:4
 msgid "<b>Preparation Time:</b>"
 msgstr "<b>Forberedelsestid:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:5
+#: ../src/gourmand/ui/recCardDisplay.ui.h:5
 msgid "<b>Cuisine:</b>"
 msgstr "<b>Køkken:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:6
+#: ../src/gourmand/ui/recCardDisplay.ui.h:6
 msgid "<b>Category:</b>"
 msgstr "<b>Kategori:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:7
+#: ../src/gourmand/ui/recCardDisplay.ui.h:7
 msgid "<b>Webpage:</b>"
 msgstr "<b>Internetside:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:8
+#: ../src/gourmand/ui/recCardDisplay.ui.h:8
 msgid "<b>_Yields:</b>"
 msgstr "<b>_Portioner</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:9
+#: ../src/gourmand/ui/recCardDisplay.ui.h:9
 msgid "<span underline=\"single\" color=\"blue\">Link</span>"
 msgstr "<span underlige=\"single\" color=\"blue\">Link</span>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:10
+#: ../src/gourmand/ui/recCardDisplay.ui.h:10
 msgid "<b>Source:</b>"
 msgstr "<b>Kilde:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:11
+#: ../src/gourmand/ui/recCardDisplay.ui.h:11
 msgid "<b>Rating:</b>"
 msgstr "<b>Bedømmelse:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:12
+#: ../src/gourmand/ui/recCardDisplay.ui.h:12
 msgid "<b>_Multiply by:</b>"
 msgstr "<b>_Gang med:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:13
+#: ../src/gourmand/ui/recCardDisplay.ui.h:13
 msgid "<b>Instructions</b>"
 msgstr "<b>Instruktioner</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:14
+#: ../src/gourmand/ui/recCardDisplay.ui.h:14
 msgid "Edit _instructions"
 msgstr "Rediger _instruktioner"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:15
+#: ../src/gourmand/ui/recCardDisplay.ui.h:15
 msgid "<b>Notes</b>"
 msgstr "<b>Noter</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:16
+#: ../src/gourmand/ui/recCardDisplay.ui.h:16
 msgid "Edit _notes"
 msgstr "Rediger _noter"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:17
+#: ../src/gourmand/ui/recCardDisplay.ui.h:17
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:507
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:83
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:168
-#: ../src/gourmand/exporters/exporter.py:625
+#: ../src/gourmand/exporters/exporter.py:627
 msgid "Recipe"
 msgstr "Opskrift"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:18
+#: ../src/gourmand/ui/recCardDisplay.ui.h:18
 msgid "<b>Ingredients</b>"
 msgstr "<b>Ingredienser</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:19
+#: ../src/gourmand/ui/recCardDisplay.ui.h:19
 msgid "Edit _ingredients"
 msgstr "Rediger _ingredienser"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
 msgid "Add _ingredient:"
 msgstr "Tilføj _ingrediens:"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
 #: ../src/gourmand/reccard.py:1008
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:504
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:545
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:117
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:180
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:598
-#: ../src/gourmand/exporters/exporter.py:251
+#: ../src/gourmand/exporters/exporter.py:252
 #: ../src/gourmand/importers/interactive_importer.py:40
 #: ../src/gourmand/importers/interactive_importer.py:47
 msgid "Ingredients"
 msgstr "Ingredienser"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:1
+#: ../src/gourmand/ui/recipe_index.ui.h:1
 msgid "Add recipe to shopping list"
 msgstr "Tilføj opskrift til indkøbsliste"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:2
+#: ../src/gourmand/ui/recipe_index.ui.h:2
 msgid "Add to _shopping list"
 msgstr "Tilføj til _indkøbsliste"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:3
+#: ../src/gourmand/ui/recipe_index.ui.h:3
 msgid "Jump to recipe in Recipe Card vew"
 msgstr "Gå til opskriften i Opskriftskort visning"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:5
+#: ../src/gourmand/ui/recipe_index.ui.h:5
 msgid "Delete selected recipe"
 msgstr "Slet valgte opskrift"
 
 #. saveEdits
-#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
+#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
 msgid "_Delete Recipe"
 msgstr "_Slet Opskrift"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:7
+#: ../src/gourmand/ui/recipe_index.ui.h:7
 msgid "Edit attributes of selected recipes"
 msgstr "Rediger egenskaber til valgte opskrifter"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:8
+#: ../src/gourmand/ui/recipe_index.ui.h:8
 msgid "_Batch edit recipes"
 msgstr "Redigér opskrifter samlet"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:9
+#: ../src/gourmand/ui/recipe_index.ui.h:9
 #, fuzzy
 msgid "Copy selected recipe"
 msgstr "Åben valgte opskrift"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:10
+#: ../src/gourmand/ui/recipe_index.ui.h:10
 #, fuzzy
 msgid "_Copy recipe"
 msgstr "Vælg opskrift"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:11
+#: ../src/gourmand/ui/recipe_index.ui.h:11
 msgid "Print selected recipe"
 msgstr "Udskriv valgte opskrift"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:12
+#: ../src/gourmand/ui/recipe_index.ui.h:12
 msgid "_Print recipe"
 msgstr "_Udskriv opskrift"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:13
+#: ../src/gourmand/ui/recipe_index.ui.h:13
 msgid ""
 "Never buy this item. When called for in a recipe, it will show up in a "
 "\"pantry\" section of the list as a reminder that you need it, but it won't "
@@ -543,31 +543,31 @@ msgid ""
 "buy it."
 msgstr ""
 
-#: ../src/gourmand/ui/recipe_index.ui.h:14
+#: ../src/gourmand/ui/recipe_index.ui.h:14
 msgid "Add to _Pantry"
 msgstr "Tilføj til _Spisekammer"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:17
+#: ../src/gourmand/ui/recipe_index.ui.h:17
 msgid "Show _Options"
 msgstr "Vis _Valgmuligheder"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:18
+#: ../src/gourmand/ui/recipe_index.ui.h:18
 msgid "Search _in"
 msgstr "Søg _i"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:21
+#: ../src/gourmand/ui/recipe_index.ui.h:21
 msgid "_Use regular expressions (advanced searching)"
 msgstr "_Brug regulære udtryk (avanceret søgning)"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:22
+#: ../src/gourmand/ui/recipe_index.ui.h:22
 msgid "Search as you _type"
 msgstr "Søg i mens du _taster"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:23
+#: ../src/gourmand/ui/recipe_index.ui.h:23
 msgid "<i>Search Options</i>"
 msgstr "<i>Søgemuligheder</i>"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
+#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
 msgid "Category"
 msgstr "Kategori"
 
@@ -576,7 +576,7 @@ msgstr "Kategori"
 #. None,
 #. ()),
 #. }
-#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
+#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
 #: ../src/gourmand/reccard.py:2100
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:508
 #: ../src/gourmand/plugins/key_editor/recipeEditorPlugin.py:128
@@ -584,265 +584,264 @@ msgstr "Kategori"
 msgid "Key"
 msgstr "Nøgle"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:3
+#: ../src/gourmand/ui/shopCatEditor.ui.h:3
 msgid "Category Editor"
 msgstr "Kategoriredigering"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:4
+#: ../src/gourmand/ui/shopCatEditor.ui.h:4
 msgid "Search by"
 msgstr "Søg af"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
+#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
 msgid "Search as you type"
 msgstr "Søg mens du taster"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:8
-#: ../src/gourmand/ui/nutritionDruid.ui.h:33
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
+#: ../src/gourmand/ui/shopCatEditor.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:33
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
 msgid "Use regular expressions"
 msgstr "Brug regulære udtryk"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:9
+#: ../src/gourmand/ui/shopCatEditor.ui.h:9
 msgid "Advanced Search"
 msgstr "Avanceret Søgning"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:10
+#: ../src/gourmand/ui/shopCatEditor.ui.h:10
 msgid "Add Category: "
 msgstr "Tilføj Kategori: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
+#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
 #: ../src/gourmand/timer.py:186
 msgid "Timer"
 msgstr "Stopur"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:2
+#: ../src/gourmand/ui/timerDialog.ui.h:2
 msgid "<b><span size=\"larger\">Timer</span></b>"
 msgstr "<b><span size=\"larger\">Stopur</span></b>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:3
+#: ../src/gourmand/ui/timerDialog.ui.h:3
 msgid "<i>Timer Finished!</i>"
 msgstr "<i>Stopur Slut!</i>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:4
+#: ../src/gourmand/ui/timerDialog.ui.h:4
 msgid ""
 "Timer will continue to go off until you close this dialog or reset the timer."
 msgstr ""
 "Minuturet vil blive ved med at ringe, indtil du lukker denne dialog eller "
 "nulstiller uret."
 
-#: ../src/gourmand/ui/timerDialog.ui.h:5
+#: ../src/gourmand/ui/timerDialog.ui.h:5
 msgid "Set _Timer: "
 msgstr "Indstil _Stopur: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:6
+#: ../src/gourmand/ui/timerDialog.ui.h:6
 msgid "_Reset"
 msgstr "_Nulstil"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:7
+#: ../src/gourmand/ui/timerDialog.ui.h:7
 msgid "_Start"
 msgstr "_Start"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:8
+#: ../src/gourmand/ui/timerDialog.ui.h:8
 msgid "S_ound"
 msgstr "Lyd"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:9
+#: ../src/gourmand/ui/timerDialog.ui.h:9
 msgid "_Note"
 msgstr "_Bemærk"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:10
+#: ../src/gourmand/ui/timerDialog.ui.h:10
 msgid "Re_peat alarm until I turn it off"
 msgstr "Gen_tag alarm indtil jeg slår den fra"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:11
+#: ../src/gourmand/ui/timerDialog.ui.h:11
 msgid "_Settings"
 msgstr "_Indstillinger"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:1
+#: ../src/gourmand/ui/valueEditor.ui.h:1
 msgid "<b>Edit fields throughout database</b>"
 msgstr "<b>Redigér felter i hele databasen</b>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:2
+#: ../src/gourmand/ui/valueEditor.ui.h:2
 msgid "Field to _Edit:"
 msgstr "Redigér dette felt:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:3
+#: ../src/gourmand/ui/valueEditor.ui.h:3
 msgid "For each selected value:"
 msgstr "For hver valgte værdi:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:4
+#: ../src/gourmand/ui/valueEditor.ui.h:4
 msgid "_Leave value as is"
 msgstr "Ingen ændringer"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:5
+#: ../src/gourmand/ui/valueEditor.ui.h:5
 msgid "<i>New value will be added to the end of any existing text</i>"
 msgstr ""
 "<i>Den nye værdi vil blive tilføjet til slutningen i eksisterende tekst</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:6
+#: ../src/gourmand/ui/valueEditor.ui.h:6
 msgid "<i>New value will replace any existing value</i>"
 msgstr "<i>Den nye værdi vil erstatte eksisterende værdier</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:7
+#: ../src/gourmand/ui/valueEditor.ui.h:7
 msgid "_Field:"
 msgstr "_Felt:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:8
+#: ../src/gourmand/ui/valueEditor.ui.h:8
 msgid "_Value:"
 msgstr "_Værdi:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:9
+#: ../src/gourmand/ui/valueEditor.ui.h:9
 msgid "Change _other field:"
 msgstr "Skift _andet felt"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:10
+#: ../src/gourmand/ui/valueEditor.ui.h:10
 msgid "C_hange value to: "
 msgstr "Skift værdi til: "
 
-#: ../src/gourmand/ui/valueEditor.ui.h:11
+#: ../src/gourmand/ui/valueEditor.ui.h:11
 msgid "_Delete value"
 msgstr "_Slet værdi"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:1
 msgid "<i>Select equivalent of</i>"
 msgstr "<i>Vælg hvad der svarer til</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:2
+#: ../src/gourmand/ui/nutritionDruid.ui.h:2
 msgid "<i>from USDA database</i>"
 msgstr "<i>fra USDA databasen</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:3
+#: ../src/gourmand/ui/nutritionDruid.ui.h:3
 msgid "_Change ingredient"
 msgstr "_Udskift ingrediens"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:4
 msgid "<i>or</i>"
 msgstr "<i>eller</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:5
 msgid "_Search USDA Ingredient Database:"
 msgstr "_Søg i USDA Ingrediens-databasen"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:6
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:6
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
 msgid "Search as you t_ype"
 msgstr "Søg mens du taster"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:7
+#: ../src/gourmand/ui/nutritionDruid.ui.h:7
 msgid "Show only food in _group:"
 msgstr "Vis kun mad i _gruppe"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:8
 msgid "<i>Search _results:</i>"
 msgstr "<i>Søge_resultater:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:9
+#: ../src/gourmand/ui/nutritionDruid.ui.h:9
 msgid "<i>From:</i>"
 msgstr "<i>Fra:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:10
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:10
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
 msgid "_Amount:"
 msgstr "_Beløb:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:11
+#: ../src/gourmand/ui/nutritionDruid.ui.h:11
 msgid "Unit:"
 msgstr "Enhed:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:12
+#: ../src/gourmand/ui/nutritionDruid.ui.h:12
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:98
 msgid "unit"
 msgstr "element"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:13
+#: ../src/gourmand/ui/nutritionDruid.ui.h:13
 msgid "_Change unit"
 msgstr "_Udskift enhed"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:14
+#: ../src/gourmand/ui/nutritionDruid.ui.h:14
 msgid "_Save new unit"
 msgstr "_Gem nye enhed"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:15
 msgid "<i>To:</i>"
 msgstr "<i>Til:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:16
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:16
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
 msgid "_Unit:"
 msgstr "_Enhed:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:17
+#: ../src/gourmand/ui/nutritionDruid.ui.h:17
 msgid "<i>Enter nutritional information for </i>"
 msgstr "<i>Indtast ernæringsmæssig information for</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:18
+#: ../src/gourmand/ui/nutritionDruid.ui.h:18
 msgid "<b>Choose a Density</b>"
 msgstr "<b>Vælg en Massefylde</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:19
+#: ../src/gourmand/ui/nutritionDruid.ui.h:19
 msgid "<b>Ingredient Key: </b>"
 msgstr "<b>Ingrediensnøgle:</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:20
+#: ../src/gourmand/ui/nutritionDruid.ui.h:20
 msgid "<b>USDA Item: </b>"
 msgstr "<b>USDA Ingrediens: </b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:21
+#: ../src/gourmand/ui/nutritionDruid.ui.h:21
 msgid "Edit _USDA Association"
 msgstr "Redigér _USAD-tilknytning"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:22
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:22
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
 msgid "<b>Nutritional Information</b>"
 msgstr "<b>Ernæringsmæssig Information</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:23
+#: ../src/gourmand/ui/nutritionDruid.ui.h:23
 msgid "Edit _information"
 msgstr "Redigér _information"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:24
+#: ../src/gourmand/ui/nutritionDruid.ui.h:24
 msgid "_Nutritional Information"
 msgstr "_Erneringsmæssig Information"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:25
+#: ../src/gourmand/ui/nutritionDruid.ui.h:25
 msgid "Density:"
 msgstr "Massefylde:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:26
+#: ../src/gourmand/ui/nutritionDruid.ui.h:26
 msgid "USDA equivalents:"
 msgstr "USDA-ækvivalenter:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:27
+#: ../src/gourmand/ui/nutritionDruid.ui.h:27
 msgid "Custom equivalents:"
 msgstr "Brugerdefineret ækvivalent:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:28
+#: ../src/gourmand/ui/nutritionDruid.ui.h:28
 msgid "_Density Information"
 msgstr "_Tætheds-information"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:29
+#: ../src/gourmand/ui/nutritionDruid.ui.h:29
 msgid "<b>Known Nutritonal Information</b>"
 msgstr "<b>Kendt Ernæringsmæssig Information</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:34
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
+#: ../src/gourmand/ui/nutritionDruid.ui.h:34
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
 msgid "_Advanced Search"
 msgstr "_Avanceret Søgning"
 
 #. name
 #. stock
-#: ../src/gourmand/ui/nutritionDruid.ui.h:35
+#: ../src/gourmand/ui/nutritionDruid.ui.h:35
 #: ../src/gourmand/plugins/nutritional_information/nutPrefsPlugin.py:13
 #: ../src/gourmand/plugins/nutritional_information/main_plugin.py:14
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:36
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:71
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
 msgid "Nutritional Information"
 msgstr "Ernæringsmæssige Oplysninger"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:36
+#: ../src/gourmand/ui/nutritionDruid.ui.h:36
 msgid "I_gnore"
 msgstr "I_gnorer"
 
@@ -1437,27 +1436,27 @@ msgid "Do you really want to do this"
 msgstr "Vil du virkelig gøre dette"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:771
-#: ../src/gourmand/importers/importer.py:488
+#: ../src/gourmand/importers/importer.py:482
 msgid "excellent"
 msgstr "fremragende"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:772
-#: ../src/gourmand/importers/importer.py:489
+#: ../src/gourmand/importers/importer.py:483
 msgid "great"
 msgstr "storartet"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:773
-#: ../src/gourmand/importers/importer.py:490
+#: ../src/gourmand/importers/importer.py:484
 msgid "good"
 msgstr "god"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:774
-#: ../src/gourmand/importers/importer.py:491
+#: ../src/gourmand/importers/importer.py:485
 msgid "fair"
 msgstr "nogenlunde"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:775
-#: ../src/gourmand/importers/importer.py:493
+#: ../src/gourmand/importers/importer.py:487
 msgid "poor"
 msgstr "dårlig"
 
@@ -2141,20 +2140,19 @@ msgstr "Rediger Nøgle Sammenslutninger"
 msgid "Edit associations with key and other attributes in database"
 msgstr "Rediger sammenslutninger med nøgle og andre attributter i databasen"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
 msgid "Key Editor"
 msgstr "Nøgleredigering"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
 msgid "_Item:"
 msgstr "_Genstand:"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
 msgid "_Key:"
 msgstr "_Nøgle:"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
 msgid "<b>_Change selected ingredients</b>"
 msgstr "<b>_Udskift valgte ingredienser</b>"
 
@@ -2220,7 +2218,7 @@ msgstr "Brug altid ældste opskrift"
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:611
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:636
 #: ../src/gourmand/plugins/unit_converter/convertGui.py:170
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
 msgid "None"
 msgstr "Ingen"
 
@@ -2241,39 +2239,39 @@ msgstr "Find_duplikat opskrifter"
 msgid "Find and remove duplicate recipes"
 msgstr "Find og fjern duplikat opskrifter"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
 msgid "Recipes with similar recipe information"
 msgstr "Opskrifter med ligende opskriftinformation"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
 msgid "Recipes with similar ingredients"
 msgstr "Opskrifter med ligende opskrifter"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
 msgid "Recipes with similar recipe information and ingredients"
 msgstr "Opskrifter med ens opskriftsinformationer og ingredienser"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
 msgid "<b><span size=\"large\">Duplicate recipes</span></b>"
 msgstr "<b><span size=\"large\">Kopier Opskrifter</span></b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
 msgid "_Include recipes in trash"
 msgstr "_Inkludér opskrifter i papirkurv"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
 msgid "<i>_Showing:</i>"
 msgstr "<i>_Viser:</i>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
 msgid "Merge _all duplicates"
 msgstr "Sammenknyt _alle kopier"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
 msgid "<b>Merge recipes</b>"
 msgstr "<b>Sammenknyt opskrifter</b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
 msgid "_Auto-merge"
 msgstr "_Auto-sammenknyt"
 
@@ -2309,12 +2307,10 @@ msgid "<i>This change is not reversable.</i>"
 msgstr "<i>Denne ændring er ikke reversibel.</i>"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
 msgid "Field Editor"
 msgstr "Felt Redigering"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:2
 msgid "Edit fields across multiple recipes at a time."
 msgstr "Rediger felter på flere opskrifter på én gang."
 
@@ -2358,40 +2354,39 @@ msgstr "_Enhedskonvertering"
 msgid "Calculate unit conversions"
 msgstr "Beregn enhedskonverteringer"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
 msgid "Unit Converter"
 msgstr "Enhedskonvertering"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
 msgid "<b>From</b>"
 msgstr "<b>Fra</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
 msgid "1"
 msgstr "1"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
 msgid "I_tem:"
 msgstr "Gen_stande:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
 msgid "_Density:"
 msgstr "_Tæthed:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
 msgid "Density _Information"
 msgstr "Tætheds _Information"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
 msgid "<b>To</b>"
 msgstr "<b>Til</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
 msgid "_Result:"
 msgstr "_Resultat:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
 msgid "?"
 msgstr "?"
 
@@ -2423,8 +2418,8 @@ msgstr "Original Side fra %s"
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:270
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:625
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:638
-#: ../src/gourmand/exporters/exporter.py:383
-#: ../src/gourmand/exporters/exporter.py:479
+#: ../src/gourmand/exporters/exporter.py:385
+#: ../src/gourmand/exporters/exporter.py:481
 msgid "optional"
 msgstr "valgfrit"
 
@@ -2760,7 +2755,6 @@ msgid "Recipe saved in My CookBook MCB file %(file)s."
 msgstr "Opskrift gemt i Gourmet XML-fil %(file)s."
 
 #: ../src/gourmand/plugins/listsaver/shoppingSaverPlugin.py:28
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
 msgid "Shopping List Saver"
 msgstr "Indkøbsseddel Gemmer"
 
@@ -3458,14 +3452,6 @@ msgid "USDA ID#"
 msgstr "USDA ID#"
 
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:32
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
 msgid "Tools"
 msgstr "Værktøjer"
 
@@ -3479,23 +3465,23 @@ msgstr "Få ernæringsmæssig information for nuværende liste"
 msgid "Amount for Shopping List"
 msgstr "Mængde for Indkøbsseddel"
 
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
 msgid "Edit _nutritional info"
 msgstr "Redigér _ernærings info"
 
-#: ../src/gourmand/exporters/exporter.py:215
-#: ../src/gourmand/exporters/exporter.py:217
-#: ../src/gourmand/exporters/exporter.py:538
+#: ../src/gourmand/exporters/exporter.py:216
+#: ../src/gourmand/exporters/exporter.py:218
 #: ../src/gourmand/exporters/exporter.py:540
+#: ../src/gourmand/exporters/exporter.py:542
 msgid "stars"
 msgstr "stjerner"
 
-#: ../src/gourmand/exporters/exporter.py:577
+#: ../src/gourmand/exporters/exporter.py:579
 #, python-format
 msgid "Exported %(number)s of %(total)s recipes"
 msgstr "Eksporterede %(number)s af %(total)s opskrifter"
 
-#: ../src/gourmand/exporters/exporter.py:597
+#: ../src/gourmand/exporters/exporter.py:599
 msgid "Export complete."
 msgstr "Eksport fuldført."
 
@@ -3613,18 +3599,18 @@ msgstr "Alle importérbare filer"
 msgid "Imported %s recipes."
 msgstr "Importerede %s opskrift"
 
-#: ../src/gourmand/importers/importer.py:188
+#: ../src/gourmand/importers/importer.py:187
 msgid "serving"
 msgid_plural "servings"
 msgstr[0] "portion"
 msgstr[1] "portioner"
 
-#: ../src/gourmand/importers/importer.py:269
+#: ../src/gourmand/importers/importer.py:263
 #, python-format
 msgid "Imported %s of %s recipes."
 msgstr "Importerede %s af %s opskrifter"
 
-#: ../src/gourmand/importers/importer.py:492
+#: ../src/gourmand/importers/importer.py:486
 msgid "okay"
 msgstr "okay"
 
@@ -3769,7 +3755,7 @@ msgstr "Fejl %s: %s"
 msgid "Traceback"
 msgstr "Sporing"
 
-#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:629
+#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:608
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekund"
@@ -3780,7 +3766,7 @@ msgstr[1] "sekunder"
 msgid "min"
 msgstr "min."
 
-#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:628
+#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:607
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
@@ -3791,25 +3777,25 @@ msgstr[1] "minutter"
 msgid "hrs."
 msgstr "tim."
 
-#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:627
+#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "time"
 msgstr[1] "timer"
 
-#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:626
+#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:605
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dag"
 msgstr[1] "dage"
 
-#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:625
+#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:604
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "uge"
 msgstr[1] "uger"
 
-#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:624
+#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:603
 msgid "month"
 msgid_plural "months"
 msgstr[0] "måned"
@@ -3818,7 +3804,7 @@ msgstr[1] "måneder"
 #. 'millennia':lambda decades: ngettext("millenium","millenia",round(decades))
 #. 'centuries':lambda decades: ngettext("century","centuries",round(decades))
 #. 'decades':lambda decades: ngettext("decade","decades",round(decades))
-#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:623
+#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:602
 msgid "year"
 msgid_plural "years"
 msgstr[0] "år"
@@ -3830,213 +3816,283 @@ msgstr[1] "år"
 #. You can of course make your language only use commas or
 #. ands or spaces or whatever you like by translating both
 #. ", " and " and " with the same string.
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid " and "
 msgstr " og "
 
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid ", "
 msgstr ", "
 
-#: ../src/gourmand/convert.py:683
+#: ../src/gourmand/convert.py:662
 msgid " "
 msgstr " "
 
-#: ../src/gourmand/convert.py:813
+#: ../src/gourmand/convert.py:792
 msgid "and"
 msgstr "og"
 
 #. Note: the order matters on this range regular expression in order
 #. for it to properly split things like 1 - to - 3, which really do
 #. show up sometimes.
-#: ../src/gourmand/convert.py:836
+#: ../src/gourmand/convert.py:815
 msgid "to"
 msgstr "til"
 
-#. i=InteractiveConverter()
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
-msgid "Browse Recipes"
-msgstr "Gennemse Opskrifter"
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:2
-msgid "Selecting recipes by browsing by category, cuisine, etc."
-msgstr ""
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
-msgid "Main"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Main);"
 msgstr "Hjem"
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
-msgid "Find duplicate recipes"
-msgstr "Find ens opskrifter"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
+msgid "Selecting recipes by browsing by category, cuisine, etc.);"
+msgstr ""
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:2
-msgid "A wizard to find and remove or merge duplicate recipes."
+#. i=InteractiveConverter()
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Browse Recipes);"
+msgstr "Gennemse Opskrifter"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:5
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:5
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:5
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Tools);"
+msgstr "Værktøjer"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "A wizard to find and remove or merge duplicate recipes.);"
 msgstr ""
 "En guide til finde og fjerne eller sammenslå dobbelte forekomster af "
 "opskrifter."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
 #, fuzzy
-msgid "EPub Export"
-msgstr "PDF Eksport"
+msgid "Find duplicate recipes);"
+msgstr "Find ens opskrifter"
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:2
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
 #, fuzzy
-msgid "Create an epub book from recipes."
-msgstr "Opret opskrift-webside fra opskrifter."
+msgid "Edit fields across multiple recipes at a time.);"
+msgstr "Rediger felter på flere opskrifter på én gang."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
-#: ../data/plugins/utf16.gourmet-plugin.in.h:3
-msgid "Importer/Exporter"
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Field Editor);"
+msgstr "Felt Redigering"
+
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:5
+#: ../data/plugins/utf16.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Importer/Exporter);"
 msgstr "Importér/Eksportér"
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
-msgid "Gourmet XML Import and Export"
-msgstr "Gourmet XML Import og Eksport"
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Create an epub book from recipes.);"
+msgstr "Opret opskrift-webside fra opskrifter."
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "EPub Export);"
+msgstr "PDF Eksport"
+
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Import and Export recipes as Gourmet XML files, suitable for backup or "
-"exchange with other Gourmet users."
+"exchange with other Gourmet users.);"
 msgstr ""
 "Importér og Eksportér opskrifter som Gourmet XML filer, brugbare til backup "
 "eller udveksling med andre Gourmet brugere."
 
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
-msgid "KRecipe import"
-msgstr "KRecipe importering"
-
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Krecipe program."
-msgstr "Importér filer fra Krecipe programmet."
-
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
-msgid "Mastercook import"
-msgstr "Mastercook importering"
-
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Mastercook program."
-msgstr "Importér filer fra Mastercook programmet."
-
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
 #, fuzzy
-msgid "My CookBook Import and Export"
+msgid "Gourmet XML Import and Export);"
 msgstr "Gourmet XML Import og Eksport"
 
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Krecipe program.);"
+msgstr "Importér filer fra Krecipe programmet."
+
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "KRecipe import);"
+msgstr "KRecipe importering"
+
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Mastercook program.);"
+msgstr "Importér filer fra Mastercook programmet."
+
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mastercook import);"
+msgstr "Mastercook importering"
+
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
 #, fuzzy
 msgid ""
 "Import and Export recipes as My CookBook XML files, suitable for backup or "
-"exchange with other My CookBook users."
+"exchange with other My CookBook users.);"
 msgstr ""
 "Importér og Eksportér opskrifter som Gourmet XML filer, brugbare til backup "
 "eller udveksling med andre Gourmet brugere."
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
-msgid "Mealmaster (tm) Export"
-msgstr "Mealmaster (tm) Eksportering"
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "My CookBook Import and Export);"
+msgstr "Gourmet XML Import og Eksport"
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:2
-msgid "Export recipes as mealmaster text files"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Export recipes as mealmaster text files);"
 msgstr "Eksportér opskrifter som mealmaster tekstfiler"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
-msgid "Printing & PDF Export"
-msgstr "Udskrivning & PDF Eksportering"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mealmaster (tm) Export);"
+msgstr "Mealmaster (tm) Eksportering"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Print recipes or export them as PDF; this plugin allows a variety of page "
-"layouts."
+"layouts.);"
 msgstr ""
 "Print opskrifter eller eksportér dem som PDF; dette plugin giver mulighed "
 "for forskellige side-opsætninger."
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
-msgid "Plain Text Guided Import"
-msgstr "Standard Tekstguided Importering"
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Printing & PDF Export);"
+msgstr "Udskrivning & PDF Eksportering"
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
-"Help user mark up and import plain text. Also provides plain text export."
+"Help user mark up and import plain text. Also provides plain text export.);"
 msgstr ""
 "Hjælper brugeren med at markere og importere ren tekst. Giver også mulighed "
 "for eksport af ren tekst."
 
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Plain Text Guided Import);"
+msgstr "Standard Tekstguided Importering"
+
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit ingredient keys (unique identifiers for ingredients, used "
-"for consolidating items on shopping lists)."
+"for consolidating items on shopping lists).);"
 msgstr ""
 "Tildel og redigér ingrediens-koder (unikke identifikationer for "
 "ingredienser, bruges til at samle ens ingredienser på indkøbslisten)."
 
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:2
-msgid "Save shopping lists as recipes for future use."
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Key Editor);"
+msgstr "Nøgleredigering"
+
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Save shopping lists as recipes for future use.);"
 msgstr "Gem indkøbslister som opskrifter til fremtidig brug."
 
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:2
-msgid "Calculate nutritional information for recipes."
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping List Saver);"
+msgstr "Indkøbsseddel Gemmer"
+
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Calculate nutritional information for recipes.);"
 msgstr "Udregn ernæringsmæssig information i opskrifterne."
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
-msgid "Shopping Category Editor"
-msgstr "Indkøbs Kategoriredigering"
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Nutritional Information);"
+msgstr "Ernæringsmæssige Oplysninger"
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:2
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit shopping categories for ingredients from within the recipe "
-"editor."
+"editor.);"
 msgstr ""
 "Tildel og redigér indkøbskategorier for ingredienser, fra "
 "opskriftsredigeringsvinduet."
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
-msgid "Spell Checking"
-msgstr "Stavekontrol"
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping Category Editor);"
+msgstr "Indkøbs Kategoriredigering"
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:2
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Adds spell checking to paragraph length text boxes in recipe entry "
-"(Instructions, Notes)."
+"(Instructions, Notes).);"
 msgstr ""
 "Tilføjer stavekontrol til tekstfelter af afsnitslængde i "
 "opskriftsredigeringen (Instruktioner, Noter)."
 
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:2
-msgid "Provides a simple unit calculator."
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Spell Checking);"
+msgstr "Stavekontrol"
+
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Provides a simple unit calculator.);"
 msgstr "Giver en simpel enhedsudregner."
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
-msgid "Unit Display Preferences"
-msgstr "Enhedsvisnings-opsætning"
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Converter);"
+msgstr "Enhedskonvertering"
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:2
-msgid "Allows you to always use metric (or imperial) units for display."
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
+msgid "Allows you to always use metric (or imperial) units for display.);"
 msgstr ""
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:1
-msgid "Check for Unicode-16 in text files"
-msgstr "Tjek for Unicode-16 i tekstfiler"
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Display Preferences);"
+msgstr "Enhedsvisnings-opsætning"
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:2
+#: ../data/plugins/utf16.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Enable this if your utf-16 text files aren't importing cleanly into Gourmet. "
 "Disable this if you never use UTF16 and you're constantly being annoyed by "
-"the 'Encoding' dialog when you import files."
+"the 'Encoding' dialog when you import files.);"
 msgstr ""
 "Slå denne til, hvis dine UTF-16 tekstfiler ikke bliver importeret rent ind i "
 "Gourmet. Slå fra, hvis du aldrig bruger UTF-16 og du konstant bliver "
 "irriteret over \"Kodning\"-dialogen når du importerer filer."
+
+#: ../data/plugins/utf16.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Check for Unicode-16 in text files);"
+msgstr "Tjek for Unicode-16 i tekstfiler"
 
 #~ msgid "E-mail selected recipe"
 #~ msgstr "E-mail valgte opskrift"

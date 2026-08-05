@@ -2,12 +2,12 @@
 # Copyright (c) (c) 2005 Canonical Ltd, and Rosetta Contributors 2005
 # This file is distributed under the same license as the grecipe-manager package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2005.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: grecipe-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 14:04+0200\n"
+"POT-Creation-Date: 2026-08-05 14:35+0100\n"
 "PO-Revision-Date: 2012-12-31 23:31+0000\n"
 "Last-Translator: Panagiotis Ligopsychakis <panligo@gmail.com>\n"
 "Language-Team: Greek, Modern (1453-) <el@li.org>\n"
@@ -21,64 +21,64 @@ msgstr ""
 "X-Rosetta-Version: 0.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../src/gourmand/ui/app.ui.h:1
+#: ../src/gourmand/ui/app.ui.h:1
 msgid "Recipe Index"
 msgstr "Κατάλογος Συνταγών"
 
 #. Set up hard-coded functional buttons...
-#: ../src/gourmand/ui/app.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:2
 #: ../src/gourmand/importers/interactive_importer.py:142
 msgid "_New Recipe"
 msgstr "_Νέα Συνταγή"
 
-#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
+#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
 msgid "Add to _Shopping List"
 msgstr "Προσθήκη στον _Κατάλογο Αγορών"
 
-#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
 msgid "View Re_cipe"
 msgstr "Προβολή _Συνταγής"
 
-#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
-#: ../src/gourmand/ui/nutritionDruid.ui.h:31
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:31
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
 msgid "_Search for:"
 msgstr "_Αναζήτηση για:"
 
-#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
-#: ../src/gourmand/ui/shopCatEditor.ui.h:5
-#: ../src/gourmand/ui/nutritionDruid.ui.h:32
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
+#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
+#: ../src/gourmand/ui/shopCatEditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:32
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
 msgid "Search for recipes as you type"
 msgstr "Αναζήτηση συνταγών κατά την πληκτρολόγηση"
 
-#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
 msgid "_in"
 msgstr "_Μέσα"
 
-#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
+#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
 msgid "Search by other critera within the current search results."
 msgstr "Αναζήτηση με διαφορετικά κριτήρια στα υπάρχοντα αποτελέσματα"
 
-#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
+#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
 msgid "A_dd Search Criteria"
 msgstr "_Προσθέστε Κριτήρια Αναζήτησης"
 
-#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
+#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
 msgid "Limiting Search to:"
 msgstr "Περιορισμός Αναζήτησης σε:"
 
-#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
+#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
 msgid "Search _Results"
 msgstr "_Αποτελέσματα Αναζήτισης"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:1
+#: ../src/gourmand/ui/batchEditor.ui.h:1
 msgid "Set Fields for Selected Recipes"
 msgstr "Καθορισμός πεδίων στις Επιλεγμένες Συνταγές"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:2
 msgid ""
 "<span size=\"large\" weight=\"bold\">Set Recipe Fields for selected recipes</"
 "span>"
@@ -86,133 +86,133 @@ msgstr ""
 "<span size=\"large\" weight=\"bold\">Καθορίστε τα Πεδία Συνταγών για τις "
 "επιλεγμένες συνταγές</span>"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:3
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
+#: ../src/gourmand/ui/batchEditor.ui.h:3
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
 msgid "_Add Image"
 msgstr "Προσθήκη _Είκονας"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:4
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
+#: ../src/gourmand/ui/batchEditor.ui.h:4
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
 msgid "_Remove Image"
 msgstr "_Διαγραφή Εικόνας"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:5
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:5
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
 msgid "S_ource:"
 msgstr "_Πηγή:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:6
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
+#: ../src/gourmand/ui/batchEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
 msgid "_Rating:"
 msgstr "Α_ξιολόγηση"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:7
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
+#: ../src/gourmand/ui/batchEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
 msgid "C_uisine:"
 msgstr "_Κουζίνα"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:8
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:8
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
 msgid "_Category:"
 msgstr "_Κατηγορία:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:9
 msgid "_Preparation Time:"
 msgstr "Χ_ρόνος Προετοιμασίας"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:10
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
+#: ../src/gourmand/ui/batchEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
 msgid "Coo_king Time:"
 msgstr "_Χρόνος Μαγειρέματος"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:11
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:11
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
 msgid "_Webpage:"
 msgstr "_Ιστοσελίδα"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:12
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
+#: ../src/gourmand/ui/batchEditor.ui.h:12
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
 msgid "Image:"
 msgstr "Εικόνα:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:13
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
+#: ../src/gourmand/ui/batchEditor.ui.h:13
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
 msgid "_Yield:"
 msgstr "_Μερίδες"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:14
 #, fuzzy
 msgid "Yield U_nit:"
 msgstr "Μονάδα Μέτρησης Μερίδας"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:15
+#: ../src/gourmand/ui/batchEditor.ui.h:15
 msgid "_Only set values where field is currently blank"
 msgstr "Καθορισμός _τιμών μόνο σε κενά πεδία"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:16
+#: ../src/gourmand/ui/batchEditor.ui.h:16
 msgid "Set all values for _all selected recipes"
 msgstr "Καθορισμός όλων των τιμών για _όλες τις επιλεγμένες συνταγές"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:1
+#: ../src/gourmand/ui/databaseChooser.ui.h:1
 msgid "Metakit (default, stored in a local file)"
 msgstr "Metakit (προεπιλεγμένο, αποθηκεύεται σε τοπικό αρχείο)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:2
+#: ../src/gourmand/ui/databaseChooser.ui.h:2
 msgid "SQLite (stored in a local file)"
 msgstr "SQLite (αποθηκεύεται σε τοπικό αρχείο)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:3
+#: ../src/gourmand/ui/databaseChooser.ui.h:3
 msgid "MySQL (requires connection to a database)"
 msgstr "MySQL (απαιτείται σύνδεση σε βάση δεδομένων)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:4
+#: ../src/gourmand/ui/databaseChooser.ui.h:4
 msgid "Choose Database"
 msgstr "Επιλέξτε Βάση Δεδομένων"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:5
+#: ../src/gourmand/ui/databaseChooser.ui.h:5
 msgid "<b>Choose Database System for Gourmet to Use</b>"
 msgstr ""
 "<b>Επιλέξτε το Σύστημα Βάσης Δεδομένων που θα χρησιμοποιήσει το Gourmet</b>"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:6
+#: ../src/gourmand/ui/databaseChooser.ui.h:6
 msgid "_Database System"
 msgstr "Σύστημα _Βάσης Δεδομένων"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:7
 msgid "_Host:"
 msgstr "_Κεντρικός υπολογιστής:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:8
+#: ../src/gourmand/ui/databaseChooser.ui.h:8
 msgid "_Username:"
 msgstr "Όνο_μα Χρήστη:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:9
+#: ../src/gourmand/ui/databaseChooser.ui.h:9
 msgid "_Password:"
 msgstr "_Κωδικός:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:10
+#: ../src/gourmand/ui/databaseChooser.ui.h:10
 msgid "Password for your username on the database."
 msgstr "Κωδικός πρόσβασης χρήστη στην βάση δεδομένων."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:11
-#: ../src/gourmand/ui/shopCatEditor.ui.h:6
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:11
+#: ../src/gourmand/ui/shopCatEditor.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
 msgid "*"
 msgstr "*"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:12
+#: ../src/gourmand/ui/databaseChooser.ui.h:12
 msgid "Database _Name:"
 msgstr "Όνομα _Βάσης Δεδομένων:"
 
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
-#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
+#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
 #: ../src/gourmand/main.py:1009
 msgid "_File"
 msgstr "_Αρχείο"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:14
+#: ../src/gourmand/ui/databaseChooser.ui.h:14
 msgid ""
 "Hostname of the system where your database server is running. If your "
 "database server is running on your local system, use localhost."
@@ -221,11 +221,11 @@ msgstr ""
 "Εάν ο διακομιστής της βάσης δεδομένων σας λειτουργεί στο τοπικό σύστημα "
 "χρησιμοποιήστε το όνομα localhost."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:15
+#: ../src/gourmand/ui/databaseChooser.ui.h:15
 msgid "localhost"
 msgstr "localhost"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:16
+#: ../src/gourmand/ui/databaseChooser.ui.h:16
 msgid ""
 "Save the password for next time. This means the password will be stored "
 "insecurely in your configuration file."
@@ -233,11 +233,11 @@ msgstr ""
 "Αποθήκευση κωδικού για την επόμενη φορά. Αυτό σημαίνει ότι ο κωδικός θα "
 "αποθηκευτεί χωρίς ασφάλεια στο αρχείο ρυθμίσεων σας."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:17
+#: ../src/gourmand/ui/databaseChooser.ui.h:17
 msgid "_Save Password"
 msgstr "Απο_θήκευση Κωδικού"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:18
+#: ../src/gourmand/ui/databaseChooser.ui.h:18
 msgid ""
 "Name of the database in which Gourmet should store its information. Gourmet "
 "will try to create this database if it does not already exist."
@@ -246,85 +246,85 @@ msgstr ""
 "πληροφορίες. Το Gourmet θα προσπαθήσει να δημιουργήσει αυτή τη βάση "
 "δεδομένων, εάν δεν υπάρχει ήδη."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:19
+#: ../src/gourmand/ui/databaseChooser.ui.h:19
 #: ../src/gourmand/plugins/nutritional_information/nutritionDruid.py:277
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:22
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:72
 msgid "recipe"
 msgstr "Συνταγή"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:20
+#: ../src/gourmand/ui/databaseChooser.ui.h:20
 msgid "Your username on the database."
 msgstr "Το όνομα χρήστη στην βάση δεδομένων."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:21
+#: ../src/gourmand/ui/databaseChooser.ui.h:21
 msgid "_Browse"
 msgstr "Π_εριήγηση"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:22
+#: ../src/gourmand/ui/databaseChooser.ui.h:22
 #: ../src/gourmand/gtk_extras/dialog_extras.py:838
 #: ../src/gourmand/gtk_extras/dialog_extras.py:1253
 msgid "_Details"
 msgstr "_Λεπτομέρειες"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:1
+#: ../src/gourmand/ui/preferenceDialog.ui.h:1
 #, fuzzy
 msgid "Gourmand Recipe Manager Preferences"
 msgstr "Προτιμήσεις  του Διαχειριστή Συνταγών Gourmet"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:2
+#: ../src/gourmand/ui/preferenceDialog.ui.h:2
 msgid "<b>Index View Preferences</b>"
 msgstr "<b>Επιλογές Προβολής Λίστας</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:3
+#: ../src/gourmand/ui/preferenceDialog.ui.h:3
 #, fuzzy
 msgid "Show _toolbar"
 msgstr "Εμφάνιση _Επιλογών"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:4
+#: ../src/gourmand/ui/preferenceDialog.ui.h:4
 msgid "_Recipes per page:"
 msgstr "_Συνταγές ανά σελίδα:"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:5
+#: ../src/gourmand/ui/preferenceDialog.ui.h:5
 msgid "<i>Configure which columns are included in the recipe index view.</i>"
 msgstr ""
 "<i>Επιλογή στηλών που θα περιέχονται στην προβολή λίστας συνταγών .</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:6
+#: ../src/gourmand/ui/preferenceDialog.ui.h:6
 msgid "Index View"
 msgstr "Προβολή Λίστας"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:7
+#: ../src/gourmand/ui/preferenceDialog.ui.h:7
 msgid "<b>Card View Preferences</b>"
 msgstr "<b>Επιλογές Προβολής Καρτέλας</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:8
+#: ../src/gourmand/ui/preferenceDialog.ui.h:8
 msgid "_Allow units to change when multiplying"
 msgstr "Επιτ_ρέπεται η μετατροπή μονάδων κατά τον πολλαπλασιασμό"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:9
+#: ../src/gourmand/ui/preferenceDialog.ui.h:9
 msgid "_Use fractions"
 msgstr "_Χρήση κλασμάτων"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:10
+#: ../src/gourmand/ui/preferenceDialog.ui.h:10
 msgid "Use fractions when possible for display"
 msgstr "Χρησιμοποίηση κλασμάτων, όταν είναι δυνατόν"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:11
+#: ../src/gourmand/ui/preferenceDialog.ui.h:11
 msgid "<i>Remove items you don't use from the Recipe Card interface.</i>"
 msgstr ""
 "<i>Απομάκρυνση αντικειμένων που δεν χρησιμοποιούνται από το περιβάλλον Κάρτα "
 "Συνταγής.</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:12
+#: ../src/gourmand/ui/preferenceDialog.ui.h:12
 msgid "Card View"
 msgstr "Προβολή Κάρτας"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:13
+#: ../src/gourmand/ui/preferenceDialog.ui.h:13
 msgid "<b>Shopping List Preferences</b>"
 msgstr "<b>Επιλογές Λίστας Αγορών</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:14
+#: ../src/gourmand/ui/preferenceDialog.ui.h:14
 #, fuzzy
 msgid ""
 "<i>What should Gourmand do with Optional Ingredients when adding recipes to "
@@ -333,216 +333,216 @@ msgstr ""
 "<i>Τι πρέπει να κάνει το Gourmet με τα προαιρετικά συστατικά όταν προσθέτει "
 "συνταγές στην λίστα αγορών;</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:15
+#: ../src/gourmand/ui/preferenceDialog.ui.h:15
 msgid "As_k whether to include optional ingredients"
 msgstr "Ερώτηση εάν θα συμπεριληφθούν τα προαιρετικά συστατικά"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:16
+#: ../src/gourmand/ui/preferenceDialog.ui.h:16
 msgid "_Remember user selections by default"
 msgstr "_Απομνημόνευση των επιλογών χρήστη"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:17
+#: ../src/gourmand/ui/preferenceDialog.ui.h:17
 msgid "_Clear remembered optional ingredients"
 msgstr "_Καθαρισμός των αποθηκευμένων προαιρετικών συστατικών"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:18
+#: ../src/gourmand/ui/preferenceDialog.ui.h:18
 msgid "_Always add optional ingredients"
 msgstr "Π_άντα να προστίθενται τα προαιρετικά συστατικά"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:19
+#: ../src/gourmand/ui/preferenceDialog.ui.h:19
 msgid "_Never add optional ingredients"
 msgstr "Να μην προστίθενται τα προαιρετικά συστατικά"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
+#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
 #: ../src/gourmand/shopgui.py:552 ../src/gourmand/shopgui.py:858
 #: ../src/gourmand/shopgui.py:1014
 msgid "Shopping List"
 msgstr "Κατάλογος Αγορών"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
 msgid "servings"
 msgstr "μερίδες"
 
 #. renderer.set_property('editable',True)
 #. renderer.connect('edited',tst)
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
 #: ../src/gourmand/shopgui.py:754 ../src/gourmand/gglobals.py:29
 #: ../src/gourmand/exporters/rtf_exporter.py:93
 msgid "Title"
 msgstr "Τίτλος"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
 msgid "_Title:"
 msgstr "_Τίτλος:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
 msgid "Pre_paration Time:"
 msgstr "Χρόνος _Προετοιμασίας:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
 #: ../src/gourmand/recindex.py:45 ../src/gourmand/recindex.py:53
 msgid "category"
 msgstr "κατηγορία"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
 msgid "rating"
 msgstr "αξιολόγηση"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
 #: ../src/gourmand/gglobals.py:35
 msgid "Yield"
 msgstr "Μερίδες"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
 #: ../src/gourmand/gglobals.py:36
 msgid "Yield Unit"
 msgstr "Μονάδα Μέτρησης Μερίδας"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:1
+#: ../src/gourmand/ui/recCardDisplay.ui.h:1
 msgid "_Shop"
 msgstr "_Αγορά"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:2
+#: ../src/gourmand/ui/recCardDisplay.ui.h:2
 msgid "Edit _description"
 msgstr "Επεξεργασία _Περιγραφής"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:3
+#: ../src/gourmand/ui/recCardDisplay.ui.h:3
 msgid "<b>Cooking Time:</b>"
 msgstr "<b>Χρόνος Μαγειρέματος:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:4
+#: ../src/gourmand/ui/recCardDisplay.ui.h:4
 msgid "<b>Preparation Time:</b>"
 msgstr "<b>Χρόνος Προετοιμασίας:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:5
+#: ../src/gourmand/ui/recCardDisplay.ui.h:5
 msgid "<b>Cuisine:</b>"
 msgstr "<b>Κουζίνα:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:6
+#: ../src/gourmand/ui/recCardDisplay.ui.h:6
 msgid "<b>Category:</b>"
 msgstr "<b>Κατηγορία:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:7
+#: ../src/gourmand/ui/recCardDisplay.ui.h:7
 msgid "<b>Webpage:</b>"
 msgstr "<b>Ιστοσελίδα:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:8
+#: ../src/gourmand/ui/recCardDisplay.ui.h:8
 msgid "<b>_Yields:</b>"
 msgstr "<b>_Μερίδες:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:9
+#: ../src/gourmand/ui/recCardDisplay.ui.h:9
 msgid "<span underline=\"single\" color=\"blue\">Link</span>"
 msgstr "<span underline=\"single\" color=\"blue\">Σύνδεσμος</span>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:10
+#: ../src/gourmand/ui/recCardDisplay.ui.h:10
 msgid "<b>Source:</b>"
 msgstr "<b>Πηγή:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:11
+#: ../src/gourmand/ui/recCardDisplay.ui.h:11
 msgid "<b>Rating:</b>"
 msgstr "<b> Αξιολόγηση:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:12
+#: ../src/gourmand/ui/recCardDisplay.ui.h:12
 msgid "<b>_Multiply by:</b>"
 msgstr "<b>_Πολλαπλασιασμός επί:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:13
+#: ../src/gourmand/ui/recCardDisplay.ui.h:13
 msgid "<b>Instructions</b>"
 msgstr "<b>Οδηγίες</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:14
+#: ../src/gourmand/ui/recCardDisplay.ui.h:14
 msgid "Edit _instructions"
 msgstr "Επεξεργασία _Οδηγιών Παρασκευής"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:15
+#: ../src/gourmand/ui/recCardDisplay.ui.h:15
 msgid "<b>Notes</b>"
 msgstr "<b>Σημειώσεις</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:16
+#: ../src/gourmand/ui/recCardDisplay.ui.h:16
 msgid "Edit _notes"
 msgstr "Επεξεργασία Σ_ημειώσεων"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:17
+#: ../src/gourmand/ui/recCardDisplay.ui.h:17
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:507
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:83
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:168
-#: ../src/gourmand/exporters/exporter.py:625
+#: ../src/gourmand/exporters/exporter.py:627
 msgid "Recipe"
 msgstr "Συνταγή"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:18
+#: ../src/gourmand/ui/recCardDisplay.ui.h:18
 msgid "<b>Ingredients</b>"
 msgstr "<b>Συστατικά:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:19
+#: ../src/gourmand/ui/recCardDisplay.ui.h:19
 msgid "Edit _ingredients"
 msgstr "Επεξεργασία _Συστατικών"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
 msgid "Add _ingredient:"
 msgstr "Προσθήκη _Συστατικού:"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
 #: ../src/gourmand/reccard.py:1008
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:504
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:545
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:117
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:180
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:598
-#: ../src/gourmand/exporters/exporter.py:251
+#: ../src/gourmand/exporters/exporter.py:252
 #: ../src/gourmand/importers/interactive_importer.py:40
 #: ../src/gourmand/importers/interactive_importer.py:47
 msgid "Ingredients"
 msgstr "Συστατικά"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:1
+#: ../src/gourmand/ui/recipe_index.ui.h:1
 msgid "Add recipe to shopping list"
 msgstr "Προσθήκη συνταγής στην λίστα αγορών"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:2
+#: ../src/gourmand/ui/recipe_index.ui.h:2
 msgid "Add to _shopping list"
 msgstr "Προσθήκη στην _λίστα αγορών"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:3
+#: ../src/gourmand/ui/recipe_index.ui.h:3
 msgid "Jump to recipe in Recipe Card vew"
 msgstr "Εμφάνιση συνταγής στην Προβολή Κάρτας"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:5
+#: ../src/gourmand/ui/recipe_index.ui.h:5
 msgid "Delete selected recipe"
 msgstr "Διαγραφή επιλεγμένης συνταγής"
 
 #. saveEdits
-#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
+#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
 msgid "_Delete Recipe"
 msgstr "_Διαγραφή Συνταγής"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:7
+#: ../src/gourmand/ui/recipe_index.ui.h:7
 msgid "Edit attributes of selected recipes"
 msgstr "Επεξεργασία ιδιοτήτων των επιλεγμένων συνταγών"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:8
+#: ../src/gourmand/ui/recipe_index.ui.h:8
 msgid "_Batch edit recipes"
 msgstr "_Ομαδική επεξεργασία συνταγών"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:9
+#: ../src/gourmand/ui/recipe_index.ui.h:9
 #, fuzzy
 msgid "Copy selected recipe"
 msgstr "Άνοιγμα της επιλεγμένης συνταγής"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:10
+#: ../src/gourmand/ui/recipe_index.ui.h:10
 #, fuzzy
 msgid "_Copy recipe"
 msgstr "Επιλέξτε συνταγή"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:11
+#: ../src/gourmand/ui/recipe_index.ui.h:11
 msgid "Print selected recipe"
 msgstr "_Εκτύπωση επιλεγμένης συνταγής"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:12
+#: ../src/gourmand/ui/recipe_index.ui.h:12
 msgid "_Print recipe"
 msgstr "Εκτύ_πωση συνταγής"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:13
+#: ../src/gourmand/ui/recipe_index.ui.h:13
 msgid ""
 "Never buy this item. When called for in a recipe, it will show up in a "
 "\"pantry\" section of the list as a reminder that you need it, but it won't "
@@ -554,31 +554,31 @@ msgstr ""
 "περιλαμβάνεται στην λίστα που αποθηκεύεται η εκτυπώνεται εκτός και αν "
 "ζητηθεί να αγοραστεί."
 
-#: ../src/gourmand/ui/recipe_index.ui.h:14
+#: ../src/gourmand/ui/recipe_index.ui.h:14
 msgid "Add to _Pantry"
 msgstr "Προσθήκη στο _Ντουλάπι"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:17
+#: ../src/gourmand/ui/recipe_index.ui.h:17
 msgid "Show _Options"
 msgstr "Εμφάνιση _Επιλογών"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:18
+#: ../src/gourmand/ui/recipe_index.ui.h:18
 msgid "Search _in"
 msgstr "Αναζήτηση _σε:"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:21
+#: ../src/gourmand/ui/recipe_index.ui.h:21
 msgid "_Use regular expressions (advanced searching)"
 msgstr "_Χρήση κανονικών εκφράσεων (προηγμένη αναζήτηση)"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:22
+#: ../src/gourmand/ui/recipe_index.ui.h:22
 msgid "Search as you _type"
 msgstr "Αναζήτηση κατά την _πηκτρολόγιση"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:23
+#: ../src/gourmand/ui/recipe_index.ui.h:23
 msgid "<i>Search Options</i>"
 msgstr "<i>Επιλογές Αναζήτησης</i>"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
+#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
 msgid "Category"
 msgstr "Κατηγορία"
 
@@ -587,7 +587,7 @@ msgstr "Κατηγορία"
 #. None,
 #. ()),
 #. }
-#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
+#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
 #: ../src/gourmand/reccard.py:2100
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:508
 #: ../src/gourmand/plugins/key_editor/recipeEditorPlugin.py:128
@@ -595,264 +595,263 @@ msgstr "Κατηγορία"
 msgid "Key"
 msgstr "Κλειδί"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:3
+#: ../src/gourmand/ui/shopCatEditor.ui.h:3
 msgid "Category Editor"
 msgstr "Επεξεργαστής Κατηγοριών"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:4
+#: ../src/gourmand/ui/shopCatEditor.ui.h:4
 msgid "Search by"
 msgstr "Αναζήτηση με"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
+#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
 msgid "Search as you type"
 msgstr "Αναζήτηση κατά την πληκτρολόγηση"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:8
-#: ../src/gourmand/ui/nutritionDruid.ui.h:33
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
+#: ../src/gourmand/ui/shopCatEditor.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:33
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
 msgid "Use regular expressions"
 msgstr "Χρήση κανονικών εκφράσεων"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:9
+#: ../src/gourmand/ui/shopCatEditor.ui.h:9
 msgid "Advanced Search"
 msgstr "Προηγμένη Αναζήτηση"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:10
+#: ../src/gourmand/ui/shopCatEditor.ui.h:10
 msgid "Add Category: "
 msgstr "Προσθήκη Κατηγορίας: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
+#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
 #: ../src/gourmand/timer.py:186
 msgid "Timer"
 msgstr "Χρονόμετρο"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:2
+#: ../src/gourmand/ui/timerDialog.ui.h:2
 msgid "<b><span size=\"larger\">Timer</span></b>"
 msgstr "<b><span size=\"larger\">Χρονοδιακόπτης</span></b>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:3
+#: ../src/gourmand/ui/timerDialog.ui.h:3
 msgid "<i>Timer Finished!</i>"
 msgstr "<i>Τέλος Χρόνου!</i>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:4
+#: ../src/gourmand/ui/timerDialog.ui.h:4
 msgid ""
 "Timer will continue to go off until you close this dialog or reset the timer."
 msgstr ""
 "Η υπενθύμιση θα χτυπά μέχρι να κλείσετε αυτό το παράθυρο ή μηδενίσετε το "
 "χρονόμετρο."
 
-#: ../src/gourmand/ui/timerDialog.ui.h:5
+#: ../src/gourmand/ui/timerDialog.ui.h:5
 msgid "Set _Timer: "
 msgstr "Ρύθμιση _ Χρονομέτρου: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:6
+#: ../src/gourmand/ui/timerDialog.ui.h:6
 msgid "_Reset"
 msgstr "_Επαναφορά"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:7
+#: ../src/gourmand/ui/timerDialog.ui.h:7
 msgid "_Start"
 msgstr "_Έναρξη"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:8
+#: ../src/gourmand/ui/timerDialog.ui.h:8
 msgid "S_ound"
 msgstr "_Ήχος"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:9
+#: ../src/gourmand/ui/timerDialog.ui.h:9
 msgid "_Note"
 msgstr "_Σημείωση"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:10
+#: ../src/gourmand/ui/timerDialog.ui.h:10
 msgid "Re_peat alarm until I turn it off"
 msgstr "Επανάληψη υπενθύμισης μέχρι να την απενεργοποιήσω"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:11
+#: ../src/gourmand/ui/timerDialog.ui.h:11
 msgid "_Settings"
 msgstr "_Ρυθμίσεις"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:1
+#: ../src/gourmand/ui/valueEditor.ui.h:1
 msgid "<b>Edit fields throughout database</b>"
 msgstr "<b>Επεξεργασία πεδίων σε όλη την βάση δεδομένων</b>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:2
+#: ../src/gourmand/ui/valueEditor.ui.h:2
 msgid "Field to _Edit:"
 msgstr "Πεδίο για _επεξεργασία:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:3
+#: ../src/gourmand/ui/valueEditor.ui.h:3
 msgid "For each selected value:"
 msgstr "Για κάθε επιλεγμένη τιμή:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:4
+#: ../src/gourmand/ui/valueEditor.ui.h:4
 msgid "_Leave value as is"
 msgstr "Η τιμή αυτή να π_αραμείνει ως έχει"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:5
+#: ../src/gourmand/ui/valueEditor.ui.h:5
 msgid "<i>New value will be added to the end of any existing text</i>"
 msgstr "<i>Η νέα τιμή θα προστεθεί στο τέλος  κάθε υπάρχοντος κειμένου</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:6
+#: ../src/gourmand/ui/valueEditor.ui.h:6
 msgid "<i>New value will replace any existing value</i>"
 msgstr "<i>Η νέα τιμή θα αντικαταστήσει την τυχόν υπάρχουσα τιμή</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:7
+#: ../src/gourmand/ui/valueEditor.ui.h:7
 msgid "_Field:"
 msgstr "_Πεδίο:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:8
+#: ../src/gourmand/ui/valueEditor.ui.h:8
 msgid "_Value:"
 msgstr "_Τιμή:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:9
+#: ../src/gourmand/ui/valueEditor.ui.h:9
 msgid "Change _other field:"
 msgstr "Α_λλαγή διαφορετικού πεδίου:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:10
+#: ../src/gourmand/ui/valueEditor.ui.h:10
 msgid "C_hange value to: "
 msgstr "_ Αλλαγή τιμής σε: "
 
-#: ../src/gourmand/ui/valueEditor.ui.h:11
+#: ../src/gourmand/ui/valueEditor.ui.h:11
 msgid "_Delete value"
 msgstr "_Διαγραφή τιμής"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:1
 msgid "<i>Select equivalent of</i>"
 msgstr "<i>Επιλογή ισοδύναμου του</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:2
+#: ../src/gourmand/ui/nutritionDruid.ui.h:2
 msgid "<i>from USDA database</i>"
 msgstr "<i>Από την USDA βάση δεδομένων</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:3
+#: ../src/gourmand/ui/nutritionDruid.ui.h:3
 msgid "_Change ingredient"
 msgstr "_Άλλαγή συστατικού"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:4
 msgid "<i>or</i>"
 msgstr "<i>ή</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:5
 msgid "_Search USDA Ingredient Database:"
 msgstr "_Αναζήτηση στην Βάση Συστατικών USDA:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:6
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:6
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
 msgid "Search as you t_ype"
 msgstr "Αναζήτηση κατά την π_ληκτρολόγηση"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:7
+#: ../src/gourmand/ui/nutritionDruid.ui.h:7
 msgid "Show only food in _group:"
 msgstr "Εμφάνισε φαγητό μόνο στην _ομάδα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:8
 msgid "<i>Search _results:</i>"
 msgstr "<i>_Αποτελέσματα Αναζήτησης:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:9
+#: ../src/gourmand/ui/nutritionDruid.ui.h:9
 msgid "<i>From:</i>"
 msgstr "<i>Από:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:10
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:10
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
 msgid "_Amount:"
 msgstr "Π_οσότητα"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:11
+#: ../src/gourmand/ui/nutritionDruid.ui.h:11
 msgid "Unit:"
 msgstr "Μονάδα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:12
+#: ../src/gourmand/ui/nutritionDruid.ui.h:12
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:98
 msgid "unit"
 msgstr "μονάδα"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:13
+#: ../src/gourmand/ui/nutritionDruid.ui.h:13
 msgid "_Change unit"
 msgstr "_Αλλαγή μονάδας"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:14
+#: ../src/gourmand/ui/nutritionDruid.ui.h:14
 msgid "_Save new unit"
 msgstr "_Αποθήκευση νέας μονάδας"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:15
 msgid "<i>To:</i>"
 msgstr "<i> Προς:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:16
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:16
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
 msgid "_Unit:"
 msgstr "_Μονάδα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:17
+#: ../src/gourmand/ui/nutritionDruid.ui.h:17
 msgid "<i>Enter nutritional information for </i>"
 msgstr "<i>Εισαγωγή διατροφικών πληροφοριών για </i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:18
+#: ../src/gourmand/ui/nutritionDruid.ui.h:18
 msgid "<b>Choose a Density</b>"
 msgstr "<b>Choose a Density</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:19
+#: ../src/gourmand/ui/nutritionDruid.ui.h:19
 msgid "<b>Ingredient Key: </b>"
 msgstr "<b>Πλήκτρο Συστατικού: </b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:20
+#: ../src/gourmand/ui/nutritionDruid.ui.h:20
 msgid "<b>USDA Item: </b>"
 msgstr "<b>USDA ατνικείμενο: </b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:21
+#: ../src/gourmand/ui/nutritionDruid.ui.h:21
 msgid "Edit _USDA Association"
 msgstr "Επεξεργασία του _USDA Association"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:22
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:22
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
 msgid "<b>Nutritional Information</b>"
 msgstr "<b>Διατροφικές πληροφορίες</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:23
+#: ../src/gourmand/ui/nutritionDruid.ui.h:23
 msgid "Edit _information"
 msgstr "Επεξεργασία _Πληροφοριών"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:24
+#: ../src/gourmand/ui/nutritionDruid.ui.h:24
 msgid "_Nutritional Information"
 msgstr "_Διατροφικές πληροφορίες"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:25
+#: ../src/gourmand/ui/nutritionDruid.ui.h:25
 msgid "Density:"
 msgstr "Πυκνότητα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:26
+#: ../src/gourmand/ui/nutritionDruid.ui.h:26
 msgid "USDA equivalents:"
 msgstr "USDA ισοδύναμα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:27
+#: ../src/gourmand/ui/nutritionDruid.ui.h:27
 msgid "Custom equivalents:"
 msgstr "Προσαρμοσμένα ισοδύναμα:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:28
+#: ../src/gourmand/ui/nutritionDruid.ui.h:28
 msgid "_Density Information"
 msgstr "_Πληροφορίες Πυκνότητας"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:29
+#: ../src/gourmand/ui/nutritionDruid.ui.h:29
 msgid "<b>Known Nutritonal Information</b>"
 msgstr "<b>Γνωστές Διατροφικές Πληροφορίες</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:34
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
+#: ../src/gourmand/ui/nutritionDruid.ui.h:34
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
 msgid "_Advanced Search"
 msgstr "_Προηγμένη Αναζήτηση"
 
 #. name
 #. stock
-#: ../src/gourmand/ui/nutritionDruid.ui.h:35
+#: ../src/gourmand/ui/nutritionDruid.ui.h:35
 #: ../src/gourmand/plugins/nutritional_information/nutPrefsPlugin.py:13
 #: ../src/gourmand/plugins/nutritional_information/main_plugin.py:14
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:36
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:71
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
 msgid "Nutritional Information"
 msgstr "Διατροφικές Πληροφορίες"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:36
+#: ../src/gourmand/ui/nutritionDruid.ui.h:36
 msgid "I_gnore"
 msgstr "Α_γνόησε"
 
@@ -1452,27 +1451,27 @@ msgid "Do you really want to do this"
 msgstr "Είσαι σίγουρος ότι θές να το κάνεις"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:771
-#: ../src/gourmand/importers/importer.py:488
+#: ../src/gourmand/importers/importer.py:482
 msgid "excellent"
 msgstr "άριστη"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:772
-#: ../src/gourmand/importers/importer.py:489
+#: ../src/gourmand/importers/importer.py:483
 msgid "great"
 msgstr "σπουδαία"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:773
-#: ../src/gourmand/importers/importer.py:490
+#: ../src/gourmand/importers/importer.py:484
 msgid "good"
 msgstr "καλό"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:774
-#: ../src/gourmand/importers/importer.py:491
+#: ../src/gourmand/importers/importer.py:485
 msgid "fair"
 msgstr "καλό"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:775
-#: ../src/gourmand/importers/importer.py:493
+#: ../src/gourmand/importers/importer.py:487
 msgid "poor"
 msgstr "φτωχή"
 
@@ -2154,20 +2153,19 @@ msgstr ""
 "Επεξεργάζεται τις συσχετίσεις του κλειδιού και άλλων ιδιοτήτων στη βάση "
 "δεδομένων."
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
 msgid "Key Editor"
 msgstr "Επεξεργαστής Πλήκτων"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
 msgid "_Item:"
 msgstr "_Αντικέιμενο"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
 msgid "_Key:"
 msgstr "_Πλήκτρο:"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
 msgid "<b>_Change selected ingredients</b>"
 msgstr "<b>_Αλλαγή επιλεγμένων συστατικών</b>"
 
@@ -2202,8 +2200,8 @@ msgid ""
 "Automatically convert units to preferred system (metric, imperial, etc.) "
 "where possible."
 msgstr ""
-"Μετατρέπει αυτόματα τις μονάδες στο προτιμώμενο σύστημα (μετρικό, αγγλικό, κ."
-"τ.λ.) όπου είναι δυνατόν"
+"Μετατρέπει αυτόματα τις μονάδες στο προτιμώμενο σύστημα (μετρικό, αγγλικό, "
+"κ.τ.λ.) όπου είναι δυνατόν"
 
 #: ../src/gourmand/plugins/browse_recipes/browser.py:105
 msgid "Unrated"
@@ -2235,7 +2233,7 @@ msgstr "Πάντοτε να χρησιμοποιείται η παλαιότερ
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:611
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:636
 #: ../src/gourmand/plugins/unit_converter/convertGui.py:170
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
 msgid "None"
 msgstr "Τίποτα"
 
@@ -2257,39 +2255,39 @@ msgstr "Εύρεση _διπλών συνταγών"
 msgid "Find and remove duplicate recipes"
 msgstr "Εύρεση και διαγραφή διπλών συνταγών"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
 msgid "Recipes with similar recipe information"
 msgstr "Συνταγές με παρόμοιες πληροφορίες"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
 msgid "Recipes with similar ingredients"
 msgstr "Συνταγές με παρόμοια συστατικά"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
 msgid "Recipes with similar recipe information and ingredients"
 msgstr "Συνταγές με παρόμοιες πληροφορίες και συστατικά"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
 msgid "<b><span size=\"large\">Duplicate recipes</span></b>"
 msgstr "<b><span size=\"large\">Διπλότυπες συνταγές</span></b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
 msgid "_Include recipes in trash"
 msgstr "_Συμπεριέλαβε συνταγές που βρίσκονται στον κάδο"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
 msgid "<i>_Showing:</i>"
 msgstr "<i>_Εμφάνιση:</i>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
 msgid "Merge _all duplicates"
 msgstr "Συγχώνευση _όλων των διπλότυπων"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
 msgid "<b>Merge recipes</b>"
 msgstr "<b> Συγχώνευση συνταγών</b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
 msgid "_Auto-merge"
 msgstr "_Αυτόματη συγχώνευση"
 
@@ -2325,12 +2323,10 @@ msgid "<i>This change is not reversable.</i>"
 msgstr "<i>Αυτή η αλλαγή δεν είναι αντιστρέψιμη.</i>"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
 msgid "Field Editor"
 msgstr "Επεξεργαστής Πεδίου"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:2
 msgid "Edit fields across multiple recipes at a time."
 msgstr "Επεξεργασία πεδίων μεταξύ πολλαπλών συνταγών μονομιάς."
 
@@ -2375,40 +2371,39 @@ msgstr "Μετατροπέας Μονάδων"
 msgid "Calculate unit conversions"
 msgstr "Υπολογίζει τις μετατροπές μονάδων"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
 msgid "Unit Converter"
 msgstr "Μετατροπέας Μονάδων"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
 msgid "<b>From</b>"
 msgstr "<b>Από</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
 msgid "1"
 msgstr "1"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
 msgid "I_tem:"
 msgstr "Α_ντικείμενο"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
 msgid "_Density:"
 msgstr "Πυκνό_τητα"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
 msgid "Density _Information"
 msgstr "Πληροφορία Π_υκνότητας"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
 msgid "<b>To</b>"
 msgstr "<b>Σε</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
 msgid "_Result:"
 msgstr "Αποτέ_λεσμα"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
 msgid "?"
 msgstr ";"
 
@@ -2440,8 +2435,8 @@ msgstr "Πρωτότυπη Σελίδα από %s"
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:270
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:625
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:638
-#: ../src/gourmand/exporters/exporter.py:383
-#: ../src/gourmand/exporters/exporter.py:479
+#: ../src/gourmand/exporters/exporter.py:385
+#: ../src/gourmand/exporters/exporter.py:481
 msgid "optional"
 msgstr "προαιρετικό"
 
@@ -2777,7 +2772,6 @@ msgid "Recipe saved in My CookBook MCB file %(file)s."
 msgstr "Η Συνταγή αποθηκεύθηκε ως Αρχείο Gourmet XML %(file)s."
 
 #: ../src/gourmand/plugins/listsaver/shoppingSaverPlugin.py:28
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
 msgid "Shopping List Saver"
 msgstr "Αποθήκευση Λίστας Αγορών"
 
@@ -3479,14 +3473,6 @@ msgid "USDA ID#"
 msgstr "USDA ID#"
 
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:32
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
 msgid "Tools"
 msgstr "Εργαλεία"
 
@@ -3500,23 +3486,23 @@ msgstr "Ανάκτηση διατροφικών πληροφοριών για τ
 msgid "Amount for Shopping List"
 msgstr "Σύνολο για την Λίστα Αγορών"
 
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
 msgid "Edit _nutritional info"
 msgstr "Επεξεργασία _διατροφικών πλαροφοριών"
 
-#: ../src/gourmand/exporters/exporter.py:215
-#: ../src/gourmand/exporters/exporter.py:217
-#: ../src/gourmand/exporters/exporter.py:538
+#: ../src/gourmand/exporters/exporter.py:216
+#: ../src/gourmand/exporters/exporter.py:218
 #: ../src/gourmand/exporters/exporter.py:540
+#: ../src/gourmand/exporters/exporter.py:542
 msgid "stars"
 msgstr "Αστέρια"
 
-#: ../src/gourmand/exporters/exporter.py:577
+#: ../src/gourmand/exporters/exporter.py:579
 #, python-format
 msgid "Exported %(number)s of %(total)s recipes"
 msgstr "Εξαχθείσες %(number)s από %(total)s Συνταγές"
 
-#: ../src/gourmand/exporters/exporter.py:597
+#: ../src/gourmand/exporters/exporter.py:599
 msgid "Export complete."
 msgstr "Η εξαγωγή ολοκληρώθηκε."
 
@@ -3637,18 +3623,18 @@ msgstr "Όλα τα Εισαγώγιμα Αρχεία"
 msgid "Imported %s recipes."
 msgstr "Εισαχθείσες %s συνταγές."
 
-#: ../src/gourmand/importers/importer.py:188
+#: ../src/gourmand/importers/importer.py:187
 msgid "serving"
 msgid_plural "servings"
 msgstr[0] "σερβίρισμα"
 msgstr[1] "σερβιρίσματα"
 
-#: ../src/gourmand/importers/importer.py:269
+#: ../src/gourmand/importers/importer.py:263
 #, python-format
 msgid "Imported %s of %s recipes."
 msgstr "Εισήχθησαν %s από %s συνταγές."
 
-#: ../src/gourmand/importers/importer.py:492
+#: ../src/gourmand/importers/importer.py:486
 msgid "okay"
 msgstr "Εντάξει"
 
@@ -3797,7 +3783,7 @@ msgstr "Σφάλμα %s: %s"
 msgid "Traceback"
 msgstr "ανατρέξτε"
 
-#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:629
+#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:608
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "δευτερόλεπτο"
@@ -3808,7 +3794,7 @@ msgstr[1] "δευτερόλεπτα"
 msgid "min"
 msgstr "λεπτά"
 
-#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:628
+#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:607
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "λεπτό"
@@ -3819,25 +3805,25 @@ msgstr[1] "λεπτά"
 msgid "hrs."
 msgstr "ώρες."
 
-#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:627
+#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "ώρα"
 msgstr[1] "ώρες"
 
-#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:626
+#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:605
 msgid "day"
 msgid_plural "days"
 msgstr[0] "ημέρα"
 msgstr[1] "ημέρες"
 
-#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:625
+#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:604
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "εβδομάδα"
 msgstr[1] "εβδομάδες"
 
-#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:624
+#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:603
 msgid "month"
 msgid_plural "months"
 msgstr[0] "μήνας"
@@ -3846,7 +3832,7 @@ msgstr[1] "μήνες"
 #. 'millennia':lambda decades: ngettext("millenium","millenia",round(decades))
 #. 'centuries':lambda decades: ngettext("century","centuries",round(decades))
 #. 'decades':lambda decades: ngettext("decade","decades",round(decades))
-#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:623
+#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:602
 msgid "year"
 msgid_plural "years"
 msgstr[0] "έτος"
@@ -3858,214 +3844,286 @@ msgstr[1] "έτη"
 #. You can of course make your language only use commas or
 #. ands or spaces or whatever you like by translating both
 #. ", " and " and " with the same string.
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid " and "
 msgstr " και "
 
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid ", "
 msgstr ", "
 
-#: ../src/gourmand/convert.py:683
+#: ../src/gourmand/convert.py:662
 msgid " "
 msgstr " "
 
-#: ../src/gourmand/convert.py:813
+#: ../src/gourmand/convert.py:792
 msgid "and"
 msgstr "και"
 
 #. Note: the order matters on this range regular expression in order
 #. for it to properly split things like 1 - to - 3, which really do
 #. show up sometimes.
-#: ../src/gourmand/convert.py:836
+#: ../src/gourmand/convert.py:815
 msgid "to"
 msgstr "προς"
 
-#. i=InteractiveConverter()
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
-msgid "Browse Recipes"
-msgstr "Προσπέλαση Συνταγών"
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:2
-msgid "Selecting recipes by browsing by category, cuisine, etc."
-msgstr "Επιλογή συνταγών με προσπέλαση ανά κατηγορία, κουζίνα, κλπ."
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
-msgid "Main"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Main);"
 msgstr "Κύριο"
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
-msgid "Find duplicate recipes"
-msgstr "Εύρεση διπλότυπων συνταγών"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Selecting recipes by browsing by category, cuisine, etc.);"
+msgstr "Επιλογή συνταγών με προσπέλαση ανά κατηγορία, κουζίνα, κλπ."
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:2
-msgid "A wizard to find and remove or merge duplicate recipes."
+#. i=InteractiveConverter()
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Browse Recipes);"
+msgstr "Προσπέλαση Συνταγών"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:5
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:5
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:5
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Tools);"
+msgstr "Εργαλεία"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "A wizard to find and remove or merge duplicate recipes.);"
 msgstr "Ένας οδηγός εύρεσης και αφαίρεσης ή συγχώνευσης  διπλότυπων συνταγών."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
 #, fuzzy
-msgid "EPub Export"
-msgstr "Εξαγωγή σε PDF"
+msgid "Find duplicate recipes);"
+msgstr "Εύρεση διπλότυπων συνταγών"
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:2
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
 #, fuzzy
-msgid "Create an epub book from recipes."
-msgstr "Δημιουργία ιστοσελίδων συνταγών από συνταγές."
+msgid "Edit fields across multiple recipes at a time.);"
+msgstr "Επεξεργασία πεδίων μεταξύ πολλαπλών συνταγών μονομιάς."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
-#: ../data/plugins/utf16.gourmet-plugin.in.h:3
-msgid "Importer/Exporter"
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Field Editor);"
+msgstr "Επεξεργαστής Πεδίου"
+
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:5
+#: ../data/plugins/utf16.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Importer/Exporter);"
 msgstr "Εισαγωγέας/Εξαγωγέας"
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
-msgid "Gourmet XML Import and Export"
-msgstr "Εισαγωγή και Εξαγωγή XML αρχείων στο Gourmet"
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Create an epub book from recipes.);"
+msgstr "Δημιουργία ιστοσελίδων συνταγών από συνταγές."
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "EPub Export);"
+msgstr "Εξαγωγή σε PDF"
+
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Import and Export recipes as Gourmet XML files, suitable for backup or "
-"exchange with other Gourmet users."
+"exchange with other Gourmet users.);"
 msgstr ""
 "Εισαγωγή και Εξαγωγή συνταγών ως XML αρχείων του Gourmet, κατάλληλα για "
 "αντίγραφα ασφαλείας ή ανταλλαγή με άλλους χρήστες του Gourmet."
 
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
-msgid "KRecipe import"
-msgstr "Εισαγωγή από KRecipe"
-
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Krecipe program."
-msgstr "Εισαγωγή αρχείων από το πρόγραμμα Krecipe."
-
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
-msgid "Mastercook import"
-msgstr "Εισαγωγή από Mastercook"
-
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Mastercook program."
-msgstr "Εισαγωγή αρχείων από το πρόγραμμα Mastercook."
-
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
 #, fuzzy
-msgid "My CookBook Import and Export"
+msgid "Gourmet XML Import and Export);"
 msgstr "Εισαγωγή και Εξαγωγή XML αρχείων στο Gourmet"
 
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Krecipe program.);"
+msgstr "Εισαγωγή αρχείων από το πρόγραμμα Krecipe."
+
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "KRecipe import);"
+msgstr "Εισαγωγή από KRecipe"
+
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Mastercook program.);"
+msgstr "Εισαγωγή αρχείων από το πρόγραμμα Mastercook."
+
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mastercook import);"
+msgstr "Εισαγωγή από Mastercook"
+
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
 #, fuzzy
 msgid ""
 "Import and Export recipes as My CookBook XML files, suitable for backup or "
-"exchange with other My CookBook users."
+"exchange with other My CookBook users.);"
 msgstr ""
 "Εισαγωγή και Εξαγωγή συνταγών ως XML αρχείων του Gourmet, κατάλληλα για "
 "αντίγραφα ασφαλείας ή ανταλλαγή με άλλους χρήστες του Gourmet."
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
-msgid "Mealmaster (tm) Export"
-msgstr "Εξαγωγή αρχείων Mealmaster(tm)"
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "My CookBook Import and Export);"
+msgstr "Εισαγωγή και Εξαγωγή XML αρχείων στο Gourmet"
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:2
-msgid "Export recipes as mealmaster text files"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Export recipes as mealmaster text files);"
 msgstr "Εξαγωγή συνταγών ως αρχεία κειμένου mealmaster"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
-msgid "Printing & PDF Export"
-msgstr "Εκτύπωση και εξαγωγή PDF"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mealmaster (tm) Export);"
+msgstr "Εξαγωγή αρχείων Mealmaster(tm)"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Print recipes or export them as PDF; this plugin allows a variety of page "
-"layouts."
+"layouts.);"
 msgstr ""
 "Εκτύπωση συνταγών ή εξαγωγή αυτών ως PDF' αυτό το πρόσθετο επιτρέπει μια "
 "ποικιλία από μορφοποιήσεις σελίδας."
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
-msgid "Plain Text Guided Import"
-msgstr "Καθοδηγούμενη εισαγωγή απλού κειμένου"
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Printing & PDF Export);"
+msgstr "Εκτύπωση και εξαγωγή PDF"
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
-"Help user mark up and import plain text. Also provides plain text export."
+"Help user mark up and import plain text. Also provides plain text export.);"
 msgstr ""
 "Βοήθεια χρήστη να επιλέξει και να εισάγει απλό κείμενο. Επιπλέον παρέχει "
 "εξαγωγή απλού κειμένου."
 
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Plain Text Guided Import);"
+msgstr "Καθοδηγούμενη εισαγωγή απλού κειμένου"
+
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit ingredient keys (unique identifiers for ingredients, used "
-"for consolidating items on shopping lists)."
+"for consolidating items on shopping lists).);"
 msgstr ""
 "Καθορισμός και επεξεργασία πλήκτρων συστατικών (μοναδικών αναγνωριστικών για "
 "τα συστατικά, για τη προσθήκη αντικειμένων στις λίστες αγορών)."
 
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:2
-msgid "Save shopping lists as recipes for future use."
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Key Editor);"
+msgstr "Επεξεργαστής Πλήκτων"
+
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Save shopping lists as recipes for future use.);"
 msgstr "Αποθήκευση λιστών αγορών ως συνταγές για μελλοντική χρήση."
 
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:2
-msgid "Calculate nutritional information for recipes."
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping List Saver);"
+msgstr "Αποθήκευση Λίστας Αγορών"
+
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Calculate nutritional information for recipes.);"
 msgstr "Υπολογισμός διατροφικών πληροφοριών για συνταγές."
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
-msgid "Shopping Category Editor"
-msgstr "Επεξεργαστής Κατηγορίας Αγορών"
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Nutritional Information);"
+msgstr "Διατροφικές Πληροφορίες"
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:2
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit shopping categories for ingredients from within the recipe "
-"editor."
+"editor.);"
 msgstr ""
 "Καθορισμός και επεξεργασία των κατηγοριών αγορών για συστατικά από τον "
 "επεξεργαστή συνταγών."
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
-msgid "Spell Checking"
-msgstr "Ορθογραφικός Έλεγχος"
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping Category Editor);"
+msgstr "Επεξεργαστής Κατηγορίας Αγορών"
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:2
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Adds spell checking to paragraph length text boxes in recipe entry "
-"(Instructions, Notes)."
+"(Instructions, Notes).);"
 msgstr ""
 "Προσθέτει ορθογραφικό έλεγχο σε πλαίσια κειμένου παραγράφων στην εισαγωγή "
 "συνταγής (Οδηγίες, Σημειώσεις)."
 
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:2
-msgid "Provides a simple unit calculator."
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Spell Checking);"
+msgstr "Ορθογραφικός Έλεγχος"
+
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Provides a simple unit calculator.);"
 msgstr "Παρέχει έναν απλό υπολογιστή μονάδων."
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
-msgid "Unit Display Preferences"
-msgstr "Προτιμήσεις Εμφάνισης Μονάδων"
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Converter);"
+msgstr "Μετατροπέας Μονάδων"
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:2
-msgid "Allows you to always use metric (or imperial) units for display."
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Allows you to always use metric (or imperial) units for display.);"
 msgstr ""
 "Επιτρέπει να χρησιμοποιούνται πάντα οι μετρικές (ή αυτοκρατορικές) μονάδες "
 "για την εμφάνιση."
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:1
-msgid "Check for Unicode-16 in text files"
-msgstr "Έλεγχος για Unicode-16 σε αρχεία κειμένου"
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Display Preferences);"
+msgstr "Προτιμήσεις Εμφάνισης Μονάδων"
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:2
+#: ../data/plugins/utf16.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Enable this if your utf-16 text files aren't importing cleanly into Gourmet. "
 "Disable this if you never use UTF16 and you're constantly being annoyed by "
-"the 'Encoding' dialog when you import files."
+"the 'Encoding' dialog when you import files.);"
 msgstr ""
 "Ενεργοποιήστε αυτό εάν τα utf-16 αρχεία κειμένου δεν εισάγονται καθαρά στο "
 "Gourmet. Απενεργοποιήστε το αν ποτέ δεν χρησιμοποιείτε το UTF16 και "
 "ενοχλείστε από την συνεχή εμφάνιση του διαλόγου \"Κωδικοποίηση\" όταν "
 "εισάγετε αρχεία."
+
+#: ../data/plugins/utf16.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Check for Unicode-16 in text files);"
+msgstr "Έλεγχος για Unicode-16 σε αρχεία κειμένου"
 
 #~ msgid "E-mail selected recipe"
 #~ msgstr "Αποστολή επιλεγμένης συνταγής με E-mail"
@@ -4462,8 +4520,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Το %(progname)s %(version)s έχει αλλάξει την μορφοποίηση της βάσης "
 #~ "δεδομένων. Η βάση δεδομένων σας δεν μπορεί να λειτουργήσει με παλαιότερες "
-#~ "εκδόσης του %(progname)s. Ένα αντίγραφο ασφαλείας έχει σωθεί στο "
-#~ "%(backupfile)s"
+#~ "εκδόσης του %(progname)s. Ένα αντίγραφο ασφαλείας έχει σωθεί στο %"
+#~ "(backupfile)s"
 
 #~ msgid ""
 #~ "In case anything goes wrong, a backup copy of your recipe database is "
