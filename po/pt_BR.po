@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gourmet Recipe Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 14:04+0200\n"
+"POT-Creation-Date: 2026-08-05 14:35+0100\n"
 "PO-Revision-Date: 2015-05-15 20:13-0200\n"
 "Last-Translator: Felipe Braga <fbobraga@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
@@ -20,64 +20,64 @@ msgstr ""
 "X-Launchpad-Export-Date: 2014-06-02 11:52+0000\n"
 "X-Rosetta-Version: 0.1\n"
 
-#: ../src/gourmand/ui/app.ui.h:1
+#: ../src/gourmand/ui/app.ui.h:1
 msgid "Recipe Index"
 msgstr "Índice de receitas"
 
 #. Set up hard-coded functional buttons...
-#: ../src/gourmand/ui/app.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:2
 #: ../src/gourmand/importers/interactive_importer.py:142
 msgid "_New Recipe"
 msgstr "_Nova receita"
 
-#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
+#: ../src/gourmand/ui/app.ui.h:3 ../src/gourmand/gglobals.py:102
 msgid "Add to _Shopping List"
 msgstr "Adicionar à _lista de compras"
 
-#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:4 ../src/gourmand/ui/recipe_index.ui.h:4
 msgid "View Re_cipe"
 msgstr "Ver re_ceita"
 
-#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
-#: ../src/gourmand/ui/nutritionDruid.ui.h:31
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
+#: ../src/gourmand/ui/app.ui.h:5 ../src/gourmand/ui/recipe_index.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:31
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:2
 msgid "_Search for:"
 msgstr "_Pesquisar por:"
 
-#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
-#: ../src/gourmand/ui/shopCatEditor.ui.h:5
-#: ../src/gourmand/ui/nutritionDruid.ui.h:32
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
+#: ../src/gourmand/ui/app.ui.h:6 ../src/gourmand/ui/recipe_index.ui.h:16
+#: ../src/gourmand/ui/shopCatEditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:32
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:3
 msgid "Search for recipes as you type"
 msgstr "Procurar por receitas ao digitar"
 
-#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
+#: ../src/gourmand/ui/app.ui.h:7 ../src/gourmand/ui/nutritionDruid.ui.h:30
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:4
 msgid "_in"
 msgstr "_em"
 
-#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
+#: ../src/gourmand/ui/app.ui.h:8 ../src/gourmand/ui/recipe_index.ui.h:19
 msgid "Search by other critera within the current search results."
 msgstr "Pesquisar com outros critérios dentro dos resultados."
 
-#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
+#: ../src/gourmand/ui/app.ui.h:9 ../src/gourmand/ui/recipe_index.ui.h:20
 msgid "A_dd Search Criteria"
 msgstr "Adicionar critério de busca"
 
-#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
+#: ../src/gourmand/ui/app.ui.h:10 ../src/gourmand/ui/recipe_index.ui.h:24
 msgid "Limiting Search to:"
 msgstr "Limitar busca a:"
 
-#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
+#: ../src/gourmand/ui/app.ui.h:11 ../src/gourmand/ui/recipe_index.ui.h:25
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:8
 msgid "Search _Results"
 msgstr "_Resultados da busca"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:1
+#: ../src/gourmand/ui/batchEditor.ui.h:1
 msgid "Set Fields for Selected Recipes"
 msgstr "Configurar Campos para Receitas Selecionadas"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:2
 msgid ""
 "<span size=\"large\" weight=\"bold\">Set Recipe Fields for selected recipes</"
 "span>"
@@ -85,131 +85,131 @@ msgstr ""
 "<span size=\"large\" weight=\"bold\">Definir atributos de receita para as "
 "receitas selecionadas</span>"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:3
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
+#: ../src/gourmand/ui/batchEditor.ui.h:3
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:3
 msgid "_Add Image"
 msgstr "_Adicionar imagem"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:4
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
+#: ../src/gourmand/ui/batchEditor.ui.h:4
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:5
 msgid "_Remove Image"
 msgstr "_Remover imagem"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:5
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:5
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:14
 msgid "S_ource:"
 msgstr "F_onte:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:6
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
+#: ../src/gourmand/ui/batchEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:13
 msgid "_Rating:"
 msgstr "_Avaliação:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:7
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
+#: ../src/gourmand/ui/batchEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:12
 msgid "C_uisine:"
 msgstr "C_ozinha:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:8
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:8
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:9
 msgid "_Category:"
 msgstr "_Categoria:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:9
+#: ../src/gourmand/ui/batchEditor.ui.h:9
 msgid "_Preparation Time:"
 msgstr "Tempo de _preparo:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:10
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
+#: ../src/gourmand/ui/batchEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:11
 msgid "Coo_king Time:"
 msgstr "Tempo de co_zimento:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:11
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
+#: ../src/gourmand/ui/batchEditor.ui.h:11
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:2
 msgid "_Webpage:"
 msgstr "_Página web:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:12
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
+#: ../src/gourmand/ui/batchEditor.ui.h:12
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:4
 msgid "Image:"
 msgstr "Imagem:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:13
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
+#: ../src/gourmand/ui/batchEditor.ui.h:13
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:8
 msgid "_Yield:"
 msgstr "_Rendimento:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:14
+#: ../src/gourmand/ui/batchEditor.ui.h:14
 msgid "Yield U_nit:"
 msgstr "U_nidade de rendimento:"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:15
+#: ../src/gourmand/ui/batchEditor.ui.h:15
 msgid "_Only set values where field is currently blank"
 msgstr "_Apenas definir valores que estiverem vazios"
 
-#: ../src/gourmand/ui/batchEditor.ui.h:16
+#: ../src/gourmand/ui/batchEditor.ui.h:16
 msgid "Set all values for _all selected recipes"
 msgstr "Defina todos os valores para _todas as receitas selecionadas"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:1
+#: ../src/gourmand/ui/databaseChooser.ui.h:1
 msgid "Metakit (default, stored in a local file)"
 msgstr "Metakit (padrão, armazenado em um arquivo local)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:2
+#: ../src/gourmand/ui/databaseChooser.ui.h:2
 msgid "SQLite (stored in a local file)"
 msgstr "SQLite (armazenado em um arquivo local)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:3
+#: ../src/gourmand/ui/databaseChooser.ui.h:3
 msgid "MySQL (requires connection to a database)"
 msgstr "MySQL (requer conexão a um banco de dados)"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:4
+#: ../src/gourmand/ui/databaseChooser.ui.h:4
 msgid "Choose Database"
 msgstr "Escolha o banco de dados"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:5
+#: ../src/gourmand/ui/databaseChooser.ui.h:5
 msgid "<b>Choose Database System for Gourmet to Use</b>"
 msgstr "<b>Escolha o sistema de banco de dados para o Gourmet usar</b>"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:6
+#: ../src/gourmand/ui/databaseChooser.ui.h:6
 msgid "_Database System"
 msgstr "Sistema de _banco de dados"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:7
 msgid "_Host:"
 msgstr "_Servidor:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:8
+#: ../src/gourmand/ui/databaseChooser.ui.h:8
 msgid "_Username:"
 msgstr "Nome de _usuário:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:9
+#: ../src/gourmand/ui/databaseChooser.ui.h:9
 msgid "_Password:"
 msgstr "_Senha:"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:10
+#: ../src/gourmand/ui/databaseChooser.ui.h:10
 msgid "Password for your username on the database."
 msgstr "Senha para seu usuário no banco de dados."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:11
-#: ../src/gourmand/ui/shopCatEditor.ui.h:6
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
+#: ../src/gourmand/ui/databaseChooser.ui.h:11
+#: ../src/gourmand/ui/shopCatEditor.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:7
 msgid "*"
 msgstr "*"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:12
+#: ../src/gourmand/ui/databaseChooser.ui.h:12
 msgid "Database _Name:"
 msgstr "_Nome da base de dados:"
 
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
 #. name  # stock  # text  # key-command  # tooltip  # callback
-#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
+#: ../src/gourmand/ui/databaseChooser.ui.h:13 ../src/gourmand/shopgui.py:681
 #: ../src/gourmand/main.py:1009
 msgid "_File"
 msgstr "_Arquivo"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:14
+#: ../src/gourmand/ui/databaseChooser.ui.h:14
 msgid ""
 "Hostname of the system where your database server is running. If your "
 "database server is running on your local system, use localhost."
@@ -218,11 +218,11 @@ msgstr ""
 "Se o servidor de banco de dados está sendo executado no sistema local, use "
 "\"localhost\"."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:15
+#: ../src/gourmand/ui/databaseChooser.ui.h:15
 msgid "localhost"
 msgstr "localhost"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:16
+#: ../src/gourmand/ui/databaseChooser.ui.h:16
 msgid ""
 "Save the password for next time. This means the password will be stored "
 "insecurely in your configuration file."
@@ -230,11 +230,11 @@ msgstr ""
 "Salvar a senha para a próxima vez. Isto significa que a senha será "
 "armazenada de forma insegura no seu arquivo de configuração."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:17
+#: ../src/gourmand/ui/databaseChooser.ui.h:17
 msgid "_Save Password"
 msgstr "_Salvar Senha"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:18
+#: ../src/gourmand/ui/databaseChooser.ui.h:18
 msgid ""
 "Name of the database in which Gourmet should store its information. Gourmet "
 "will try to create this database if it does not already exist."
@@ -242,84 +242,84 @@ msgstr ""
 "Nome do banco de dados no qual o Gourmet deverá armazenar suas informações. "
 "O Gourmet tentará criar este banco de dados se ele já não existir."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:19
+#: ../src/gourmand/ui/databaseChooser.ui.h:19
 #: ../src/gourmand/plugins/nutritional_information/nutritionDruid.py:277
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:22
 #: ../src/gourmand/plugins/nutritional_information/nutritionInfoEditor.py:72
 msgid "recipe"
 msgstr "receita"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:20
+#: ../src/gourmand/ui/databaseChooser.ui.h:20
 msgid "Your username on the database."
 msgstr "Seu nome de usuário no banco de dados."
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:21
+#: ../src/gourmand/ui/databaseChooser.ui.h:21
 msgid "_Browse"
 msgstr "_Navegar"
 
-#: ../src/gourmand/ui/databaseChooser.ui.h:22
+#: ../src/gourmand/ui/databaseChooser.ui.h:22
 #: ../src/gourmand/gtk_extras/dialog_extras.py:838
 #: ../src/gourmand/gtk_extras/dialog_extras.py:1253
 msgid "_Details"
 msgstr "_Detalhes"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:1
+#: ../src/gourmand/ui/preferenceDialog.ui.h:1
 #, fuzzy
 msgid "Gourmand Recipe Manager Preferences"
 msgstr "Preferências do gestor de receitas Gourmet"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:2
+#: ../src/gourmand/ui/preferenceDialog.ui.h:2
 msgid "<b>Index View Preferences</b>"
 msgstr "<b>Preferências da visão do índice de receitas</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:3
+#: ../src/gourmand/ui/preferenceDialog.ui.h:3
 msgid "Show _toolbar"
 msgstr "Mostrar _barra de ferramentas"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:4
+#: ../src/gourmand/ui/preferenceDialog.ui.h:4
 msgid "_Recipes per page:"
 msgstr "_Receitas por página:"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:5
+#: ../src/gourmand/ui/preferenceDialog.ui.h:5
 msgid "<i>Configure which columns are included in the recipe index view.</i>"
 msgstr ""
 "<i>Configure quais as colunas que aparecem na visão do índice de receitas.</"
 "i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:6
+#: ../src/gourmand/ui/preferenceDialog.ui.h:6
 msgid "Index View"
 msgstr "Lista de receitas"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:7
+#: ../src/gourmand/ui/preferenceDialog.ui.h:7
 msgid "<b>Card View Preferences</b>"
 msgstr "<b>Preferências da visão de cartão das receitas</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:8
+#: ../src/gourmand/ui/preferenceDialog.ui.h:8
 msgid "_Allow units to change when multiplying"
 msgstr "_Permitir que unidades mudem quando multiplicadas"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:9
+#: ../src/gourmand/ui/preferenceDialog.ui.h:9
 msgid "_Use fractions"
 msgstr "_Usar frações"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:10
+#: ../src/gourmand/ui/preferenceDialog.ui.h:10
 msgid "Use fractions when possible for display"
 msgstr "Mostrar frações sempre que possível"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:11
+#: ../src/gourmand/ui/preferenceDialog.ui.h:11
 msgid "<i>Remove items you don't use from the Recipe Card interface.</i>"
 msgstr ""
 "<i>Remover os itens que você não usa da janela de cartão da receita.</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:12
+#: ../src/gourmand/ui/preferenceDialog.ui.h:12
 msgid "Card View"
 msgstr "Receita"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:13
+#: ../src/gourmand/ui/preferenceDialog.ui.h:13
 msgid "<b>Shopping List Preferences</b>"
 msgstr "<b>Preferências da lista de compras</b>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:14
+#: ../src/gourmand/ui/preferenceDialog.ui.h:14
 #, fuzzy
 msgid ""
 "<i>What should Gourmand do with Optional Ingredients when adding recipes to "
@@ -328,216 +328,216 @@ msgstr ""
 "<i>O que o Gourmet deve fazer com ingredientes opcionais quando adicionando "
 "receitas à lista de compras?</i>"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:15
+#: ../src/gourmand/ui/preferenceDialog.ui.h:15
 msgid "As_k whether to include optional ingredients"
 msgstr "_Perguntar se deve incluir os ingredientes opcionais"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:16
+#: ../src/gourmand/ui/preferenceDialog.ui.h:16
 msgid "_Remember user selections by default"
 msgstr "_Lembrar das escolhas do usuário por padrão"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:17
+#: ../src/gourmand/ui/preferenceDialog.ui.h:17
 msgid "_Clear remembered optional ingredients"
 msgstr "Limpar a _memória ingredientes opcionais"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:18
+#: ../src/gourmand/ui/preferenceDialog.ui.h:18
 msgid "_Always add optional ingredients"
 msgstr "_Sempre adicionar ingredientes opcionais"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:19
+#: ../src/gourmand/ui/preferenceDialog.ui.h:19
 msgid "_Never add optional ingredients"
 msgstr "_Nunca adicionar ingredientes opcionais"
 
-#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
+#: ../src/gourmand/ui/preferenceDialog.ui.h:20 ../src/gourmand/shopgui.py:157
 #: ../src/gourmand/shopgui.py:552 ../src/gourmand/shopgui.py:858
 #: ../src/gourmand/shopgui.py:1014
 msgid "Shopping List"
 msgstr "Lista de compras"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:1
 msgid "servings"
 msgstr "porções"
 
 #. renderer.set_property('editable',True)
 #. renderer.connect('edited',tst)
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:6
 #: ../src/gourmand/shopgui.py:754 ../src/gourmand/gglobals.py:29
 #: ../src/gourmand/exporters/rtf_exporter.py:93
 msgid "Title"
 msgstr "Título"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:7
 msgid "_Title:"
 msgstr "_Título:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:10
 msgid "Pre_paration Time:"
 msgstr "Tempo de _preparo:"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:15
 #: ../src/gourmand/recindex.py:45 ../src/gourmand/recindex.py:53
 msgid "category"
 msgstr "categoria"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:16
 msgid "rating"
 msgstr "avaliação"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:17
 #: ../src/gourmand/gglobals.py:35
 msgid "Yield"
 msgstr "Rendimento"
 
-#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
+#: ../src/gourmand/ui/recCardDescriptionEditor.ui.h:18
 #: ../src/gourmand/gglobals.py:36
 msgid "Yield Unit"
 msgstr "Rendimento unitário"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:1
+#: ../src/gourmand/ui/recCardDisplay.ui.h:1
 msgid "_Shop"
 msgstr "_Comprar"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:2
+#: ../src/gourmand/ui/recCardDisplay.ui.h:2
 msgid "Edit _description"
 msgstr "Editar _descrição"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:3
+#: ../src/gourmand/ui/recCardDisplay.ui.h:3
 msgid "<b>Cooking Time:</b>"
 msgstr "<b>Tempo de cozimento:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:4
+#: ../src/gourmand/ui/recCardDisplay.ui.h:4
 msgid "<b>Preparation Time:</b>"
 msgstr "<b>Tempo de preparo:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:5
+#: ../src/gourmand/ui/recCardDisplay.ui.h:5
 msgid "<b>Cuisine:</b>"
 msgstr "<b>Cozinha:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:6
+#: ../src/gourmand/ui/recCardDisplay.ui.h:6
 msgid "<b>Category:</b>"
 msgstr "<b>Categoria:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:7
+#: ../src/gourmand/ui/recCardDisplay.ui.h:7
 msgid "<b>Webpage:</b>"
 msgstr "<b>Página web:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:8
+#: ../src/gourmand/ui/recCardDisplay.ui.h:8
 msgid "<b>_Yields:</b>"
 msgstr "<b>_Rende:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:9
+#: ../src/gourmand/ui/recCardDisplay.ui.h:9
 msgid "<span underline=\"single\" color=\"blue\">Link</span>"
 msgstr "<span underline=\"single\" color=\"blue\">Link</span>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:10
+#: ../src/gourmand/ui/recCardDisplay.ui.h:10
 msgid "<b>Source:</b>"
 msgstr "<b>Fonte:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:11
+#: ../src/gourmand/ui/recCardDisplay.ui.h:11
 msgid "<b>Rating:</b>"
 msgstr "<b>Avaliação:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:12
+#: ../src/gourmand/ui/recCardDisplay.ui.h:12
 msgid "<b>_Multiply by:</b>"
 msgstr "<b>_Multiplicar por:</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:13
+#: ../src/gourmand/ui/recCardDisplay.ui.h:13
 msgid "<b>Instructions</b>"
 msgstr "<b>Modo de preparo</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:14
+#: ../src/gourmand/ui/recCardDisplay.ui.h:14
 msgid "Edit _instructions"
 msgstr "Editar modo de _preparo"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:15
+#: ../src/gourmand/ui/recCardDisplay.ui.h:15
 msgid "<b>Notes</b>"
 msgstr "<b>Notas</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:16
+#: ../src/gourmand/ui/recCardDisplay.ui.h:16
 msgid "Edit _notes"
 msgstr "Editar _notas"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:17
+#: ../src/gourmand/ui/recCardDisplay.ui.h:17
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:507
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:83
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:168
-#: ../src/gourmand/exporters/exporter.py:625
+#: ../src/gourmand/exporters/exporter.py:627
 msgid "Recipe"
 msgstr "Receita"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:18
+#: ../src/gourmand/ui/recCardDisplay.ui.h:18
 msgid "<b>Ingredients</b>"
 msgstr "<b>Ingredientes</b>"
 
-#: ../src/gourmand/ui/recCardDisplay.ui.h:19
+#: ../src/gourmand/ui/recCardDisplay.ui.h:19
 msgid "Edit _ingredients"
 msgstr "Editar _ingredientes"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:1
 msgid "Add _ingredient:"
 msgstr "Adicionar _ingrediente:"
 
-#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
+#: ../src/gourmand/ui/recCardIngredientsEditor.ui.h:2
 #: ../src/gourmand/reccard.py:1008
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:504
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:545
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:117
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:180
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:598
-#: ../src/gourmand/exporters/exporter.py:251
+#: ../src/gourmand/exporters/exporter.py:252
 #: ../src/gourmand/importers/interactive_importer.py:40
 #: ../src/gourmand/importers/interactive_importer.py:47
 msgid "Ingredients"
 msgstr "Ingredientes"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:1
+#: ../src/gourmand/ui/recipe_index.ui.h:1
 msgid "Add recipe to shopping list"
 msgstr "Adicionar receita à lista de compras"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:2
+#: ../src/gourmand/ui/recipe_index.ui.h:2
 msgid "Add to _shopping list"
 msgstr "Adicionar à _lista de compras"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:3
+#: ../src/gourmand/ui/recipe_index.ui.h:3
 msgid "Jump to recipe in Recipe Card vew"
 msgstr "Ir para a visualização do cartão da receita"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:5
+#: ../src/gourmand/ui/recipe_index.ui.h:5
 msgid "Delete selected recipe"
 msgstr "Apagar receita selecionada"
 
 #. saveEdits
-#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
+#: ../src/gourmand/ui/recipe_index.ui.h:6 ../src/gourmand/reccard.py:819
 msgid "_Delete Recipe"
 msgstr "_Apagar Receita"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:7
+#: ../src/gourmand/ui/recipe_index.ui.h:7
 msgid "Edit attributes of selected recipes"
 msgstr "Editar atributos das receitas selecionadas"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:8
+#: ../src/gourmand/ui/recipe_index.ui.h:8
 msgid "_Batch edit recipes"
 msgstr "Editar _várias receitas"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:9
+#: ../src/gourmand/ui/recipe_index.ui.h:9
 #, fuzzy
 msgid "Copy selected recipe"
 msgstr "Abrir receita selecionada"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:10
+#: ../src/gourmand/ui/recipe_index.ui.h:10
 #, fuzzy
 msgid "_Copy recipe"
 msgstr "Escolha a receita"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:11
+#: ../src/gourmand/ui/recipe_index.ui.h:11
 msgid "Print selected recipe"
 msgstr "Imprimir receita selecionada"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:12
+#: ../src/gourmand/ui/recipe_index.ui.h:12
 msgid "_Print recipe"
 msgstr "_Imprimir receita"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:13
+#: ../src/gourmand/ui/recipe_index.ui.h:13
 msgid ""
 "Never buy this item. When called for in a recipe, it will show up in a "
 "\"pantry\" section of the list as a reminder that you need it, but it won't "
@@ -549,31 +549,31 @@ msgstr ""
 "você salvar ou imprimir a lista de compras a menos que você diga que precisa "
 "comprá-lo."
 
-#: ../src/gourmand/ui/recipe_index.ui.h:14
+#: ../src/gourmand/ui/recipe_index.ui.h:14
 msgid "Add to _Pantry"
 msgstr "Adicionar à _despensa"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:17
+#: ../src/gourmand/ui/recipe_index.ui.h:17
 msgid "Show _Options"
 msgstr "Mostrar _opções"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:18
+#: ../src/gourmand/ui/recipe_index.ui.h:18
 msgid "Search _in"
 msgstr "Procurar _em"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:21
+#: ../src/gourmand/ui/recipe_index.ui.h:21
 msgid "_Use regular expressions (advanced searching)"
 msgstr "_Usar expressões regulares (busca avançada)"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:22
+#: ../src/gourmand/ui/recipe_index.ui.h:22
 msgid "Search as you _type"
 msgstr "Pesquisa ao digitar"
 
-#: ../src/gourmand/ui/recipe_index.ui.h:23
+#: ../src/gourmand/ui/recipe_index.ui.h:23
 msgid "<i>Search Options</i>"
 msgstr "<i>Opções de busca</i>"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
+#: ../src/gourmand/ui/shopCatEditor.ui.h:1 ../src/gourmand/gglobals.py:30
 msgid "Category"
 msgstr "Categoria"
 
@@ -582,7 +582,7 @@ msgstr "Categoria"
 #. None,
 #. ()),
 #. }
-#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
+#: ../src/gourmand/ui/shopCatEditor.ui.h:2 ../src/gourmand/reccard.py:2039
 #: ../src/gourmand/reccard.py:2100
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:508
 #: ../src/gourmand/plugins/key_editor/recipeEditorPlugin.py:128
@@ -590,264 +590,263 @@ msgstr "Categoria"
 msgid "Key"
 msgstr "Código"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:3
+#: ../src/gourmand/ui/shopCatEditor.ui.h:3
 msgid "Category Editor"
 msgstr "Editor de categorias"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:4
+#: ../src/gourmand/ui/shopCatEditor.ui.h:4
 msgid "Search by"
 msgstr "Procurar por"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
+#: ../src/gourmand/ui/shopCatEditor.ui.h:7 ../src/gourmand/recindex.py:104
 msgid "Search as you type"
 msgstr "Pesquisa ao digitar"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:8
-#: ../src/gourmand/ui/nutritionDruid.ui.h:33
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
+#: ../src/gourmand/ui/shopCatEditor.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:33
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:7
 msgid "Use regular expressions"
 msgstr "Usar expressões regulares"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:9
+#: ../src/gourmand/ui/shopCatEditor.ui.h:9
 msgid "Advanced Search"
 msgstr "Pesquisa avançada"
 
-#: ../src/gourmand/ui/shopCatEditor.ui.h:10
+#: ../src/gourmand/ui/shopCatEditor.ui.h:10
 msgid "Add Category: "
 msgstr "Adicionar categoria: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
+#: ../src/gourmand/ui/timerDialog.ui.h:1 ../src/gourmand/timer.py:184
 #: ../src/gourmand/timer.py:186
 msgid "Timer"
 msgstr "Temporizador"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:2
+#: ../src/gourmand/ui/timerDialog.ui.h:2
 msgid "<b><span size=\"larger\">Timer</span></b>"
 msgstr "<b><span size=\"larger\">Temporizador</span></b>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:3
+#: ../src/gourmand/ui/timerDialog.ui.h:3
 msgid "<i>Timer Finished!</i>"
 msgstr "<i>Tempo alcançado!</i>"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:4
+#: ../src/gourmand/ui/timerDialog.ui.h:4
 msgid ""
 "Timer will continue to go off until you close this dialog or reset the timer."
 msgstr ""
 "O temporizador continuará a contar até você fechar esta janela ou reiniciá-"
 "lo."
 
-#: ../src/gourmand/ui/timerDialog.ui.h:5
+#: ../src/gourmand/ui/timerDialog.ui.h:5
 msgid "Set _Timer: "
 msgstr "Ajustar _temporizador: "
 
-#: ../src/gourmand/ui/timerDialog.ui.h:6
+#: ../src/gourmand/ui/timerDialog.ui.h:6
 msgid "_Reset"
 msgstr "_Reiniciar"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:7
+#: ../src/gourmand/ui/timerDialog.ui.h:7
 msgid "_Start"
 msgstr "_Iniciar"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:8
+#: ../src/gourmand/ui/timerDialog.ui.h:8
 msgid "S_ound"
 msgstr "S_om"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:9
+#: ../src/gourmand/ui/timerDialog.ui.h:9
 msgid "_Note"
 msgstr "_Nota"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:10
+#: ../src/gourmand/ui/timerDialog.ui.h:10
 msgid "Re_peat alarm until I turn it off"
 msgstr "Re_petir o alarme até que eu o desligue"
 
-#: ../src/gourmand/ui/timerDialog.ui.h:11
+#: ../src/gourmand/ui/timerDialog.ui.h:11
 msgid "_Settings"
 msgstr "Confi_gurações"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:1
+#: ../src/gourmand/ui/valueEditor.ui.h:1
 msgid "<b>Edit fields throughout database</b>"
 msgstr "<b>Editar campos pela base de dados</b>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:2
+#: ../src/gourmand/ui/valueEditor.ui.h:2
 msgid "Field to _Edit:"
 msgstr "Campo para _editar:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:3
+#: ../src/gourmand/ui/valueEditor.ui.h:3
 msgid "For each selected value:"
 msgstr "Para cada valor selecionado:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:4
+#: ../src/gourmand/ui/valueEditor.ui.h:4
 msgid "_Leave value as is"
 msgstr "Deixar o valor _como está"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:5
+#: ../src/gourmand/ui/valueEditor.ui.h:5
 msgid "<i>New value will be added to the end of any existing text</i>"
 msgstr "<i>O novo valor será adicionado no final do existente</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:6
+#: ../src/gourmand/ui/valueEditor.ui.h:6
 msgid "<i>New value will replace any existing value</i>"
 msgstr "<i>O novo valor substituirá o existente</i>"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:7
+#: ../src/gourmand/ui/valueEditor.ui.h:7
 msgid "_Field:"
 msgstr "_Campo:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:8
+#: ../src/gourmand/ui/valueEditor.ui.h:8
 msgid "_Value:"
 msgstr "_Valor:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:9
+#: ../src/gourmand/ui/valueEditor.ui.h:9
 msgid "Change _other field:"
 msgstr "Mudar _outro campo:"
 
-#: ../src/gourmand/ui/valueEditor.ui.h:10
+#: ../src/gourmand/ui/valueEditor.ui.h:10
 msgid "C_hange value to: "
 msgstr "_Mudar o valor para: "
 
-#: ../src/gourmand/ui/valueEditor.ui.h:11
+#: ../src/gourmand/ui/valueEditor.ui.h:11
 msgid "_Delete value"
 msgstr "_Excluir valor"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:1
 msgid "<i>Select equivalent of</i>"
 msgstr "<i>Selecione o equivalente de</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:2
+#: ../src/gourmand/ui/nutritionDruid.ui.h:2
 msgid "<i>from USDA database</i>"
 msgstr "<i>da base de dados da USDA</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:3
+#: ../src/gourmand/ui/nutritionDruid.ui.h:3
 msgid "_Change ingredient"
 msgstr "_Alterar ingrediente"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:4
 msgid "<i>or</i>"
 msgstr "<i>ou</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:5
 msgid "_Search USDA Ingredient Database:"
 msgstr "_Procurar na base de dados de ingredientes da USDA:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:6
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:6
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:5
 msgid "Search as you t_ype"
 msgstr "Pesquisa ao _digitar"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:7
+#: ../src/gourmand/ui/nutritionDruid.ui.h:7
 msgid "Show only food in _group:"
 msgstr "Mostrar apenas alimentos no _grupo:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:8
+#: ../src/gourmand/ui/nutritionDruid.ui.h:8
 msgid "<i>Search _results:</i>"
 msgstr "<i>_Resultados da busca:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:9
+#: ../src/gourmand/ui/nutritionDruid.ui.h:9
 msgid "<i>From:</i>"
 msgstr "<i>De:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:10
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
+#: ../src/gourmand/ui/nutritionDruid.ui.h:10
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:4
 msgid "_Amount:"
 msgstr "_Quantidade:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:11
+#: ../src/gourmand/ui/nutritionDruid.ui.h:11
 msgid "Unit:"
 msgstr "Unidade:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:12
+#: ../src/gourmand/ui/nutritionDruid.ui.h:12
 #: ../src/gourmand/plugins/key_editor/keyEditor.py:98
 msgid "unit"
 msgstr "unidade"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:13
+#: ../src/gourmand/ui/nutritionDruid.ui.h:13
 msgid "_Change unit"
 msgstr "_Mudar a unidade"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:14
+#: ../src/gourmand/ui/nutritionDruid.ui.h:14
 msgid "_Save new unit"
 msgstr "_Salvar nova unidade"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:15
+#: ../src/gourmand/ui/nutritionDruid.ui.h:15
 msgid "<i>To:</i>"
 msgstr "<i>Para:</i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:16
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
+#: ../src/gourmand/ui/nutritionDruid.ui.h:16
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:5
 msgid "_Unit:"
 msgstr "_Unidade:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:17
+#: ../src/gourmand/ui/nutritionDruid.ui.h:17
 msgid "<i>Enter nutritional information for </i>"
 msgstr "<i>Entre com a informação nutricional para </i>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:18
+#: ../src/gourmand/ui/nutritionDruid.ui.h:18
 msgid "<b>Choose a Density</b>"
 msgstr "<b>Escolha uma densidade</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:19
+#: ../src/gourmand/ui/nutritionDruid.ui.h:19
 msgid "<b>Ingredient Key: </b>"
 msgstr "<b>Chave do ingrediente: </b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:20
+#: ../src/gourmand/ui/nutritionDruid.ui.h:20
 msgid "<b>USDA Item: </b>"
 msgstr "<b>Item USDA: </b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:21
+#: ../src/gourmand/ui/nutritionDruid.ui.h:21
 msgid "Edit _USDA Association"
 msgstr ""
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:22
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
+#: ../src/gourmand/ui/nutritionDruid.ui.h:22
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:1
 msgid "<b>Nutritional Information</b>"
 msgstr "<b>Informação nutricional</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:23
+#: ../src/gourmand/ui/nutritionDruid.ui.h:23
 msgid "Edit _information"
 msgstr "Editar _informação"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:24
+#: ../src/gourmand/ui/nutritionDruid.ui.h:24
 msgid "_Nutritional Information"
 msgstr "Informação _nutricional"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:25
+#: ../src/gourmand/ui/nutritionDruid.ui.h:25
 msgid "Density:"
 msgstr "Densidade:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:26
+#: ../src/gourmand/ui/nutritionDruid.ui.h:26
 msgid "USDA equivalents:"
 msgstr "Equivalentes USDA:"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:27
+#: ../src/gourmand/ui/nutritionDruid.ui.h:27
 msgid "Custom equivalents:"
 msgstr ""
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:28
+#: ../src/gourmand/ui/nutritionDruid.ui.h:28
 msgid "_Density Information"
 msgstr "Informação de _densidade"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:29
+#: ../src/gourmand/ui/nutritionDruid.ui.h:29
 msgid "<b>Known Nutritonal Information</b>"
 msgstr "<b>Informação nutricional conhecida</b>"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:34
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
+#: ../src/gourmand/ui/nutritionDruid.ui.h:34
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:6
 msgid "_Advanced Search"
 msgstr "Pesquisa _avançada"
 
 #. name
 #. stock
-#: ../src/gourmand/ui/nutritionDruid.ui.h:35
+#: ../src/gourmand/ui/nutritionDruid.ui.h:35
 #: ../src/gourmand/plugins/nutritional_information/nutPrefsPlugin.py:13
 #: ../src/gourmand/plugins/nutritional_information/main_plugin.py:14
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:36
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:71
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
 msgid "Nutritional Information"
 msgstr "Informação nutricional"
 
-#: ../src/gourmand/ui/nutritionDruid.ui.h:36
+#: ../src/gourmand/ui/nutritionDruid.ui.h:36
 msgid "I_gnore"
 msgstr "I_gnorar"
 
@@ -1441,27 +1440,27 @@ msgid "Do you really want to do this"
 msgstr "Você realmente quer fazer isso"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:771
-#: ../src/gourmand/importers/importer.py:488
+#: ../src/gourmand/importers/importer.py:482
 msgid "excellent"
 msgstr "ótimo"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:772
-#: ../src/gourmand/importers/importer.py:489
+#: ../src/gourmand/importers/importer.py:483
 msgid "great"
 msgstr "muito bom"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:773
-#: ../src/gourmand/importers/importer.py:490
+#: ../src/gourmand/importers/importer.py:484
 msgid "good"
 msgstr "bom"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:774
-#: ../src/gourmand/importers/importer.py:491
+#: ../src/gourmand/importers/importer.py:485
 msgid "fair"
 msgstr "razoável"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:775
-#: ../src/gourmand/importers/importer.py:493
+#: ../src/gourmand/importers/importer.py:487
 msgid "poor"
 msgstr "fraco"
 
@@ -2153,20 +2152,19 @@ msgstr ""
 "Editar associações com identificador e outros atributos presentes na base de "
 "dados"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:1
 msgid "Key Editor"
 msgstr "Editor de chaves"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:11
 msgid "_Item:"
 msgstr "_Item:"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:12
 msgid "_Key:"
 msgstr "_Chave:"
 
-#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
+#: ../src/gourmand/plugins/key_editor/keyeditor.ui.h:13
 msgid "<b>_Change selected ingredients</b>"
 msgstr "<b>_Alterar os ingredientes selecionados</b>"
 
@@ -2233,7 +2231,7 @@ msgstr "Sempre usar a receita mais antiga"
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:611
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:636
 #: ../src/gourmand/plugins/unit_converter/convertGui.py:170
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:1
 msgid "None"
 msgstr "Nenhum"
 
@@ -2254,39 +2252,39 @@ msgstr "Procurar _receitas duplicadas"
 msgid "Find and remove duplicate recipes"
 msgstr "Encontre e remova receitas duplicadas"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:1
 msgid "Recipes with similar recipe information"
 msgstr "Receitas com informações similares"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:2
 msgid "Recipes with similar ingredients"
 msgstr "Receitas com ingredientes similares"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:3
 msgid "Recipes with similar recipe information and ingredients"
 msgstr "Receitas com informações e ingredientes similares"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:4
 msgid "<b><span size=\"large\">Duplicate recipes</span></b>"
 msgstr "<b><span size=\"large\">Receitas duplicadas</span></b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:5
 msgid "_Include recipes in trash"
 msgstr "_Incluir receitas da lixeira"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:6
 msgid "<i>_Showing:</i>"
 msgstr "<i>_Mostrando:</i>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:7
 msgid "Merge _all duplicates"
 msgstr "Juntar _todas as duplicadas"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:8
 msgid "<b>Merge recipes</b>"
 msgstr "<b>Juntar receitas</b>"
 
-#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
+#: ../src/gourmand/plugins/duplicate_finder/recipeMerger.ui.h:9
 msgid "_Auto-merge"
 msgstr "Juntar _automaticamente"
 
@@ -2322,12 +2320,10 @@ msgid "<i>This change is not reversable.</i>"
 msgstr "<i>Esta mudança não é reversível.</i>"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
 msgid "Field Editor"
 msgstr "Editor de Campo"
 
 #: ../src/gourmand/plugins/field_editor/__init__.py:20
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:2
 msgid "Edit fields across multiple recipes at a time."
 msgstr "Editar campos entre múltiplas receitas simultaneamente."
 
@@ -2372,40 +2368,39 @@ msgstr "Conversor de _unidade"
 msgid "Calculate unit conversions"
 msgstr "Calcular conversões de unidade"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:2
 msgid "Unit Converter"
 msgstr "Conversor de Unidades"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:3
 msgid "<b>From</b>"
 msgstr "<b>De</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:6
 msgid "1"
 msgstr "1"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:8
 msgid "I_tem:"
 msgstr "I_tem:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:9
 msgid "_Density:"
 msgstr "_Densidade:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:10
 msgid "Density _Information"
 msgstr "Informação_de_Densidade"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:11
 msgid "<b>To</b>"
 msgstr "<b>Para</b>"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:12
 msgid "_Result:"
 msgstr "_Resultado:"
 
-#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
+#: ../src/gourmand/plugins/unit_converter/converter.ui.h:13
 msgid "?"
 msgstr "?"
 
@@ -2437,8 +2432,8 @@ msgstr "Página original de %s"
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:270
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:625
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:638
-#: ../src/gourmand/exporters/exporter.py:383
-#: ../src/gourmand/exporters/exporter.py:479
+#: ../src/gourmand/exporters/exporter.py:385
+#: ../src/gourmand/exporters/exporter.py:481
 msgid "optional"
 msgstr "opcional"
 
@@ -2772,7 +2767,6 @@ msgid "Recipe saved in My CookBook MCB file %(file)s."
 msgstr "Receita salva no arquivo MCB do My CookBook %(file)s."
 
 #: ../src/gourmand/plugins/listsaver/shoppingSaverPlugin.py:28
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
 msgid "Shopping List Saver"
 msgstr "Armazenador de listas de compras"
 
@@ -3472,14 +3466,6 @@ msgid "USDA ID#"
 msgstr "Identificação do Ministério da Agricultura"
 
 #: ../src/gourmand/plugins/nutritional_information/shopping_plugin.py:32
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
-#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
 msgid "Tools"
 msgstr "Ferramentas"
 
@@ -3493,23 +3479,23 @@ msgstr "Obter informações nutricionais para a lista atual"
 msgid "Amount for Shopping List"
 msgstr "Montante para a lista de compras"
 
-#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
+#: ../src/gourmand/plugins/nutritional_information/nut_recipe_card_display.ui.h:2
 msgid "Edit _nutritional info"
 msgstr "Editar informações _nutricionais"
 
-#: ../src/gourmand/exporters/exporter.py:215
-#: ../src/gourmand/exporters/exporter.py:217
-#: ../src/gourmand/exporters/exporter.py:538
+#: ../src/gourmand/exporters/exporter.py:216
+#: ../src/gourmand/exporters/exporter.py:218
 #: ../src/gourmand/exporters/exporter.py:540
+#: ../src/gourmand/exporters/exporter.py:542
 msgid "stars"
 msgstr "estrelas"
 
-#: ../src/gourmand/exporters/exporter.py:577
+#: ../src/gourmand/exporters/exporter.py:579
 #, python-format
 msgid "Exported %(number)s of %(total)s recipes"
 msgstr "Exportadas %(number)s de %(total)s receitas"
 
-#: ../src/gourmand/exporters/exporter.py:597
+#: ../src/gourmand/exporters/exporter.py:599
 msgid "Export complete."
 msgstr "Exportação completa."
 
@@ -3629,18 +3615,18 @@ msgstr "Todos os arquivos importáveis"
 msgid "Imported %s recipes."
 msgstr "%s receitas importadas."
 
-#: ../src/gourmand/importers/importer.py:188
+#: ../src/gourmand/importers/importer.py:187
 msgid "serving"
 msgid_plural "servings"
 msgstr[0] "porção"
 msgstr[1] "porções"
 
-#: ../src/gourmand/importers/importer.py:269
+#: ../src/gourmand/importers/importer.py:263
 #, python-format
 msgid "Imported %s of %s recipes."
 msgstr "Importado %s de %s receitas."
 
-#: ../src/gourmand/importers/importer.py:492
+#: ../src/gourmand/importers/importer.py:486
 msgid "okay"
 msgstr "Ok"
 
@@ -3787,7 +3773,7 @@ msgstr "Erro %s: %s"
 msgid "Traceback"
 msgstr "Traceback"
 
-#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:629
+#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:608
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "segundo"
@@ -3798,7 +3784,7 @@ msgstr[1] "segundos"
 msgid "min"
 msgstr "min"
 
-#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:628
+#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:607
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minuto"
@@ -3809,25 +3795,25 @@ msgstr[1] "minutos"
 msgid "hrs."
 msgstr "hs."
 
-#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:627
+#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hora"
 msgstr[1] "horas"
 
-#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:626
+#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:605
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dia"
 msgstr[1] "dias"
 
-#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:625
+#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:604
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "semana"
 msgstr[1] "semanas"
 
-#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:624
+#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:603
 msgid "month"
 msgid_plural "months"
 msgstr[0] "mês"
@@ -3836,7 +3822,7 @@ msgstr[1] "meses"
 #. 'millennia':lambda decades: ngettext("millenium","millenia",round(decades))
 #. 'centuries':lambda decades: ngettext("century","centuries",round(decades))
 #. 'decades':lambda decades: ngettext("decade","decades",round(decades))
-#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:623
+#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:602
 msgid "year"
 msgid_plural "years"
 msgstr[0] "ano"
@@ -3848,211 +3834,285 @@ msgstr[1] "anos"
 #. You can of course make your language only use commas or
 #. ands or spaces or whatever you like by translating both
 #. ", " and " and " with the same string.
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid " and "
 msgstr " e "
 
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid ", "
 msgstr ", "
 
-#: ../src/gourmand/convert.py:683
+#: ../src/gourmand/convert.py:662
 msgid " "
 msgstr " "
 
-#: ../src/gourmand/convert.py:813
+#: ../src/gourmand/convert.py:792
 msgid "and"
 msgstr "e"
 
 #. Note: the order matters on this range regular expression in order
 #. for it to properly split things like 1 - to - 3, which really do
 #. show up sometimes.
-#: ../src/gourmand/convert.py:836
+#: ../src/gourmand/convert.py:815
 msgid "to"
 msgstr "para"
 
-#. i=InteractiveConverter()
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
-msgid "Browse Recipes"
-msgstr "Navegar pelas receitas"
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:2
-msgid "Selecting recipes by browsing by category, cuisine, etc."
-msgstr "Selecione receitas navegando por categorias, tipo de cozinha, etc."
-
-#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
-msgid "Main"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Main);"
 msgstr "Principal"
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
-msgid "Find duplicate recipes"
-msgstr "Procurar receitas duplicadas"
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Selecting recipes by browsing by category, cuisine, etc.);"
+msgstr "Selecione receitas navegando por categorias, tipo de cozinha, etc."
 
-#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:2
-msgid "A wizard to find and remove or merge duplicate recipes."
+#. i=InteractiveConverter()
+#: ../data/plugins/browse_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Browse Recipes);"
+msgstr "Navegar pelas receitas"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:5
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:5
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:5
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:5
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:5
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Tools);"
+msgstr "Ferramentas"
+
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "A wizard to find and remove or merge duplicate recipes.);"
 msgstr "Um assistente para encontrar e remover ou juntar receitas duplicadas."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#: ../data/plugins/duplicate_finder.gourmet-plugin.in.h:1
 #, fuzzy
-msgid "EPub Export"
-msgstr "Exportar para PDF"
+msgid "Find duplicate recipes);"
+msgstr "Procurar receitas duplicadas"
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:2
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:3
 #, fuzzy
-msgid "Create an epub book from recipes."
-msgstr "Criar páginas web a partir de receitas."
+msgid "Edit fields across multiple recipes at a time.);"
+msgstr "Editar campos entre múltiplas receitas simultaneamente."
 
-#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
-#: ../data/plugins/utf16.gourmet-plugin.in.h:3
-msgid "Importer/Exporter"
+#: ../data/plugins/field_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Field Editor);"
+msgstr "Editor de Campo"
+
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:5
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:5
+#: ../data/plugins/utf16.gourmet-plugin.in.h:5
+#, fuzzy
+msgid "Importer/Exporter);"
 msgstr "Importação/Exportação"
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
-msgid "Gourmet XML Import and Export"
-msgstr "Importar e exportar arquivos XML do Gourmet"
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Create an epub book from recipes.);"
+msgstr "Criar páginas web a partir de receitas."
 
-#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/epub.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "EPub Export);"
+msgstr "Exportar para PDF"
+
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Import and Export recipes as Gourmet XML files, suitable for backup or "
-"exchange with other Gourmet users."
+"exchange with other Gourmet users.);"
 msgstr ""
 "Importação e exportação de receitas como arquivos XML do Gourmet, adequados "
 "para backup ou troca com outros usuários do Gourmet."
 
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
-msgid "KRecipe import"
-msgstr "Importação do KRecipe"
+#: ../data/plugins/import_export/gxml.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Gourmet XML Import and Export);"
+msgstr "Importar e exportar arquivos XML do Gourmet"
 
-#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Krecipe program."
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Krecipe program.);"
 msgstr "Importar arquivos do programa Krecipe."
 
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
-msgid "Mastercook import"
-msgstr "Importação do Mastercook"
+#: ../data/plugins/import_export/krecipe_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "KRecipe import);"
+msgstr "Importação do KRecipe"
 
-#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:2
-msgid "Import files from the Mastercook program."
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Import files from the Mastercook program.);"
 msgstr "Importar arquivos do programa Mastercook."
 
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
-msgid "My CookBook Import and Export"
-msgstr "Importação e exportação do My CookBook"
+#: ../data/plugins/import_export/mastercook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mastercook import);"
+msgstr "Importação do Mastercook"
 
-#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Import and Export recipes as My CookBook XML files, suitable for backup or "
-"exchange with other My CookBook users."
+"exchange with other My CookBook users.);"
 msgstr ""
 "Importação e exportação de receitas como arquivos XML do My CookBook, "
 "adequados para backup ou troca com outros usuários do My CookBook."
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
-msgid "Mealmaster (tm) Export"
-msgstr "Exportação para MealMaster ®"
+#: ../data/plugins/import_export/mycookbook_plugin.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "My CookBook Import and Export);"
+msgstr "Importação e exportação do My CookBook"
 
-#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:2
-msgid "Export recipes as mealmaster text files"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Export recipes as mealmaster text files);"
 msgstr "Exportar receitas como arquivos texto do mealmaster"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
-msgid "Printing & PDF Export"
-msgstr "Impressão e exportação em PDF"
+#: ../data/plugins/import_export/mealmaster.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Mealmaster (tm) Export);"
+msgstr "Exportação para MealMaster ®"
 
-#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Print recipes or export them as PDF; this plugin allows a variety of page "
-"layouts."
+"layouts.);"
 msgstr ""
 "Imprimir receitas ou exportá-las para arquivos PDF; este plugin permite "
 "vários layouts de página."
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
-msgid "Plain Text Guided Import"
-msgstr "Importação orientada à arquivos de texto puro"
+#: ../data/plugins/import_export/pdf.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Printing & PDF Export);"
+msgstr "Impressão e exportação em PDF"
 
-#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
-"Help user mark up and import plain text. Also provides plain text export."
+"Help user mark up and import plain text. Also provides plain text export.);"
 msgstr ""
 "Ajuda o usuário a identificar trechos na importação de texto simples. Também "
 "fornece exportação de texto simples."
 
-#: ../data/plugins/key_editor.gourmet-plugin.in.h:2
+#: ../data/plugins/import_export/plaintext.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Plain Text Guided Import);"
+msgstr "Importação orientada à arquivos de texto puro"
+
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit ingredient keys (unique identifiers for ingredients, used "
-"for consolidating items on shopping lists)."
+"for consolidating items on shopping lists).);"
 msgstr ""
 "Definir e editar chaves de ingredientes (identificadores únicos de "
 "ingredientes, usados para juntar itens nas listas de compras)"
 
-#: ../data/plugins/listsaver.gourmet-plugin.in.h:2
-msgid "Save shopping lists as recipes for future use."
+#: ../data/plugins/key_editor.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Key Editor);"
+msgstr "Editor de chaves"
+
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Save shopping lists as recipes for future use.);"
 msgstr "Salvar listas de compras de receitas para uso futuro."
 
-#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:2
-msgid "Calculate nutritional information for recipes."
+#: ../data/plugins/listsaver.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping List Saver);"
+msgstr "Armazenador de listas de compras"
+
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Calculate nutritional information for recipes.);"
 msgstr "Calcular informações nutricionais de receitas."
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
-msgid "Shopping Category Editor"
-msgstr "Editor de categoria de compras"
+#: ../data/plugins/nutritional_information.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Nutritional Information);"
+msgstr "Informação nutricional"
 
-#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:2
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Assign and edit shopping categories for ingredients from within the recipe "
-"editor."
+"editor.);"
 msgstr ""
 "Atribuir e editar categorias de compras para os ingredientes dentro do "
 "gestor de receitas."
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
-msgid "Spell Checking"
-msgstr "Verificação ortográfica"
+#: ../data/plugins/shopping_associations.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Shopping Category Editor);"
+msgstr "Editor de categoria de compras"
 
-#: ../data/plugins/spellcheck.gourmet-plugin.in.h:2
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Adds spell checking to paragraph length text boxes in recipe entry "
-"(Instructions, Notes)."
+"(Instructions, Notes).);"
 msgstr ""
 "Adiciona verificação ortográfica em caixas de texto de várias linhas (Modo "
 "de preparo, Notas)."
 
-#: ../data/plugins/unit_converter.gourmet-plugin.in.h:2
-msgid "Provides a simple unit calculator."
+#: ../data/plugins/spellcheck.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Spell Checking);"
+msgstr "Verificação ortográfica"
+
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Provides a simple unit calculator.);"
 msgstr "Provê uma calculadora simples de unidades."
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
-msgid "Unit Display Preferences"
-msgstr "Preferências de exibição de unidades"
+#: ../data/plugins/unit_converter.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Converter);"
+msgstr "Conversor de Unidades"
 
-#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:2
-msgid "Allows you to always use metric (or imperial) units for display."
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:3
+#, fuzzy
+msgid "Allows you to always use metric (or imperial) units for display.);"
 msgstr ""
 "Permite que sempre sejam usadas unidades métricas (ou imperiais) para "
 "exibição."
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:1
-msgid "Check for Unicode-16 in text files"
-msgstr "Verificar a existência de caracteres Unicode-16 nos arquivos texto"
+#: ../data/plugins/unit_display_prefs.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Unit Display Preferences);"
+msgstr "Preferências de exibição de unidades"
 
-#: ../data/plugins/utf16.gourmet-plugin.in.h:2
+#: ../data/plugins/utf16.gourmet-plugin.in.h:3
+#, fuzzy
 msgid ""
 "Enable this if your utf-16 text files aren't importing cleanly into Gourmet. "
 "Disable this if you never use UTF16 and you're constantly being annoyed by "
-"the 'Encoding' dialog when you import files."
+"the 'Encoding' dialog when you import files.);"
 msgstr ""
 "Habilite isto se seus arquivos de texto UTF-16 não são importados "
 "corretamente no Gourmet. Desative isso se você nunca usa UTF16 e está sendo "
 "constantemente incomodado com diálogo \"Codificação\" ao importar arquivos."
+
+#: ../data/plugins/utf16.gourmet-plugin.in.h:1
+#, fuzzy
+msgid "Check for Unicode-16 in text files);"
+msgstr "Verificar a existência de caracteres Unicode-16 nos arquivos texto"
 
 #~ msgid "E-mail selected recipe"
 #~ msgstr "Enviar a receita selecionada por e-mail"
