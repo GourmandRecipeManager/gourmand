@@ -17,7 +17,7 @@
         <child>
           <object class="GtkAction" id="view_recipe1">
             <property name="name">view_recipe1</property>
-            <property name="tooltip" translatable="yes">Jump to recipe in Recipe Card vew</property>
+            <property name="tooltip" translatable="yes">Jump to recipe in Recipe Card view</property>
             <property name="label" translatable="yes">View Re_cipe</property>
           </object>
         </child>
