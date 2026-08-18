@@ -1,0 +1,24 @@
+name: EnchantDependencies
+buildsystem: simple
+build-commands: []
+modules:
+  - name: Enchant
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/rrthomas/enchant/releases/download/v2.8.16/enchant-2.8.16.tar.gz
+        sha256: d73162b5eff401a6397e1215e2b103bcef83f921c396c7f6b1394d2450d124e2
+  - name: HunSpell
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/hunspell/hunspell/releases/download/v1.7.2/hunspell-1.7.2.tar.gz
+        sha256: 11ddfa39afe28c28539fe65fc4f1592d410c1e9b6dd7d8a91ca25d85e9ec65b8
+  - name: PyEnchant
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps pyenchant-*.whl
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/38/b0/35926bad6885fb7bc24aa7e1b45e6d86540c6c57ee4abc4fed1ef58d4ec0/pyenchant-3.3.0-py3-none-any.whl
+        sha256: 3da00b1d01314d85aac733bb997415d7a3e875666dc81735ddcf320aa36b7a70
