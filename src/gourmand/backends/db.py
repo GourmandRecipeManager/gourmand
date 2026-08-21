@@ -258,6 +258,7 @@ class RecData(Pluggable):
         self.setup_recipe_table()
         self.setup_category_table()
         self.setup_ingredient_table()
+        self.setup_cuisine_table()
 
     def setup_info_table(self):
         self.info_table = Table(
@@ -348,6 +349,26 @@ class RecData(Pluggable):
             pass
 
         self._setup_object_for_table(self.categories_table, Category)
+
+    def setup_cuisine_table(self):
+        """Table to hold cuisine information.
+
+        Linked to Recipe table with recipe_id foreign key.  The value of
+        cuisine can be a country, like Indian or Thai, or a type of food
+        like Mom's Brunch Recipes or something like that.
+        """
+        self.cuisine_table = Table(
+            "cuisine",
+            self.metadata,
+            Column("id", Integer(), primary_key=True),
+            Column("recipe_id", Integer, ForeignKey("recipe.id"), **{}),
+            Column("cuisine", Text(), **{}),
+        )
+
+        class Cuisine(object):
+            pass
+
+        self._setup_object_for_table(self.cuisine_table, Cuisine)
 
     def setup_ingredient_table(self):
         self.ingredients_table = Table(
@@ -751,7 +772,7 @@ class RecData(Pluggable):
     def fetch_len(self, table, **criteria):
         """Return the number of rows in table that match criteria"""
         if criteria:
-            return select(func.count(criteria)).select_from(table).scalar()
+            return select(func.count(**criteria)).select_from(table).scalar()
         else:
             return select(func.count()).select_from(table).scalar()
 
@@ -779,6 +800,9 @@ class RecData(Pluggable):
         return self.nutrition_table.select(where_statement).execute().fetchall()
 
     def __get_joins(self, searches):
+        """Based on the columns selected for make sure joins will occur
+        between the recipe_table and the appropriate column of another table.
+        """
         joins = []
         for s in searches:
             if isinstance(s, tuple):
@@ -787,6 +811,11 @@ class RecData(Pluggable):
                 if s["column"] == "category":
                     if self.categories_table not in joins:
                         joins.append(self.categories_table, self.categories_table.c.id, self.recipe_table.c.id)
+                # Cuisine is its own table now and needs a reference to it and
+                # the columns to use for the join itself.
+                elif s["column"] == "cuisine":
+                    if self.cuisine_table not in joins:
+                        joins.append(self.cuisine_table, self.cuisine_table.c.id, self.recipe_table.c.id)
                 elif s["column"] == "ingredient":
                     if self.ingredients_table not in joins:
                         joins.append(self.ingredients_table)
@@ -806,6 +835,10 @@ class RecData(Pluggable):
             if crit["column"] == "category":
                 subtable = self.categories_table
                 col = subtable.c.category
+            # Define how to access the cuisine attribute
+            elif crit["column"] == "cuisine":
+                subtable = self.cuisine_table
+                col = subtable.c.cuisine
             elif crit["column"] in ["ingkey", "item"]:
                 subtable = self.ingredients_table
                 col = getattr(subtable.c, crit["column"])
@@ -839,7 +872,7 @@ class RecData(Pluggable):
     def search_recipes(self, searches, sort_by: Optional[List[Tuple]] = None):
         """Search recipes for columns of values.
 
-        "category" and "ingredient" are handled magically
+        "category", "cuisine" and "ingredient" are handled magically
         sort_by is a list of tuples (column,1) [ASCENDING] or (column,-1) [DESCENDING]
         """
         # TODO: convert `sort_by` to be a dict.
@@ -867,11 +900,28 @@ class RecData(Pluggable):
                     criteria,
                     distinct=True,
                     from_obj=[sqlalchemy.outerjoin(self.recipe_table, self.categories_table)],
-                    order_by=make_order_by(sort_by, self.recipe_table, join_tables=[self.categories_table]),
+                    order_by=make_order_by(sort_by, self.categories_table, join_tables=[self.recipe_table]),
                 )
                 .execute()
                 .fetchall()
             )
+
+        # Modelled off of category search, need to play with to understand better.
+        # TODO: Figure out how it works.
+        elif "cuisine" in sort_keys:
+            return (
+                sqlalchemy.select(
+                    [c for c in self.recipe_table.c],
+                    criteria,
+                    distinct=True,
+                    from_obj=[sqlalchemy.outerjoin(self.recipe_table, self.cuisine_table)],
+                    order_by=make_order_by(sort_by, self.cuisine_table, join_tables=[self.recipe_table]
+),
+                )
+                .execute()
+                .fetchall()
+            )
+
         else:
             return (
                 sqlalchemy.select(
@@ -895,6 +945,15 @@ class RecData(Pluggable):
             criteria = make_simple_select_arg(criteria, table)[0]
         else:
             criteria = None
+        if colname == "cuisine" and table == self.cuisine_table:
+            # Only use cuisine entries for recipes that aren't deleted
+            results = (sqlalchemy.select([getattr(table.c, colname)], distinct=True)
+                       .join(self.recipe_table,
+                             self.recipe_table.c.id == self.cuisine_table.c.recipe_id)
+                       .where(self.recipe_table.c.deleted == 0)
+                       .execute().fetchall())
+            retval = [r[0] for r in results]
+            return [x for x in retval if x is not None]
         if colname == "category" and table == self.recipe_table:
             print("WARNING: you are using a hack to access category values.")
             table = self.categories_table
@@ -1162,10 +1221,41 @@ class RecData(Pluggable):
                 if c not in curcats:
                     self.do_add_cat({"recipe_id": rec.id, "category": c})
             del dic["category"]
+        if "cuisine" in dic:
+            new_cuisine = dic["cuisine"].split(", ")
+            # Make sure our cuisines are not blank
+            new_cuisine = [x for x in new_cuisine if x]
+            cur_cuisine = self.get_cuisines(rec)
+            # Avoid adding the same cuisine multiple times to a recipe
+            for c in new_cuisine:
+                if c not in cur_cuisine:
+                    self.do_add_cuisine({"recipe_id": rec.id, "cuisine": c})
+            # Remove cuisines that no longer apply
+            for old_cuisine in cur_cuisine:
+                if old_cuisine not in new_cuisine:
+                    self.delete_cuisine(rec.id, old_cuisine)
+            # Cuisine is handled in a separate table, delete from dictionary
+            del dic["cuisine"]
         debug("do modify rec", 3)
         retval = self.do_modify_rec(rec, dic)
         self.update_hashes(rec)
         return retval
+
+    def migrate_cuisines_to_cuisine_table(self):
+        """Copy relevant cuisine from recipe table to cuisine table"""
+        # Iterate through all non-deleted recipes
+        all_recipes = self.fetch_all(self.recipe_table, deleted=False)
+        for current_rec in all_recipes:
+            # Add cuisine to the new cuisine table if it is not there already
+            old_cuisine = current_rec.cuisine
+            new_cuisine = self.get_cuisines(current_rec.id)
+            if ((old_cuisine) and (old_cuisine not in new_cuisine)):
+                self.do_add_cuisine({"recipe_id": current_rec.id, "cuisine": old_cuisine})
+                debug(f"Adding {old_cuisine} as a cuisine to {current_rec._data[1]}", 1)
+
+            # Remove from 'old' table once it is transferred over.
+            dic = {"cuisine": None}
+            self.do_modify_rec(current_rec, dic)
 
     def validate_recdic(self, recdic):
         if "last_modified" not in recdic:
@@ -1269,6 +1359,10 @@ class RecData(Pluggable):
         if dic.get('category'):
             cats = [v.strip() for v in dic["category"].split(",") if v]
             del dic["category"]
+        cuisine=[]
+        if "cuisine" in dic:
+            cuisine = [v.strip() for v in dic["cuisine"].split(",") if v]
+            # del dic["cuisine"] # Don't delete until fully switched over
         if "servings" in dic:
             if "yields" in dic:
                 del dic["yields"]
@@ -1299,6 +1393,10 @@ class RecData(Pluggable):
             for c in cats:
                 if c:
                     self.do_add_cat({"recipe_id": ID, "category": c.strip()})
+            # Add cuisines to database, take care not to add whitespace or NULL
+            for cu in cuisine:
+                if cu:
+                    self.do_add_cuisine({"recipe_id": ID, "cuisine": cu.strip()})
             self.update_hashes(ret)
             return ret
 
@@ -1393,6 +1491,10 @@ class RecData(Pluggable):
     def do_add_ing(self, dic):
         return self.do_add_and_return_item(self.ingredients_table, dic, id_prop="id")
 
+    def do_add_cuisine(self, dic):
+        """Add cuisine values in dic to cuisine table"""
+        return self.do_add_and_return_item(self.cuisine_table, dic)
+
     def do_add_cat(self, dic):
         return self.do_add_and_return_item(self.categories_table, dic)
 
@@ -1436,7 +1538,7 @@ class RecData(Pluggable):
                 print("d=", d, "id_col=", id_col)
                 print(e)
                 raise
-            select = table.select(getattr(table.c, id_col) == getattr(row, id_col))
+            select = table.select(getattr(table.c, id_col) == row_val)
         else:  # Saving the recipe as a whole
             table.update().execute(**d)
             select = table.select()
@@ -1451,6 +1553,20 @@ class RecData(Pluggable):
         else:
             id = rec
         return self.fetch_all(self.ingredients_table, recipe_id=id, deleted=False)
+
+    def get_cuisines(self, rec):
+        """Handed rec, return a list of cuisines.
+
+        rec should be an ID or an object with an attribute ID)"""
+        if hasattr(rec, "id"):
+            id = rec.id
+        else:
+            id = rec
+        results = self.fetch_all(self.cuisine_table, recipe_id=id)
+        cuisines = [result.cuisine or "" for result in results]
+        while "" in cuisines:
+            cuisines.remove("")
+        return cuisines
 
     def get_cats(self, rec):
         svw = self.fetch_all(self.categories_table, recipe_id=rec.id)
@@ -1500,14 +1616,25 @@ class RecData(Pluggable):
         return self.fetch_one(self.recipe_table, id=id)
 
     def delete_rec(self, rec):
-        """Delete recipe object rec from our database."""
+        """Delete recipe object rec from our database.
+
+        Note: This happens upon permanent deletion, not the first time a recipe
+        is deleted from the main index.
+        """
         if not isinstance(rec, int):
             rec = rec.id
         debug("deleting recipe ID %s" % rec, 0)
         self.delete_by_criteria(self.recipe_table, {"id": rec})
         self.delete_by_criteria(self.categories_table, {"recipe_id": rec})
         self.delete_by_criteria(self.ingredients_table, {"recipe_id": rec})
+        self.delete_by_criteria(self.cuisine_table, {"recipe_id": rec})
         debug("deleted recipe ID %s" % rec, 0)
+
+    def delete_cuisine(self, recipe_id, cuisine_name):
+        """Remove the specified cuisine from the specified recipe"""
+        self.delete_by_criteria(self.cuisine_table, {"recipe_id": recipe_id,
+                                                     "cuisine": cuisine_name})
+        debug(f"Deleted cuisine: {cuisine_name} from recipe #: {recipe_id}!")
 
     def new_rec(self):
         """Create and return a new, empty recipe"""
@@ -1772,6 +1899,9 @@ class RecData(Pluggable):
         for k in keys:
             if k == "category":
                 v = ", ".join(self.get_cats(obj))
+            # Supply cuisines as a comma separated list
+            if k == "cuisine":
+                v = ", ".join(self.get_cuisines(obj))
             else:
                 v = getattr(obj, k)
             orig_dic[k] = v
