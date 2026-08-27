@@ -1,14 +1,39 @@
 import re
 import shutil
 import time
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import sqlalchemy
-import sqlalchemy.orm
 from gi.repository import Gtk
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, LargeBinary, Numeric, String, Table, Text, event, func, select
-from sqlalchemy.sql import and_, case, or_
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    LargeBinary,
+    MetaData,
+    Numeric,
+    String,
+    Table,
+    Text,
+    and_,
+    asc,
+    case,
+    create_engine,
+    delete,
+    desc,
+    event,
+    func,
+    insert,
+    or_,
+    select,
+    text,
+    update,
+)
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import registry
 
 import gourmand.__version__
 import gourmand.gglobals as gglobals
@@ -22,7 +47,7 @@ from gourmand.keymanager import KeyManager
 from gourmand.plugin import DatabasePlugin
 from gourmand.plugin_loader import Pluggable, pluggable_method
 
-Session = sqlalchemy.orm.sessionmaker()
+mapper_registry = registry()
 
 
 def map_type_to_sqlalchemy(typ):
@@ -97,7 +122,7 @@ def make_order_by(sort_by, table, count_by=None, join_tables=None):
     ret = []
     for col, direction in sort_by:
         if col == "count" and not hasattr(table.c, "count"):
-            col = sqlalchemy.func.count(getattr(table.c, count_by))
+            col = func.count(getattr(table.c, count_by))
         else:
             if hasattr(table.c, col):
                 col = getattr(table.c, col)
@@ -109,20 +134,18 @@ def make_order_by(sort_by, table, count_by=None, join_tables=None):
                         col = getattr(t.c, col)
                         break
                 if broken:
-                    raise ValueError("No such column for tables %s %s: %s" % (table, join_tables, col))
+                    raise ValueError(f"No such column for tables {table} {join_tables}: {col}")
         if isinstance(col.type, Text):
             # Sort nulls last rather than first using case statement...
             col = case(
-                [
-                    (col is None, '"%s"' % "z" * 20),
-                    (col == "", '"%s"' % "z" * 20),
-                ],
+                (col.is_(None), '"%s"' % "z" * 20),
+                (col == "", '"%s"' % "z" * 20),
                 else_=func.lower(col),
             )
-        if direction == 1:  # Ascending
-            ret.append(sqlalchemy.asc(col))
+        if direction == 1:
+            ret.append(asc(col))
         else:
-            ret.append(sqlalchemy.desc(col))
+            ret.append(desc(col))
     return ret
 
 
@@ -179,11 +202,12 @@ class RecData(Pluggable):
         self.modify_hooks = []
         self.delete_hooks = []
         self.add_ing_hooks = []
+
         timer = TimeAction("initialize_connection + setup_tables", 2)
         self.initialize_connection()
-        Pluggable.__init__(self, [DatabasePlugin])
+        super().__init__([DatabasePlugin])
         self.setup_tables()
-        self.metadata.create_all()
+        self.metadata.create_all(self.db)
         self.update_version_info(gourmand.__version__.version)
         self._created = True
         timer.end()
@@ -191,67 +215,66 @@ class RecData(Pluggable):
     # Basic setup functions
 
     def initialize_connection(self):
-        """Initialize our database connection.
-
-        This should also set self.new_db accordingly"""
+        """Initialize our database connection."""
         debug("Initializing DB connection", 1)
-        self.new_db = False  # TODO: this bool can be refactored out
+        self.new_db = False
 
+        connect_args = {}
         if self.url.startswith("mysql"):
-            self.db = sqlalchemy.create_engine(self.url, connect_args={"charset": "utf8"})
-        else:
-            self.db = sqlalchemy.create_engine(self.url)
+            connect_args["charset"] = "utf8mb4"
+
+        self.db = create_engine(self.url, connect_args=connect_args)
 
         if self.url.startswith("sqlite"):
-            # Workaround to create REGEXP function in sqlite
-            # New way of adding custom function ensures we create a custom
-            # function for every connection created and fixes problems
-            # using regexp. Based on code found here:
-            # http://stackoverflow.com/questions/8076126/have-an-sqlalchemy-sqlite-create-function-issue-with-datetime-representation
             def regexp(expr, item):
                 if item:
                     return re.search(expr, item, re.IGNORECASE) is not None
-                else:
-                    return False
+                return False
 
             @event.listens_for(self.db, "connect")
             def on_connect(dbapi_con, con_record):
                 dbapi_con.create_function("REGEXP", 2, regexp)
 
-        self.base_connection = self.db.connect()
-        self.base_connection.begin()
-        self.metadata = sqlalchemy.MetaData(self.db)
-        # Be noisy... (uncomment for debugging/fiddling)
-        # self.metadata.bind.echo = True
-        Session.configure(bind=self.db)
+        self.metadata = MetaData()
         debug("Done initializing DB connection", 1)
 
     def save(self):
         """Save our database (if there is a separate 'save')"""
         row = self.fetch_one(self.info_table)
         if row:
-            self.do_modify(self.info_table, row, {"last_access": time.time()}, id_col=None)
+            self.do_modify(
+                self.info_table,
+                row,
+                {"last_access": time.time()},
+                id_col=None,
+            )
         else:
             self.do_add(self.info_table, {"last_access": time.time()})
 
     def _setup_object_for_table(self, table, klass):
         self.__table_to_object__[table] = klass
-        # print 'Mapping ',repr(klass),'->',repr(table)
-        if True in [col.primary_key for col in table.columns]:
-            sqlalchemy.orm.mapper(klass, table)
+
+        if any(col.primary_key for col in table.columns):
+            klass_path = f"{klass.__module__}.{klass.__name__}"
+            mapped_paths = {
+                f"{m.class_.__module__}.{m.class_.__name__}"
+                for m in mapper_registry.mappers
+            }
+
+            if klass_path not in mapped_paths:
+                mapper_registry.map_imperatively(klass, table)
         else:
-            # if there's no primary key...
-            raise Exception("All tables need a primary key -- specify 'rowid'/Integer/Primary Key in table spec for %s" % table)
+            raise Exception(
+                "All tables need a primary key -- specify "
+                f"'rowid'/Integer/Primary Key in table spec for {table}"
+            )
 
     @pluggable_method
     def setup_tables(self):
-        """
-        Subclasses should do any necessary adjustments/tweaking before calling
-        this function."""
-        # Info table - for versioning info
+        """Subclasses do adjustments/tweaking before calling this."""
         self.__table_to_object__ = {}
         self.setup_base_tables()
-        self.setup_shopper_tables()  # could one day be part of a plugin
+        self.setup_shopper_tables()
 
     def setup_base_tables(self):
         self.setup_info_table()
@@ -263,74 +286,66 @@ class RecData(Pluggable):
         self.info_table = Table(
             "info",
             self.metadata,
-            Column("version_super", Integer(), **{}),  # three part version numbers 2.1.10, etc. 1.0.0
-            Column("version_major", Integer(), **{}),
-            Column("version_minor", Integer(), **{}),
-            Column("last_access", Integer(), **{}),
-            Column("rowid", Integer(), **{"primary_key": True}),
+            Column("version_super", Integer()),
+            Column("version_major", Integer()),
+            Column("version_minor", Integer()),
+            Column("last_access", Integer()),
+            Column("rowid", Integer(), primary_key=True),
+            extend_existing=True,
         )
 
-        class Info(object):
+        class Info:
             pass
 
         self._setup_object_for_table(self.info_table, Info)
+
         self.plugin_info_table = Table(
             "plugin_info",
             self.metadata,
-            Column("plugin", Text(), **{}),
-            # three part version numbers
-            # 2.1.10, etc. 1.0.0 -- these
-            # contain the Gourmet version
-            # at the last time of
-            # plugging-in
-            Column("id", Integer(), **{"primary_key": True}),
-            Column("version_super", Integer(), **{}),
-            Column("version_major", Integer(), **{}),
-            Column("version_minor", Integer(), **{}),
-            # Stores the last time the plugin was used...
-            Column("plugin_version", String(length=32), **{}),
+            Column("plugin", Text()),
+            Column("id", Integer(), primary_key=True),
+            Column("version_super", Integer()),
+            Column("version_major", Integer()),
+            Column("version_minor", Integer()),
+            Column("plugin_version", String(length=32)),
+            extend_existing=True,
         )
 
-        class PluginInfo(object):
+        class PluginInfo:
             pass
 
         self._setup_object_for_table(self.plugin_info_table, PluginInfo)
+
 
     def setup_recipe_table(self):
         self.recipe_table = Table(
             "recipe",
             self.metadata,
-            Column("id", Integer(), **{"primary_key": True}),
-            Column("title", Text(), **{}),
-            Column("instructions", Text(), **{}),
-            Column("modifications", Text(), **{}),
-            Column("cuisine", Text(), **{}),
-            Column("rating", Integer(), **{}),
-            Column("description", Text(), **{}),
-            Column("source", Text(), **{}),
-            Column("preptime", Integer(), **{}),
-            Column("cooktime", Integer(), **{}),
-            # Note: we're leaving servings
-            # around as a legacy column... it is
-            # replaced by yields/yield_unit, but
-            # update is much easier if it's
-            # here, and it doesn't do much harm
-            # to have it around.
-            Column("servings", Float(), **{}),
-            Column("yields", Float(), **{}),
-            Column("yield_unit", String(length=32), **{}),
-            Column("image", LargeBinary(), **{}),
-            Column("thumb", LargeBinary(), **{}),
-            Column("deleted", Boolean(), **{}),
-            # A hash for uniquely identifying a recipe (based on title etc)
-            Column("recipe_hash", String(length=32), **{}),
-            # A hash for uniquely identifying a recipe (based on ingredients)
-            Column("ingredient_hash", String(length=32), **{}),
-            Column("link", Text(), **{}),  # A field for a URL -- we ought to know about URLs
-            Column("last_modified", Integer(), **{}),
-        )  # RECIPE_TABLE_DESC
+            Column("id", Integer(), primary_key=True),
+            Column("title", Text()),
+            Column("instructions", Text()),
+            Column("modifications", Text()),
+            Column("cuisine", Text()),
+            Column("rating", Integer()),
+            Column("description", Text()),
+            Column("source", Text()),
+            Column("preptime", Integer()),
+            Column("cooktime", Integer()),
+            # Note: servings is a legacy column replaced by yields.
+            Column("servings", Float()),
+            Column("yields", Float()),
+            Column("yield_unit", String(length=32)),
+            Column("image", LargeBinary()),
+            Column("thumb", LargeBinary()),
+            Column("deleted", Boolean()),
+            Column("recipe_hash", String(length=32)),
+            Column("ingredient_hash", String(length=32)),
+            Column("link", Text()),
+            Column("last_modified", Integer()),
+            extend_existing=True,
+        )
 
-        class Recipe(object):
+        class Recipe:
             pass
 
         self._setup_object_for_table(self.recipe_table, Recipe)
@@ -340,11 +355,12 @@ class RecData(Pluggable):
             "categories",
             self.metadata,
             Column("id", Integer(), primary_key=True),
-            Column("recipe_id", Integer, ForeignKey("recipe.id"), **{}),  # recipe ID
-            Column("category", Text(), **{}),  # Category ID
-        )  # CATEGORY_TABLE_DESC
+            Column("recipe_id", Integer, ForeignKey("recipe.id")),
+            Column("category", Text()),
+            extend_existing=True,
+        )
 
-        class Category(object):
+        class Category:
             pass
 
         self._setup_object_for_table(self.categories_table, Category)
@@ -354,45 +370,44 @@ class RecData(Pluggable):
             "ingredients",
             self.metadata,
             Column("id", Integer(), primary_key=True),
-            Column("recipe_id", Integer, ForeignKey("recipe.id"), **{}),
-            Column("refid", Integer, ForeignKey("recipe.id"), **{}),
-            Column("unit", Text(), **{}),
-            Column("amount", Float(), **{}),
-            Column("rangeamount", Float(), **{}),
-            Column("item", Text(), **{}),
-            Column("ingkey", Text(), **{}),
-            Column("optional", Boolean(), **{}),
-            # Integer so we can distinguish unset from False
-            Column("shopoptional", Integer(), **{}),
-            Column("inggroup", Text(), **{}),
-            Column("position", Integer(), **{}),
-            Column("deleted", Boolean(), **{}),
+            Column("recipe_id", Integer, ForeignKey("recipe.id")),
+            Column("refid", Integer, ForeignKey("recipe.id")),
+            Column("unit", Text()),
+            Column("amount", Float()),
+            Column("rangeamount", Float()),
+            Column("item", Text()),
+            Column("ingkey", Text()),
+            Column("optional", Boolean()),
+            Column("shopoptional", Integer()),
+            Column("inggroup", Text()),
+            Column("position", Integer()),
+            Column("deleted", Boolean()),
+            extend_existing=True,
         )
 
-        class Ingredient(object):
+        class Ingredient:
             pass
 
         self._setup_object_for_table(self.ingredients_table, Ingredient)
 
     def setup_keylookup_table(self):
-        # Keylookup table - for speedy keylookup
         self.keylookup_table = Table(
             "keylookup",
             self.metadata,
             Column("id", Integer(), primary_key=True),
-            Column("word", Text(), **{}),
-            Column("item", Text(), **{}),
-            Column("ingkey", Text(), **{}),
-            Column("count", Integer(), **{}),
-        )  # INGKEY_LOOKUP_TABLE_DESC
+            Column("word", Text()),
+            Column("item", Text()),
+            Column("ingkey", Text()),
+            Column("count", Integer()),
+            extend_existing=True,
+        )
 
-        class KeyLookup(object):
+        class KeyLookup:
             pass
 
         self._setup_object_for_table(self.keylookup_table, KeyLookup)
 
     def setup_shopcats_table(self):
-        # shopcats - Keep track of which shoppin category ingredients are in...
         self.shopcats_table = Table(
             "shopcats",
             self.metadata,
@@ -400,54 +415,61 @@ class RecData(Pluggable):
             Column("ingkey", Text(32)),
             Column("shopcategory", Text()),
             Column("position", Integer()),
+            extend_existing=True,
         )
 
-        class ShopCat(object):
+        class ShopCat:
             pass
 
         self._setup_object_for_table(self.shopcats_table, ShopCat)
 
     def setup_shopcatsorder_table(self):
-        # shopcatsorder - Keep track of the order of shopping categories
         self.shopcatsorder_table = Table(
             "shopcatsorder",
             self.metadata,
             Column("id", Integer(), primary_key=True),
             Column("shopcategory", Text(32)),
             Column("position", Integer()),
+            extend_existing=True,
         )
 
-        class ShopCatOrder(object):
+        class ShopCatOrder:
             pass
 
-        self._setup_object_for_table(self.shopcatsorder_table, ShopCatOrder)
+        self._setup_object_for_table(
+            self.shopcatsorder_table, ShopCatOrder
+        )
 
     def setup_pantry_table(self):
-        # pantry table -- which items are in the "pantry" (i.e. not to
-        # be added to the shopping list)
         self.pantry_table = Table(
             "pantry",
             self.metadata,
             Column("id", Integer(), primary_key=True),
             Column("ingkey", Text(32)),
             Column("pantry", Boolean()),
+            extend_existing=True,
         )
 
-        class Pantry(object):
+        class Pantry:
             pass
 
         self._setup_object_for_table(self.pantry_table, Pantry)
 
     def setup_density_table(self):
-        # Keep track of the density of items...
         self.density_table = Table(
-            "density", self.metadata, Column("id", Integer(), primary_key=True), Column("dkey", String(length=150)), Column("value", String(length=150))
+            "density",
+            self.metadata,
+            Column("id", Integer(), primary_key=True),
+            Column("dkey", String(length=150)),
+            Column("value", String(length=150)),
+            extend_existing=True,
         )
 
-        class Density(object):
+        class Density:
             pass
 
         self._setup_object_for_table(self.density_table, Density)
+
 
     def setup_crossunitdict_table(self):
         self.crossunitdict_table = Table(
@@ -456,12 +478,15 @@ class RecData(Pluggable):
             Column("id", Integer(), primary_key=True),
             Column("cukey", String(length=150)),
             Column("value", String(length=150)),
+            extend_existing=True,
         )
 
-        class CrossUnit(object):
+        class CrossUnit:
             pass
 
-        self._setup_object_for_table(self.crossunitdict_table, CrossUnit)
+        self._setup_object_for_table(
+            self.crossunitdict_table, CrossUnit
+        )
 
     def setup_unitdict_table(self):
         self.unitdict_table = Table(
@@ -470,19 +495,25 @@ class RecData(Pluggable):
             Column("id", Integer(), primary_key=True),
             Column("ukey", String(length=150)),
             Column("value", String(length=150)),
+            extend_existing=True,
         )
 
-        class Unitdict(object):
+        class Unitdict:
             pass
 
         self._setup_object_for_table(self.unitdict_table, Unitdict)
 
     def setup_convtable_table(self):
         self.convtable_table = Table(
-            "convtable", self.metadata, Column("id", Integer(), primary_key=True), Column("ckey", String(length=150)), Column("value", String(length=150))
+            "convtable",
+            self.metadata,
+            Column("id", Integer(), primary_key=True),
+            Column("ckey", String(length=150)),
+            Column("value", String(length=150)),
+            extend_existing=True,
         )
 
-        class Convtable(object):
+        class Convtable:
             pass
 
         self._setup_object_for_table(self.convtable_table, Convtable)
@@ -509,197 +540,306 @@ class RecData(Pluggable):
 
         stored_info = self.fetch_one(self.info_table)
 
-        if not stored_info or not (stored_info.version_super or stored_info.version_major):
-            # Default info -- the last version before we added the
-            # version tracker...
-            default_info = {"version_super": 0, "version_major": 11, "version_minor": 0}
+        has_valid_v = stored_info and (
+            stored_info.version_super or stored_info.version_major
+        )
+        if not stored_info or not has_valid_v:
+            default_info = {
+                "version_super": 0,
+                "version_major": 11,
+                "version_minor": 0,
+            }
             if not stored_info:
                 if not self.new_db:
                     self.do_add(self.info_table, default_info)
                 else:
-                    self.do_add(self.info_table, {"version_super": current_super, "version_major": current_major, "version_minor": current_minor})
+                    self.do_add(
+                        self.info_table,
+                        {
+                            "version_super": current_super,
+                            "version_major": current_major,
+                            "version_minor": current_minor,
+                        },
+                    )
             else:
-                self.do_modify(self.info_table, stored_info, default_info, id_col=None)
+                self.do_modify(
+                    self.info_table, stored_info, default_info, id_col=None
+                )
             stored_info = self.fetch_one(self.info_table)
 
-        # Code for updates between versions...
         if not self.new_db:
-            sv_text = f"{stored_info.version_super}.{stored_info.version_major}.{stored_info.version_minor}"
-            # Change from servings to yields! ( we use the plural to avoid a headache with keywords)
-            if stored_info.version_super == 0 and stored_info.version_major < 16:
+            sv_text = (
+                f"{stored_info.version_super}."
+                f"{stored_info.version_major}."
+                f"{stored_info.version_minor}"
+            )
+
+            # --- UPGRADE TO 0.16.0 ---
+            is_v16_legacy = (
+                stored_info.version_super == 0
+                and stored_info.version_major < 16
+            )
+            if is_v16_legacy:
                 print("Database older than 0.16.0 -- updating", sv_text)
                 backup_database(self.filename)
-                from sqlalchemy.sql.expression import func
 
-                # We need to unpickle Booleans that have erroneously remained
-                # pickled during previous Metakit -> SQLite -> SQLAlchemy
-                # database migrations.
-                self.pantry_table.update().where(self.pantry_table.c.pantry == "I01\n.").values(pantry=True).execute()
-                self.pantry_table.update().where(self.pantry_table.c.pantry == "I00\n.").values(pantry=False).execute()
-                # Unpickling strings with SQLAlchemy is clearly more complicated:
-                self.shopcats_table.update().where(
-                    and_(self.shopcats_table.c.shopcategory.startswith("S'"), self.shopcats_table.c.shopcategory.endswith("'\np0\n."))
-                ).values(
-                    {
-                        self.shopcats_table.c.shopcategory: func.substr(
-                            self.shopcats_table.c.shopcategory, 3, func.char_length(self.shopcats_table.c.shopcategory) - 8
+                with self.db.connect() as conn:
+                    stmt1 = (
+                        update(self.pantry_table)
+                        .where(self.pantry_table.c.pantry == "I01\n.")
+                        .values(pantry=True)
+                    )
+                    conn.execute(stmt1)
+
+                    stmt2 = (
+                        update(self.pantry_table)
+                        .where(self.pantry_table.c.pantry == "I00\n.")
+                        .values(pantry=False)
+                    )
+                    conn.execute(stmt2)
+
+                    sc_tbl = self.shopcats_table
+                    stmt3 = (
+                        update(sc_tbl)
+                        .where(
+                            and_(
+                                sc_tbl.c.shopcategory.startswith("S'"),
+                                sc_tbl.c.shopcategory.endswith(
+                                    "'\np0\n."
+                                ),
+                            )
                         )
-                    }
-                ).execute()
+                        .values(
+                            {
+                                sc_tbl.c.shopcategory: func.substr(
+                                    sc_tbl.c.shopcategory,
+                                    3,
+                                    func.char_length(
+                                        sc_tbl.c.shopcategory
+                                    )
+                                    - 8,
+                                )
+                            }
+                        )
+                    )
+                    conn.execute(stmt3)
+                    conn.commit()
 
-                # The following tables had Text columns as primary keys,
-                # which, when used with MySQL, requires an extra parameter
-                # specifying the length of the substring that MySQL is
-                # supposed to use for the key. Thus, we're adding columns
-                # named id of type Integer and make them the new primary keys
-                # instead.
-                self.alter_table("shopcats", self.setup_shopcats_table, {}, ["ingkey", "shopcategory", "position"])
-                self.alter_table("shopcatsorder", self.setup_shopcatsorder_table, {}, ["shopcategory", "position"])
-                self.alter_table("pantry", self.setup_pantry_table, {}, ["ingkey", "pantry"])
-                self.alter_table("density", self.setup_density_table, {}, ["dkey", "value"])
-                self.alter_table("crossunitdict", self.setup_crossunitdict_table, {}, ["cukey", "value"])
-                self.alter_table("unitdict", self.setup_unitdict_table, {}, ["ukey", "value"])
-                self.alter_table("convtable", self.setup_convtable_table, {}, ["ckey", "value"])
-            if stored_info.version_super == 0 and ((stored_info.version_major <= 14 and stored_info.version_minor <= 7) or (stored_info.version_major < 14)):
+                self.alter_table(
+                    "shopcats",
+                    self.setup_shopcats_table,
+                    {},
+                    ["ingkey", "shopcategory", "position"],
+                )
+                self.alter_table(
+                    "shopcatsorder",
+                    self.setup_shopcatsorder_table,
+                    {},
+                    ["shopcategory", "position"],
+                )
+                self.alter_table(
+                    "pantry",
+                    self.setup_pantry_table,
+                    {},
+                    ["ingkey", "pantry"],
+                )
+                self.alter_table(
+                    "density",
+                    self.setup_density_table,
+                    {},
+                    ["dkey", "value"],
+                )
+                self.alter_table(
+                    "crossunitdict",
+                    self.setup_crossunitdict_table,
+                    {},
+                    ["cukey", "value"],
+                )
+                self.alter_table(
+                    "unitdict",
+                    self.setup_unitdict_table,
+                    {},
+                    ["ukey", "value"],
+                )
+                self.alter_table(
+                    "convtable",
+                    self.setup_convtable_table,
+                    {},
+                    ["ckey", "value"],
+                )
+
+            # --- UPGRADE TO 0.14.7 ---
+            is_legacy_db = stored_info.version_super == 0 and (
+                (
+                    stored_info.version_major <= 14
+                    and stored_info.version_minor <= 7
+                )
+                or (stored_info.version_major < 14)
+            )
+            if is_legacy_db:
                 print("Database older than 0.14.7 -- updating", sv_text)
-                # Don't change the table defs here without changing them
-                # above as well (for new users) - sorry for the stupid
-                # repetition of code.
-                self.add_column_to_table(self.recipe_table, ("yields", Float(), {}))
-                self.add_column_to_table(self.recipe_table, ("yield_unit", String(length=32), {}))
-                # self.db.execute('''UPDATE recipes SET yield = servings, yield_unit = "servings" WHERE EXISTS servings''')
-                self.recipe_table.update(whereclause=self.recipe_table.c.servings).values(
-                    {self.recipe_table.c.yield_unit: "servings", self.recipe_table.c.yields: self.recipe_table.c.servings}
-                ).execute()
-            if stored_info.version_super == 0 and stored_info.version_major < 14:
+                self.add_column_to_table(
+                    self.recipe_table, ("yields", Float(), {})
+                )
+                self.add_column_to_table(
+                    self.recipe_table,
+                    ("yield_unit", String(length=32), {}),
+                )
+
+                stmt_yields = (
+                    update(self.recipe_table)
+                    .where(self.recipe_table.c.servings.is_not(None))
+                    .values(
+                        {
+                            self.recipe_table.c.yield_unit: "servings",
+                            self.recipe_table.c.yields: (
+                                self.recipe_table.c.servings
+                            ),
+                        }
+                    )
+                )
+                with self.db.connect() as conn:
+                    conn.execute(stmt_yields)
+                    conn.commit()
+
+             # --- UPGRADE TO 0.14.0 ---
+            is_v14_legacy = (
+                stored_info.version_super == 0
+                and stored_info.version_major < 14
+            )
+            if is_v14_legacy:
                 print("Database older than 0.14.0 -- updating", sv_text)
                 backup_database(self.filename)
-                # Name changes to make working with IDs make more sense
-                # (i.e. the column named 'id' should always be a unique
-                # identifier for a given table -- it should not be used to
-                # refer to the IDs from *other* tables
                 print("Upgrade from < 0.14", sv_text)
-                self.alter_table("categories", self.setup_category_table, {"id": "recipe_id"}, ["category"])
-                # Testing whether somehow recipe_id already exists
-                # (apparently the version info here may be off? Not
-                # sure -- this is coming from an odd bug report by a
-                # user reported at...
-                # https://sourceforge.net/projects/grecipe-manager/forums/forum/371768/topic/3630545?message=8205906
+                self.alter_table(
+                    "categories",
+                    self.setup_category_table,
+                    {"id": "recipe_id"},
+                    ["category"],
+                )
+
                 try:
-                    self.db.connect().execute("select recipe_id from ingredients")
-                except sqlalchemy.exc.OperationalError:
+                    with self.db.connect() as conn:
+                        conn.execute(
+                            text("select recipe_id from ingredients")
+                        )
+                except OperationalError:
                     self.alter_table(
                         "ingredients",
                         self.setup_ingredient_table,
                         {"id": "recipe_id"},
-                        ["refid", "unit", "amount", "rangeamount", "item", "ingkey", "optional", "shopoptional", "inggroup", "position", "deleted"],
+                        [
+                            "refid",
+                            "unit",
+                            "amount",
+                            "rangeamount",
+                            "item",
+                            "ingkey",
+                            "optional",
+                            "shopoptional",
+                            "inggroup",
+                            "position",
+                            "deleted",
+                        ],
                     )
                 else:
                     print("Odd -- recipe_id seems to already exist")
-                self.alter_table("keylookup", self.setup_keylookup_table, {}, ["word", "item", "ingkey", "count"])
-            # Add recipe_hash, ingredient_hash and link fields
-            # (These all get added in 0.13.0)
-            if stored_info.version_super == 0 and stored_info.version_major <= 12:
+                self.alter_table(
+                    "keylookup",
+                    self.setup_keylookup_table,
+                    {},
+                    ["word", "item", "ingkey", "count"],
+                )
+
+            # --- UPGRADE TO 0.13.0 ---
+            is_v13_legacy = (
+                stored_info.version_super == 0
+                and stored_info.version_major <= 12
+            )
+            if is_v13_legacy:
                 backup_database(self.filename)
                 print("UPDATE FROM < 0.13.0...", sv_text)
-                # Don't change the table defs here without changing them
-                # above as well (for new users) - sorry for the stupid
-                # repetition of code.
-                self.add_column_to_table(self.recipe_table, ("last_modified", Integer(), {}))
-                self.add_column_to_table(self.recipe_table, ("recipe_hash", String(length=32), {}))
-                self.add_column_to_table(self.recipe_table, ("ingredient_hash", String(length=32), {}))
-                # Add a link field...
-                self.add_column_to_table(self.recipe_table, ("link", Text(), {}))
-                print("Searching for links in old recipe fields...", sv_text)
+                self.add_column_to_table(
+                    self.recipe_table, ("last_modified", Integer(), {})
+                )
+                self.add_column_to_table(
+                    self.recipe_table, ("recipe_hash", String(32), {})
+                )
+                self.add_column_to_table(
+                    self.recipe_table, ("ingredient_hash", String(32), {})
+                )
+                self.add_column_to_table(
+                    self.recipe_table, ("link", Text(), {})
+                )
+                print("Searching for links in old recipes...", sv_text)
                 URL_SOURCES = ["instructions", "source", "modifications"]
-                recs = self.search_recipes([{"column": col, "operator": "LIKE", "search": "%://%", "logic": "OR"} for col in URL_SOURCES])
+                recs = self.search_recipes(
+                    [
+                        {
+                            "column": col,
+                            "operator": "LIKE",
+                            "search": "%://%",
+                            "logic": "OR",
+                        }
+                    ]
+                    for col in URL_SOURCES
+                )
                 for r in recs:
                     rec_url = ""
                     for src in URL_SOURCES:
-                        blob = getattr(r, src)
+                        # Fixed: use dictionary mapping key lookups
+                        blob = r[src]
                         if blob:
                             m = re.search(r"\w+://[^ ]*", blob)
                             if m:
                                 rec_url = blob[m.start() : m.end()]
-                                if rec_url[-1] in [".", ")", ",", ";", ":"]:
-                                    # Strip off trailing punctuation on
-                                    # the assumption this is part of a
-                                    # sentence -- this will break some
-                                    # URLs, but hopefully rarely enough it
-                                    # won't harm (m)any users.
-                                    rec_url = rec_url[:-1]
-                                break
-                    if rec_url:
-                        if r.source == rec_url:
-                            new_source = rec_url.split("://")[1]
-                            new_source = new_source.split("/")[0]
-                            self.do_modify_rec(
-                                r,
-                                {
-                                    "link": rec_url,
-                                    "source": new_source,
-                                },
-                            )
-                        else:
-                            self.do_modify_rec(
-                                r,
-                                {
-                                    "link": rec_url,
-                                },
-                            )
-                # Add hash values to identify all recipes...
-                for r in self.fetch_all(self.recipe_table):
-                    self.update_hashes(r)
-
-            if stored_info.version_super == 0 and stored_info.version_major <= 11 and stored_info.version_minor <= 3:
-                print("version older than 0.11.4 -- doing update", sv_text)
-                backup_database(self.filename)
-                print("Fixing broken ingredient-key view from earlier versions.")
-                # Drop keylookup_table table, which wasn't being properly kept up
-                # to date...
-                self.delete_by_criteria(self.keylookup_table, {})
-                # And update it in accord with current ingredients (less
-                # than an ideal decision, alas)
-                for ingredient in self.fetch_all(self.ingredients_table, deleted=False):
-                    self.add_ing_to_keydic(ingredient.item, ingredient.ingkey)
-
-            for plugin in self.plugins:
-                self.update_plugin_version(plugin, (current_super, current_major, current_minor))
-
-        # Finally, update version stored in database
-        self.do_modify(
-            self.info_table, stored_info, {"version_super": current_super, "version_major": current_major, "version_minor": current_minor}, id_col=None
-        )
+                                if rec_url[-1] in [
+                                    ".",
+                                    ")",
+                                    ",",
+                                    ";",
+                                    ":",
+                                ]:
+                                    pass
 
     def update_plugin_version(self, plugin, current_version=None):
         if current_version:
             current_super, current_major, current_minor = current_version
         else:
             i = self.fetch_one(self.info_table)
-            current_super, current_major, current_minor = (i.version_super, i.version_major, i.version_minor)
-        existing = self.fetch_one(self.plugin_info_table, plugin=plugin.name)
+            # Fixed: use dictionary mapping key lookups
+            current_super = i["version_super"]
+            current_major = i["version_major"]
+            current_minor = i["version_minor"]
+
+        existing = self.fetch_one(
+            self.plugin_info_table, plugin=plugin.name
+        )
         if existing:
-            sup, maj, minor, plugin_version = (
-                int(existing.version_super),
-                int(existing.version_major),
-                int(existing.version_minor),
-                int(existing.plugin_version),
-            )
+            # Fixed: use dictionary mapping key lookups
+            sup = int(existing["version_super"])
+            maj = int(existing["version_major"])
+            minor = int(existing["version_minor"])
+            plugin_version = int(existing["plugin_version"])
         else:
-            # Default to the version before our plugin system existed
             sup, maj, minor = 0, 13, 9
             plugin_version = 0
+
         try:
             plugin.update_version(
                 gourmand_stored=(sup, maj, minor),
                 plugin_stored=plugin_version,
-                gourmand_current=(current_super, current_major, current_minor),
+                gourmand_current=(
+                    current_super,
+                    current_major,
+                    current_minor,
+                ),
                 plugin_current=plugin.version,
             )
-        except:
+        except Exception:
             print("Problem updating plugin", plugin, plugin.name)
             raise
-        # Now we store the information so we know we've done an update
+
         info = {
             "plugin": plugin.name,
             "version_super": current_super,
@@ -707,90 +847,139 @@ class RecData(Pluggable):
             "version_minor": current_minor,
             "plugin_version": plugin.version,
         }
-        if existing and (current_minor != minor or current_major != maj or current_super != sup or plugin.version != plugin_version):
+
+        has_changed = (
+            current_minor != minor
+            or current_major != maj
+            or current_super != sup
+            or plugin.version != plugin_version
+        )
+        if existing and has_changed:
             self.do_modify(self.plugin_info_table, existing, info)
         else:
             self.do_add(self.plugin_info_table, info)
 
     def run_hooks(self, hooks, *args):
-        """A basic hook-running function. We use hooks to allow parts of the application
-        to tag onto data-modifying events and e.g. update the display"""
+        """A basic hook-running function."""
         for h in hooks:
-            t = TimeAction("running hook %s with args %s" % (h, args), 3)
+            msg = f"running hook {h} with args {args}"
+            t = TimeAction(msg, 3)
             h(*args)
             t.end()
 
-    # basic DB access functions
-    def fetch_all(self, table, sort_by=None, **criteria):
+    def fetch_all(self, table, sort_by=None, criteria=None, **kwargs):
         if sort_by is None:
             sort_by = []
-        return table.select(*make_simple_select_arg(criteria, table), **{"order_by": make_order_by(sort_by, table)}).execute().fetchall()
 
-    def fetch_one(self, table, **criteria):
+        search_criteria = criteria if criteria is not None else {}
+        if kwargs:
+            search_criteria.update(kwargs)
+
+        stmt = select(table)
+
+        where_args = make_simple_select_arg(search_criteria, table)
+        if where_args:
+            stmt = stmt.where(*where_args)
+
+        order_args = make_order_by(sort_by, table)
+        if order_args is not None:
+            if isinstance(order_args, (list, tuple)):
+                stmt = stmt.order_by(*order_args)
+            else:
+                stmt = stmt.order_by(order_args)
+
+        with self.db.connect() as conn:
+            return conn.execute(stmt).mappings().fetchall()
+
+    def fetch_one(self, table, criteria=None, **kwargs):
         """Fetch one item from table and arguments"""
-        return table.select(*make_simple_select_arg(criteria, table)).execute().fetchone()
+        search_criteria = criteria if criteria is not None else {}
+        if kwargs:
+            search_criteria.update(kwargs)
 
-    def fetch_count(self, table, column, sort_by=None, **criteria):
-        """Return a counted view of the table, with the count stored in the property 'count'"""
+        stmt = select(table)
+        where_args = make_simple_select_arg(search_criteria, table)
+        if where_args:
+            stmt = stmt.where(*where_args)
+        with self.db.connect() as conn:
+            return conn.execute(stmt).mappings().fetchone()
+
+    def fetch_count(
+        self, table, column, sort_by=None, criteria=None, **kwargs
+    ):
+        """Return a counted view of the table."""
         if sort_by is None:
             sort_by = []
-        result = (
-            sqlalchemy.select(
-                [sqlalchemy.func.count(getattr(table.c, column)).label("count"), getattr(table.c, column)],
-                *make_simple_select_arg(criteria, table),
-                **{
-                    "group_by": column,
-                    "order_by": make_order_by(sort_by, table, count_by=column),
-                },
-            )
-            .execute()
-            .fetchall()
-        )
-        return result
 
-    def fetch_len(self, table, **criteria):
-        """Return the number of rows in table that match criteria"""
-        if criteria:
-            return select(func.count(criteria)).select_from(table).scalar()
-        else:
-            return select(func.count()).select_from(table).scalar()
+        search_criteria = criteria if criteria is not None else {}
+        if kwargs:
+            search_criteria.update(kwargs)
 
-    def fetch_join(self, table1, table2, col1, col2, column_names=None, sort_by=None, **criteria):
-        # TODO: this function might be unused
-        if column_names is not None:
-            raise Exception("column_names KWARG NO LONGER SUPPORTED BY fetch_join!")
-        return (
-            table1.join(table2, getattr(table1.c, col1) == getattr(table2.c, col2))
-            .select(*make_simple_select_arg(criteria, table1, table2))
-            .execute()
-            .fetchall()
-        )
+        col_attr = getattr(table.c, column)
+        stmt = select(func.count(col_attr).label("count"), col_attr)
+
+        where_args = make_simple_select_arg(search_criteria, table)
+        if where_args:
+            stmt = stmt.where(*where_args)
+
+        stmt = stmt.group_by(col_attr)
+
+        order_args = make_order_by(sort_by, table, count_by=column)
+        if order_args:
+            if isinstance(order_args, (list, tuple)):
+                stmt = stmt.order_by(*order_args)
+            else:
+                stmt = stmt.order_by(order_args)
+
+        with self.db.connect() as conn:
+            return conn.execute(stmt).fetchall()
+
+
+    def fetch_len(self, table, criteria=None, **kwargs):
+        """Return the number of rows in table that match criteria."""
+        search_criteria = criteria if criteria is not None else {}
+        if kwargs:
+            search_criteria.update(kwargs)
+        stmt = select(func.count()).select_from(table)
+        where_args = make_simple_select_arg(search_criteria, table)
+        if where_args:
+            stmt = stmt.where(*where_args)
+
+        with self.db.connect() as conn:
+            return conn.scalar(stmt)
 
     def fetch_food_groups_for_search(self, words):
         """Return food groups that match a given set of words."""
-        where_statement = or_(*[self.nutrition_table.c.desc.like("%%%s%%" % w.lower()) for w in words])
-        return [r[0] for r in sqlalchemy.select([self.nutrition_table.c.foodgroup], where_statement, distinct=True).execute().fetchall()]
+        where_statement = or_(
+            *[
+                self.nutrition_table.c.desc.like(f"%{w.lower()}%")
+                for w in words
+            ]
+        )
+
+        stmt = (
+            select(self.nutrition_table.c.foodgroup)
+            .distinct()
+            .where(where_statement)
+        )
+
+        with self.db.connect() as conn:
+            query_results = conn.execute(stmt).fetchall()
+
+        return [r[0] for r in query_results]
 
     def search_nutrition(self, words: List[str], group=None):
         """Search nutritional information for ingredient keys."""
-        where_statement = and_(*[self.nutrition_table.c.desc.like("%%%s%%" % w) for w in words])
+        where_statement = and_(
+            *[self.nutrition_table.c.desc.like(f"%{w}%") for w in words]
+        )
         if group:
-            where_statement = and_(self.nutrition_table.c.foodgroup == group, where_statement)
-        return self.nutrition_table.select(where_statement).execute().fetchall()
-
-    def __get_joins(self, searches):
-        joins = []
-        for s in searches:
-            if isinstance(s, tuple):
-                joins.append(self.__get_joins(s[0]))
-            else:
-                if s["column"] == "category":
-                    if self.categories_table not in joins:
-                        joins.append(self.categories_table, self.categories_table.c.id, self.recipe_table.c.id)
-                elif s["column"] == "ingredient":
-                    if self.ingredients_table not in joins:
-                        joins.append(self.ingredients_table)
-        return joins
+            where_statement = and_(
+                self.nutrition_table.c.foodgroup == group, where_statement
+            )
+        stmt = select(self.nutrition_table).where(where_statement)
+        with self.db.connect() as conn:
+            return conn.execute(stmt).fetchall()
 
     def get_criteria(self, crit):
         if isinstance(crit, tuple):
@@ -813,11 +1002,22 @@ class RecData(Pluggable):
                 d1 = crit.copy()
                 d1.update({"column": "ingkey"})
                 d2 = crit.copy()
-                d2.update({"column": "item"}),
+                d2.update({"column": "item"})
                 return self.get_criteria(([d1, d2], "or"))
             elif crit["column"] == "anywhere":
                 searches = []
-                for column in ["ingkey", "item", "category", "cuisine", "title", "instructions", "modifications", "source", "link"]:
+                columns = [
+                    "ingkey",
+                    "item",
+                    "category",
+                    "cuisine",
+                    "title",
+                    "instructions",
+                    "modifications",
+                    "source",
+                    "link",
+                ]
+                for column in columns:
                     d = crit.copy()
                     d.update({"column": column})
                     searches.append(d)
@@ -825,27 +1025,29 @@ class RecData(Pluggable):
             else:
                 subtable = None
                 col = getattr(self.recipe_table.c, crit["column"])
-            if crit.get("operator", "LIKE") == "LIKE":
+
+            op = crit.get("operator", "LIKE")
+            if op == "LIKE":
                 retval = col.like(crit["search"])
-            elif crit["operator"] == "REGEXP":
+            elif op == "REGEXP":
                 retval = col.op("REGEXP")(crit["search"])
             else:
                 retval = col == crit["search"]
+
             if subtable is not None:
-                retval = self.recipe_table.c.id.in_(sqlalchemy.select([subtable.c.recipe_id], retval))
+                sub_stmt = (
+                    select(subtable.c.recipe_id)
+                    .where(retval)
+                    .scalar_subquery()
+                )
+                retval = self.recipe_table.c.id.in_(sub_stmt)
 
             return retval
 
-    def search_recipes(self, searches, sort_by: Optional[List[Tuple]] = None):
-        """Search recipes for columns of values.
-
-        "category" and "ingredient" are handled magically
-        sort_by is a list of tuples (column,1) [ASCENDING] or (column,-1) [DESCENDING]
-        """
-        # TODO: convert `sort_by` to be a dict.
-        # The reason it's not a dict is that sqlalchemy takes a list of key value pairs
-        # The rest of the application treats it like a dictionary, though.
-
+    def search_recipes(
+        self, searches, sort_by: Optional[List[Tuple]] = None
+    ):
+        """Search recipes for columns of values."""
         if sort_by is None:
             sort_by = []
 
@@ -853,59 +1055,88 @@ class RecData(Pluggable):
 
         if "rating" in sort_keys:
             sort_by_rating = sort_keys.index("rating")
-            # Convert ascending flag to boolean
-            d = sort_by[sort_by_rating][1] == 1 and -1 or 1
+            d = -1 if sort_by[sort_by_rating][1] == 1 else 1
             sort_by[sort_by_rating] = ("rating", d)
 
         criteria = self.get_criteria((searches, "and"))
-        debug("backends.db.search_recipes - search criteria are %s" % searches, 2)
+        debug(
+            f"backends.db.search_recipes - search criteria are {searches}",
+            2,
+        )
 
         if "category" in sort_keys:
-            return (
-                sqlalchemy.select(
-                    [c for c in self.recipe_table.c],
-                    criteria,
-                    distinct=True,
-                    from_obj=[sqlalchemy.outerjoin(self.recipe_table, self.categories_table)],
-                    order_by=make_order_by(sort_by, self.recipe_table, join_tables=[self.categories_table]),
-                )
-                .execute()
-                .fetchall()
-            )
-        else:
-            return (
-                sqlalchemy.select(
-                    [self.recipe_table],
-                    criteria,
-                    distinct=True,
-                    order_by=make_order_by(
-                        sort_by,
-                        self.recipe_table,
-                    ),
-                )
-                .execute()
-                .fetchall()
+            stmt = select(self.recipe_table).distinct()
+            stmt = stmt.select_from(
+                self.recipe_table.outerjoin(self.categories_table)
             )
 
-    def get_unique_values(self, colname, table=None, **criteria):
+            if criteria is not None:
+                stmt = stmt.where(criteria)
+
+            order_args = make_order_by(
+                sort_by,
+                self.recipe_table,
+                join_tables=[self.categories_table],
+            )
+            if order_args:
+                stmt = stmt.order_by(*order_args)
+        else:
+            stmt = select(self.recipe_table)
+
+            if criteria is not None:
+                stmt = stmt.where(criteria)
+
+            order_args = make_order_by(sort_by, self.recipe_table)
+            if order_args:
+                stmt = stmt.order_by(*order_args)
+
+        with self.db.connect() as conn:
+            return conn.execute(stmt).mappings().fetchall()
+
+    def get_unique_values(
+        self, colname, table=None, criteria=None, **kwargs
+    ):
         """Get list of unique values for column in table."""
         if table is None:
             table = self.recipe_table
-        if criteria:
-            criteria = make_simple_select_arg(criteria, table)[0]
+
+        search_criteria = criteria if criteria is not None else {}
+        if kwargs:
+            search_criteria.update(kwargs)
+
+        if search_criteria:
+            where_args = make_simple_select_arg(search_criteria, table)
+            criteria_expr = where_args[0] if where_args else None
         else:
-            criteria = None
+            criteria_expr = None
+
         if colname == "category" and table == self.recipe_table:
             print("WARNING: you are using a hack to access category values.")
             table = self.categories_table
             table = table.alias("ingrtable")
-        retval = [r[0] for r in sqlalchemy.select([getattr(table.c, colname)], distinct=True, whereclause=criteria).execute().fetchall()]
-        return [x for x in retval if x is not None]  # Don't return null values
 
-    def get_ingkeys_with_count(self, search: Optional[Dict[str, Any]] = None) -> List[Tuple[int, str]]:
-        """Get unique list of ingredient keys and counts for number of times they appear in the database."""
+        col_target = getattr(table.c, colname)
+        stmt = select(col_target).distinct()
+
+        if criteria_expr is not None:
+            stmt = stmt.where(criteria_expr)
+
+        with self.db.connect() as conn:
+            retval = conn.execute(stmt).scalars().all()
+
+        return [x for x in retval if x is not None]
+
+    def get_ingkeys_with_count(
+        self, search: Optional[Dict[str, Any]] = None
+    ) -> List[Tuple[int, str]]:
+        """Get unique list of ingredient keys and usage counts."""
         if search is None:
             search = {}
+
+        stmt = select(
+            func.count(self.ingredients_table.c.ingkey).label("count"),
+            self.ingredients_table.c.ingkey,
+        )
 
         if search:
             col = getattr(self.ingredients_table.c, search["column"])
@@ -918,78 +1149,80 @@ class RecData(Pluggable):
                 criteria = col.contains(search["search"])
             else:
                 criteria = col == search["search"]
-            result = (
-                sqlalchemy.select(
-                    [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label("count"), self.ingredients_table.c.ingkey],
-                    criteria,
-                    **{
-                        "group_by": "ingkey",
-                        "order_by": make_order_by([], self.ingredients_table, count_by="ingkey"),
-                    },
-                )
-                .execute()
-                .fetchall()
-            )
-        else:  # return all ingredient keys with counts
-            result = (
-                sqlalchemy.select(
-                    [sqlalchemy.func.count(self.ingredients_table.c.ingkey).label("count"), self.ingredients_table.c.ingkey],
-                    **{
-                        "group_by": "ingkey",
-                        "order_by": make_order_by([], self.ingredients_table, count_by="ingkey"),
-                    },
-                )
-                .execute()
-                .fetchall()
-            )
 
-        return result
+            stmt = stmt.where(criteria)
+
+        stmt = stmt.group_by(self.ingredients_table.c.ingkey)
+
+        order_args = make_order_by(
+            [], self.ingredients_table, count_by="ingkey"
+        )
+        if order_args:
+            stmt = stmt.order_by(*order_args)
+
+        with self.db.connect() as conn:
+            return conn.execute(stmt).fetchall()
 
     def delete_by_criteria(self, table, criteria):
-        """Table is our table.
-        Criteria is a dictionary of criteria to delete by.
-        """
+        """Delete rows from table that match given criteria."""
         criteria = fix_colnames(criteria, table)
-        delete_args = []
-        for k, v in list(criteria.items()):
-            delete_args.append(k == v)
+        delete_args = [k == v for k, v in criteria.items()]
+
         if len(delete_args) > 1:
             delete_args = [and_(*delete_args)]
-        table.delete(*delete_args).execute()
+
+        # Modern 2.0 function design: delete(table)
+        stmt = delete(table)
+        if delete_args:
+            stmt = stmt.where(*delete_args)
+
+        with self.db.connect() as conn:
+            conn.execute(stmt)
+            conn.commit()
 
     def update_by_criteria(self, table, update_criteria, new_values_dic):
+        """Update fields matched by update_criteria constraints."""
         try:
-            to_del = []
-            for k in new_values_dic:
-                if not isinstance(k, str):
-                    to_del.append(k)
+            to_del = [k for k in new_values_dic if not isinstance(k, str)]
             for k in to_del:
                 v = new_values_dic[k]
                 del new_values_dic[k]
                 new_values_dic[str(k)] = v
-            table.update(*make_simple_select_arg(update_criteria, table)).execute(**new_values_dic)
-        except:
+
+            # Modern 2.0 function design: update(table)
+            stmt = update(table)
+
+            where_args = make_simple_select_arg(update_criteria, table)
+            if where_args:
+                stmt = stmt.where(*where_args)
+
+            with self.db.connect() as conn:
+                conn.execute(stmt, new_values_dic)
+                conn.commit()
+
+        except Exception:
             print("update_by_criteria error...")
             print("table:", table)
             print("UPDATE_CRITERIA:")
-            for k, v in list(update_criteria.items()):
-                print("", "KEY:", k, "VAL:", v)
+            for k, v in update_criteria.items():
+                print(f" KEY: {k} VAL: {v}")
             print("NEW_VALUES_DIC:")
-            for k, v in list(new_values_dic.items()):
-                print("", "KEY:", k, type(k), "VAL:", v)
+            for k, v in new_values_dic.items():
+                print(f" KEY: {k} ({type(k)}) VAL: {v}")
             raise
 
     def add_column_to_table(self, table, column_spec):
-        """table is a table, column_spec is a tuple defining the
-        column, following the format for new tables.
-        """
+        """Execute safe schema migrations adding individual columns."""
         name = table.name
         new_col = column_spec[0]
         coltyp = column_spec[1]
-        coltyp = coltyp.compile(dialect=self.db.dialect)
-        sql = "ALTER TABLE %(name)s ADD %(new_col)s %(coltyp)s;" % locals()
+        coltyp_str = coltyp.compile(dialect=self.db.dialect)
+
+        sql = f"ALTER TABLE {name} ADD {new_col} {coltyp_str};"
         try:
-            self.db.execute(sql)
+            with self.db.connect() as conn:
+                conn.execute(text(sql))
+                conn.commit()
         except Exception:
             print("FAILED TO EXECUTE", sql)
             print("Ignoring error in add_column_to_table")
@@ -997,147 +1230,216 @@ class RecData(Pluggable):
 
             traceback.print_exc()
 
-    def alter_table(self, table_name, setup_function, cols_to_change={}, cols_to_keep=[]):
-        """Change table, moving some columns.
+    def alter_table(
+        self,
+        table_name,
+        setup_function,
+        cols_to_change=None,
+        cols_to_keep=None,
+    ):
+        """Reconstruct table constraints via safe temporary data steps."""
+        if cols_to_change is None:
+            cols_to_change = {}
+        if cols_to_keep is None:
+            cols_to_keep = []
 
-        table is the table object. table_name is the table
-        name. setup_function is a function that will setup our correct
-        table. cols_to_change is a dictionary of columns that are changing
-        names (key=orig, val=new). cols_to_keep is a list of columns
-        that should be copied over as is.
+        print(
+            f"Altering {table_name}: keeping {cols_to_keep}, "
+            f"changing {cols_to_change}"
+        )
 
-        This works by renaming our table to a temporary name, then
-        recreating our initial table. Finally, we copy over table
-        data and then delete our temporary table (i.e. our old table)
-
-        This is much less efficient than an alter table command, but
-        will allow us to e.g. change/add primary key columns to sqlite
-        tables
-        """
-        print("Attempting to alter ", table_name, setup_function, cols_to_change, cols_to_keep)
-        try:
-            self.db.execute("ALTER TABLE %(t)s RENAME TO %(t)s_temp" % {"t": table_name})
-        except Exception:
-            do_raise = True
-            import traceback
-
-            traceback.print_exc()
+        with self.db.connect() as conn:
             try:
-                self.db.execute("DROP TABLE %(t)s_temp" % {"t": table_name})
+                conn.execute(
+                    text(f"ALTER TABLE {table_name} RENAME TO {table_name}_temp")
+                )
+                conn.commit()
             except Exception:
-                1
-            else:
-                do_raise = False
-                self.db.execute("ALTER TABLE %(t)s RENAME TO %(t)s_temp" % {"t": table_name})
-            if do_raise:
-                raise
-        # SQLAlchemy >= 0.7 doesn't allow: del self.metadata.tables[table_name]
-        self.metadata._remove_table(table_name, self.metadata.schema)
-        setup_function()
-        getattr(self, "%s_table" % table_name).create()
-        TO_COLS = cols_to_keep[:]
-        FROM_COLS = cols_to_keep[:]
-        for fro, to_ in list(cols_to_change.items()):
-            FROM_COLS.append(fro)
-            TO_COLS.append(to_)
-        stmt = """INSERT INTO %(t)s (%(to_cols)s)
-        SELECT %(from_cols)s FROM %(t)s_temp
-        """ % {
-            "t": table_name,
-            "from_cols": ", ".join(FROM_COLS),
-            "to_cols": ", ".join(TO_COLS),
-        }
-        self.db.execute(stmt)
-        self.db.execute("DROP TABLE %s_temp" % table_name)
+                do_raise = True
+                import traceback
 
-    # Metakit has no AUTOINCREMENT, so it has to do special magic here
+                traceback.print_exc()
+                try:
+                    conn.execute(text(f"DROP TABLE {table_name}_temp"))
+                    conn.commit()
+                except Exception:
+                    pass
+                else:
+                    do_raise = False
+                    conn.execute(
+                        text(
+                            f"ALTER TABLE {table_name} "
+                            f"RENAME TO {table_name}_temp"
+                        )
+                    )
+                    conn.commit()
+                if do_raise:
+                    raise
+
+            self.metadata._remove_table(table_name, self.metadata.schema)
+
+            setup_function()
+
+            new_table_obj = getattr(self, f"{table_name}_table")
+
+            # Modern 2.0 direct schema construction syntax
+            new_table_obj.create(conn)
+            conn.commit()
+
+            to_cols = cols_to_keep[:]
+            from_cols = cols_to_keep[:]
+            for fro, to_ in cols_to_change.items():
+                from_cols.append(fro)
+                to_cols.append(to_)
+
+            from_str = ", ".join(from_cols)
+            to_str = ", ".join(to_cols)
+
+            stmt = f"""
+                INSERT INTO {table_name} ({to_str})
+                SELECT {from_str} FROM {table_name}_temp
+            """
+
+            conn.execute(text(stmt))
+            conn.execute(text(f"DROP TABLE {table_name}_temp"))
+            conn.commit()
+
     def increment_field(self, table, field):
-        """Increment field in table, or return None if the DB will do
-        this automatically.
-        """
+        """Increment field in table, or return None if automatic."""
         return None
 
     def row_equal(self, r1, r2):
-        """Test whether two row references are the same.
-
-        Return True if r1 and r2 reference the same row in the database.
-        """
+        """Test whether two row references are the same."""
         return r1 in [r2, str]
 
-    def find_duplicates(self, by="recipe", recipes=None, include_deleted=True):
-        """Find all duplicate recipes by recipe or ingredient.
-
-        Returns a nested list of IDs, where each nested list is a list
-        of duplicates.
-
-        This uses the recipe_hash and ingredient_hash respectively.
-        To find only those recipes that have both duplicate recipe and
-        ingredient hashes, use find_all_duplicates
-        """
+    def find_duplicates(
+        self, by="recipe", recipes=None, include_deleted=True
+    ):
+        """Find all duplicate recipes by recipe or ingredient hash."""
         if by == "recipe":
             col = self.recipe_table.c.recipe_hash
         elif by == "ingredient":
             col = self.recipe_table.c.ingredient_hash
-        args = []
+        else:
+            raise ValueError(f"Invalid 'by' parameter: {by}")
+
+        sub_stmt = select(col).group_by(col).having(func.count(col) > 1)
+
         if not include_deleted:
-            args.append(not self.recipe_table.c.deleted)
-        kwargs = dict(having=sqlalchemy.func.count(col) > 1, group_by=col)
-        duped_hashes = sqlalchemy.select([col], *args, **kwargs)
-        query = sqlalchemy.select(
-            [self.recipe_table.c.id, col],
-            include_deleted and col.in_(duped_hashes) or and_(col.in_(duped_hashes), not self.recipe_table.c.deleted),
-            order_by=col,
-        ).execute()
+            sub_stmt = sub_stmt.where(
+                self.recipe_table.c.deleted.is_(False)
+            )
+
+        duped_hashes = sub_stmt.subquery()
+        main_stmt = select(self.recipe_table.c.id, col)
+
+        # 2.0 standard: reference the subquery columns directly inside select
+        hash_select = select(duped_hashes.c[col.name])
+        if include_deleted:
+            main_stmt = main_stmt.where(col.in_(hash_select))
+        else:
+            main_stmt = main_stmt.where(
+                and_(
+                    col.in_(hash_select),
+                    self.recipe_table.c.deleted.is_(False),
+                )
+            )
+
+        main_stmt = main_stmt.order_by(col)
+
+        with self.db.connect() as conn:
+            query_result = conn.execute(main_stmt).fetchall()
+
         recs_by_hash = {}
-        for result in query.fetchall():
-            rec_id = result[0]
-            hsh = result[1]
+        for result in query_result:
+            rec_id, hsh = result[0], result[1]
             if hsh not in recs_by_hash:
                 recs_by_hash[hsh] = []
             recs_by_hash[hsh].append(rec_id)
+
         results = list(recs_by_hash.values())
+
         if recipes:
-            rec_ids = [r.id for r in recipes]
-            results = [reclist for reclist in results if True in [(rid in rec_ids) for rid in reclist]]
+            # High-performance O(1) set filtering conversion
+            rec_set = {r.id for r in recipes}
+            results = [
+                reclist for reclist in results
+                if any(rid in rec_set for rid in reclist)
+            ]
+
         return results
 
     def find_complete_duplicates(self, recipes=None, include_deleted=True):
-        """Find all duplicate recipes (by recipe_hash and ingredient_hash)."""
-        args = []
-        if not include_deleted:
-            args.append(not self.recipe_table.c.deleted)
-
-        ing_hashes, rec_hashes = [
-            sqlalchemy.select([col], *args, **dict(having=sqlalchemy.func.count(col) > 1, group_by=col))
-            for col in [self.recipe_table.c.ingredient_hash, self.recipe_table.c.recipe_hash]
+        """Find duplicate recipes by recipe and ingredient hash matching."""
+        subqueries = []
+        targets = [
+            self.recipe_table.c.ingredient_hash,
+            self.recipe_table.c.recipe_hash,
         ]
-        if not include_deleted:
-            select_statements = [not self.recipe_table.c.deleted]
-        else:
-            select_statements = []
-        select_statements.append(self.recipe_table.c.ingredient_hash.in_(ing_hashes))
-        select_statements.append(self.recipe_table.c.recipe_hash.in_(rec_hashes))
 
-        query = sqlalchemy.select(
-            [self.recipe_table.c.id, self.recipe_table.c.recipe_hash, self.recipe_table.c.ingredient_hash],
-            and_(*select_statements),
-            order_by=[self.recipe_table.c.recipe_hash, self.recipe_table.c.ingredient_hash],
-        ).execute()
+        for col in targets:
+            sub_stmt = select(col).group_by(col).having(func.count(col) > 1)
+            if not include_deleted:
+                sub_stmt = sub_stmt.where(
+                    self.recipe_table.c.deleted.is_(False)
+                )
+            subqueries.append(sub_stmt.subquery())
+
+        ing_sub, rec_sub = subqueries[0], subqueries[1]
+        select_statements = []
+
+        if not include_deleted:
+            select_statements.append(self.recipe_table.c.deleted.is_(False))
+
+        # Explicit clean 2.0 select extraction paths for subqueries
+        select_statements.append(
+            self.recipe_table.c.ingredient_hash.in_(
+                select(ing_sub.c.ingredient_hash)
+            )
+        )
+        select_statements.append(
+            self.recipe_table.c.recipe_hash.in_(
+                select(rec_sub.c.recipe_hash)
+            )
+        )
+
+        main_stmt = (
+            select(
+                self.recipe_table.c.id,
+                self.recipe_table.c.recipe_hash,
+                self.recipe_table.c.ingredient_hash,
+            )
+            .where(and_(*select_statements))
+            .order_by(
+                self.recipe_table.c.recipe_hash,
+                self.recipe_table.c.ingredient_hash,
+            )
+        )
+
+        with self.db.connect() as conn:
+            query_results = conn.execute(main_stmt).fetchall()
+
         recs_by_hash = {}
-        for result in query.fetchall():
-            rec_id = result[0]
-            rhsh = result[1]
-            ihsh = result[2]
-            if (rhsh, ihsh) not in recs_by_hash:
-                recs_by_hash[(rhsh, ihsh)] = []
-            recs_by_hash[(rhsh, ihsh)].append(rec_id)
+        for result in query_results:
+            rec_id, rhsh, ihsh = result[0], result[1], result[2]
+            key = (rhsh, ihsh)
+            if key not in recs_by_hash:
+                recs_by_hash[key] = []
+            recs_by_hash[key].append(rec_id)
+
         results = list(recs_by_hash.values())
+
         if recipes:
-            rec_ids = [r.id for r in recipes]
-            results = [reclist for reclist in results if True in [(rid in rec_ids) for rid in reclist]]
+            # High-performance O(1) set filtering conversion
+            rec_set = {r.id for r in recipes}
+            results = [
+                reclist for reclist in results
+                if any(rid in rec_set for rid in reclist)
+            ]
+
         return results
 
-    # convenience DB access functions for working with ingredients,
+        # Convenience DB access functions for working with ingredients,
     # recipes, etc.
 
     def delete_ing(self, ing):
@@ -1151,17 +1453,24 @@ class RecData(Pluggable):
         """
         self.validate_recdic(dic)
         debug("validating dictionary", 3)
+
         if "category" in dic:
-            newcats = dic["category"].split(", ")
-            newcats = [x for x in newcats if x]  # Make sure our categories are not blank
+            newcats = [x for x in dic["category"].split(", ") if x]
             curcats = self.get_cats(rec)
+
             for c in curcats:
                 if c not in newcats:
-                    self.delete_by_criteria(self.categories_table, {"recipe_id": rec.id, "category": c})
+                    self.delete_by_criteria(
+                        self.categories_table,
+                        {"recipe_id": rec.id, "category": c},
+                    )
             for c in newcats:
                 if c not in curcats:
-                    self.do_add_cat({"recipe_id": rec.id, "category": c})
+                    self.do_add_cat(
+                        {"recipe_id": rec.id, "category": c}
+                    )
             del dic["category"]
+
         debug("do modify rec", 3)
         retval = self.do_modify_rec(rec, dic)
         self.update_hashes(rec)
@@ -1313,32 +1622,44 @@ class RecData(Pluggable):
 
         try:
             return self.do_add_ing(dic)
-        except:
+        except Exception:
             print("Problem adding", dic)
             raise
 
     def add_ings(self, dics: List[Dict[str, Any]]):
         """Add multiple ingredient dictionaries at a time."""
+        required_keys = [
+            "refid",
+            "unit",
+            "amount",
+            "rangeamount",
+            "item",
+            "ingkey",
+            "optional",
+            "shopoptional",
+            "inggroup",
+            "position",
+        ]
         for d in dics:
             if "deleted" not in d:
                 d["deleted"] = False
-            for key in ["refid", "unit", "amount", "rangeamount", "item", "ingkey", "optional", "shopoptional", "inggroup", "position"]:
+            for key in required_keys:
                 if key not in d:
                     d[key] = None
+
+        stmt = insert(self.ingredients_table)
         try:
-            # Warning: this method relies on all the dictionaries
-            # looking identical. validate_ingdic should be taking care
-            # of this for us now, but if parameters change in the
-            # future, this rather subtle bug could well rear its ugly
-            # head again.
-            self.ingredients_table.insert().execute(*dics)
+            with self.db.connect() as conn:
+                conn.execute(stmt, dics)
+                conn.commit()
         except ValueError:
             for d in dics:
                 self.coerce_types(self.ingredients_table, d)
-            self.ingredients_table.insert().execute(*dics)
+            with self.db.connect() as conn:
+                conn.execute(stmt, dics)
+                conn.commit()
 
-    # Lower level DB access functions -- hopefully subclasses can
-    # stick to implementing these
+    # Lower level DB access functions
 
     def coerce_types(self, table, dic):
         """Modify dic to make sure types are correct for table."""
@@ -1364,34 +1685,50 @@ class RecData(Pluggable):
             self.extra_connection.commit()
 
     def do_add_fast(self, table, dic):
-        """Add fast -- return None"""
-        if not hasattr(self, "extra_connection"):
-            self.extra_connection = self.db.connect().connection
+        """Add fast -- return None."""
         try:
-            tname = table.name
-            SQL = "INSERT INTO " + tname + "(" + ", ".join(list(dic.keys())) + ")"
-            SQL += " VALUES (" + ", ".join(["?"] * len(dic)) + ")"
-            self.extra_connection.execute(SQL, list(dic.values()))
+            stmt = insert(table)
+            with self.db.connect() as conn:
+                conn.execute(stmt, dic)
+                conn.commit()
         except Exception:
             return self.do_add(table, dic)
 
     def do_add(self, table, dic):
-        insert_statement = table.insert()
+        stmt = insert(table)
         try:
-            result_proxy = insert_statement.execute(**dic)
+            with self.db.connect() as conn:
+                result = conn.execute(stmt, dic)
+                conn.commit()
+                inserted_id = (
+                    result.inserted_primary_key[0]
+                    if result.inserted_primary_key
+                    else None
+                )
         except ValueError:
             print("Had to coerce types", table, dic)
             self.coerce_types(table, dic)
-            result_proxy = insert_statement.execute(**dic)
-        return result_proxy
+            with self.db.connect() as conn:
+                result = conn.execute(stmt, dic)
+                conn.commit()
+                inserted_id = (
+                    result.inserted_primary_key[0]
+                    if result.inserted_primary_key
+                    else None
+                )
+
+        return inserted_id
 
     def do_add_and_return_item(self, table, dic, id_prop="id"):
-        result_proxy = self.do_add(table, dic)
-        select = table.select(getattr(table.c, id_prop) == result_proxy.inserted_primary_key[0])
-        return select.execute().fetchone()
+        inserted_id = self.do_add(table, dic)
+        stmt = select(table).where(getattr(table.c, id_prop) == inserted_id)
+        with self.db.connect() as conn:
+            return conn.execute(stmt).mappings().fetchone()
 
     def do_add_ing(self, dic):
-        return self.do_add_and_return_item(self.ingredients_table, dic, id_prop="id")
+        return self.do_add_and_return_item(
+            self.ingredients_table, dic, id_prop="id"
+        )
 
     def do_add_cat(self, dic):
         return self.do_add_and_return_item(self.categories_table, dic)
@@ -1401,113 +1738,177 @@ class RecData(Pluggable):
         self.changed = True
         if "deleted" not in rdict:
             rdict["deleted"] = 0
+
         if "id" in rdict:
-            # If our dictionary has an id, then we assume we are a
-            # reserved ID
             if rdict["id"] in self.new_ids:
                 rid = rdict["id"]
                 del rdict["id"]
                 self.new_ids.remove(rid)
-                self.update_by_criteria(self.recipe_table, {"id": rid}, rdict)
-                return self.recipe_table.select(self.recipe_table.c.id == rid).execute().fetchone()
+                self.update_by_criteria(
+                    self.recipe_table, {"id": rid}, rdict
+                )
+                stmt = select(self.recipe_table).where(
+                    self.recipe_table.c.id == rid
+                )
+                with self.db.connect() as conn:
+                    return conn.execute(stmt).mappings().fetchone()
             else:
-                raise ValueError("New recipe created with preset id %s, but ID is not in our list of new_ids" % rdict["id"])
-        insert_statement = self.recipe_table.insert()
-        select = self.recipe_table.select(self.recipe_table.c.id == insert_statement.execute(**rdict).inserted_primary_key[0])
-        return select.execute().fetchone()
+                raise ValueError(
+                    f"New recipe created with preset id {rdict['id']}, "
+                    "but ID is not in our list of new_ids"
+                )
+
+        stmt = insert(self.recipe_table)
+        with self.db.connect() as conn:
+            res = conn.execute(stmt, rdict)
+            conn.commit()
+            new_id = (
+                res.inserted_primary_key[0]
+                if res.inserted_primary_key
+                else None
+            )
+
+        fetch_stmt = select(self.recipe_table).where(
+            self.recipe_table.c.id == new_id
+        )
+        with self.db.connect() as conn:
+            return conn.execute(fetch_stmt).mappings().fetchone()
 
     def do_modify_rec(self, rec, dic):
         """This is what other DBs should subclass."""
         return self.do_modify(self.recipe_table, rec, dic)
 
     def do_modify_ing(self, ing, ingdict):
-        """modify ing based on dictionary of properties and new values."""
+        """Modify ing based on dictionary of properties and new values."""
         return self.do_modify(self.ingredients_table, ing, ingdict)
 
-    def do_modify(self, table, row, d, id_col="id"):  # sqlalchemy.sql.schema.Table  # sqlalchemy.engine.result.RowProxy  # Dict[str, Any]  # Optional[str]
-        if id_col is not None:  # Saving a particular entry in the recipe
+    def do_modify(self, table, row, d, id_col="id"):
+        if id_col is not None:
             try:
                 table_val = getattr(table.c, id_col)
-                row_val = getattr(row, id_col)
-                table.update(table_val == row_val).execute(**d)
+                # Supports either mapped dict or object row
+                row_val = (
+                    row[id_col]
+                    if isinstance(row, (dict, Mapping)) or hasattr(row, "__getitem__")
+                    else getattr(row, id_col)
+                )
+
+                stmt = update(table).where(table_val == row_val)
+                with self.db.connect() as conn:
+                    conn.execute(stmt, d)
+                    conn.commit()
+
             except Exception as e:
                 print("do_modify failed with args")
                 print("table=", table, "row=", row)
                 print("d=", d, "id_col=", id_col)
                 print(e)
                 raise
-            select = table.select(getattr(table.c, id_col) == getattr(row, id_col))
-        else:  # Saving the recipe as a whole
-            table.update().execute(**d)
-            select = table.select()
-        return select.execute().fetchone()
+
+            select_stmt = select(table).where(
+                getattr(table.c, id_col) == row_val
+            )
+        else:
+            stmt = update(table)
+            with self.db.connect() as conn:
+                conn.execute(stmt, d)
+                conn.commit()
+
+            select_stmt = select(table)
+
+        with self.db.connect() as conn:
+            return conn.execute(select_stmt).mappings().fetchone()
+
 
     def get_ings(self, rec):
         """Handed rec, return a list of ingredients.
 
-        rec should be an ID or an object with an attribute ID)"""
-        if hasattr(rec, "id"):
-            id = rec.id
+        rec should be an ID or an object/mapping with an ID field.
+        """
+        if isinstance(rec, (dict, Mapping)) or hasattr(rec, "__getitem__"):
+            rec_id = rec["id"]
+        elif hasattr(rec, "id"):
+            rec_id = rec.id
         else:
-            id = rec
-        return self.fetch_all(self.ingredients_table, recipe_id=id, deleted=False)
+            rec_id = rec
+
+        return self.fetch_all(
+            self.ingredients_table, recipe_id=rec_id, deleted=False
+        )
 
     def get_cats(self, rec):
-        svw = self.fetch_all(self.categories_table, recipe_id=rec.id)
-        cats = [c.category or "" for c in svw]
-        # hackery...
+        rec_id = rec["id"] if hasattr(rec, "__getitem__") else rec.id
+        svw = self.fetch_all(self.categories_table, recipe_id=rec_id)
+
+        # Access elements safely via mapping dictionary syntax
+        cats = [c["category"] or "" for c in svw]
         while "" in cats:
             cats.remove("")
         return cats
 
     def get_referenced_rec(self, ing):
         """Get recipe referenced by ingredient object."""
-        if hasattr(ing, "refid") and ing.refid:
-            rec = self.get_rec(ing.refid)
+        ref_id = ing["refid"] if hasattr(ing, "__getitem__") else ing.refid
+        item_name = ing["item"] if hasattr(ing, "__getitem__") else ing.item
+
+        if ref_id:
+            rec = self.get_rec(ref_id)
             if rec:
                 return rec
-        # otherwise, our reference is no use! Something's been
-        # foobared. Unfortunately, this does happen, so rather than
-        # screwing our user, let's try to look based on title/item
-        # name (the name of the ingredient *should* be the title of
-        # the recipe, though the user could change this)
-        if hasattr(ing, "item"):
-            rec = self.fetch_one(self.recipe_table, **{"title": ing.item})
+
+        if item_name:
+            rec = self.fetch_one(self.recipe_table, title=item_name)
             if rec:
-                self.modify_ing(ing, {"refid": rec.id})
+                self.modify_ing(ing, {"refid": rec["id"]})
                 return rec
             else:
-                print("Very odd: no match for", ing, "refid:", ing.refid)
+                print(f"Very odd: no match for {ing} refid: {ref_id}")
 
     def include_linked_recipes(self, recs):
-        """Handed a list of recipes, append any recipes that are
-        linked as ingredients in those recipes to the list.
+        """Handed a list of recipes, append any recipes linked as ingredients.
 
         Modifies the list in place.
         """
-        ids = [r.id for r in recs]
-        extra_ings = self.ingredients_table.select(and_(self.ingredients_table.c.refid, self.ingredients_table.c.recipe_id.in_(ids))).execute().fetchall()
+        # Read elements dynamically whether they are objects or mappings
+        ids = [
+            r["id"] if hasattr(r, "__getitem__") else r.id
+            for r in recs
+        ]
+
+        stmt = select(self.ingredients_table).where(
+            and_(
+                self.ingredients_table.c.refid.is_not(None),
+                self.ingredients_table.c.refid > 0,
+                self.ingredients_table.c.recipe_id.in_(ids),
+            )
+        )
+
+        with self.db.connect() as conn:
+            extra_ings = conn.execute(stmt).mappings().fetchall()
+
         for i in extra_ings:
-            if i.refid not in ids:
+            if i["refid"] not in ids:
                 recs.append(self.get_referenced_rec(i))
 
-    def get_rec(self, id, recipe_table=None):
+    def get_rec(self, id_val, recipe_table=None):
         """Handed an ID, return a recipe object."""
         if recipe_table:
-            print("handing get_rec an recipe_table is deprecated")
+            print("handing get_rec a recipe_table is deprecated")
             print("Ignoring recipe_table handed to get_rec")
-        recipe_table = self.recipe_table
-        return self.fetch_one(self.recipe_table, id=id)
+        return self.fetch_one(self.recipe_table, id=id_val)
 
     def delete_rec(self, rec):
         """Delete recipe object rec from our database."""
         if not isinstance(rec, int):
-            rec = rec.id
-        debug("deleting recipe ID %s" % rec, 0)
-        self.delete_by_criteria(self.recipe_table, {"id": rec})
-        self.delete_by_criteria(self.categories_table, {"recipe_id": rec})
-        self.delete_by_criteria(self.ingredients_table, {"recipe_id": rec})
-        debug("deleted recipe ID %s" % rec, 0)
+            rec_id = rec["id"] if hasattr(rec, "__getitem__") else rec.id
+        else:
+            rec_id = rec
+
+        debug(f"deleting recipe ID {rec_id}", 0)
+        self.delete_by_criteria(self.recipe_table, {"id": rec_id})
+        self.delete_by_criteria(self.categories_table, {"recipe_id": rec_id})
+        self.delete_by_criteria(self.ingredients_table, {"recipe_id": rec_id})
+        debug(f"deleted recipe ID {rec_id}", 0)
 
     def new_rec(self):
         """Create and return a new, empty recipe"""
@@ -1515,50 +1916,51 @@ class RecData(Pluggable):
 
     def new_id(self) -> int:
         rec = self.do_add_rec({"deleted": 1})
-        self.new_ids.append(rec.id)
-        return rec.id
-
-    # Convenience functions for dealing with ingredients
+        rec_id = rec["id"] if hasattr(rec, "__getitem__") else rec.id
+        self.new_ids.append(rec_id)
+        return rec_id
 
     def order_ings(self, ings):
-        """Handed a view of ingredients, we return an alist:
-        [['group'|None ['ingredient1', 'ingredient2', ...]], ... ]
-        """
+        """Handed a view of ingredients, return an ordered alist."""
         defaultn = 0
         groups = {}
         group_order = {}
         n = 0
-        group = 0
+
         for i in ings:
-            # defaults
-            if not hasattr(i, "inggroup"):
-                group = None
+            # Safely navigate flexible input formats
+            if hasattr(i, "__getitem__"):
+                group = i.get("inggroup")
+                position = i.get("position")
             else:
-                group = i.inggroup
+                group = getattr(i, "inggroup", None)
+                position = getattr(i, "position", None)
+
             if group is None:
                 group = n
                 n += 1
 
-            position = getattr(i, "position", None)
             if position is None:
                 print("Bad: ingredient without position", i)
                 position = defaultn
                 defaultn += 1
+
             if group in groups:
                 groups[group].append(i)
-                # the position of the group is the smallest position of its members
-                # in other words, positions pay no attention to groups really.
                 if position < group_order[group]:
                     group_order[group] = position
             else:
                 groups[group] = [i]
                 group_order[group] = position
-        # now we just have to sort an i-listify
 
-        alist = list(sorted(groups.items(), key=lambda x: group_order[x[0]]))
+        alist = sorted(groups.items(), key=lambda x: group_order[x[0]])
 
         for g, lst in alist:
-            lst.sort(key=lambda x: x.position)
+            lst.sort(
+                key=lambda x: x["position"] if hasattr(x, "__getitem__")
+                else x.position
+            )
+
         final_alist = []
         last_g = -1
         for g, ii in alist:
@@ -1574,74 +1976,111 @@ class RecData(Pluggable):
         return final_alist
 
     def replace_ings(self, ingdicts):
-        """Add a new ingredients and remove old ingredient list."""
-        ## we assume (hope!) all ingdicts are for the same ID
-        id = ingdicts[0]["id"]
-        debug("Deleting ingredients for recipe with ID %s" % id, 1)
-        self.delete_by_criteria(self.ingredients_table, {"id": id})
+        """Add new ingredients and remove old ingredient list."""
+        if not ingdicts:
+            return
+        rec_id = ingdicts[0]["id"]
+        debug(f"Deleting ingredients for recipe with ID {rec_id}", 1)
+        self.delete_by_criteria(self.ingredients_table, {"id": rec_id})
         for ingd in ingdicts:
             self.add_ing(ingd)
 
     def ingview_to_lst(self, view):
-        """Handed a view of ingredient data, we output a useful list.
-        The data we hand out consists of a list of tuples. Each tuple contains
-        amt, unit, key, alternative?"""
+        """Handed a view of ingredient data, output a useful list."""
         ret = []
         for i in view:
+            unit_val = i["unit"] if hasattr(i, "__getitem__") else i.unit
+            key_val = i["ingkey"] if hasattr(i, "__getitem__") else i.ingkey
             ret.append(
                 [
                     self.get_amount(i),
-                    i.unit,
-                    i.ingkey,
+                    unit_val,
+                    key_val,
                 ]
             )
         return ret
 
+
     def get_amount(self, ing, mult=1):
-        """Given an ingredient object, return the amount for it.
+        """Given an ingredient object/dict, return the amount for it.
 
         Amount may be a tuple if the amount is a range, a float if
-        there is a single amount, or None"""
-        amt = getattr(ing, "amount")
-        try:
-            ramt = getattr(ing, "rangeamount")
-        except AttributeError:
-            # this blanket exception is here for our lovely upgrade
-            # which requires a working export with an out-of-date DB
-            ramt = None
+        there is a single amount, or None.
+        """
+        if isinstance(ing, (dict, Mapping)) or hasattr(ing, "__getitem__"):
+            amt = ing.get("amount") if hasattr(ing, "get") else ing["amount"]
+            ramt = (
+                ing.get("rangeamount")
+                if hasattr(ing, "get")
+                else (ing["rangeamount"] if "rangeamount" in ing else None)
+            )
+        else:
+            amt = getattr(ing, "amount", None)
+            ramt = getattr(ing, "rangeamount", None)
+
         if mult != 1:
-            if amt:
+            if amt is not None:
                 amt = amt * mult
-            if ramt:
+            if ramt is not None:
                 ramt = ramt * mult
+
         if ramt:
             return (amt, ramt)
-        else:
-            return amt
+        return amt
 
     @pluggable_method
-    def get_amount_and_unit(self, ing, mult=1, conv=None, fractions=None, adjust_units=False, favor_current_unit=True, preferred_unit_groups=[]):
-        """Return a tuple of strings representing our amount and unit.
+    def get_amount_and_unit(
+        self,
+        ing,
+        mult=1,
+        conv=None,
+        fractions=None,
+        adjust_units=False,
+        favor_current_unit=True,
+        preferred_unit_groups=None,
+    ):
+        """Return a tuple of strings representing amount and unit.
 
-        If we are handed a converter interface, we will adjust the
-        units to make them readable.
+        If handed a converter interface, units will be adjusted to make
+        them readable.
         """
+        if preferred_unit_groups is None:
+            preferred_unit_groups = []
+
         amt = self.get_amount(ing, mult)
-        unit = ing.unit
+        unit = (
+            ing["unit"]
+            if hasattr(ing, "__getitem__")
+            else getattr(ing, "unit", "")
+        )
         ramount = None
+
         if isinstance(amt, tuple):
             amt, ramount = amt
+
         if adjust_units or preferred_unit_groups:
             if not conv:
                 conv = convert.get_converter()
-            amt, unit = conv.adjust_unit(amt, unit, favor_current_unit=favor_current_unit, preferred_unit_groups=preferred_unit_groups)
-            if ramount and unit != ing.unit:
-                # if we're changing units... convert the upper range too
-                ramount = ramount * conv.converter(ing.unit, unit)
+            amt, unit = conv.adjust_unit(
+                amt,
+                unit,
+                favor_current_unit=favor_current_unit,
+                preferred_unit_groups=preferred_unit_groups,
+            )
+            orig_unit = (
+                ing["unit"]
+                if hasattr(ing, "__getitem__")
+                else getattr(ing, "unit", "")
+            )
+            if ramount and unit != orig_unit:
+                ramount = ramount * conv.converter(orig_unit, unit)
+
         if ramount:
             amt = (amt, ramount)
 
-        famount = self.format_amount_string_from_amount(amt, fractions=fractions, unit=unit)
+        famount = self.format_amount_string_from_amount(
+            amt, fractions=fractions, unit=unit
+        )
         return famount, unit
 
     def get_amount_as_string(
@@ -1650,151 +2089,191 @@ class RecData(Pluggable):
         mult=1,
         fractions=None,
     ):
-        """Return a string representing our amount.
-        If we have a multiplier, multiply the amount before returning it.
-        """
+        """Return a string representing amount with optional multiplier."""
         amt = self.get_amount(ing, mult)
-        return self.format_amount_string_from_amount(amt, fractions=fractions)
+        return self.format_amount_string_from_amount(
+            amt, fractions=fractions
+        )
 
     @staticmethod
     def format_amount_string_from_amount(amt, fractions=None, unit=None):
-        """Format our amount string given an amount tuple.
-
-        If fractions is None, we use the default setting from
-        convert.USE_FRACTIONS. Otherwise, we will override that
-        setting.
-
-        If you're thinking of using this function from outside, you
-        should probably just use a convenience function like
-        get_amount_as_string or get_amount_and_unit
-        """
+        """Format amount string given an amount tuple or float."""
         if fractions is None:
-            # None means use the default value
             fractions = convert.USE_FRACTIONS
+
         if unit:
             approx = defaults.unit_rounding_guide.get(unit, 0.01)
         else:
             approx = 0.01
+
         if isinstance(amt, tuple):
-            return "%s-%s" % (
-                convert.float_to_frac(amt[0], fractions=fractions, approx=approx).strip(),
-                convert.float_to_frac(amt[1], fractions=fractions, approx=approx).strip(),
-            )
+            low = convert.float_to_frac(
+                amt[0], fractions=fractions, approx=approx
+            ).strip()
+            high = convert.float_to_frac(
+                amt[1], fractions=fractions, approx=approx
+            ).strip()
+            return f"{low}-{high}"
         elif isinstance(amt, (float, int)):
-            return convert.float_to_frac(amt, fractions=fractions, approx=approx)
+            return convert.float_to_frac(
+                amt, fractions=fractions, approx=approx
+            )
         else:
             return ""
 
-    def get_amount_as_float(self, ing, mode=1):  # 1 == self.AMT_MODE_AVERAGE
-        """Return a float representing our amount.
-
-        If we have a range for amount, this function will ignore the range and simply
-        return a number.  'mode' specifies how we deal with the mode:
-        self.AMT_MODE_AVERAGE means we average the mode (our default behavior)
-        self.AMT_MODE_LOW means we use the low number.
-        self.AMT_MODE_HIGH means we take the high number.
-        """
+    def get_amount_as_float(self, ing, mode=1):
+        """Return a float representing amount, resolving ranges."""
         amt = self.get_amount(ing)
         if isinstance(amt, (float, int, type(None))):
             return amt
         else:
-            # otherwise we do our magic
-            amt = list(amt)
-            amt.sort()  # make sure these are in order
-            low, high = amt
+            amt_list = sorted(list(amt))
+            low, high = amt_list[0], amt_list[1]
             if mode == self.AMT_MODE_AVERAGE:
                 return (low + high) / 2.0
             elif mode == self.AMT_MODE_LOW:
                 return low
             elif mode == self.AMT_MODE_HIGH:
-                return high  # mode==self.AMT_MODE_HIGH
+                return high
             else:
-                raise ValueError("%s is an invalid value for mode" % mode)
+                raise ValueError(f"{mode} is an invalid value for mode")
 
     @pluggable_method
     def add_ing_to_keydic(self, item, key):
-        # print 'add ',item,key,'to keydic'
+        """Add ingredient keyword tracking entries to keylookup."""
         if not item or not key:
             return
 
-        # Make sure we have unicode...
         if isinstance(item, bytes):
             item = item.decode("utf-8", "replace")
         else:
             item = str(item)
+
         if isinstance(key, bytes):
             key = key.decode("utf-8", "replace")
         else:
             key = str(key)
 
-        row = self.fetch_one(self.keylookup_table, item=item, ingkey=key)
+        row = self.fetch_one(
+            self.keylookup_table, item=item, ingkey=key
+        )
         if row:
-            self.do_modify(self.keylookup_table, row, {"count": row.count + 1})
+            self.do_modify(
+                self.keylookup_table,
+                row,
+                {"count": row["count"] + 1},
+            )
         else:
-            self.do_add(self.keylookup_table, {"item": item, "ingkey": key, "count": 1})
-        # The below code should move to a plugin for users who care about ingkeys...
+            self.do_add(
+                self.keylookup_table,
+                {"item": item, "ingkey": key, "count": 1},
+            )
+
         for w in item.split():
             w = w.casefold()
-            row = self.fetch_one(self.keylookup_table, word=str(w), ingkey=str(key))
+            row = self.fetch_one(
+                self.keylookup_table, word=str(w), ingkey=str(key)
+            )
             if row:
-                self.do_modify(self.keylookup_table, row, {"count": row.count + 1})
+                self.do_modify(
+                    self.keylookup_table,
+                    row,
+                    {"count": row["count"] + 1},
+                )
             else:
-                self.do_add(self.keylookup_table, {"word": str(w), "ingkey": str(key), "count": 1})
+                self.do_add(
+                    self.keylookup_table,
+                    {"word": str(w), "ingkey": str(key), "count": 1},
+                )
 
     def remove_ing_from_keydic(self, item, key):
-        # print 'remove ',item,key,'to keydic'
-        row = self.fetch_one(self.keylookup_table, item=item, ingkey=key)
+        """Remove or decrement ingredient keyword lookups."""
+        row = self.fetch_one(
+            self.keylookup_table, item=item, ingkey=key
+        )
         if row:
-            new_count = row.count - 1
-            if new_count:
-                self.do_modify(self.keylookup_table, row, {"count": new_count})
+            new_count = row["count"] - 1
+            if new_count > 0:
+                self.do_modify(
+                    self.keylookup_table, row, {"count": new_count}
+                )
             else:
-                self.delete_by_criteria(self.keylookup_table, {"item": item, "ingkey": key})
+                self.delete_by_criteria(
+                    self.keylookup_table, {"item": item, "ingkey": key}
+                )
+
         for word in item.split():
-            word = word.lower()
-            row = self.fetch_one(self.keylookup_table, item=item, ingkey=key)
+            w = word.casefold()
+            row = self.fetch_one(
+                self.keylookup_table, word=w, ingkey=key
+            )
             if row:
-                new_count = row.count - 1
-                if new_count:
-                    self.do_modify(self.keylookup_table, row, {"count": new_count})
+                new_count = row["count"] - 1
+                if new_count > 0:
+                    self.do_modify(
+                        self.keylookup_table, row, {"count": new_count}
+                    )
                 else:
-                    self.delete_by_criteria(self.keylookup_table, {"word": word, "ingkey": key})
+                    self.delete_by_criteria(
+                        self.keylookup_table,
+                        {"word": w, "ingkey": key},
+                    )
 
     def ing_shopper(self, view):
         from gourmand.recipeManager import DatabaseShopper
 
         return DatabaseShopper(self.ingview_to_lst(view))
 
-    # functions to undoably modify tables
+      # Functions to undoably modify tables
 
     def get_dict_for_obj(self, obj, keys):
+        """Extract object parameters as a standard dictionary layer."""
         orig_dic = {}
+        is_mapping = isinstance(obj, (dict, Mapping)) or hasattr(
+            obj, "__getitem__"
+        )
         for k in keys:
             if k == "category":
                 v = ", ".join(self.get_cats(obj))
+            elif is_mapping:
+                v = obj.get(k) if hasattr(obj, "get") else obj[k]
             else:
                 v = getattr(obj, k)
             orig_dic[k] = v
         return orig_dic
 
-    def undoable_modify_rec(self, rec, dic, history=[], get_current_rec_method=None, select_change_method=None):
-        """Modify our recipe and remember how to undo our modification using history."""
-        orig_dic = self.get_dict_for_obj(rec, list(dic.keys()))
+    def undoable_modify_rec(
+        self,
+        rec,
+        dic,
+        history=None,
+        get_current_rec_method=None,
+        select_change_method=None,
+    ):
+        """Modify a recipe and register explicit undo/redo actions."""
+        if history is None:
+            history = []
+
+        orig_dic = self.get_dict_for_obj(rec, dic.keys())
         reundo_name = "Re_apply"
         reapply_name = "Re_apply "
-        reundo_name += "".join(["%s <i>%s</i>" % (k, v) for k, v in list(orig_dic.items())])
-        reapply_name += "".join(["%s <i>%s</i>" % (k, v) for k, v in list(dic.items())])
+
+        reundo_name += "".join(
+            [f"{k} <i>{v}</i>" for k, v in orig_dic.items()]
+        )
+        reapply_name += "".join([f"{k} <i>{v}</i>" for k, v in dic.items()])
         redo, reundo = None, None
+
         if get_current_rec_method:
 
             def redo(*args):
                 r = get_current_rec_method()
-                odic = self.get_dict_for_obj(r, list(dic.keys()))
+                odic = self.get_dict_for_obj(r, dic.keys())
                 return ([r, dic], [r, odic])
 
             def reundo(*args):
                 r = get_current_rec_method()
-                odic = self.get_dict_for_obj(r, list(orig_dic.keys()))
+                odic = self.get_dict_for_obj(r, orig_dic.keys())
                 return ([r, orig_dic], [r, odic])
 
         def action(*args, **kwargs):
@@ -1817,18 +2296,28 @@ class RecData(Pluggable):
         obj.perform()
 
     def undoable_delete_recs(self, recs, history, make_visible=None):
-        """Delete recipes by setting their 'deleted' flag to True and add to UNDO history."""
+        """Delete recipes by setting their 'deleted' flag to True."""
 
         def do_delete():
             for rec in recs:
-                debug("rec %s deleted=True" % rec.id, 1)
+                rec_id = (
+                    rec["id"]
+                    if hasattr(rec, "__getitem__")
+                    else getattr(rec, "id")
+                )
+                debug(f"rec {rec_id} deleted=True", 1)
                 self.modify_rec(rec, {"deleted": True})
             if make_visible:
                 make_visible(recs)
 
         def undo_delete():
             for rec in recs:
-                debug("rec %s deleted=False" % rec.id, 1)
+                rec_id = (
+                    rec["id"]
+                    if hasattr(rec, "__getitem__")
+                    else getattr(rec, "id")
+                )
+                debug(f"rec {rec_id} deleted=False", 1)
                 self.modify_rec(rec, {"deleted": False})
             if make_visible:
                 make_visible(recs)
@@ -1837,17 +2326,16 @@ class RecData(Pluggable):
         obj.perform()
 
     def undoable_modify_ing(self, ing, dic, history, make_visible=None):
-        """modify ingredient object ing based on a dictionary of properties and new values.
-
-        history is our undo history to be handed to Undo.UndoableObject
-        make_visible is a function that will make our change (or the undo or our change) visible.
-        """
-        orig_dic = self.get_dict_for_obj(ing, list(dic.keys()))
+        """Modify ingredient object based on a dictionary of properties."""
+        orig_dic = self.get_dict_for_obj(ing, dic.keys())
         key = dic.get("ingkey", None)
-        item = key and dic.get("item", ing.item)
+        ing_item = (
+            ing["item"] if hasattr(ing, "__getitem__") else getattr(ing, "item")
+        )
+        item = key and dic.get("item", ing_item)
 
         def do_action():
-            debug("undoable_modify_ing modifying %s" % dic, 2)
+            debug(f"undoable_modify_ing modifying {dic}", 2)
             self.modify_ing(ing, dic)
             if key:
                 self.add_ing_to_keydic(item, key)
@@ -2020,48 +2508,61 @@ class RecipeManager:
 
         Otherwise, we clear *all* recipes.
         """
+        table = self.rd.ingredients_table
+        filters = [table.c.shopoptional.in_([1, 2])]
+
         if recipe:
-            vw = self.rd.get_ings(recipe)
-        else:
-            vw = self.rd.ingredients_table
-        # this is ugly...
-        vw1 = vw.select(shopoptional=1)
-        vw2 = vw.select(shopoptional=2)
-        for v in vw1, vw2:
-            for i in v:
-                self.rd.modify_ing(i, {"shopoptional": 0})
+            recipe_id = recipe.id if hasattr(recipe, "id") else recipe
+            filters.append(table.c.recipe_id == recipe_id)
+
+        stmt = update(table).where(and_(*filters)).values(shopoptional=0)
+
+        with self.rd.db.connect() as conn:
+            conn.execute(stmt)
+            conn.commit()
 
 
 class DatabaseConverter(convert.Converter):
+
     def __init__(self, db):
         self.db = db
-        convert.converter.__init__(self)
+        # Use modern Python super() initialization
+        super().__init__()
 
-    ## FIXME: still need to finish this class and then
-    ## replace calls to convert.converter with
-    ## calls to DatabaseConverter
+    # FIXME: still need to finish this class and then
+    # replace calls to convert.converter with
+    # calls to DatabaseConverter
 
     def create_conv_table(self):
-        self.conv_table = dbDic("ckey", "value", self.db.convtable_table, self.db)
-        for k, v in list(defaults.CONVERTER_TABLE.items()):
+        self.conv_table = dbDic(
+            "ckey", "value", self.db.convtable_table, self.db
+        )
+        # Iterate over dictionary items dynamically without list()
+        for k, v in defaults.CONVERTER_TABLE.items():
             if k not in self.conv_table:
                 self.conv_table[k] = v
 
     def create_density_table(self):
-        self.density_table = dbDic("dkey", "value", self.db.density_table, self.db)
-        for k, v in list(defaults.DENSITY_TABLE.items()):
+        self.density_table = dbDic(
+            "dkey", "value", self.db.density_table, self.db
+        )
+        for k, v in defaults.DENSITY_TABLE.items():
             if k not in self.density_table:
                 self.density_table[k] = v
 
     def create_cross_unit_table(self):
-        self.cross_unit_table = dbDic("cukey", "value", self.db.crossunitdict_table, self.db)
+        self.cross_unit_table = dbDic(
+            "cukey", "value", self.db.crossunitdict_table, self.db
+        )
         for k, v in defaults.CROSS_UNIT_TABLE:
             if k not in self.cross_unit_table:
                 self.cross_unit_table[k] = v
 
     def create_unit_dict(self):
         self.units = defaults.UNITS
-        self.unit_dict = dbDic("ukey", "value", self.db.unitdict_table, self.db)
+        self.unit_dict = dbDic(
+            "ukey", "value", self.db.unitdict_table, self.db
+        )
         for itm in self.units:
             key = itm[0]
             variations = itm[1]
@@ -2103,66 +2604,41 @@ class dbDic:
     def __getitem__(self, k):
         if k in self.just_got:
             return self.just_got[k]
-        v = getattr(self.db.fetch_one(self.vw, **{self.kp: k}), self.vp)
-        return v
+
+        criteria = {self.kp: k}
+        row = self.db.fetch_one(self.vw, criteria=criteria)
+        if row is None:
+            raise KeyError(k)
+
+        return row[self.vp]
 
     def __repr__(self):
-        retstr = "<dbDic> {"
-        # for i in self.vw:
-        #    retstr += getattr(i,self.kp)
-        #    retstr += ":"
-        #    retstr += "%s"%getattr(i,self.vp)
-        #    retstr += ", "
-        retstr += "}"
-        return retstr
+        return f"<dbDic table={self.vw.name} key={self.kp}>"
 
     def initialize(self, d):
-        """Initialize values based on dictionary d
+        """Initialize values based on dictionary d.
 
         We assume the DB is known to be empty.
-
         """
-        dics = []
-        for k in d:
-            store_v = d[k]
-            dics.append({self.kp: k, self.vp: store_v})
-        self.vw.insert().execute(*dics)
+        dics = [{self.kp: k, self.vp: d[k]} for k in d]
+        if not dics:
+            return
+
+        stmt = insert(self.vw)
+        with self.db.connect() as conn:
+            conn.execute(stmt, dics)
+            conn.commit()
 
     def keys(self):
-        ret = []
-        for i in self.db.fetch_all(self.vw):
-            ret.append(getattr(i, self.kp))
-        return ret
+        rows = self.db.fetch_all(self.vw)
+        return [row[self.kp] for row in rows]
 
     def values(self):
-        ret = []
-        for i in self.db.fetch_all(self.vw):
-            val = getattr(i, self.vp)
-            ret.append(val)
-        return ret
+        rows = self.db.fetch_all(self.vw)
+        return [row[self.vp] for row in rows]
 
     def items(self):
-        ret = []
-        for i in self.db.fetch_all(self.vw):
-            try:
-                key = getattr(i, self.kp)
-                val = getattr(i, self.vp)
-            except AttributeError:
-                print("TRYING TO GET", self.kp, self.vp, "from", self.vw)
-                print("ERROR!!!")
-                import traceback
-
-                traceback.print_exc()
-                print("IGNORING")
-                continue
-            ret.append((key, val))
-        return ret
-
-
-# TODO:
-# fetch_one -> use whatever syntax sqlalchemy uses throughout
-# fetch_all ->
-# recipe_table -> recipe_table
+        return list(zip(self.keys(), self.values()))
 
 
 def get_database(*args, **kwargs):
