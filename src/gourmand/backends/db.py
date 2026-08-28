@@ -2222,7 +2222,7 @@ class RecData(Pluggable):
     def ing_shopper(self, view):
         from gourmand.recipeManager import DatabaseShopper
 
-        return DatabaseShopper(self.ingview_to_lst(view))
+        return DatabaseShopper(self.ingview_to_lst(view), self.db)
 
       # Functions to undoably modify tables
 

@@ -1,7 +1,6 @@
 from gourmand import convert, shopping
 
 from . import gglobals
-from .backends.db import RecipeManager, dbDic
 from .optionparser import args
 
 # Follow commandline db specification if given
@@ -29,18 +28,22 @@ class DatabaseShopper(shopping.Shopper):
             self.cnv = convert.get_converter()
 
     def init_orgdic(self):
+        from .backends.db import dbDic
         self.orgdic = dbDic("ingkey", "shopcategory", self.db.shopcats_table, db=self.db)
         if len(list(self.orgdic.items())) == 0:
             dic = shopping.setup_default_orgdic()
             self.orgdic.initialize(dic)
 
     def init_ingorder_dic(self):
+        from .backends.db import dbDic
         self.ingorder_dic = dbDic("ingkey", "position", self.db.shopcats_table, db=self.db)
 
     def init_catorder_dic(self):
+        from .backends.db import dbDic
         self.catorder_dic = dbDic("shopcategory", "position", self.db.shopcatsorder_table, db=self.db)
 
     def init_pantry(self):
+        from .backends.db import dbDic
         self.pantry = dbDic("ingkey", "pantry", self.db.pantry_table, db=self.db)
         if len(self.pantry.items()) == 0:
             self.pantry.initialize(dict([(i, True) for i in self.default_pantry]))
@@ -50,6 +53,7 @@ class DatabaseShopper(shopping.Shopper):
 class SimpleCLI:
     def __init__(self, rmclass=None, rmargs=None):
         if not rmclass:
+            from .backends.db import RecipeManager
             self.rmclass = RecipeManager
         else:
             self.rmclass = rmclass
@@ -81,6 +85,7 @@ class SimpleCLI:
 
 
 def get_recipe_manager(**kwargs):
+    from .backends.db import RecipeManager
     return RecipeManager.instance_for(**kwargs)
 
 
@@ -89,7 +94,5 @@ def default_rec_manager():
 
 
 if __name__ == "__main__":
-    # rm = RecipeManager(**dbargs)
+    from .backends.db import RecipeManager
     rm = RecipeManager(file="/tmp/0112/recipes.db")
-    # s=SimpleCLI()
-    # s()
