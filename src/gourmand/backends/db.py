@@ -781,8 +781,8 @@ class RecData(Pluggable):
                             "search": "%://%",
                             "logic": "OR",
                         }
-                    ]
                     for col in URL_SOURCES
+                    ]
                 )
                 for r in recs:
                     rec_url = ""
