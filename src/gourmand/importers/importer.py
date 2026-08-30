@@ -89,7 +89,7 @@ class Importer(SuspendableThread):
         else:
             self.rating_converter = RatingConverter()
             self.do_conversion = True
-        self.km = KeyManager.instance()
+        self.km = KeyManager.instance(self.rd)
         timeaction.end()
         SuspendableThread.__init__(self, name=name)
 

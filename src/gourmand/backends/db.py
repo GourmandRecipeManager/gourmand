@@ -37,8 +37,10 @@ from sqlalchemy.orm import registry
 
 import gourmand.__version__
 import gourmand.gglobals as gglobals
+import gourmand.image_utils as image_utils
 import gourmand.recipeIdentifier as recipeIdentifier
-from gourmand import Undo, convert, image_utils
+import gourmand.Undo as Undo
+from gourmand import convert
 from gourmand.defaults import lang as defaults
 from gourmand.gdebug import TimeAction, debug
 from gourmand.gtk_extras.dialog_extras import show_message

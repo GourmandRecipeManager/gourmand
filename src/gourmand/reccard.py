@@ -7,8 +7,13 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from gi.repository import Gdk, GdkPixbuf, GLib, GObject, Gtk, Pango
 from PIL import Image
 
-from gourmand import Undo, convert, defaults, plugin_loader, prefs, timeScanner
-from gourmand import image_utils as iu
+import gourmand.convert as convert
+import gourmand.defaults as defaults
+import gourmand.image_utils as iu
+import gourmand.plugin_loader as plugin_loader
+import gourmand.prefs as prefs
+import gourmand.timeScanner as timeScanner
+import gourmand.Undo as Undo
 from gourmand.exporters.clipboard_exporter import copy_to_clipboard
 from gourmand.exporters.exportManager import ExportManager
 from gourmand.exporters.printer import PrintManager
