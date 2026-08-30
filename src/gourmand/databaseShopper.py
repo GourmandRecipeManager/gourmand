@@ -1,4 +1,5 @@
-from gourmand import convert, shopping
+import gourmand.convert as convert
+import gourmand.shopping as shopping
 from gourmand.backends.db import dbDic
 
 
