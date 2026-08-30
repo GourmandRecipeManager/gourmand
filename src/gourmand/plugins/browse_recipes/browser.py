@@ -266,9 +266,9 @@ class RecipeBrowser(Gtk.VBox):
 
 
 def try_out():
-    import gourmand.recipeManager
+    from gourmand.backends.db import RecipeManager
 
-    rb = RecipeBrowser(gourmand.recipeManager.get_recipe_manager())
+    rb = RecipeBrowser(RecipeManager.get_recipe_manager())
     vb = Gtk.VBox()
     vb.pack_start(rb, True, True, 0)
     rb.show()

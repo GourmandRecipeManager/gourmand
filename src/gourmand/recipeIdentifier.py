@@ -276,9 +276,9 @@ def show_ing_diff(idiff):
 
 
 if __name__ == "__main__":
-    import recipeManager
+    from gourmand.backends.db import RecipeManager
 
-    rd = recipeManager.default_rec_manager()
+    rd = RecipeManager.default_rec_manager()
     r1 = 33
     r2 = 241
 

@@ -44,8 +44,18 @@ from gourmand.gdebug import TimeAction, debug
 from gourmand.gtk_extras.dialog_extras import show_message
 from gourmand.i18n import _
 from gourmand.keymanager import KeyManager
+from gourmand.optionparser import args
 from gourmand.plugin import DatabasePlugin
 from gourmand.plugin_loader import Pluggable, pluggable_method
+
+# Follow commandline db specification if given
+dbargs = {}
+
+if "file" not in dbargs:
+    dbargs["file"] = gglobals.gourmanddir / "recipes.db"
+if args.db_url:
+    print("We have a db_url and it is,", args.db_url)
+    dbargs["custom_url"] = args.db_url
 
 mapper_registry = registry()
 
@@ -2220,7 +2230,7 @@ class RecData(Pluggable):
                     )
 
     def ing_shopper(self, view):
-        from gourmand.recipeManager import DatabaseShopper
+        from gourmand.databaseShopper import DatabaseShopper
 
         return DatabaseShopper(self.ingview_to_lst(view), self.db)
 
@@ -2499,6 +2509,16 @@ class RecipeManager:
     def ings_search(self, ings, keyed=None, recipe_table=None, use_regexp=True, exact=False):
         """Search for multiple ingredients."""
         raise NotImplementedError
+
+    @classmethod
+    def get_recipe_manager(cls, **kwargs):
+        """Class method to get a specific instance of the manager"""
+        return cls.instance_for(**kwargs)
+
+    @classmethod
+    def default_rec_manager(cls):
+        """Class method to get the default manager using global/default args."""
+        return cls.get_recipe_manager(**dbargs)
 
     def clear_remembered_optional_ings(self, recipe=None):
         """Clear our memories of optional ingredient defaults.

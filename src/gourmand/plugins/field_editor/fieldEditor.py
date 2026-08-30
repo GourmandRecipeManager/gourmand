@@ -254,9 +254,9 @@ class FieldEditor:
 
 
 if __name__ == "__main__":
-    import recipeManager
+    from gourmand.backends.db import RecipeManager
 
-    rm = recipeManager.default_rec_manager()
+    rm = RecipeManager.default_rec_manager()
 
     class DummyRG:
         def reset_search(self):
