@@ -249,7 +249,7 @@ class DatabasePlugin(StandardPlugin):
                 self.create_tables()
             except sqlalchemy.exc.InvalidRequestError as error:
                 print(("An InvalidRequestError was caught: {0} {1}".format(error.args, error.message)))
-            self.db.metadata.create_all()
+            self.db.metadata.create_all(self.db.db)
             db.update_plugin_version(self)
         else:
             db.add_hook(plugin_loader.POST, "setup_tables", self.create_tables)
