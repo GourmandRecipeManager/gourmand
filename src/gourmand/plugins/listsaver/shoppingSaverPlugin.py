@@ -3,7 +3,7 @@ import time
 from gi.repository import Gtk
 
 import gourmand.main
-import gourmand.recipeManager
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.plugin import ShoppingListPlugin
 
@@ -46,7 +46,7 @@ class ShoppingListSaver(ShoppingListPlugin):
     def save_as_recipe(self, *args):
         sg = self.pluggable
         rr = sg.recs
-        rd = gourmand.recipeManager.get_recipe_manager()
+        rd = RecipeManager.get_recipe_manager()
         rg = gourmand.main.get_application()
         # print rr
         rec = rd.add_rec(dict(title=_("Menu for %s (%s)") % (time.strftime("%x"), time.strftime("%X")), category=_("Menu")))

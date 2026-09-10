@@ -2,8 +2,8 @@ import re
 from gettext import ngettext
 from pkgutil import get_data
 
-import sqlalchemy
 from gi.repository import GObject, Gtk, Pango
+from sqlalchemy import select
 
 import gourmand.backends.db
 import gourmand.gtk_extras.cb_extras as cb
@@ -218,53 +218,72 @@ class NutStore(pageable_store.PageableViewStore):
         int,  # ID
         str,  # description
         str,  # Density equivalent
-        # float, # Density
     ]
 
     def __init__(self, rd, per_page=15, ingredients=None):
         self.rd = rd
         if ingredients:
-            self.limited_args = self.search_kwargs = {"ingkey": ("in", ingredients)}
+            self.limited_args = {"ingkey": ("in", ingredients)}
+            self.search_kwargs = {"ingkey": ("in", ingredients)}
         else:
             self.limited_args = self.search_kwargs = {}
         self.ingredients = ingredients
         vw = self.get_vw(self.search_kwargs)
-        pageable_store.PageableViewStore.__init__(self, vw, columns=self.columns, column_types=self.column_types, per_page=per_page)
+        pageable_store.PageableViewStore.__init__(
+            self,
+            vw,
+            columns=self.columns,
+            column_types=self.column_types,
+            per_page=per_page
+        )
 
     def get_vw(self, search_kwargs, search_extras_regexp=None):
-        """Get a view for our model.
-
-        Our model will consist of items found in our database + any
-        ingredients specified when we were created. In other words,
-        we'll list all ingredients that we're told about, whether
-        they're in the nutrition aliases table or not.
-
-        search_kwargs are the arguments handed to our database search.
-        search_extras_text is a regexp used to filter our "extras."
-        """
-        select = sqlalchemy.select(
-            [
-                self.rd.nutritionaliases_table.c.ingkey,
-                self.rd.nutritionaliases_table.c.density_equivalent,
-                self.rd.nutrition_table.c.desc,
-                self.rd.nutrition_table.c.ndbno,
-            ],
-            *gourmand.backends.db.make_simple_select_arg(search_kwargs, self.rd.nutrition_table, self.rd.nutritionaliases_table),
-            **{"from_obj": [sqlalchemy.join(self.rd.nutrition_table, self.rd.nutritionaliases_table)]},
+        """Get a view for our model."""
+        # Join the target data tables explicitly
+        join_tbl = self.rd.nutrition_table.join(
+            self.rd.nutritionaliases_table
         )
-        vw = select.execute().fetchall()
+
+        stmt = select(
+            self.rd.nutritionaliases_table.c.ingkey,
+            self.rd.nutritionaliases_table.c.density_equivalent,
+            self.rd.nutrition_table.c.desc,
+            self.rd.nutrition_table.c.ndbno,
+        ).select_from(join_tbl)
+
+        where_args = gourmand.backends.db.make_simple_select_arg(
+            search_kwargs,
+            self.rd.nutrition_table,
+            self.rd.nutritionaliases_table
+        )
+        if where_args:
+            stmt = stmt.where(*where_args)
+
+        with self.rd.db.connect() as conn:
+            vw = conn.execute(stmt).mappings().fetchall()
+
         # We must show ingredients whether we have them or not...
         extras = []
         if self.ingredients:
             ings_to_add = self.ingredients[:]
             if search_extras_regexp:
-                ings_to_add = [i for i in ings_to_add if re.match(search_extras_regexp, i)]
+                ings_to_add = [
+                    i for i in ings_to_add
+                    if re.match(search_extras_regexp, i)
+                ]
             for row in vw:
-                while row.ingkey in ings_to_add:
-                    ings_to_add.remove(row.ingkey)
+                while row["ingkey"] in ings_to_add:
+                    ings_to_add.remove(row["ingkey"])
             for extra_ing in ings_to_add:
                 if extra_ing:
-                    extras.append(MockObject(ingkey=extra_ing, ndbno=0, desc="Not in database", density_equivalent=None))
+                    extras.append(
+                        MockObject(
+                            ingkey=extra_ing,
+                            ndbno=0,
+                            desc="Not in database",
+                            density_equivalent=None
+                        )
+                    )
         return vw + extras
 
     def limit(self, txt, column="ingkey", search_options={}):
@@ -286,12 +305,17 @@ class NutStore(pageable_store.PageableViewStore):
         self.change_view(vw)
 
     def _get_value_(self, row, attr):
+        if hasattr(row, "get"):
+            return row[attr]
         return getattr(row, attr)
 
     def _get_slice_(self, bottom, top):
         try:
-            return [[r] + [self._get_value_(r, col) for col in self.columns[1:]] for r in self.view[bottom:top]]
-        except:
+            return [
+                [r] + [self._get_value_(r, col) for col in self.columns[1:]]
+                for r in self.view[bottom:top]
+            ]
+        except Exception:
             print("_get_slice_ failed with", bottom, top)
             raise
 

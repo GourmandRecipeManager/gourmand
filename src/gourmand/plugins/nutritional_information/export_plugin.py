@@ -1,10 +1,10 @@
 from xml.sax.saxutils import escape
 
+from gourmand.backends.db import RecipeManager
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.i18n import _
 from gourmand.plugin import BaseExporterPlugin
 from gourmand.prefs import Prefs
-from gourmand.recipeManager import default_rec_manager
 
 from .nutritionLabel import MAIN_NUT_LAYOUT, MAJOR, SEP
 
@@ -21,7 +21,7 @@ class NutritionBaseExporterPlugin(BaseExporterPlugin):
             return None
         txt = ""
         footnotes = ""
-        rd = default_rec_manager()
+        rd = RecipeManager.default_rec_manager()
         nd = rd.nd
         nutinfo = nd.get_nutinfo_for_inglist(rd.get_ings(rec), rd)
         ings = rd.get_ings(rec)

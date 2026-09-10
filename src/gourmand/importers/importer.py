@@ -6,10 +6,10 @@ import time
 import gourmand.gglobals
 import gourmand.gtk_extras.dialog_extras as de
 from gourmand import convert, image_utils
+from gourmand.backends.db import RecipeManager
 from gourmand.gdebug import TimeAction, debug, print_timer_info
 from gourmand.i18n import _
 from gourmand.keymanager import KeyManager
-from gourmand.recipeManager import get_recipe_manager
 from gourmand.threadManager import SuspendableThread, Terminated
 
 # Convenience functions
@@ -66,7 +66,7 @@ class Importer(SuspendableThread):
                 print("WARNING: ", self, "handed obsolete parameter rd=", rd)
         self.do_markup = do_markup
         self.count = 0
-        self.rd = get_recipe_manager()
+        self.rd = RecipeManager.get_recipe_manager()
         self.rd_orig_ing_hooks = self.rd.add_ing_hooks
         self.added_recs = []
         self.added_ings = []
@@ -89,7 +89,7 @@ class Importer(SuspendableThread):
         else:
             self.rating_converter = RatingConverter()
             self.do_conversion = True
-        self.km = KeyManager.instance()
+        self.km = KeyManager.instance(self.rd)
         timeaction.end()
         SuspendableThread.__init__(self, name=name)
 
