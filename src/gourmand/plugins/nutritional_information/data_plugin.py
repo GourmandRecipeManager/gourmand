@@ -16,7 +16,14 @@ class NutritionDataPlugin(DatabasePlugin):
             "usda_weights",
             self.db.metadata,
             Column("id", Integer(), primary_key=True),
-            *[Column(name, gourmand.backends.db.map_type_to_sqlalchemy(typ), **{}) for lname, name, typ in parser_data.WEIGHT_FIELDS],
+            *[
+                Column(
+                    name,
+                    gourmand.backends.db.map_type_to_sqlalchemy(typ),
+                )
+                for lname, name, typ in parser_data.WEIGHT_FIELDS
+            ],
+            extend_existing=True,
         )
 
         class UsdaWeight(object):
@@ -29,11 +36,12 @@ class NutritionDataPlugin(DatabasePlugin):
             "nutritionconversions",
             self.db.metadata,
             Column("id", Integer(), primary_key=True),
-            Column("ingkey", String(length=255), **{}),
-            Column("unit", String(length=255), **{}),
-            Column("factor", Float(), **{}),  # Factor is the amount we multiply
-            # from unit to get 100 grams
-        )  # NUTRITION_CONVERSIONS
+            Column("ingkey", String(length=255)),
+            Column("unit", String(length=255)),
+            # Factor is the amount we multiply from unit to get 100 grams
+            Column("factor", Float()),
+            extend_existing=True,
+        )
 
         class NutritionConversion(object):
             pass
@@ -48,6 +56,7 @@ class NutritionDataPlugin(DatabasePlugin):
             Column("ingkey", Text()),
             Column("ndbno", Integer, ForeignKey("nutrition.ndbno")),
             Column("density_equivalent", Text(length=20)),
+            extend_existing=True,
         )
 
         class NutritionAlias(object):
@@ -59,13 +68,21 @@ class NutritionDataPlugin(DatabasePlugin):
         return self.db.do_add_and_return_item(self.db.nutrition_table, d, id_prop="ndbno")
 
     def create_tables(self, *args):
-        # print 'nutritional_information.data_plugin.create_tables()'
-        cols = [
-            Column(name, gourmand.backends.db.map_type_to_sqlalchemy(typ), **(name == "ndbno" and {"primary_key": True} or {}))
-            for lname, name, typ in parser_data.NUTRITION_FIELDS
-        ] + [Column("foodgroup", Text(), **{})]
-        # print 'nutrition cols:',cols
-        self.db.nutrition_table = Table("nutrition", self.db.metadata, *cols)
+        cols = []
+        for lname, name, typ in parser_data.NUTRITION_FIELDS:
+            is_pk = name == "ndbno"
+            col_type = gourmand.backends.db.map_type_to_sqlalchemy(typ)
+
+            cols.append(Column(name, col_type, primary_key=is_pk))
+
+        cols.append(Column("foodgroup", Text()))
+
+        self.db.nutrition_table = Table(
+            "nutrition",
+            self.db.metadata,
+            *cols,
+            extend_existing=True
+        )
 
         class Nutrition(object):
             pass
