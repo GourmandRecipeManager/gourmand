@@ -135,6 +135,13 @@ class GourmandApplication:
         """Initialize recipe database from the recipe manager."""
         self.rd = recipeManager.default_rec_manager()
 
+        # Migrate once if it has not occurred yet, update preference file
+        if ( (self.prefs.get('migrate_db') is None) or
+             (self.prefs.get('migrate_db')['cuisine']) ):
+            self.rd.rd.migrate_cuisines_to_cuisine_table()
+            self.prefs['migrate_db'] = {'cuisine': False}
+            self.prefs.save()
+
         # Add auto save
         def autosave():
             self.rd.save()
@@ -288,6 +295,9 @@ class GourmandApplication:
         """Create a ListModel with unique values of attribute."""
         if attribute == "category":
             slist = self.rg.rd.get_unique_values(attribute, self.rg.rd.categories_table)
+        # Cuisine information has its own table now
+        if attribute == "cuisine":
+            slist = self.rg.rd.get_unique_values(attribute, self.rg.rd.cuisine_table)
         else:
             slist = self.rg.rd.get_unique_values(attribute, deleted=False)
         if not slist:
@@ -297,10 +307,11 @@ class GourmandApplication:
                 if default_value not in slist:
                     slist.append(default_value)
 
-        slist = sorted(slist)
         if "None" in slist:
             slist.remove("None")
         slist = set(slist)
+        # Sort after creating a set, otherwise it gets unsorted
+        slist = sorted(slist, key=str.lower)
         return slist
 
     def get_attribute_model(self, attribute: str) -> Gtk.ListStore:
@@ -736,12 +747,15 @@ class StuffThatShouldBePlugins:
             ):
                 for r in recs:
                     # Need to copy in case we're dealing with
-                    # categories as they would get messed up by
-                    # modify_rec
+                    # categories or cuisines as they would get
+                    # messed up by modify_rec
                     changes = self.batchEditor.values.copy()
                     if only_where_blank:
                         for attribute in list(changes.keys()):
-                            if (attribute == "category" and self.rd.get_cats(r)) or (hasattr(r, attribute) and getattr(r, attribute)):
+                            if ( (attribute == "category" and self.rd.get_cats(r)) or
+                                 (hasattr(r, attribute) and getattr(r, attribute)) or
+                                 (attribute == "cuisine" and self.rd.get_cuisines(r))
+                                 ):
                                 del changes[attribute]
                         if changes:
                             self.rd.modify_rec(r, changes)
