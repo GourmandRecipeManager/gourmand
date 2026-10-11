@@ -10,7 +10,8 @@ from typing import Union
 
 from gi.repository import Gtk, Pango
 
-from gourmand import convert, gglobals, recipeIdentifier, recipeManager
+from gourmand import convert, gglobals, recipeIdentifier  #, recipeManager
+from gourmand.backends.db import RecipeManager
 from gourmand.gtk_extras import dialog_extras, mnemonic_manager, ratingWidget
 from gourmand.i18n import _
 
@@ -58,7 +59,7 @@ class RecipeMergerDialog:
         if rd:
             self.rd = rd
         else:
-            self.rd = recipeManager.get_recipe_manager()
+            self.rd = RecipeManager.default_rec_manager()
         self.in_recipes = in_recipes
         self.on_close_callback = on_close_callback
         self.to_merge = []  # Queue of recipes to be merged...
@@ -679,7 +680,7 @@ if __name__ == "__main__":
         else:
             print("No differences in ", conflicts)
 
-    rd = recipeManager.default_rec_manager()
+    rd = RecipeManager.default_rec_manager()
     rmd = RecipeMergerDialog(rd)
     rmd.populate_tree()
     rmd.show()

@@ -170,9 +170,10 @@ class EmailerDialog(RecipeEmailer):
 
 
 if __name__ == "__main__":
-    import gourmand.recipeManager
+    from gourmand.backends.db import RecipeManager
 
-    rd = gourmand.recipeManager.default_rec_manager()
+    rd = RecipeManager.default_rec_manager()
+
     rec = rd.fetch_one(rd.recipe_table)
     ed = EmailerDialog([rec], rd, {})
     ed.setup_dialog()

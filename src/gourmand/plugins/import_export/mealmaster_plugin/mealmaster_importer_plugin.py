@@ -1,9 +1,9 @@
 import os.path
 
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.importers.importer import Tester
 from gourmand.plugin import ImporterPlugin
-from gourmand.recipeManager import get_recipe_manager
 
 from . import mealmaster_importer
 
@@ -43,7 +43,7 @@ def assert_equal_ignorecase(val1, val2):
 
 
 def test_mmf(recs, filename):
-    rd = get_recipe_manager()
+    rd = RecipeManager.get_recipe_manager()
     assert_equal(recs[0].title, "Almond Mushroom Pate")
     assert_equal(recs[0].yields, 6)
     assert_equal(recs[0].yield_unit, "servings")
@@ -53,7 +53,7 @@ def test_mmf(recs, filename):
 
 
 def test_2_col(recs, filename):
-    rd = get_recipe_manager()
+    rd = RecipeManager.get_recipe_manager()
     assert len(recs) == 1, "Expected 1 recipes; got %s (%s)" % (len(recs), recs)
     chile_ings = rd.get_ings(recs[0])
     print("chile_ings=", chile_ings)

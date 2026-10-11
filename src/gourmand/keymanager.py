@@ -23,11 +23,7 @@ class KeyManager:
 
         return KeyManager.__single
 
-    def __init__(self, recipe_manager=None):
-        if recipe_manager is None:
-            from . import recipeManager  # work around cyclic dependencies
-
-            recipe_manager = recipeManager.default_rec_manager()
+    def __init__(self, recipe_manager):
         self.rm = recipe_manager
 
         if self.rm.fetch_len(self.rm.keylookup_table) == 0:

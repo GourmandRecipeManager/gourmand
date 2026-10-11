@@ -5,12 +5,10 @@ import time
 
 from gi.repository import Gdk, GObject, Gtk
 
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
-from gourmand.recipeManager import get_recipe_manager
 
-# from nutrition.nutritionLabel import NutritionLabel
-# from nutrition.nutrition import NutritionInfoList
-from . import convert, plugin, plugin_loader, prefs, recipeManager
+from . import convert, databaseShopper, plugin, plugin_loader, prefs
 from .exporters.printer import PrintManager
 from .gdebug import debug
 from .gtk_extras import WidgetSaver, fix_action_group_importance
@@ -108,7 +106,7 @@ class IngredientAndPantryList:
     """
 
     def __init__(self):
-        self.rd = recipeManager.get_recipe_manager()
+        self.rd = RecipeManager.get_recipe_manager()
         self.setup_ui_manager()
         self.setup_actions()
 
@@ -566,7 +564,7 @@ class ShopGui(ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
         self.create_popups()
 
     def get_shopper(self, lst):
-        return recipeManager.DatabaseShopper(lst, self.rd)
+        return databaseShopper.DatabaseShopper(lst, self.rd)
 
     # Create interface...
 
@@ -889,7 +887,7 @@ class ShopGui(ShoppingList, plugin_loader.Pluggable, IngredientAndPantryList):
 
     def item_added(self, *args):
         txt = self.add_entry.get_text()
-        dct = get_recipe_manager().parse_ingredient(txt)
+        dct = RecipeManager.get_recipe_manager().parse_ingredient(txt)
         if not dct:
             dct = {"amount": None, "unit": None, "item": txt}
         self.extras.append([dct.get("amount"), dct.get("unit"), dct.get("item")])
@@ -910,7 +908,7 @@ class OptionalIngDialog(de.ModalDialog):
 
     def __init__(self, vw, prefs, mult=1, default=False):
         debug("__init__ (self,vw,default=False):", 5)
-        self.rd = recipeManager.get_recipe_manager()
+        self.rd = RecipeManager.get_recipe_manager()
         de.ModalDialog.__init__(
             self,
             default,
@@ -1007,7 +1005,7 @@ if __name__ == "__main__":
             # self.pantry = [('Dairy',[('eggs','1/2 doz')]),
             #                ('Frozen',[('ice cream','1 gal')]),]
             #
-            rm = recipeManager.get_recipe_manager()
+            rm = RecipeManager.get_recipe_manager()
             recs = [(r, 1) for r in rm.fetch_all(rm.recipe_table)[:2]]
             self.data, self.pantry = self.grabIngsFromRecs(recs)
             self.w = Gtk.Window()
@@ -1018,7 +1016,7 @@ if __name__ == "__main__":
 
     # tst = TestIngredientAndPantryList()
     sg = ShopGui()
-    rm = recipeManager.get_recipe_manager()
+    rm = RecipeManager.get_recipe_manager()
     recs = [(r, 1) for r in rm.fetch_all(rm.recipe_table)[:2]]
     for r, mult in recs:
         sg.addRec(r, mult)
