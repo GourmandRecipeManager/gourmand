@@ -202,7 +202,7 @@ setup(
         "lxml>=4.6.3",
         "pillow>=8.3.2",
         "pygobject>=3.40.1,<=3.50.0",  # Issues with Ubuntu 22.04: https://github.com/beeware/toga/issues/3143
-        "sqlalchemy>=1.4.36,<2",
+        "sqlalchemy>=2.0.0,<2.1",
         "tomli-w>=1.0.0",
         'tomli; python_version<"3.11"',
         "recipe-scrapers>=14.27.0",

@@ -10,9 +10,9 @@ from recipe_scrapers import SCRAPERS, scrape_html
 from recipe_scrapers._exceptions import SchemaOrgException
 
 from gourmand import __version__
+from gourmand.backends.db import RecipeManager
 from gourmand.gdebug import debug
 from gourmand.image_utils import ImageBrowser, image_to_bytes, make_thumbnail
-from gourmand.recipeManager import get_recipe_manager
 from gourmand.structure import Recipe
 
 supported_sites = list(SCRAPERS.keys())
@@ -39,7 +39,7 @@ def import_urls(urls: List[str]) -> Tuple[List[str], List[str]]:
     """
     imported: List[str] = []
     unsupported: List[str] = []
-    database = get_recipe_manager()
+    database = RecipeManager.get_recipe_manager()
 
     # Filter websites that are not supported by recipe-scrapers.
     for url in urls:

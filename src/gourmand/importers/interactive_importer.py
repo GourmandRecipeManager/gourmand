@@ -7,11 +7,11 @@ from gi.repository import Gtk
 
 import gourmand.gglobals as gglobals
 import gourmand.gtk_extras.cb_extras as cb
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.image_utils import ImageBrowser, image_to_bytes
 from gourmand.importers import importer
 from gourmand.importers.generic_recipe_parser import RecipeParser
-from gourmand.recipeManager import get_recipe_manager
 from gourmand.threadManager import NotThreadSafe
 
 # TODO
@@ -69,7 +69,7 @@ class ConvenientImporter(importer.Importer):
         self.group = txt.strip()
 
     def add_ing_from_text(self, txt):
-        parsed_dict = get_recipe_manager().parse_ingredient(txt)
+        parsed_dict = RecipeManager.get_recipe_manager().parse_ingredient(txt)
         self.ing = parsed_dict
         self.commit_ing()
 

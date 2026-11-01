@@ -1,8 +1,8 @@
 from gi.repository import Gtk
 
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.plugin import PluginPlugin
-from gourmand.recipeManager import get_recipe_manager
 
 
 class KeyEditorPlugin(PluginPlugin):
@@ -30,7 +30,7 @@ class KeyEditorPlugin(PluginPlugin):
         renderer.connect("editing-started", self.start_edit_cb)
         renderer.connect("edited", self.key_edited_cb, (ike, key_col, instant_apply))
         # Build shopcat model...
-        self.rd = get_recipe_manager()
+        self.rd = RecipeManager.get_recipe_manager()
         self.shopcat_model = Gtk.ListStore(str)
         for val in self.rd.get_unique_values("shopcategory", table=self.rd.shopcats_table):
             if val:
