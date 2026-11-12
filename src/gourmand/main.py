@@ -6,7 +6,17 @@ from typing import List, Set, Tuple
 
 from gi.repository import Gdk, GLib, GObject, Gtk
 
-from gourmand import __version__, batchEditor, convert, plugin, plugin_gui, plugin_loader, prefs, prefsGui, reccard, recipeManager, shopgui
+import gourmand.batchEditor as batchEditor
+import gourmand.convert as convert
+import gourmand.plugin as plugin
+import gourmand.plugin_gui as plugin_gui
+import gourmand.plugin_loader as plugin_loader
+import gourmand.prefs as prefs
+import gourmand.prefsGui as prefsGui
+import gourmand.reccard as reccard
+import gourmand.shopgui as shopgui
+from gourmand import __version__
+from gourmand.backends.db import RecipeManager
 from gourmand.defaults.defaults import get_pluralized_form
 from gourmand.defaults.defaults import lang as defaults
 from gourmand.exporters.clipboard_exporter import copy_to_clipboard, copy_to_drag
@@ -133,7 +143,7 @@ class GourmandApplication:
     # setup recipe database
     def setup_recipes(self):
         """Initialize recipe database from the recipe manager."""
-        self.rd = recipeManager.default_rec_manager()
+        self.rd = RecipeManager.default_rec_manager()
 
         # Add auto save
         def autosave():
