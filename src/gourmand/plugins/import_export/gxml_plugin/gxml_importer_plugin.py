@@ -5,10 +5,10 @@ import os.path
 
 from gi.repository import Pango
 
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.importers.importer import Tester
 from gourmand.plugin import ImporterPlugin
-from gourmand.recipeManager import get_recipe_manager
 
 from . import gxml2_importer, gxml_importer
 
@@ -22,7 +22,7 @@ test_dir = os.path.join(test_dir, "tests", "recipe_files")
 class GxmlImportTester:
 
     def __init__(self):
-        self.rm = get_recipe_manager()
+        self.rm = RecipeManager.get_recipe_manager()
 
     def run_test(self, recipe_objects, filename):
         if filename.endswith("test_set.grmt"):

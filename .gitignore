@@ -22,7 +22,7 @@ tests/recipe_files/athenos1.gourmetcleaned.mx2
 # Virtual environments
 /env/
 /venv/
-
+.venv*
 
 # Editors
 *.swp

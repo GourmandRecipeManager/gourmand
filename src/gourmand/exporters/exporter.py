@@ -5,6 +5,7 @@ import time
 import xml.sax.saxutils
 
 from gi.repository import GLib, Pango
+from sqlalchemy import text
 
 from gourmand import convert
 from gourmand.gdebug import TimeAction, debug, print_timer_info
@@ -545,7 +546,9 @@ class ExporterMultirec(SuspendableThread, Pluggable):
 
     def append_referenced_recipes(self):
         for r in self.recipes[:]:
-            reffed = self.rd.db.execute("select * from ingredients where recipe_id=%s and refid is not null" % r.id)
+            with self.rd.db.connect() as conn:
+                query = text("select * from ingredients where recipe_id=:recipe_id and refid is not null")
+                reffed = conn.execute(query, {"recipe_id": r.id})
             for ref in reffed:
                 rec = self.rd.get_rec(ref.refid)
                 if rec is not None and rec not in self.recipes:

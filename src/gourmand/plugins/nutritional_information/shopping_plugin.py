@@ -1,7 +1,6 @@
 from gi.repository import Gtk
 
-import gourmand.main
-import gourmand.recipeManager
+from gourmand.backends.db import RecipeManager
 from gourmand.i18n import _
 from gourmand.plugin import ShoppingListPlugin
 from gourmand.prefs import Prefs
@@ -45,7 +44,7 @@ class ShoppingNutritionalInfoPlugin(ShoppingListPlugin):
     def show_nutinfo(self, *args):
         sg = self.pluggable
         rr = sg.recs
-        rd = gourmand.recipeManager.get_recipe_manager()
+        rd = RecipeManager.get_recipe_manager()
         if not hasattr(self, "nutrition_window"):
             self.create_nutrition_window()
         nutinfo = None

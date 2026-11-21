@@ -1,7 +1,7 @@
 import os.path
 
 from gi.repository import GdkPixbuf, GObject, Gtk
-from sqlalchemy.sql import and_, not_
+from sqlalchemy import and_, not_, select
 
 import gourmand.convert as convert
 from gourmand.gglobals import DEFAULT_ATTR_ORDER, REC_ATTR_DIC
@@ -63,6 +63,7 @@ class RecipeBrowserView(Gtk.IconView):
         return attr_to_icon.get(item, attr_to_icon["category"])
 
     def get_pixbuf(self, attr: str, val: str) -> GdkPixbuf.Pixbuf:
+        result = None
         if attr == "category":
             tbl = self.rd.recipe_table.join(self.rd.categories_table)
             col = self.rd.categories_table.c.category
@@ -71,26 +72,52 @@ class RecipeBrowserView(Gtk.IconView):
                     col == val,
                     self.rd.recipe_table.c.image is not None,
                     self.rd.recipe_table.c.image != bytes(),
-                    not_(self.rd.recipe_table.c.title.in_(self.category_images)),
+                    not_(
+                        self.rd.recipe_table.c.title.in_(
+                            self.category_images
+                        )
+                    ),
                 )
             else:
-                stment = and_(col == val, self.rd.recipe_table.c.image is not None, self.rd.recipe_table.c.image != bytes())
-            result = tbl.select(stment, limit=1).execute().fetchone()
+                stment = and_(
+                    col == val,
+                    self.rd.recipe_table.c.image is not None,
+                    self.rd.recipe_table.c.image != bytes(),
+                )
+
+            stmt = (
+                select(self.rd.recipe_table)
+                .select_from(tbl)
+                .where(stment)
+                .limit(1)
+            )
+            with self.rd.db.connect() as conn:
+                result = conn.execute(stmt).mappings().fetchone()
+
             if not hasattr(self, "category_images"):
                 self.category_images = []
             if result:
-                self.category_images.append(result.title)
+                # Use safe row mapping lookup for strings
+                self.category_images.append(result["title"])
+
         elif attr == "rating":
             return star_generator.get_pixbuf(val)
         elif attr in ["preptime", "cooktime"]:
             return get_time_slice(val)
         else:
-            tbl = self.rd.recipe_table
             col = getattr(self.rd.recipe_table.c, attr)
-            stment = and_(col == val, self.rd.recipe_table.c.image is not None, self.rd.recipe_table.c.image != bytes())
-            result = tbl.select(stment, limit=1).execute().fetchone()
-        if result and result.thumb:
-            return scale_pb(bytes_to_pixbuf(result.image))
+            stment = and_(
+                col == val,
+                self.rd.recipe_table.c.image is not None,
+                self.rd.recipe_table.c.image != bytes(),
+            )
+
+            stmt = select(self.rd.recipe_table).where(stment).limit(1)
+            with self.rd.db.connect() as conn:
+                result = conn.execute(stmt).mappings().fetchone()
+
+        if result and result["thumb"]:
+            return scale_pb(bytes_to_pixbuf(result["image"]))
         else:
             return self.get_base_icon(attr) or self.get_base_icon("category")
 
@@ -175,7 +202,12 @@ class RecipeBrowserView(Gtk.IconView):
                 return True
 
         recipes = list(filter(just_recs_filter, recipes))
-        return [r for r in self.rd.recipe_table.select(self.rd.recipe_table.c.id.in_(recipes)).execute()]
+
+        stmt = select(self.rd.recipe_table).where(
+            self.rd.recipe_table.c.id.in_(recipes)
+        )
+        with self.rd.db.connect() as conn:
+            return conn.execute(stmt).fetchall()
 
     def reset_model(self):
         self.models = {}
@@ -234,9 +266,9 @@ class RecipeBrowser(Gtk.VBox):
 
 
 def try_out():
-    import gourmand.recipeManager
+    from gourmand.backends.db import RecipeManager
 
-    rb = RecipeBrowser(gourmand.recipeManager.get_recipe_manager())
+    rb = RecipeBrowser(RecipeManager.get_recipe_manager())
     vb = Gtk.VBox()
     vb.pack_start(rb, True, True, 0)
     rb.show()
