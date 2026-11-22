@@ -33,10 +33,27 @@ class TestRecBasics(DBTest):
         rec2 = self.db.new_rec()
         rec2 = self.db.modify_rec(rec2, {"title": "Foo", "cuisine": "Bar"})
         self.assertEqual(rec2.title, "Foo")
-        self.assertEqual(rec2.cuisine, "Bar")
+        # Cuisines are in their own table now
+        self.assertEqual(self.db.get_cuisines(rec2.id)[0], "Bar")
         self.db.delete_rec(rec)
         self.db.delete_rec(rec2)
         self.assertEqual(self.db.fetch_len(self.db.recipe_table), old_count)
+
+    def test_multiple_cuisines_added_initially(self):
+        cuisine_list = ['bar', 'baz', 'Indian']
+        rec = self.db.add_rec({"title": "Multiple Cuisines Initially", "cuisine": ", ".join(cuisine_list)})
+        self.assertListEqual(self.db.get_cuisines(rec.id), cuisine_list)
+        self.db.delete_rec(rec)
+
+    def test_multiple_cuisines_added_later(self):
+        cuisine_list = ['bar', 'baz', 'Indian']
+        rec = self.db.add_rec({"title": "Multiple Cuisines Later"})
+        self.assertNotEqual(self.db.get_cuisines(rec.id), cuisine_list)
+        self.db.modify_rec(rec, {'cuisine': ", ".join(cuisine_list)})
+        self.assertListEqual(self.db.get_cuisines(rec.id), cuisine_list)
+        self.db.delete_cuisine(rec.id, 'Indian')
+        self.assertNotIn("Indian", self.db.get_cuisines(rec.id))
+        self.db.delete_rec(rec)
 
 
 class TestIngBasics(DBTest):
@@ -85,6 +102,7 @@ class TestSearch(DBTest):
         self.db.delete_by_criteria(self.db.ingredients_table, {})  # Clear out ingredients
         self.db.delete_by_criteria(self.db.recipe_table, {})  # Clear out recipes
         self.db.delete_by_criteria(self.db.categories_table, {})  # Clear out categories
+        self.db.delete_by_criteria(self.db.cuisine_table, {})  # Clear out cuisines
         self.db.add_rec({"title": "Foo", "cuisine": "Bar", "source": "Z"})
         self.db.add_rec({"title": "Fooey", "cuisine": "Bar", "source": "Y"})
         self.db.add_rec({"title": "Fooey", "cuisine": "Foo", "source": "X"})
@@ -210,7 +228,11 @@ class TestMoreDataStuff(DBTest):
         for attr, val in list(new_attrs.items()):
             r = self.db.modify_rec(r, {attr: val})
             # Make sure our value changed...
-            self.assertEqual(getattr(r, attr), val, "Incorrect modified value for %s" % attr)
+            if attr != "cuisine":
+                self.assertEqual(getattr(r, attr), val, "Incorrect modified value for %s" % attr)
+            # Cuisine has its own table and needs to be treated differently
+            else:
+                self.assertIn(val, self.db.get_cuisines(r.id), "Incorrect modified value for %s" % attr)
             # Make sure no other values changed
             for a, v in list(orig_attrs.items()):
                 if a != attr:
