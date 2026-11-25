@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gourmet Recipe Manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 14:04+0200\n"
+"POT-Creation-Date: 2026-08-08 17:58+0200\n"
 "PO-Revision-Date: 2013-07-18 10:17+0000\n"
 "Last-Translator: wir3k <wir1990@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -462,7 +462,7 @@ msgstr "Edytuj _notatki"
 #: ../src/gourmand/plugins/duplicate_finder/recipeMerger.py:507
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:83
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:168
-#: ../src/gourmand/exporters/exporter.py:625
+#: ../src/gourmand/exporters/exporter.py:627
 msgid "Recipe"
 msgstr "Przepis"
 
@@ -485,7 +485,7 @@ msgstr "Dodaj składn_iki:"
 #: ../src/gourmand/plugins/import_export/html_plugin/html_exporter.py:117
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:180
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:598
-#: ../src/gourmand/exporters/exporter.py:251
+#: ../src/gourmand/exporters/exporter.py:252
 #: ../src/gourmand/importers/interactive_importer.py:40
 #: ../src/gourmand/importers/interactive_importer.py:47
 msgid "Ingredients"
@@ -500,7 +500,8 @@ msgid "Add to _shopping list"
 msgstr "Dodaj do li_sty zakupów"
 
 #: ../src/gourmand/ui/recipe_index.ui.h:3
-msgid "Jump to recipe in Recipe Card vew"
+#, fuzzy
+msgid "Jump to recipe in Recipe Card view"
 msgstr "Skocz do przepisu w widoku Karty Receptur"
 
 #: ../src/gourmand/ui/recipe_index.ui.h:5
@@ -1441,27 +1442,27 @@ msgid "Do you really want to do this"
 msgstr "Czy naprawdę chcesz to zrobić"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:771
-#: ../src/gourmand/importers/importer.py:488
+#: ../src/gourmand/importers/importer.py:482
 msgid "excellent"
 msgstr "doskonały"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:772
-#: ../src/gourmand/importers/importer.py:489
+#: ../src/gourmand/importers/importer.py:483
 msgid "great"
 msgstr "znakomity"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:773
-#: ../src/gourmand/importers/importer.py:490
+#: ../src/gourmand/importers/importer.py:484
 msgid "good"
 msgstr "dobry"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:774
-#: ../src/gourmand/importers/importer.py:491
+#: ../src/gourmand/importers/importer.py:485
 msgid "fair"
 msgstr "zadawalający"
 
 #: ../src/gourmand/gtk_extras/dialog_extras.py:775
-#: ../src/gourmand/importers/importer.py:493
+#: ../src/gourmand/importers/importer.py:487
 msgid "poor"
 msgstr "słaby"
 
@@ -2432,8 +2433,8 @@ msgstr "Oryginalna strona z %s"
 #: ../src/gourmand/plugins/import_export/epub_plugin/epub_exporter.py:270
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:625
 #: ../src/gourmand/plugins/import_export/pdf_plugin/pdf_exporter.py:638
-#: ../src/gourmand/exporters/exporter.py:383
-#: ../src/gourmand/exporters/exporter.py:479
+#: ../src/gourmand/exporters/exporter.py:385
+#: ../src/gourmand/exporters/exporter.py:481
 msgid "optional"
 msgstr "opcjonalne"
 
@@ -3494,19 +3495,19 @@ msgstr "Ilość pozycji Listy zakupów"
 msgid "Edit _nutritional info"
 msgstr "Edytuj info wartości od_żywczych"
 
-#: ../src/gourmand/exporters/exporter.py:215
-#: ../src/gourmand/exporters/exporter.py:217
-#: ../src/gourmand/exporters/exporter.py:538
+#: ../src/gourmand/exporters/exporter.py:216
+#: ../src/gourmand/exporters/exporter.py:218
 #: ../src/gourmand/exporters/exporter.py:540
+#: ../src/gourmand/exporters/exporter.py:542
 msgid "stars"
 msgstr "gwiazdki"
 
-#: ../src/gourmand/exporters/exporter.py:577
+#: ../src/gourmand/exporters/exporter.py:579
 #, python-format
 msgid "Exported %(number)s of %(total)s recipes"
 msgstr "Wyeksportowano %(number)s z %(total)s przepisów"
 
-#: ../src/gourmand/exporters/exporter.py:597
+#: ../src/gourmand/exporters/exporter.py:599
 msgid "Export complete."
 msgstr "Eksport zakończony"
 
@@ -3626,19 +3627,19 @@ msgstr "Wszystkie importowalne pliki"
 msgid "Imported %s recipes."
 msgstr "Przepis %s został pobrany"
 
-#: ../src/gourmand/importers/importer.py:188
+#: ../src/gourmand/importers/importer.py:187
 msgid "serving"
 msgid_plural "servings"
 msgstr[0] "porcja"
 msgstr[1] "porcje"
 msgstr[2] "porcje"
 
-#: ../src/gourmand/importers/importer.py:269
+#: ../src/gourmand/importers/importer.py:263
 #, python-format
 msgid "Imported %s of %s recipes."
 msgstr "Zaimportowano %s z %s przepisów."
 
-#: ../src/gourmand/importers/importer.py:492
+#: ../src/gourmand/importers/importer.py:486
 msgid "okay"
 msgstr "OK"
 
@@ -3788,7 +3789,7 @@ msgstr "Błąd %s: %s"
 msgid "Traceback"
 msgstr "Prześledź"
 
-#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:629
+#: ../src/gourmand/convert.py:108 ../src/gourmand/convert.py:608
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekunda"
@@ -3800,7 +3801,7 @@ msgstr[2] "sekund"
 msgid "min"
 msgstr "min"
 
-#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:628
+#: ../src/gourmand/convert.py:110 ../src/gourmand/convert.py:607
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minuta"
@@ -3812,28 +3813,28 @@ msgstr[2] "minut"
 msgid "hrs."
 msgstr "godz."
 
-#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:627
+#: ../src/gourmand/convert.py:112 ../src/gourmand/convert.py:606
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "godzina"
 msgstr[1] "godziny"
 msgstr[2] "godzin"
 
-#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:626
+#: ../src/gourmand/convert.py:113 ../src/gourmand/convert.py:605
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dzień"
 msgstr[1] "dni"
 msgstr[2] "dni"
 
-#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:625
+#: ../src/gourmand/convert.py:114 ../src/gourmand/convert.py:604
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] "tydzień"
 msgstr[1] "tygodnie"
 msgstr[2] "tygodni"
 
-#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:624
+#: ../src/gourmand/convert.py:115 ../src/gourmand/convert.py:603
 msgid "month"
 msgid_plural "months"
 msgstr[0] "miesiąc"
@@ -3843,7 +3844,7 @@ msgstr[2] "miesięcy"
 #. 'millennia':lambda decades: ngettext("millenium","millenia",round(decades))
 #. 'centuries':lambda decades: ngettext("century","centuries",round(decades))
 #. 'decades':lambda decades: ngettext("decade","decades",round(decades))
-#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:623
+#: ../src/gourmand/convert.py:116 ../src/gourmand/convert.py:602
 msgid "year"
 msgid_plural "years"
 msgstr[0] "rok"
@@ -3856,26 +3857,26 @@ msgstr[2] "lat"
 #. You can of course make your language only use commas or
 #. ands or spaces or whatever you like by translating both
 #. ", " and " and " with the same string.
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid " and "
 msgstr " i "
 
-#: ../src/gourmand/convert.py:681
+#: ../src/gourmand/convert.py:660
 msgid ", "
 msgstr ", "
 
-#: ../src/gourmand/convert.py:683
+#: ../src/gourmand/convert.py:662
 msgid " "
 msgstr " "
 
-#: ../src/gourmand/convert.py:813
+#: ../src/gourmand/convert.py:792
 msgid "and"
 msgstr "i"
 
 #. Note: the order matters on this range regular expression in order
 #. for it to properly split things like 1 - to - 3, which really do
 #. show up sometimes.
-#: ../src/gourmand/convert.py:836
+#: ../src/gourmand/convert.py:815
 msgid "to"
 msgstr "do"
 
