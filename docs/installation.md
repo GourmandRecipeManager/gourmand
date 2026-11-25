@@ -31,13 +31,15 @@ sudo apt-get install flatpak
 ```
 
 As Gourmand is still under active development, the flatpak is not available from
-Flathub, and instead must be [downloaded and installed manually](https://github.com/GourmandRecipeManager/gourmand/releases/).
+Flathub.
+
+[Download the latest release](https://github.com/GourmandRecipeManager/gourmand/releases/)
 
 In a terminal, execute the following:
 
 ```sh
 flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install gourmand-1.0.0.flatpak
+flatpak install gourmand-<version-that-you-downloaded>.flatpak
 ```
 
 You will be prompted with a message regarding the runtime:
