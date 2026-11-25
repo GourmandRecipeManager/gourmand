@@ -209,7 +209,7 @@ setup(
     ],
     extras_require={
         "epub-export": ["ebooklib==0.17.1"],
-        "pdf-export": ["reportlab<4"],
+        "pdf-export": ["reportlab"],
         "spellcheck": ["pyenchant", "pygtkspellcheck"],
     },
     cmdclass={
